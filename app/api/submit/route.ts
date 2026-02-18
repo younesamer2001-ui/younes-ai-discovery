@@ -1,0 +1,70 @@
+import { NextRequest, NextResponse } from 'next/server'
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { recommendation, session, answers, userEmail } = body
+
+    const adminEmail = process.env.ADMIN_EMAIL || 'younes.amer.2001@gmail.com'
+
+    // If RESEND_API_KEY is configured, send email
+    if (process.env.RESEND_API_KEY) {
+      const emailBody = `
+        <h1>New AI Discovery Submission</h1>
+        <h2>Company Profile</h2>
+        <ul>
+          <li><strong>Industry:</strong> ${session.industry}</li>
+          <li><strong>Size:</strong> ${session.company_size}</li>
+          <li><strong>Challenge:</strong> ${session.primary_challenge}</li>
+          <li><strong>Budget:</strong> ${session.budget}</li>
+          <li><strong>AI Experience:</strong> ${session.ai_experience}</li>
+          <li><strong>User Email:</strong> ${userEmail}</li>
+        </ul>
+
+        <h2>Discovery Answers</h2>
+        ${answers.map((a: any, i: number) => `
+          <p><strong>Q${i + 1}:</strong> ${a.question}</p>
+          <p><em>A:</em> ${a.answer}</p>
+          <hr>
+        `).join('')}
+
+        <h2>AI Recommendation</h2>
+        <p><strong>Priority Score:</strong> ${recommendation.priority_score}/10</p>
+        <p><strong>Solution:</strong> ${recommendation.primary_solution?.name}</p>
+        <p>${recommendation.executive_summary}</p>
+        <p><strong>Timeline:</strong> ${recommendation.timeline}</p>
+        <p><strong>Investment:</strong> ${recommendation.investment}</p>
+
+        <h3>Full Report</h3>
+        <p>${recommendation.full_text || 'See dashboard for full details.'}</p>
+      `
+
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: 'Younes AI Discovery <noreply@younesai.com>',
+          to: [adminEmail],
+          subject: `[Priority ${recommendation.priority_score}/10] New AI Discovery: ${session.ai_summary?.company_name || 'Unknown Company'}`,
+          html: emailBody,
+        }),
+      })
+
+      if (!res.ok) {
+        console.error('Email send failed:', await res.text())
+      }
+    } else {
+      console.log('RESEND_API_KEY not configured — skipping email')
+      console.log('Submission from:', userEmail)
+      console.log('Priority:', recommendation.priority_score)
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (error: any) {
+    console.error('Submit error:', error)
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+}
