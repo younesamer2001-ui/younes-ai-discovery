@@ -1,9 +1,13 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Server-side client with service role key for admin operations
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-key'
+
+export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
+
 export function createServerClient() {
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-    process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+    process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-key'
   )
 }

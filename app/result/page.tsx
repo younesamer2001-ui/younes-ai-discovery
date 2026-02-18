@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Language, t } from '@/lib/translations'
 import { CheckCircle2, Sparkles, Clock, TrendingUp, Zap, ArrowRight, Star, Loader2 } from 'lucide-react'
 
-export default function ResultPage() {
+function ResultPageContent() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('session')
   const lang = (searchParams.get('lang') || 'no') as Language
@@ -208,5 +208,13 @@ export default function ResultPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ResultPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-brand-500" /></div>}>
+      <ResultPageContent />
+    </Suspense>
   )
 }

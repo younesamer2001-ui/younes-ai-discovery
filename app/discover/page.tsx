@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Language, t } from '@/lib/translations'
 import { AIQuestion, DiscoveryAnswer } from '@/lib/types'
 import { ArrowRight, Brain, FileText, Sparkles, Loader2 } from 'lucide-react'
 
-export default function DiscoverPage() {
+function DiscoverPageContent() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('session')
   const lang = (searchParams.get('lang') || 'no') as Language
@@ -409,5 +409,13 @@ export default function DiscoverPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function DiscoverPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-brand-500" /></div>}>
+      <DiscoverPageContent />
+    </Suspense>
   )
 }

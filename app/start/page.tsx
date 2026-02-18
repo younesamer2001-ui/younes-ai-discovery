@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Language, t } from '@/lib/translations'
-import { ArrowRight, ArrowLeft, User, Building2, Phone, Globe, Sparkles } from 'lucide-react'
+import { ArrowRight, ArrowLeft, User, Building2, Phone, Globe, Sparkles, Loader2 } from 'lucide-react'
 
 type Step = 'profile' | 'industry' | 'size' | 'challenge' | 'budget' | 'ai_exp'
 
@@ -19,7 +19,7 @@ const challenges = ['challenge_manual', 'challenge_support', 'challenge_sales', 
 const budgets = ['budget_exploring', 'budget_1k_5k', 'budget_5k_20k', 'budget_20k_100k', 'budget_100kplus'] as const
 const aiExps = ['ai_exp_never', 'ai_exp_basic', 'ai_exp_some', 'ai_exp_advanced'] as const
 
-export default function StartPage() {
+function StartPageContent() {
   const searchParams = useSearchParams()
   const lang = (searchParams.get('lang') || 'no') as Language
   const router = useRouter()
@@ -353,5 +353,13 @@ export default function StartPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function StartPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-brand-500" /></div>}>
+      <StartPageContent />
+    </Suspense>
   )
 }

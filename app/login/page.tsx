@@ -1,12 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Language, t } from '@/lib/translations'
-import { Mail, ArrowLeft, Sparkles, CheckCircle2 } from 'lucide-react'
+import { Mail, ArrowLeft, Sparkles, CheckCircle2, Loader2 } from 'lucide-react'
 
-export default function LoginPage() {
+function LoginPageContent() {
   const searchParams = useSearchParams()
   const lang = (searchParams.get('lang') || 'no') as Language
   const router = useRouter()
@@ -103,5 +103,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-brand-500" /></div>}>
+      <LoginPageContent />
+    </Suspense>
   )
 }
