@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { recommendation, session, answers, userEmail } = body
 
-    const adminEmail = process.env.ADMIN_EMAIL || 'younes.amer.2001@gmail.com'
+    const adminEmail = process.env.ADMIN_EMAIL || 'amer.younes.2001@gmail.com'
 
     // If RESEND_API_KEY is configured, send email
     if (process.env.RESEND_API_KEY) {

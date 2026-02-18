@@ -73,7 +73,7 @@ export default function LandingPage() {
           <ArrowRight className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center justify-center gap-6 mt-8 text-sm text-gray-500">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mt-8 text-sm text-gray-500">
           <span className="flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-green-500" />
             {t('hero_trust_1', lang)}
