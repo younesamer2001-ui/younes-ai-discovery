@@ -851,7 +851,7 @@ export default function LandingPage() {
           {steps.map((s, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12, duration: 0.45 }}
               style={{ textAlign: 'center', position: 'relative' }}>
-              <div style={{ fontSize: 52, fontWeight: 700, fontFamily: "'Playfair Display', serif", color: `rgba(${goldRgb},0.1)`, marginBottom: 10, lineHeight: 1 }}>{s.num}</div>
+              <div style={{ fontSize: 52, fontWeight: 700, fontFamily: "'Playfair Display', serif", color: `rgba(${goldRgb},0.35)`, marginBottom: 10, lineHeight: 1 }}>{s.num}</div>
               <div style={{
                 width: 52, height: 52, borderRadius: 14, background: `rgba(${goldRgb},0.06)`, border: `1px solid rgba(${goldRgb},0.12)`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px',
