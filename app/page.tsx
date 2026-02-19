@@ -65,13 +65,22 @@ export default function LandingPage() {
           {t('hero_subtitle', lang)}
         </p>
 
-        <button
-          onClick={() => router.push(`/login?lang=${lang}`)}
-          className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-lg shadow-lg shadow-brand-600/25 hover:shadow-brand-600/40 transition-all"
-        >
-          {t('hero_cta', lang)}
-          <ArrowRight className="w-5 h-5" />
-        </button>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button
+            onClick={() => router.push(`/login?lang=${lang}`)}
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-lg shadow-lg shadow-brand-600/25 hover:shadow-brand-600/40 transition-all"
+          >
+            {t('hero_cta', lang)}
+            <ArrowRight className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => router.push('/kartlegging')}
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold text-lg shadow-lg shadow-amber-600/25 hover:shadow-amber-600/40 transition-all"
+          >
+            {lang === 'no' ? 'Gratis AI-kartlegging' : 'Free AI Discovery'}
+            <Sparkles className="w-5 h-5" />
+          </button>
+        </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mt-8 text-sm text-gray-500">
           <span className="flex items-center gap-1.5">
@@ -131,13 +140,22 @@ export default function LandingPage() {
               ? 'Det tar bare 10 minutter, og det er helt gratis.'
               : 'It only takes 10 minutes, and it\'s completely free.'}
           </p>
-          <button
-            onClick={() => router.push(`/login?lang=${lang}`)}
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-lg shadow-lg shadow-brand-600/25 transition-all"
-          >
-            {t('hero_cta', lang)}
-            <ArrowRight className="w-5 h-5" />
-          </button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              onClick={() => router.push(`/login?lang=${lang}`)}
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-lg shadow-lg shadow-brand-600/25 transition-all"
+            >
+              {t('hero_cta', lang)}
+              <ArrowRight className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => router.push('/kartlegging')}
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border-2 border-amber-500 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950 font-semibold text-lg transition-all"
+            >
+              {lang === 'no' ? 'Prøv kartlegging' : 'Try Discovery'}
+              <Sparkles className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </section>
 

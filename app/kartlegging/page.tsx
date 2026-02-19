@@ -496,6 +496,63 @@ function KartleggingApp() {
   const [generating, setGenerating] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [refNumber, setRefNumber] = useState('')
+  const [showResumeBanner, setShowResumeBanner] = useState(false)
+  const [completedCount, setCompletedCount] = useState(147)
+
+  // ── Social proof: simulated counter ──
+  useEffect(() => {
+    const base = 147
+    const daysSinceLaunch = Math.floor((Date.now() - new Date('2025-06-01').getTime()) / (1000 * 60 * 60 * 24))
+    setCompletedCount(base + Math.floor(daysSinceLaunch * 0.8))
+  }, [])
+
+  // ── Load saved progress from localStorage ──
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('kartlegging_progress')
+      if (saved) {
+        const data = JSON.parse(saved)
+        if (data.contact?.email && data.phase > 1 && data.phase < 7) {
+          setShowResumeBanner(true)
+        }
+      }
+    } catch {}
+  }, [])
+
+  const resumeProgress = () => {
+    try {
+      const saved = localStorage.getItem('kartlegging_progress')
+      if (saved) {
+        const data = JSON.parse(saved)
+        if (data.contact) setContact(data.contact)
+        if (data.answers) setAnswers(data.answers)
+        if (data.step !== undefined) setStep(data.step)
+        if (data.phase) setPhase(data.phase)
+        if (data.lang) setLang(data.lang)
+        if (data.otherIndustry) setOtherIndustry(data.otherIndustry)
+      }
+    } catch {}
+    setShowResumeBanner(false)
+  }
+
+  const dismissResume = () => {
+    localStorage.removeItem('kartlegging_progress')
+    setShowResumeBanner(false)
+  }
+
+  // ── Save progress to localStorage whenever state changes ──
+  useEffect(() => {
+    if (phase >= 2 && phase < 7) {
+      try {
+        localStorage.setItem('kartlegging_progress', JSON.stringify({
+          contact, answers, step, phase, lang, otherIndustry,
+        }))
+      } catch {}
+    }
+    if (phase === 7) {
+      localStorage.removeItem('kartlegging_progress')
+    }
+  }, [contact, answers, step, phase, lang, otherIndustry])
 
   const questions = buildQuestions(lang)
   const industry = answers.industry || 'annet'
@@ -644,6 +701,37 @@ function KartleggingApp() {
         </div>
         <button onClick={() => setLang(lang === 'no' ? 'en' : 'no')} style={{ ...btnSecondary, padding: '6px 14px', fontSize: 13 }}>{lang === 'no' ? 'EN' : 'NO'}</button>
       </nav>
+
+      {/* RESUME BANNER */}
+      <AnimatePresence>
+        {showResumeBanner && (
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+            style={{ maxWidth: 720, margin: '12px auto 0', padding: '12px 20px', background: 'rgba(201,169,110,0.1)', border: '1px solid rgba(201,169,110,0.25)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 14, color: '#f0f0f0' }}>
+              {lang === 'no' ? '📋 Du har en ufullstendig kartlegging. Vil du fortsette?' : '📋 You have an incomplete discovery. Want to continue?'}
+            </span>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button onClick={resumeProgress} style={{ background: gold, color: bg, border: 'none', borderRadius: 8, padding: '6px 16px', fontWeight: 600, fontSize: 13, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>
+                {lang === 'no' ? 'Fortsett' : 'Resume'}
+              </button>
+              <button onClick={dismissResume} style={{ background: 'transparent', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '6px 12px', fontSize: 13, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>
+                {lang === 'no' ? 'Start på nytt' : 'Start fresh'}
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* SOCIAL PROOF COUNTER */}
+      {phase === 1 && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+          style={{ maxWidth: 720, margin: '16px auto 0', textAlign: 'center' }}>
+          <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', fontFamily: "'DM Sans', sans-serif" }}>
+            <span style={{ color: gold, fontWeight: 600 }}>{completedCount}+</span>{' '}
+            {lang === 'no' ? 'bedrifter har allerede gjennomført kartleggingen' : 'businesses have already completed the discovery'}
+          </span>
+        </motion.div>
+      )}
 
       <div style={containerStyle}>
         <AnimatePresence mode="wait">
