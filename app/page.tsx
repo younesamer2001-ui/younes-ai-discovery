@@ -278,22 +278,31 @@ export default function LandingPage() {
     return () => { document.body.style.overflow = '' }
   }, [menuOpen])
 
-  /* ── Nav links ── */
+  /* ── Nav links — mix of page links and scroll-to-section links ── */
   const navLinks = lang === 'no' ? [
-    { id: 'tjenester', label: 'Tjenester' },
-    { id: 'kalkulator', label: 'Kalkulator' },
-    { id: 'sammenligning', label: 'Før & etter' },
-    { id: 'prosess', label: 'Prosess' },
-    { id: 'resultater', label: 'Resultater' },
-    { id: 'faq', label: 'FAQ' },
+    { id: '/mobilsvarer', label: 'Mobilsvarer', isPage: true },
+    { id: '/kundehistorier', label: 'Kundehistorier', isPage: true },
+    { id: 'tjenester', label: 'Tjenester', isPage: false },
+    { id: 'kalkulator', label: 'Kalkulator', isPage: false },
+    { id: 'resultater', label: 'Resultater', isPage: false },
+    { id: 'faq', label: 'FAQ', isPage: false },
   ] : [
-    { id: 'tjenester', label: 'Services' },
-    { id: 'kalkulator', label: 'Calculator' },
-    { id: 'sammenligning', label: 'Before & after' },
-    { id: 'prosess', label: 'Process' },
-    { id: 'resultater', label: 'Results' },
-    { id: 'faq', label: 'FAQ' },
+    { id: '/mobilsvarer', label: 'AI Answering', isPage: true },
+    { id: '/kundehistorier', label: 'Case Studies', isPage: true },
+    { id: 'tjenester', label: 'Services', isPage: false },
+    { id: 'kalkulator', label: 'Calculator', isPage: false },
+    { id: 'resultater', label: 'Results', isPage: false },
+    { id: 'faq', label: 'FAQ', isPage: false },
   ]
+
+  const handleNav = (link: { id: string; isPage: boolean }) => {
+    if (link.isPage) {
+      router.push(link.id)
+    } else {
+      const el = document.getElementById(link.id)
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id)
@@ -425,7 +434,7 @@ export default function LandingPage() {
               {/* Desktop links */}
               <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
                 {navLinks.map((link) => (
-                  <button key={link.id} onClick={() => scrollTo(link.id)} style={{
+                  <button key={link.id} onClick={() => handleNav(link)} style={{
                     background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', fontSize: 13,
                     cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'color 0.2s', padding: 0,
                   }}
@@ -473,7 +482,7 @@ export default function LandingPage() {
           {/* Desktop nav links */}
           <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
             {navLinks.map((link) => (
-              <button key={link.id} onClick={() => scrollTo(link.id)} style={{
+              <button key={link.id} onClick={() => handleNav(link)} style={{
                 background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', fontSize: 13,
                 cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'color 0.2s', padding: 0,
               }}
@@ -551,7 +560,7 @@ export default function LandingPage() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 + 0.1 }}
-                  onClick={() => { setMenuOpen(false); setTimeout(() => scrollTo(link.id), 200) }}
+                  onClick={() => { setMenuOpen(false); setTimeout(() => handleNav(link), 200) }}
                   style={{
                     background: 'none', border: 'none', textAlign: 'left', color: 'rgba(255,255,255,0.7)',
                     fontSize: 18, fontWeight: 500, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
