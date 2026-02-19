@@ -238,26 +238,31 @@ export default function KundehistorierPage() {
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }}
           style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 20px', borderRadius: 30, background: `rgba(${goldRgb},0.06)`, border: `1px solid rgba(${goldRgb},0.15)`, fontSize: 13, color: gold, marginBottom: 24 }}>
           <Star size={14} />
-          {lang === 'no' ? 'Kundehistorier' : 'Case Studies'}
+          {lang === 'no' ? 'Typiske scenarier' : 'Typical Scenarios'}
         </motion.div>
         <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
           style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(28px, 5vw, 48px)', fontWeight: 700, lineHeight: 1.15, marginBottom: 16 }}>
           {lang === 'no' ? (
-            <>Ekte resultater fra <span style={{ color: gold }}>ekte bedrifter</span></>
+            <>Slik kan AI hjelpe <span style={{ color: gold }}>din bedrift</span></>
           ) : (
-            <>Real results from <span style={{ color: gold }}>real businesses</span></>
+            <>How AI can help <span style={{ color: gold }}>your business</span></>
           )}
         </motion.h1>
         <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
           style={{ fontSize: 'clamp(15px, 2vw, 17px)', color: 'rgba(255,255,255,0.5)', maxWidth: 520, margin: '0 auto', lineHeight: 1.6 }}>
           {lang === 'no'
-            ? 'Se hvordan norske bedrifter bruker AI-mobilsvarer til å spare tid, øke omsetningen, og gi bedre kundeservice.'
-            : 'See how Norwegian businesses use AI phone answering to save time, increase revenue, and provide better customer service.'}
+            ? 'Typiske scenarier som viser hvordan AI-mobilsvarer kan spare tid, fange flere henvendelser, og gi bedre kundeservice.'
+            : 'Typical scenarios showing how AI phone answering can save time, capture more inquiries, and provide better customer service.'}
         </motion.p>
       </motion.section>
 
       {/* ── STORIES ── */}
       <section style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px 60px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 32, padding: '12px 20px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, fontSize: 12, color: 'rgba(255,255,255,0.35)', maxWidth: 600, margin: '0 auto 32px' }}>
+          {lang === 'no'
+            ? '📋 Scenariene under er illustrative eksempler basert på typiske utfordringer i norske bedrifter. De representerer ikke faktiske kunder.'
+            : '📋 The scenarios below are illustrative examples based on typical challenges in Norwegian businesses. They do not represent actual clients.'}
+        </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
           {stories.map((story, i) => (
             <motion.article key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
@@ -356,10 +361,10 @@ export default function KundehistorierPage() {
           border: `1px solid rgba(${goldRgb},0.1)`,
         }}>
           {[
-            { value: '0', label: lang === 'no' ? 'Tapte henvendelser' : 'Lost inquiries', sub: lang === 'no' ? 'etter AI-oppsett' : 'after AI setup' },
-            { value: '-40%', label: lang === 'no' ? 'Uteblivelser' : 'No-shows', sub: lang === 'no' ? 'gjennomsnittlig' : 'on average' },
-            { value: '+127%', label: lang === 'no' ? 'Flere leads' : 'More leads', sub: lang === 'no' ? 'gjennomsnittlig' : 'on average' },
+            { value: '24/7', label: lang === 'no' ? 'AI-tilgjengelighet' : 'AI availability', sub: lang === 'no' ? 'hele døgnet' : 'around the clock' },
             { value: '3-5', label: lang === 'no' ? 'Dager oppsett' : 'Days setup', sub: lang === 'no' ? 'typisk' : 'typically' },
+            { value: '100%', label: lang === 'no' ? 'GDPR-kompatibel' : 'GDPR compliant', sub: lang === 'no' ? 'norsk lov' : 'Norwegian law' },
+            { value: '0 kr', label: lang === 'no' ? 'Gratis analyse' : 'Free analysis', sub: lang === 'no' ? 'uforpliktende' : 'no obligations' },
           ].map((s, i) => (
             <div key={i} style={{ padding: '24px 16px', textAlign: 'center', background: bg }}>
               <div style={{ fontSize: 26, fontWeight: 700, color: gold, fontFamily: "'Playfair Display', serif" }}>{s.value}</div>

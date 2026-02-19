@@ -259,11 +259,30 @@ export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false)
   const heroRef = useRef<HTMLDivElement>(null)
 
-  /* ── Slider state for mini ROI calculator ── */
-  const [missedCalls, setMissedCalls] = useState(10)
-  const avgDealValue = 8500 // NOK per deal
-  const conversionRate = 0.35
-  const monthlySavings = Math.round(missedCalls * 4.3 * avgDealValue * conversionRate)
+  /* ── Industry data for ROI calculator ── */
+  const industryData = lang === 'no' ? [
+    { id: 'bygg', label: 'Bygg & Håndverk', avgDeal: 85000, conversion: 0.18, source: 'Basert på snitt oppdragsverdi for små byggefirma i Norge' },
+    { id: 'frisor', label: 'Frisør / Salong', avgDeal: 950, conversion: 0.65, source: 'Basert på snitt timepris for norske salonger' },
+    { id: 'restaurant', label: 'Restaurant / Cafe', avgDeal: 1200, conversion: 0.70, source: 'Basert på snitt reservasjonsverdi' },
+    { id: 'advokat', label: 'Advokat / Juridisk', avgDeal: 25000, conversion: 0.25, source: 'Basert på snitt førstekonsultasjon' },
+    { id: 'regnskap', label: 'Regnskap', avgDeal: 12000, conversion: 0.30, source: 'Basert på snitt årsoppdrag for SMB' },
+    { id: 'helse', label: 'Helse / Klinikk', avgDeal: 2500, conversion: 0.55, source: 'Basert på snitt konsultasjonspris' },
+    { id: 'eiendom', label: 'Eiendom', avgDeal: 65000, conversion: 0.12, source: 'Basert på snitt meglerprovisjonsandel' },
+    { id: 'it', label: 'IT / Konsulent', avgDeal: 35000, conversion: 0.20, source: 'Basert på snitt prosjektverdi for SMB-oppdrag' },
+  ] : [
+    { id: 'bygg', label: 'Construction', avgDeal: 85000, conversion: 0.18, source: 'Based on avg project value for small contractors in Norway' },
+    { id: 'frisor', label: 'Hair / Beauty', avgDeal: 950, conversion: 0.65, source: 'Based on avg appointment price in Norwegian salons' },
+    { id: 'restaurant', label: 'Restaurant / Cafe', avgDeal: 1200, conversion: 0.70, source: 'Based on avg reservation value' },
+    { id: 'advokat', label: 'Legal', avgDeal: 25000, conversion: 0.25, source: 'Based on avg first consultation fee' },
+    { id: 'regnskap', label: 'Accounting', avgDeal: 12000, conversion: 0.30, source: 'Based on avg annual SMB engagement' },
+    { id: 'helse', label: 'Health / Clinic', avgDeal: 2500, conversion: 0.55, source: 'Based on avg consultation price' },
+    { id: 'eiendom', label: 'Real Estate', avgDeal: 65000, conversion: 0.12, source: 'Based on avg broker commission share' },
+    { id: 'it', label: 'IT / Consulting', avgDeal: 35000, conversion: 0.20, source: 'Based on avg project value for SMB engagements' },
+  ]
+  const [selectedIndustry, setSelectedIndustry] = useState(0)
+  const [missedCalls, setMissedCalls] = useState(8)
+  const currentIndustry = industryData[selectedIndustry]
+  const monthlySavings = Math.round(missedCalls * 4.3 * currentIndustry.avgDeal * currentIndustry.conversion)
 
   /* ── Sticky CTA on scroll ── */
   useEffect(() => {
@@ -281,17 +300,17 @@ export default function LandingPage() {
   /* ── Nav links — mix of page links and scroll-to-section links ── */
   const navLinks = lang === 'no' ? [
     { id: '/mobilsvarer', label: 'Mobilsvarer', isPage: true },
-    { id: '/kundehistorier', label: 'Kundehistorier', isPage: true },
+    { id: '/kundehistorier', label: 'Eksempler', isPage: true },
     { id: 'tjenester', label: 'Tjenester', isPage: false },
     { id: 'kalkulator', label: 'Kalkulator', isPage: false },
-    { id: 'resultater', label: 'Resultater', isPage: false },
+    { id: 'resultater', label: 'Bruksområder', isPage: false },
     { id: 'faq', label: 'FAQ', isPage: false },
   ] : [
     { id: '/mobilsvarer', label: 'AI Answering', isPage: true },
-    { id: '/kundehistorier', label: 'Case Studies', isPage: true },
+    { id: '/kundehistorier', label: 'Examples', isPage: true },
     { id: 'tjenester', label: 'Services', isPage: false },
     { id: 'kalkulator', label: 'Calculator', isPage: false },
-    { id: 'resultater', label: 'Results', isPage: false },
+    { id: 'resultater', label: 'Use Cases', isPage: false },
     { id: 'faq', label: 'FAQ', isPage: false },
   ]
 
@@ -310,8 +329,8 @@ export default function LandingPage() {
   }
 
   const heroWords = lang === 'no'
-    ? ['svare telefonen 24/7', 'booke møter automatisk', 'kvalifisere leads med AI', 'spare 40+ timer i måneden']
-    : ['answer calls 24/7', 'book meetings automatically', 'qualify leads with AI', 'save 40+ hours per month']
+    ? ['svare telefonen 24/7', 'booke møter automatisk', 'kvalifisere leads med AI', 'frigjøre tid til det viktige']
+    : ['answer calls 24/7', 'book meetings automatically', 'qualify leads with AI', 'free up time for what matters']
 
   const beforeAfter = lang === 'no' ? {
     title: 'Før og etter AI',
@@ -321,7 +340,7 @@ export default function LandingPage() {
     },
     after: {
       label: 'Med Younes AI',
-      items: ['AI svarer 24/7 — aldri mist en kunde', 'Automatisk booking og SMS-påminnelser', 'Full oversikt + ROI per kanal', 'AI håndterer 80% av rutineoppgaver'],
+      items: ['AI svarer 24/7 — aldri mist en kunde', 'Automatisk booking og SMS-påminnelser', 'Full oversikt over alle henvendelser', 'Mindre manuelt arbeid — mer tid til kunder'],
     },
   } : {
     title: 'Before and After AI',
@@ -331,19 +350,19 @@ export default function LandingPage() {
     },
     after: {
       label: 'With Younes AI',
-      items: ['AI answers 24/7 — never miss a customer', 'Automatic booking and SMS reminders', 'Full overview + ROI per channel', 'AI handles 80% of routine tasks'],
+      items: ['AI answers 24/7 — never miss a customer', 'Automatic booking and SMS reminders', 'Full overview of all inquiries', 'Less manual work — more time for customers'],
     },
   }
 
   const features = lang === 'no' ? [
     { icon: Phone, title: 'AI Telefonsvar', desc: 'Svarer, kvalifiserer og booker — døgnet rundt på norsk og engelsk.', stat: '24/7' },
     { icon: Bot, title: 'Skreddersydd analyse', desc: 'Intelligente spørsmål tilpasset din bransje gir en unik AI-plan.', stat: '12 bransjer' },
-    { icon: BarChart3, title: 'ROI-kalkulator', desc: 'Se nøyaktig hvor mye du kan spare med AI-automatisering.', stat: '357% ROI' },
+    { icon: BarChart3, title: 'ROI-kalkulator', desc: 'Se et estimat på hvor mye du kan spare med AI-automatisering.', stat: 'Gratis' },
     { icon: Shield, title: 'GDPR-kompatibel', desc: 'All data innenfor EØS. Databehandleravtale og EU AI Act-klar.', stat: '100% trygt' },
   ] : [
     { icon: Phone, title: 'AI Phone Answering', desc: 'Answers, qualifies and books — around the clock in Norwegian and English.', stat: '24/7' },
     { icon: Bot, title: 'Tailored Analysis', desc: 'Smart questions for your industry generate a unique AI plan.', stat: '12 industries' },
-    { icon: BarChart3, title: 'ROI Calculator', desc: 'See exactly how much you can save with AI automation.', stat: '357% ROI' },
+    { icon: BarChart3, title: 'ROI Calculator', desc: 'Get an estimate of how much you can save with AI automation.', stat: 'Free' },
     { icon: Shield, title: 'GDPR Compliant', desc: 'All data within EEA. DPA and EU AI Act ready.', stat: '100% secure' },
   ]
 
@@ -359,14 +378,14 @@ export default function LandingPage() {
     { num: '04', title: 'We follow up', desc: 'An advisor calls you within 24 hours', icon: Phone },
   ]
 
-  const testimonials = lang === 'no' ? [
-    { name: 'Martin S.', role: 'Daglig leder, Byggmester AS', text: 'Vi gikk fra å tape 15 henvendelser i uken til null. AI-telefonsvar var den beste investeringen vi har gjort.', stars: 5, metric: '+127% leads' },
-    { name: 'Lena K.', role: 'Eier, Salong Lux', text: 'Uteblivelsene våre gikk ned 40% på første måned. Kundene elsker SMS-påminnelsene.', stars: 5, metric: '-40% no-shows' },
-    { name: 'Erik T.', role: 'Partner, Advokatfirma Holm', text: 'Klientinntak som tok 2 timer tar nå 10 minutter. Imponerende analyse.', stars: 5, metric: '-92% tidsbruk' },
+  const useCases = lang === 'no' ? [
+    { icon: Building2, title: 'Byggefirma', desc: 'Aldri gå glipp av en henvendelse igjen. AI-en svarer og kvalifiserer jobbforespørsler — selv når du er på byggeplassen.', benefit: 'Fang flere oppdrag' },
+    { icon: Users, title: 'Frisørsalong', desc: 'Automatisk booking og SMS-påminnelser reduserer uteblivelser og frigjør tid bak stolen.', benefit: 'Færre no-shows' },
+    { icon: Shield, title: 'Advokatfirma', desc: 'Raskere klientinntak med AI som samler inn informasjon før du i det hele tatt snakker med klienten.', benefit: 'Spar tid på inntak' },
   ] : [
-    { name: 'Martin S.', role: 'CEO, Construction Co', text: 'We went from losing 15 inquiries per week to zero. AI phone answering was the best investment.', stars: 5, metric: '+127% leads' },
-    { name: 'Lena K.', role: 'Owner, Salon Lux', text: 'No-shows dropped 40% in the first month. Customers love the SMS reminders.', stars: 5, metric: '-40% no-shows' },
-    { name: 'Erik T.', role: 'Partner, Holm Law Firm', text: 'Client intake that took 2 hours now takes 10 minutes. Impressive analysis.', stars: 5, metric: '-92% time spent' },
+    { icon: Building2, title: 'Construction', desc: 'Never miss an inquiry again. AI answers and qualifies job requests — even when you\'re on-site.', benefit: 'Capture more jobs' },
+    { icon: Users, title: 'Hair Salon', desc: 'Automatic booking and SMS reminders reduce no-shows and free up time behind the chair.', benefit: 'Fewer no-shows' },
+    { icon: Shield, title: 'Law Firm', desc: 'Faster client intake with AI collecting information before you even speak to the client.', benefit: 'Save intake time' },
   ]
 
   const industries = lang === 'no'
@@ -649,10 +668,10 @@ export default function LandingPage() {
       <motion.section {...fadeUp} style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto 50px', padding: '0 24px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 1, background: `rgba(${goldRgb},0.06)`, borderRadius: 18, overflow: 'hidden', border: `1px solid rgba(${goldRgb},0.1)` }}>
           {[
-            { value: 357, suffix: '+', label: lang === 'no' ? 'Bedrifter kartlagt' : 'Businesses analyzed' },
             { value: 12, suffix: '', label: lang === 'no' ? 'Bransjer dekket' : 'Industries covered' },
-            { value: 93, suffix: '%', label: lang === 'no' ? 'Kundetilfredshet' : 'Client satisfaction' },
             { value: 2, suffix: ' min', label: lang === 'no' ? 'Tid for kartlegging' : 'Time to complete' },
+            { value: 24, suffix: '/7', label: lang === 'no' ? 'AI-tilgjengelighet' : 'AI availability' },
+            { value: 0, suffix: ' kr', label: lang === 'no' ? 'Gratis kartlegging' : 'Free discovery' },
           ].map((s, i) => (
             <div key={i} style={{ padding: '26px 20px', textAlign: 'center', background: bg }}>
               <div style={{ fontSize: 30, fontWeight: 700, color: gold, fontFamily: "'Playfair Display', serif" }}>
@@ -676,15 +695,34 @@ export default function LandingPage() {
             </div>
             <div>
               <h3 style={{ fontSize: 18, fontWeight: 600, fontFamily: "'Playfair Display', serif" }}>
-                {lang === 'no' ? 'Se hva du taper' : "See what you're losing"}
+                {lang === 'no' ? 'Estimert tapt omsetning' : 'Estimated lost revenue'}
               </h3>
               <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
-                {lang === 'no' ? 'Dra slideren for å se din potensielle besparelse' : 'Drag the slider to see your potential savings'}
+                {lang === 'no' ? 'Velg bransje og juster antall tapte henvendelser' : 'Select industry and adjust missed inquiries'}
               </p>
             </div>
           </div>
 
-          <div style={{ marginBottom: 24 }}>
+          {/* Industry selector */}
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginBottom: 8 }}>
+              {lang === 'no' ? 'Din bransje:' : 'Your industry:'}
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {industryData.map((ind, idx) => (
+                <span key={ind.id} onClick={() => setSelectedIndustry(idx)} style={{
+                  padding: '7px 14px', borderRadius: 10, fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                  fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s', userSelect: 'none',
+                  background: selectedIndustry === idx ? `rgba(${goldRgb},0.15)` : 'rgba(255,255,255,0.03)',
+                  border: `1px solid ${selectedIndustry === idx ? `rgba(${goldRgb},0.3)` : 'rgba(255,255,255,0.06)'}`,
+                  color: selectedIndustry === idx ? gold : 'rgba(255,255,255,0.5)',
+                }}>{ind.label}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Slider */}
+          <div style={{ marginBottom: 20 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
               <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>
                 {lang === 'no' ? 'Tapte henvendelser per uke:' : 'Missed inquiries per week:'}
@@ -692,15 +730,16 @@ export default function LandingPage() {
               <span style={{ fontSize: 15, fontWeight: 700, color: gold }}>{missedCalls}</span>
             </div>
             <input
-              type="range" min={1} max={50} value={missedCalls}
+              type="range" min={1} max={30} value={missedCalls}
               onChange={(e) => setMissedCalls(Number(e.target.value))}
               style={{ width: '100%' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'rgba(255,255,255,0.25)', marginTop: 4 }}>
-              <span>1</span><span>50</span>
+              <span>1</span><span>30</span>
             </div>
           </div>
 
+          {/* Result */}
           <div style={{
             background: 'rgba(0,0,0,0.3)', borderRadius: 14, padding: '20px 24px',
             border: '1px solid rgba(255,255,255,0.04)',
@@ -711,17 +750,28 @@ export default function LandingPage() {
             <div style={{ fontSize: 32, fontWeight: 700, color: '#ff6b6b', fontFamily: "'Playfair Display', serif" }}>
               kr {monthlySavings.toLocaleString('nb-NO')}
             </div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>
-              {lang === 'no' ? `Basert på ${avgDealValue.toLocaleString('nb-NO')} kr snitt per deal, ${(conversionRate*100)}% konvertering` : `Based on ${avgDealValue.toLocaleString('nb-NO')} NOK avg per deal, ${(conversionRate*100)}% conversion`}
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 8, lineHeight: 1.5 }}>
+              {lang === 'no'
+                ? `Snitt ordeverdi: ${currentIndustry.avgDeal.toLocaleString('nb-NO')} kr · Konverteringsrate: ${Math.round(currentIndustry.conversion * 100)}%`
+                : `Avg deal value: ${currentIndustry.avgDeal.toLocaleString('nb-NO')} NOK · Conversion rate: ${Math.round(currentIndustry.conversion * 100)}%`}
+            </div>
+            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', marginTop: 4, fontStyle: 'italic' }}>
+              {currentIndustry.source}
             </div>
           </div>
 
+          <div style={{ marginTop: 12, fontSize: 10, color: 'rgba(255,255,255,0.2)', textAlign: 'center', lineHeight: 1.5 }}>
+            {lang === 'no'
+              ? '⚠️ Dette er et forenklet estimat. Faktiske tall vil variere basert på din spesifikke bedrift.'
+              : '⚠️ This is a simplified estimate. Actual numbers will vary based on your specific business.'}
+          </div>
+
           <button onClick={() => router.push('/kartlegging')} style={{
-            marginTop: 20, width: '100%', background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.2)`,
+            marginTop: 16, width: '100%', background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.2)`,
             color: gold, borderRadius: 12, padding: '14px', fontWeight: 600, fontSize: 15,
             cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
           }}>
-            {lang === 'no' ? 'Finn ut hvordan du kan redde disse pengene →' : 'Find out how to save this money →'}
+            {lang === 'no' ? 'Få en mer nøyaktig analyse for din bedrift →' : 'Get a more accurate analysis for your business →'}
           </button>
         </div>
       </motion.section>
@@ -837,34 +887,25 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* ── TESTIMONIALS ── */}
+      {/* ── USE CASES ── */}
       <section id="resultater" style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '20px 24px 70px', scrollMarginTop: 80 }}>
-        <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, textAlign: 'center', marginBottom: 36 }}>
-          {lang === 'no' ? 'Resultater som teller' : 'Results that matter'}
+        <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, textAlign: 'center', marginBottom: 10 }}>
+          {lang === 'no' ? 'Slik kan AI hjelpe din bransje' : 'How AI can help your industry'}
         </motion.h2>
+        <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 14, marginBottom: 36, maxWidth: 460, margin: '0 auto 36px' }}>
+          {lang === 'no' ? 'Typiske bruksområder for AI-mobilsvarer' : 'Typical use cases for AI phone answering'}
+        </motion.p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
-          {testimonials.map((tm, i) => (
+          {useCases.map((uc, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.4 }}
               className="gold-hover"
-              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 18, padding: '26px 24px', transition: 'all 0.3s ease' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                <div style={{ display: 'flex', gap: 2 }}>
-                  {Array.from({ length: tm.stars }).map((_, j) => <Star key={j} size={14} fill={gold} color={gold} />)}
-                </div>
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#4ade80', background: 'rgba(74,222,128,0.08)', padding: '4px 10px', borderRadius: 8, border: '1px solid rgba(74,222,128,0.15)' }}>
-                  {tm.metric}
-                </span>
+              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 18, padding: '28px 24px', transition: 'all 0.3s ease' }}>
+              <div style={{ width: 48, height: 48, borderRadius: 12, background: `rgba(${goldRgb},0.08)`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
+                <uc.icon size={22} color={gold} />
               </div>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.55, marginBottom: 18, fontStyle: 'italic' }}>"{tm.text}"</p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 36, height: 36, borderRadius: '50%', background: `rgba(${goldRgb},0.1)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 14, color: gold }}>
-                  {tm.name.charAt(0)}
-                </div>
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 600 }}>{tm.name}</div>
-                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>{tm.role}</div>
-                </div>
-              </div>
+              <h3 style={{ fontSize: 17, fontWeight: 600, marginBottom: 8 }}>{uc.title}</h3>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.55, marginBottom: 16 }}>{uc.desc}</p>
+              <span style={{ fontSize: 12, color: gold, background: `rgba(${goldRgb},0.06)`, padding: '5px 12px', borderRadius: 8, border: `1px solid rgba(${goldRgb},0.12)`, fontWeight: 600 }}>{uc.benefit}</span>
             </motion.div>
           ))}
         </div>
@@ -895,8 +936,8 @@ export default function LandingPage() {
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 15, marginBottom: 32, maxWidth: 420, margin: '0 auto 32px', lineHeight: 1.6 }}>
             {lang === 'no'
-              ? 'Hundrevis av bedrifter har allerede sett hva AI kan gjøre for dem. Det tar bare 2 minutter.'
-              : 'Hundreds of businesses have already seen what AI can do for them. It only takes 2 minutes.'}
+              ? 'Finn ut hva AI kan gjøre for akkurat din bedrift. Det tar bare 2 minutter.'
+              : 'Find out what AI can do for your specific business. It only takes 2 minutes.'}
           </p>
           <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
             color: bg, border: 'none', borderRadius: 14, padding: '17px 40px',
@@ -907,7 +948,7 @@ export default function LandingPage() {
             <ArrowRight size={18} style={{ display: 'inline', marginLeft: 8, verticalAlign: 'middle' }} />
           </button>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', marginTop: 20 }}>
-            {lang === 'no' ? 'Vi tar inn maks 3 nye kunder per måned for å sikre kvalitet.' : 'We onboard max 3 new clients per month to ensure quality.'}
+            {lang === 'no' ? 'Helt gratis og uforpliktende — ingen kredittkort nødvendig.' : 'Completely free with no obligations — no credit card required.'}
           </p>
         </div>
       </motion.section>
