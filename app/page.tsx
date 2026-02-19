@@ -7,7 +7,7 @@ import {
   ArrowRight, Globe, Phone, Bot, Zap, Shield, Clock, BarChart3,
   CheckCircle2, ChevronRight, Star, Users, TrendingUp, Building2,
   ChevronDown, X, Sparkles, ArrowUpRight, MessageSquare, Timer,
-  AlertCircle, ThumbsUp, Minus, Plus
+  AlertCircle, ThumbsUp, Minus, Plus, Menu
 } from 'lucide-react'
 
 /* ── Constants ── */
@@ -256,6 +256,7 @@ export default function LandingPage() {
   const [lang, setLang] = useState<'no' | 'en'>('no')
   const router = useRouter()
   const [showSticky, setShowSticky] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const heroRef = useRef<HTMLDivElement>(null)
 
   /* ── Slider state for mini ROI calculator ── */
@@ -270,6 +271,34 @@ export default function LandingPage() {
     window.addEventListener('scroll', handler, { passive: true })
     return () => window.removeEventListener('scroll', handler)
   }, [])
+
+  /* ── Lock body scroll when menu open ── */
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
+
+  /* ── Nav links ── */
+  const navLinks = lang === 'no' ? [
+    { id: 'tjenester', label: 'Tjenester' },
+    { id: 'kalkulator', label: 'Kalkulator' },
+    { id: 'sammenligning', label: 'Før & etter' },
+    { id: 'prosess', label: 'Prosess' },
+    { id: 'resultater', label: 'Resultater' },
+    { id: 'faq', label: 'FAQ' },
+  ] : [
+    { id: 'tjenester', label: 'Services' },
+    { id: 'kalkulator', label: 'Calculator' },
+    { id: 'sammenligning', label: 'Before & after' },
+    { id: 'prosess', label: 'Process' },
+    { id: 'resultater', label: 'Results' },
+    { id: 'faq', label: 'FAQ' },
+  ]
+
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id)
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   const heroWords = lang === 'no'
     ? ['svare telefonen 24/7', 'booke møter automatisk', 'kvalifisere leads med AI', 'spare 40+ timer i måneden']
@@ -358,10 +387,12 @@ export default function LandingPage() {
         .cta-shimmer:hover { transform: translateY(-1px); box-shadow: 0 12px 40px rgba(${goldRgb},0.35) !important; }
         input[type=range] { -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.08); outline: none; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: ${gold}; cursor: pointer; box-shadow: 0 2px 10px rgba(${goldRgb},0.4); }
-        @media (max-width: 640px) {
+        .show-mobile-only { display: none !important; }
+        @media (max-width: 768px) {
           .hero-title { font-size: 28px !important; }
           .grid-2 { grid-template-columns: 1fr !important; }
           .hide-mobile { display: none !important; }
+          .show-mobile-only { display: flex !important; }
         }
       `}</style>
 
@@ -371,65 +402,184 @@ export default function LandingPage() {
       {/* Live social proof toasts */}
       <LiveToasts lang={lang} />
 
-      {/* ── STICKY CTA BAR ── */}
+      {/* ── STICKY NAV BAR (appears on scroll) ── */}
       <AnimatePresence>
         {showSticky && (
-          <motion.div
-            initial={{ y: -60, opacity: 0 }}
+          <motion.nav
+            initial={{ y: -80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -60, opacity: 0 }}
+            exit={{ y: -80, opacity: 0 }}
             transition={{ duration: 0.3 }}
             style={{
               position: 'fixed', top: 0, left: 0, right: 0, zIndex: 90,
               background: 'rgba(10,10,15,0.92)', backdropFilter: 'blur(20px)',
               borderBottom: `1px solid rgba(${goldRgb},0.1)`,
-              padding: '10px 24px',
+              padding: '0 24px',
             }}
           >
-            <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 56 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                 <div style={{ width: 28, height: 28, borderRadius: 7, background: `linear-gradient(135deg, ${gold}, #a8884d)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: bg }}>AI</div>
                 <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, fontWeight: 600 }}>Younes AI</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <span className="hide-mobile" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>
-                  {lang === 'no' ? '2 min · Gratis · Uforpliktende' : '2 min · Free · No obligations'}
-                </span>
+              {/* Desktop links */}
+              <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+                {navLinks.map((link) => (
+                  <button key={link.id} onClick={() => scrollTo(link.id)} style={{
+                    background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', fontSize: 13,
+                    cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'color 0.2s', padding: 0,
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.color = gold}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}
+                  >
+                    {link.label}
+                  </button>
+                ))}
                 <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
-                  color: bg, border: 'none', borderRadius: 10, padding: '9px 22px',
-                  fontWeight: 600, fontSize: 14, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                  color: bg, border: 'none', borderRadius: 10, padding: '8px 20px',
+                  fontWeight: 600, fontSize: 13, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
                 }}>
                   {lang === 'no' ? 'Start kartlegging' : 'Start discovery'}
-                  <ArrowRight size={14} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
+                  <ArrowRight size={13} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
+                </button>
+              </div>
+              {/* Mobile hamburger */}
+              <div className="show-mobile-only" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
+                  color: bg, border: 'none', borderRadius: 8, padding: '7px 16px',
+                  fontWeight: 600, fontSize: 12, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                }}>
+                  {lang === 'no' ? 'Start' : 'Start'}
+                </button>
+                <button onClick={() => setMenuOpen(!menuOpen)} style={{
+                  background: 'none', border: `1px solid rgba(255,255,255,0.1)`, borderRadius: 8,
+                  padding: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  {menuOpen ? <X size={20} color="rgba(255,255,255,0.7)" /> : <Menu size={20} color="rgba(255,255,255,0.7)" />}
                 </button>
               </div>
             </div>
-          </motion.div>
+          </motion.nav>
         )}
       </AnimatePresence>
 
-      {/* ── NAV ── */}
-      <nav style={{ position: 'relative', zIndex: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: 1100, margin: '0 auto', padding: '20px 24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 34, height: 34, borderRadius: 9, background: `linear-gradient(135deg, ${gold}, #a8884d)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: bg }}>AI</div>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 600 }}>Younes AI</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <button onClick={() => router.push('/kartlegging')} style={{
-            background: 'transparent', border: `1px solid rgba(255,255,255,0.1)`, color: 'rgba(255,255,255,0.6)',
-            borderRadius: 8, padding: '8px 18px', fontSize: 13, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
-          }}>
-            {lang === 'no' ? 'Kartlegging' : 'Discovery'}
-          </button>
-          <button onClick={() => setLang(lang === 'no' ? 'en' : 'no')} style={{
-            background: 'transparent', border: `1px solid rgba(255,255,255,0.1)`, color: 'rgba(255,255,255,0.5)',
-            borderRadius: 8, padding: '8px 14px', fontSize: 13, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-          }}>
-            <Globe size={13} style={{ display: 'inline', marginRight: 5, verticalAlign: 'middle' }} />
-            {lang === 'no' ? 'EN' : 'NO'}
-          </button>
+      {/* ── TOP NAV (initial) ── */}
+      <nav style={{ position: 'relative', zIndex: 10, maxWidth: 1100, margin: '0 auto', padding: '16px 24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 34, height: 34, borderRadius: 9, background: `linear-gradient(135deg, ${gold}, #a8884d)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: bg }}>AI</div>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 600 }}>Younes AI</span>
+          </div>
+          {/* Desktop nav links */}
+          <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+            {navLinks.map((link) => (
+              <button key={link.id} onClick={() => scrollTo(link.id)} style={{
+                background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', fontSize: 13,
+                cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'color 0.2s', padding: 0,
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = gold}
+              onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}
+              >
+                {link.label}
+              </button>
+            ))}
+            <button onClick={() => setLang(lang === 'no' ? 'en' : 'no')} style={{
+              background: 'transparent', border: `1px solid rgba(255,255,255,0.08)`, color: 'rgba(255,255,255,0.45)',
+              borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+            }}>
+              <Globe size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
+              {lang === 'no' ? 'EN' : 'NO'}
+            </button>
+            <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
+              color: bg, border: 'none', borderRadius: 10, padding: '9px 22px',
+              fontWeight: 600, fontSize: 14, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+            }}>
+              {lang === 'no' ? 'Start kartlegging' : 'Start discovery'}
+              <ArrowRight size={14} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
+            </button>
+          </div>
+          {/* Mobile hamburger */}
+          <div className="show-mobile-only" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button onClick={() => setLang(lang === 'no' ? 'en' : 'no')} style={{
+              background: 'transparent', border: `1px solid rgba(255,255,255,0.08)`, color: 'rgba(255,255,255,0.45)',
+              borderRadius: 8, padding: '6px 10px', fontSize: 12, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+            }}>
+              {lang === 'no' ? 'EN' : 'NO'}
+            </button>
+            <button onClick={() => setMenuOpen(!menuOpen)} style={{
+              background: 'none', border: `1px solid rgba(255,255,255,0.1)`, borderRadius: 8,
+              padding: 7, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              {menuOpen ? <X size={20} color="rgba(255,255,255,0.7)" /> : <Menu size={20} color="rgba(255,255,255,0.7)" />}
+            </button>
+          </div>
         </div>
       </nav>
+
+      {/* ── MOBILE MENU OVERLAY ── */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25 }}
+            style={{
+              position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 95,
+              background: 'rgba(10,10,15,0.98)', backdropFilter: 'blur(24px)',
+              display: 'flex', flexDirection: 'column', padding: '0 24px',
+            }}
+          >
+            {/* Menu header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 64, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 34, height: 34, borderRadius: 9, background: `linear-gradient(135deg, ${gold}, #a8884d)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: bg }}>AI</div>
+                <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 600 }}>Younes AI</span>
+              </div>
+              <button onClick={() => setMenuOpen(false)} style={{
+                background: 'none', border: `1px solid rgba(255,255,255,0.1)`, borderRadius: 8,
+                padding: 7, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <X size={20} color="rgba(255,255,255,0.7)" />
+              </button>
+            </div>
+            {/* Menu links */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, paddingTop: 24 }}>
+              {navLinks.map((link, i) => (
+                <motion.button
+                  key={link.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 + 0.1 }}
+                  onClick={() => { setMenuOpen(false); setTimeout(() => scrollTo(link.id), 200) }}
+                  style={{
+                    background: 'none', border: 'none', textAlign: 'left', color: 'rgba(255,255,255,0.7)',
+                    fontSize: 18, fontWeight: 500, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                    padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.04)', transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.color = gold}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.7)'}
+                >
+                  <span style={{ color: `rgba(${goldRgb},0.3)`, fontSize: 13, marginRight: 12, fontWeight: 600 }}>0{i + 1}</span>
+                  {link.label}
+                </motion.button>
+              ))}
+            </div>
+            {/* CTA in mobile menu */}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
+              style={{ marginTop: 'auto', paddingBottom: 40 }}>
+              <button onClick={() => { setMenuOpen(false); router.push('/kartlegging') }} className="cta-shimmer" style={{
+                width: '100%', color: bg, border: 'none', borderRadius: 14, padding: '17px',
+                fontWeight: 700, fontSize: 17, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                boxShadow: `0 8px 32px rgba(${goldRgb},0.25)`,
+              }}>
+                {lang === 'no' ? 'Start gratis kartlegging' : 'Start free discovery'}
+                <ArrowRight size={18} style={{ display: 'inline', marginLeft: 8, verticalAlign: 'middle' }} />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── HERO ── */}
       <section ref={heroRef} style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '60px 24px 50px', textAlign: 'center' }}>
@@ -506,7 +656,7 @@ export default function LandingPage() {
       </motion.section>
 
       {/* ── MINI ROI CALCULATOR ── */}
-      <motion.section {...fadeUp} style={{ position: 'relative', zIndex: 1, maxWidth: 600, margin: '0 auto 70px', padding: '0 24px' }}>
+      <motion.section id="kalkulator" {...fadeUp} style={{ position: 'relative', zIndex: 1, maxWidth: 600, margin: '0 auto 70px', padding: '0 24px', scrollMarginTop: 80 }}>
         <div style={{
           background: `linear-gradient(135deg, rgba(${goldRgb},0.04) 0%, rgba(${goldRgb},0.01) 100%)`,
           border: `1px solid rgba(${goldRgb},0.12)`, borderRadius: 22, padding: '36px 32px',
@@ -568,7 +718,7 @@ export default function LandingPage() {
       </motion.section>
 
       {/* ── BEFORE / AFTER ── */}
-      <section style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '20px 24px 70px' }}>
+      <section id="sammenligning" style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '20px 24px 70px', scrollMarginTop: 80 }}>
         <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700, textAlign: 'center', marginBottom: 40 }}>
           {beforeAfter.title}
         </motion.h2>
@@ -607,7 +757,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── FEATURES ── */}
-      <section style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '20px 24px 60px' }}>
+      <section id="tjenester" style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '20px 24px 60px', scrollMarginTop: 80 }}>
         <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700, textAlign: 'center', marginBottom: 10 }}>
           {lang === 'no' ? 'Alt du trenger for AI-suksess' : 'Everything you need for AI success'}
         </motion.h2>
@@ -634,7 +784,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '40px 24px 70px' }}>
+      <section id="prosess" style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '40px 24px 70px', scrollMarginTop: 80 }}>
         <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700, textAlign: 'center', marginBottom: 48 }}>
           {lang === 'no' ? 'Slik fungerer det' : 'How it works'}
         </motion.h2>
@@ -679,7 +829,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '20px 24px 70px' }}>
+      <section id="resultater" style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '20px 24px 70px', scrollMarginTop: 80 }}>
         <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, textAlign: 'center', marginBottom: 36 }}>
           {lang === 'no' ? 'Resultater som teller' : 'Results that matter'}
         </motion.h2>
@@ -712,7 +862,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── FAQ ── */}
-      <section style={{ position: 'relative', zIndex: 1, maxWidth: 650, margin: '0 auto', padding: '20px 24px 70px' }}>
+      <section id="faq" style={{ position: 'relative', zIndex: 1, maxWidth: 650, margin: '0 auto', padding: '20px 24px 70px', scrollMarginTop: 80 }}>
         <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, textAlign: 'center', marginBottom: 32 }}>
           {lang === 'no' ? 'Ofte stilte spørsmål' : 'Frequently asked questions'}
         </motion.h2>
