@@ -1,0 +1,1007 @@
+'use client'
+
+import { useState, useEffect, useCallback, useRef, Suspense } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+
+/* ────────────────────────────────────────────
+   TRANSLATIONS
+   ──────────────────────────────────────────── */
+const T: Record<string, Record<string, string>> = {
+  nav_brand: { no: "AI Integrasjon", en: "AI Integration" },
+  phase1_title: { no: "Oppdag din AI-mulighet", en: "Discover your AI opportunity" },
+  phase1_subtitle: { no: "Fyll inn kontaktinformasjon for å starte en gratis kartlegging av hvordan AI kan effektivisere din bedrift.", en: "Enter your contact information to start a free discovery of how AI can streamline your business." },
+  company_name: { no: "Bedriftsnavn", en: "Company name" },
+  contact_name: { no: "Kontaktperson", en: "Contact name" },
+  email: { no: "E-post", en: "Email" },
+  phone: { no: "Telefon (valgfritt)", en: "Phone (optional)" },
+  gdpr_note: { no: "Vi behandler dine data i henhold til GDPR og personopplysningsloven. Informasjonen brukes kun til å utarbeide din AI-analyse.", en: "We process your data in accordance with GDPR. Information is used solely to prepare your AI analysis." },
+  start_btn: { no: "Start kartlegging", en: "Start Discovery" },
+  next: { no: "Neste", en: "Next" },
+  back: { no: "Tilbake", en: "Back" },
+  step_of: { no: "Steg {c} av {t}", en: "Step {c} of {t}" },
+  select_one: { no: "Velg ett alternativ", en: "Select one option" },
+  select_multi: { no: "Velg opptil {n} alternativer", en: "Select up to {n} options" },
+  select_multi_any: { no: "Velg alle som passer", en: "Select all that apply" },
+  free_text_ph: { no: "Beskriv her...", en: "Describe here..." },
+  optional: { no: "(Valgfritt)", en: "(Optional)" },
+  results_title: { no: "Slik kan AI transformere din bransje", en: "How AI can transform your industry" },
+  roi_title: { no: "Beregn din potensielle avkastning", en: "Calculate your potential return" },
+  roi_missed: { no: "Anslåtte tapte henvendelser per måned", en: "Estimated missed inquiries per month" },
+  roi_value: { no: "Gjennomsnittlig jobbverdi (NOK)", en: "Average job value (NOK)" },
+  roi_conv: { no: "Konverteringsrate", en: "Conversion rate" },
+  roi_lost_month: { no: "Tapt omsetning per måned", en: "Lost revenue per month" },
+  roi_lost_year: { no: "Tapt omsetning per år", en: "Lost revenue per year" },
+  roi_solution: { no: "Anbefalt løsning", en: "Recommended solution" },
+  roi_investment: { no: "Månedlig investering", en: "Monthly investment" },
+  roi_return: { no: "Avkastning (ROI)", en: "Return on investment (ROI)" },
+  receptionist_title: { no: "Resepsjonist-sammenligningen", en: "Receptionist comparison" },
+  receptionist_sol: { no: "Løsning", en: "Solution" },
+  receptionist_cost: { no: "Månedlig kostnad", en: "Monthly cost" },
+  receptionist_avail: { no: "Tilgjengelighet", en: "Availability" },
+  receptionist_cap: { no: "Kapasitet", en: "Capacity" },
+  pricing_title: { no: "Velg din pakke", en: "Choose your plan" },
+  pricing_popular: { no: "Mest populær", en: "Most popular" },
+  pricing_setup: { no: "Oppstart", en: "Setup" },
+  pricing_calls: { no: "samtaler/mnd inkludert", en: "calls/month included" },
+  pricing_overage: { no: "Overtakst", en: "Overage" },
+  pricing_min: { no: "minimum", en: "minimum" },
+  pricing_vat: { no: "Alle priser eks. mva.", en: "All prices excl. VAT." },
+  pricing_limit: { no: "Vi tar inn maksimalt 3 nye kunder per måned for å sikre kvalitet.", en: "We onboard a maximum of 3 new clients per month to ensure quality." },
+  compliance_title: { no: "Sikkerhet og regelverk", en: "Security and compliance" },
+  generate_btn: { no: "Generer AI-analyse", en: "Generate AI analysis" },
+  generating: { no: "Genererer din personlige analyse...", en: "Generating your personalized analysis..." },
+  summary_title: { no: "Din AI-analyse", en: "Your AI analysis" },
+  review_title: { no: "Gjennomgang", en: "Review" },
+  review_edit: { no: "Rediger", en: "Edit" },
+  review_answers: { no: "Dine svar", en: "Your answers" },
+  submit_btn: { no: "Send inn", en: "Submit" },
+  submitting: { no: "Sender...", en: "Submitting..." },
+  confirm_title: { no: "Takk for din henvendelse!", en: "Thank you for your inquiry!" },
+  confirm_ref: { no: "Referansenummer", en: "Reference number" },
+  confirm_next: { no: "Vi tar kontakt innen 24 timer for å diskutere anbefalingene med deg.", en: "We will contact you within 24 hours to discuss the recommendations with you." },
+  confirm_steps_title: { no: "Neste steg", en: "Next steps" },
+  confirm_step1: { no: "1. Vi gjennomgår analysen din grundig", en: "1. We thoroughly review your analysis" },
+  confirm_step2: { no: "2. En rådgiver tar kontakt for en uforpliktende samtale", en: "2. An advisor contacts you for a no-obligation conversation" },
+  confirm_step3: { no: "3. Vi utarbeider et skreddersydd forslag", en: "3. We prepare a customized proposal" },
+  replaces: { no: "Erstatter", en: "Replaces" },
+  saves: { no: "Sparer", en: "Saves" },
+  per_month: { no: "/mnd", en: "/mo" },
+  per_min: { no: "/min", en: "/min" },
+  annual_save: { no: "Spar 15% med årlig betaling", en: "Save 15% with annual billing" },
+}
+
+const t = (key: string, lang: string) => T[key]?.[lang] || T[key]?.['no'] || key
+
+/* ────────────────────────────────────────────
+   INDUSTRY DATA
+   ──────────────────────────────────────────── */
+const INDUSTRIES = [
+  { id: 'bygg', no: 'Bygg & Håndverk', en: 'Construction & Trades' },
+  { id: 'restaurant', no: 'Restaurant & Servering', en: 'Restaurant & Hospitality' },
+  { id: 'helse', no: 'Helse & Omsorg', en: 'Healthcare' },
+  { id: 'eiendom', no: 'Eiendom & Megling', en: 'Real Estate' },
+  { id: 'advokat', no: 'Advokatfirma & Juss', en: 'Law Firm & Legal' },
+  { id: 'regnskap', no: 'Regnskap & Revisjon', en: 'Accounting & Audit' },
+  { id: 'butikk', no: 'Butikk & Netthandel', en: 'Retail & E-commerce' },
+  { id: 'frisor', no: 'Frisør & Skjønnhet', en: 'Hair & Beauty' },
+  { id: 'transport', no: 'Transport & Logistikk', en: 'Transport & Logistics' },
+  { id: 'it', no: 'IT & Teknologi', en: 'IT & Technology' },
+  { id: 'utdanning', no: 'Utdanning & Kurs', en: 'Education & Courses' },
+  { id: 'annet', no: 'Annet', en: 'Other' },
+]
+
+type Rec = { name: string; desc: string; replaces: string; saves: string }
+const INDUSTRY_RECOMMENDATIONS: Record<string, Record<string, Rec[]>> = {
+  bygg: {
+    no: [
+      { name: "AI Telefonsvar med Nødtriage", desc: "Kunden ringer inn, AI svarer på norsk, kvalifiserer om det er nød eller rutine. Nøder videresendes umiddelbart med SMS, rutinesamtaler bookes i kalenderen.", replaces: "15-20 timer/uke med telefonhåndtering", saves: "15-20 t/uke" },
+      { name: "Automatisert timebestilling + påminnelser", desc: "AI sjekker kalender, booker tid, sender bekreftelse på SMS og påminnelse før timen.", replaces: "Manuell booking og oppfølging", saves: "25% færre uteblivelser" },
+      { name: "Instant tilbudskalkulering + oppfølging", desc: "Etter henvendelse genereres tilbud automatisk og sendes via SMS/e-post innen minutter. Automatisk oppfølging etter 48t og 5 dager.", replaces: "Manuell tilbudsskriving", saves: "20-30% høyere konvertering" },
+      { name: "Automatisk Google-anmeldelse etter jobb", desc: "Jobb fullført, SMS med anmeldelseslenke sendes. Påminnelse etter 3 dager. Negativ tilbakemelding rutes privat til leder.", replaces: "Manuell anmeldelsesinnhenting", saves: "Kontinuerlig omdømmebygging" },
+    ],
+    en: [
+      { name: "AI Phone Answering with Emergency Triage", desc: "Customer calls, AI answers in Norwegian, qualifies emergency vs routine. Emergencies forwarded immediately with SMS, routine calls booked into calendar.", replaces: "15-20 hrs/week phone handling", saves: "15-20 hrs/week" },
+      { name: "Automated Appointment Booking + Reminders", desc: "AI checks calendar, books slot, sends confirmation SMS and reminder before appointment.", replaces: "Manual booking and follow-up", saves: "25% fewer no-shows" },
+      { name: "Instant Quote Generation + Follow-up", desc: "After inquiry, auto-generates quote sent via SMS/email within minutes. Automated follow-up at 48h and 5 days.", replaces: "Manual quote writing", saves: "20-30% more lead conversion" },
+      { name: "Post-Job Google Review Automation", desc: "Job complete, SMS with review link sent. Reminder after 3 days. Negative feedback routed privately to manager.", replaces: "Manual review collection", saves: "Continuous reputation building" },
+    ],
+  },
+  restaurant: {
+    no: [
+      { name: "AI stemmebasert reservasjonsagent", desc: "Håndterer dato, tid, antall gjester, allergier. Sjekker tilgjengelighet og bekrefter via SMS. Fanger 50% av bestillinger etter stengetid.", replaces: "Manuell telefonreservasjon", saves: "50% flere bestillinger" },
+      { name: "Uteblivelseshåndtering + venteliste", desc: "Påminnelser i flere trinn (48t, 24t, 2t) med bekreft/avbestill. Avbestillinger utløser ventelistekontakt.", replaces: "Manuell oppfølging", saves: "30-50% færre uteblivelser" },
+      { name: "Automatisert anmeldelsesrespons", desc: "Overvåker Google/TripAdvisor, genererer personlige svar. Negative flagges for leder.", replaces: "Manuell anmeldelsesoppfølging", saves: "5-10 t/uke" },
+      { name: "Meny-chatbot for henvendelser", desc: "Svarer på allergener, åpningstider, parkering, arrangementer 24/7.", replaces: "Repeterende kundehenvendelser", saves: "10-15 t/uke" },
+    ],
+    en: [
+      { name: "AI Voice Reservation Agent", desc: "Handles date, time, party size, dietary needs. Checks availability and confirms via SMS. Captures 50% of after-hours bookings.", replaces: "Manual phone reservations", saves: "50% more bookings" },
+      { name: "No-show Management + Waitlist", desc: "Tiered reminders (48h, 24h, 2h) with confirm/cancel. Cancellations trigger waitlist contact.", replaces: "Manual follow-up", saves: "30-50% fewer no-shows" },
+      { name: "Automated Review Response", desc: "Monitors Google/TripAdvisor, generates personalized responses. Negatives flagged for manager.", replaces: "Manual review management", saves: "5-10 hrs/week" },
+      { name: "Menu Inquiry Chatbot", desc: "Answers allergens, hours, parking, events 24/7.", replaces: "Repetitive customer inquiries", saves: "10-15 hrs/week" },
+    ],
+  },
+  helse: {
+    no: [
+      { name: "AI timebestilling + telefonagent", desc: "Håndterer 50-100+ samtaler/dag, erstatter 1-2 resepsjonister. GDPR/helsepersonelloven-kompatibel.", replaces: "1-2 resepsjonister", saves: "50-100+ samtaler/dag" },
+      { name: "Pasientregistrering før konsultasjon", desc: "Automatisert innsamling av pasientinformasjon før besøk. Sparer 4-6 timer/dag.", replaces: "Manuell dataregistrering", saves: "4-6 t/dag" },
+      { name: "Timepåminnelser + ventelistehåndtering", desc: "Reduserer 15-30% uteblivelser gjennom automatiske påminnelser og smart venteliste.", replaces: "Manuell oppfølging", saves: "15-30% færre uteblivelser" },
+      { name: "Reseptfornyelse og FAQ-håndtering", desc: "Automatiserer 30% av innkommende samtaler om reseptfornyelser og vanlige spørsmål.", replaces: "30% av innkommende samtaler", saves: "Betydelig tidsbesparelse" },
+    ],
+    en: [
+      { name: "AI Appointment Management + Phone Agent", desc: "Handles 50-100+ calls/day, replaces 1-2 FTE receptionists. GDPR/healthcare-law compliant.", replaces: "1-2 receptionists", saves: "50-100+ calls/day" },
+      { name: "Patient Intake Pre-visit Automation", desc: "Automated collection of patient information before visits. Saves 4-6 hours/day.", replaces: "Manual data entry", saves: "4-6 hrs/day" },
+      { name: "Appointment Reminders + Waitlist Management", desc: "Reduces 15-30% no-show rates through automated reminders and smart waitlist.", replaces: "Manual follow-up", saves: "15-30% fewer no-shows" },
+      { name: "Prescription Refill/FAQ Handling", desc: "Automates 30% of incoming calls about prescription refills and common questions.", replaces: "30% of incoming calls", saves: "Significant time savings" },
+    ],
+  },
+  eiendom: {
+    no: [
+      { name: "AI leadkvalifisering via stemmeagent", desc: "Kvalifiserende spørsmål (kjøp/salg, tidslinje, budsjett). Scorer hot/warm/cold. Varme leads bookes umiddelbart.", replaces: "Manuell leadkvalifisering", saves: "Betydelig tidsbesparelse" },
+      { name: "Automatisert visningsplanlegging", desc: "Foreslår visningstider, bekrefter med adresse, 24t påminnelse, oppfølging etter visning.", replaces: "Manuell planlegging", saves: "10-15 t/uke" },
+      { name: "Eiendomsinformasjon chatbot", desc: "Svarer på kvm, fellesutgifter, byggeår, nabolag 24/7.", replaces: "Repeterende henvendelser", saves: "Tilgjengelig 24/7" },
+      { name: "Markedsrapportgenerering", desc: "Månedlige automatiserte rapporter med lokale salgsdata og pristrender.", replaces: "Manuell rapportering", saves: "5-8 t/mnd" },
+    ],
+    en: [
+      { name: "AI Lead Qualification Voice Agent", desc: "Qualifying questions (buy/sell, timeline, budget). Scored hot/warm/cold. Hot leads booked immediately.", replaces: "Manual lead qualification", saves: "Significant time savings" },
+      { name: "Automated Viewing Scheduling", desc: "Proposes viewing slots, confirms with address, 24h reminder, post-viewing follow-up.", replaces: "Manual scheduling", saves: "10-15 hrs/week" },
+      { name: "Property Information Chatbot", desc: "Answers sqm, fees, build year, neighborhood 24/7.", replaces: "Repetitive inquiries", saves: "Available 24/7" },
+      { name: "Market Report Generation", desc: "Monthly automated reports with local sales data and price trends.", replaces: "Manual reporting", saves: "5-8 hrs/month" },
+    ],
+  },
+  advokat: {
+    no: [
+      { name: "AI klientinntak og screening", desc: "Strukturerte spørsmål om juridisk problem, hastegrad, saksbeskrivelse. Screener levedyktighet, booker konsultasjon.", replaces: "Manuell inntaksprosess", saves: "10-15 t/uke" },
+      { name: "Konfliktsjekk + avtaleautomatisering", desc: "Navnsøk mot klient-DB, foreslår tider, oppdragsbrev sendes automatisk.", replaces: "Manuell konfliktsjekk", saves: "5-8 t/uke" },
+      { name: "Dokumentsammendrag + fristsporing", desc: "AI oppsummerer dokumenter, flagger risikoer, frister legges til kalender.", replaces: "Manuell dokumentgjennomgang", saves: "15-20 t/uke" },
+      { name: "Automatiserte klientoppdateringer", desc: "Saksendringer utløser personlige oppdateringer. Månedlig sammendrag genereres automatisk.", replaces: "Manuell statusrapportering", saves: "5-10 t/uke" },
+    ],
+    en: [
+      { name: "AI Client Intake Screening", desc: "Structured questions about legal issue, urgency, brief facts. Screens viability, books consultation.", replaces: "Manual intake process", saves: "10-15 hrs/week" },
+      { name: "Conflict Checking + Appointment Automation", desc: "Name search against client DB, proposes times, engagement letter sent automatically.", replaces: "Manual conflict checking", saves: "5-8 hrs/week" },
+      { name: "Document Summarization + Deadline Tracking", desc: "AI summarizes documents, flags risks, deadlines added to calendar.", replaces: "Manual document review", saves: "15-20 hrs/week" },
+      { name: "Automated Client Status Updates", desc: "Case changes trigger personalized updates. Monthly summary generated automatically.", replaces: "Manual status reporting", saves: "5-10 hrs/week" },
+    ],
+  },
+  regnskap: {
+    no: [
+      { name: "Automatisk dokumentinnsamling + fristpåminnelser", desc: "Kalenderdrevne påminnelser for MVA-frister. Klienter som ikke responderer får AI-telefonsamtale. Sparer 90-120 timer/år.", replaces: "Manuell dokumentjaging", saves: "90-120 t/år" },
+      { name: "AI-chatbot for rutinehenvendelser", desc: "Håndterer MVA-frister, fradrag, kilometergodtgjørelse fra norsk regnskapskunnskapsbase.", replaces: "Repeterende henvendelser", saves: "10-15 t/uke" },
+      { name: "Klient-onboarding automatisering", desc: "Velkomstsekvens, dokumentsjekkliste, manglende elementer påminnes automatisk. 3 uker til 3 dager.", replaces: "3 ukers onboarding", saves: "Redusert til 3 dager" },
+      { name: "Automatisert finansiell rapportering", desc: "Månedlig avslutning, AI-analyse, klientsammendrag, avvik flagges automatisk.", replaces: "Manuell rapportering", saves: "10-20 t/mnd" },
+    ],
+    en: [
+      { name: "Automated Document Collection + Deadline Reminders", desc: "Calendar-driven reminders before VAT deadlines. Non-responsive clients get AI voice call. Saves 90-120 hrs/year.", replaces: "Manual document chasing", saves: "90-120 hrs/year" },
+      { name: "AI Chatbot for Routine Queries", desc: "Handles VAT deadlines, deductions, mileage from Norwegian accounting knowledge base.", replaces: "Repetitive inquiries", saves: "10-15 hrs/week" },
+      { name: "Client Onboarding Automation", desc: "Welcome sequence, document checklist, missing items auto-reminded. 3 weeks to 3 days.", replaces: "3-week onboarding", saves: "Reduced to 3 days" },
+      { name: "Automated Financial Reporting", desc: "Monthly close, AI analysis, client summary, anomalies flagged automatically.", replaces: "Manual reporting", saves: "10-20 hrs/month" },
+    ],
+  },
+  butikk: {
+    no: [
+      { name: "Kundeservice chatbot + stemme-AI", desc: "Automatiserer 50% av henvendelser. Responstid fra 15 min til 23 sekunder.", replaces: "50% av kundehenvendelser", saves: "Respons: 15 min til 23 sek" },
+      { name: "Ordresporing + returautomatisering", desc: "Håndterer «hvor er pakken min?» (20-30% av alle henvendelser) automatisk.", replaces: "20-30% av alle henvendelser", saves: "Betydelig tidsbesparelse" },
+      { name: "AI produktanbefalingsmotor", desc: "Personlige anbefalinger basert på handlehistorikk og preferanser. 5-15% omsetningsvekst.", replaces: "Generiske anbefalinger", saves: "5-15% inntektsøkning" },
+      { name: "Lagervarsler + etterspørselsprognoser", desc: "Automatiske varsler ved lavt lager, AI-drevet etterspørselsprognoser for optimal bestilling.", replaces: "Manuell lagerovervåking", saves: "Optimalt lagernivå" },
+    ],
+    en: [
+      { name: "Customer Service Chatbot + Voice AI", desc: "Automates 50% of inquiries. Response time from 15 min to 23 seconds.", replaces: "50% of customer inquiries", saves: "Response: 15 min to 23 sec" },
+      { name: "Order Tracking + Returns Automation", desc: "Handles 'where is my order?' (20-30% of all inquiries) automatically.", replaces: "20-30% of all inquiries", saves: "Significant time savings" },
+      { name: "AI Product Recommendation Engine", desc: "Personalized recommendations based on purchase history. 5-15% revenue growth.", replaces: "Generic recommendations", saves: "5-15% revenue increase" },
+      { name: "Inventory Alerts + Demand Forecasting", desc: "Automatic alerts at low stock, AI-driven demand forecasting for optimal ordering.", replaces: "Manual inventory monitoring", saves: "Optimal stock levels" },
+    ],
+  },
+  frisor: {
+    no: [
+      { name: "AI telefonbooking", desc: "Fanger opp bestillinger etter stengetid 24/7. Sparer 10-20 timer/uke.", replaces: "Manuell telefonbooking", saves: "10-20 t/uke" },
+      { name: "Uteblivelseshåndtering", desc: "SMS-påminnelser i flere trinn reduserer uteblivelser 30-50%, sparer ca. NOK 240 000/år.", replaces: "Manuell oppfølging", saves: "~240 000 kr/år" },
+      { name: "Automatisk anmeldelsesinnhenting + lojalitetsprogram", desc: "Etter behandling sendes anmeldelsesforespørsler og lojalitetspoeng automatisk.", replaces: "Manuell anmeldelsesinnhenting", saves: "Kontinuerlig vekst" },
+      { name: "AI produktanbefaling + mersalg", desc: "Personlige produktanbefalinger øker gjennomsnittlig kvittering 15-25%.", replaces: "Tilfeldig mersalg", saves: "15-25% høyere snittkvittering" },
+    ],
+    en: [
+      { name: "AI Phone Booking", desc: "Captures after-hours appointments 24/7. Saves 10-20 hrs/week.", replaces: "Manual phone booking", saves: "10-20 hrs/week" },
+      { name: "No-show Management", desc: "Tiered SMS reminders reduce no-shows 30-50%, saving ~NOK 240,000/year.", replaces: "Manual follow-up", saves: "~240,000 NOK/year" },
+      { name: "Automated Review Generation + Loyalty Programs", desc: "Post-treatment review requests and loyalty points sent automatically.", replaces: "Manual review collection", saves: "Continuous growth" },
+      { name: "AI Product Recommendation + Upsell", desc: "Personalized product recommendations increase average ticket 15-25%.", replaces: "Random upselling", saves: "15-25% higher avg ticket" },
+    ],
+  },
+  transport: {
+    no: [
+      { name: "AI ekspedisjonskommunikasjonshub", desc: "Sparer 20-30 timer/uke per ekspeditører. Reduserer manuelt samtalevolum 70%.", replaces: "Manuell ekspedisjon", saves: "20-30 t/uke" },
+      { name: "Kundeleveringssporingsvarsler", desc: "Automatiske statusoppdateringer reduserer statussamtaler med 80%.", replaces: "80% av statushenvendelser", saves: "80% færre samtaler" },
+      { name: "Sjåførplanlegging + tilgjengelighetshåndtering", desc: "AI optimaliserer sjåførplaner basert på tilgjengelighet og krav.", replaces: "Manuell planlegging", saves: "Betydelig effektivisering" },
+      { name: "Ruteoptimalisering + dokumentasjon", desc: "Sparer 15% på drivstoffkostnader gjennom smart ruteplanlegging.", replaces: "Manuell ruteplanlegging", saves: "15% drivstoffbesparelse" },
+    ],
+    en: [
+      { name: "AI Dispatch Communication Hub", desc: "Saves 20-30 hrs/week per dispatcher. Reduces manual call volume 70%.", replaces: "Manual dispatch", saves: "20-30 hrs/week" },
+      { name: "Customer Delivery Tracking Notifications", desc: "Automatic status updates reduce status calls by 80%.", replaces: "80% of status inquiries", saves: "80% fewer calls" },
+      { name: "Driver Scheduling + Availability Management", desc: "AI optimizes driver schedules based on availability and requirements.", replaces: "Manual scheduling", saves: "Significant efficiency gains" },
+      { name: "Route Optimization + Documentation", desc: "Saves 15% on fuel costs through smart route planning.", replaces: "Manual route planning", saves: "15% fuel cost savings" },
+    ],
+  },
+  utdanning: {
+    no: [
+      { name: "Kurshenvendelse chatbot + stemme-AI", desc: "Håndterer 10-20 timer/uke med repeterende henvendelser om kurs, priser og tilgjengelighet.", replaces: "10-20 t/uke henvendelser", saves: "10-20 t/uke" },
+      { name: "Påmeldings- og registreringsautomatisering", desc: "Betaling, bekreftelse, materialer, kalenderoppføring — alt automatisert.", replaces: "Manuell registrering", saves: "Sømløs prosess" },
+      { name: "Automatisk sertifikatgenerering + mersalg", desc: "Kursgjennomføring utløser sertifikat og oppfølgingstilbud for videre kurs.", replaces: "Manuell sertifisering", saves: "Økt gjenkjøp" },
+      { name: "Kapasitetshåndtering", desc: "Automatisk overvåking av kursfylling, ventelister og optimal klassefordeling.", replaces: "Manuell kapasitetsovervåking", saves: "Optimal ressursbruk" },
+    ],
+    en: [
+      { name: "Course Inquiry Chatbot + Voice AI", desc: "Handles 10-20 hrs/week of repetitive inquiries about courses, prices and availability.", replaces: "10-20 hrs/week inquiries", saves: "10-20 hrs/week" },
+      { name: "Enrollment + Registration Automation", desc: "Payment, confirmation, materials, calendar entry — all automated.", replaces: "Manual registration", saves: "Seamless process" },
+      { name: "Automated Certificate Generation + Upselling", desc: "Course completion triggers certificate and follow-up offers.", replaces: "Manual certification", saves: "Increased repeat business" },
+      { name: "Capacity Management", desc: "Automatic monitoring of course fill rates, waitlists and distribution.", replaces: "Manual capacity monitoring", saves: "Optimal resource use" },
+    ],
+  },
+  it: {
+    no: [
+      { name: "AI telefonsvar og kundestøtte", desc: "Automatisk besvarelse av vanlige henvendelser, ruting av tekniske saker til riktig team.", replaces: "Manuell telefonhåndtering", saves: "15-20 t/uke" },
+      { name: "Kundeservice-automatisering", desc: "Chatbot og e-post-AI for første-linje support, eskalering ved behov.", replaces: "Første-linje support", saves: "50% av henvendelser" },
+      { name: "Intern arbeidsflytautomatisering", desc: "Automatisering av repetitive interne prosesser, rapportering og dokumenthåndtering.", replaces: "Manuelle prosesser", saves: "10-20 t/uke" },
+      { name: "Rapporteringsautomatisering", desc: "Automatisk generering av klient- og prosjektrapporter med AI-analyse.", replaces: "Manuell rapportering", saves: "5-10 t/uke" },
+    ],
+    en: [
+      { name: "AI Phone Answering & Customer Support", desc: "Automatic answering of common inquiries, routing of technical cases to the right team.", replaces: "Manual phone handling", saves: "15-20 hrs/week" },
+      { name: "Customer Service Automation", desc: "Chatbot and email AI for first-line support, escalation when needed.", replaces: "First-line support", saves: "50% of inquiries" },
+      { name: "Internal Workflow Automation", desc: "Automation of repetitive internal processes, reporting and document handling.", replaces: "Manual processes", saves: "10-20 hrs/week" },
+      { name: "Reporting Automation", desc: "Automatic generation of client and project reports with AI analysis.", replaces: "Manual reporting", saves: "5-10 hrs/week" },
+    ],
+  },
+  annet: {
+    no: [
+      { name: "AI telefonsvar", desc: "Automatisk telefonbesvarelse 24/7 med intelligent videresending og booking.", replaces: "Manuell telefonhåndtering", saves: "15-20 t/uke" },
+      { name: "Kundeservice-automatisering", desc: "AI-drevet chatbot og e-post-håndtering for vanlige henvendelser.", replaces: "Repeterende kundehenvendelser", saves: "50% av henvendelser" },
+      { name: "Intern arbeidsflytautomatisering", desc: "Automatisering av interne prosesser og oppgaver.", replaces: "Manuelle prosesser", saves: "10-15 t/uke" },
+      { name: "Rapporteringsautomatisering", desc: "Automatisk generering av rapporter og analyser.", replaces: "Manuell rapportering", saves: "5-10 t/uke" },
+    ],
+    en: [
+      { name: "AI Phone Answering", desc: "Automatic 24/7 phone answering with intelligent forwarding and booking.", replaces: "Manual phone handling", saves: "15-20 hrs/week" },
+      { name: "Customer Service Automation", desc: "AI-powered chatbot and email handling for common inquiries.", replaces: "Repetitive customer inquiries", saves: "50% of inquiries" },
+      { name: "Internal Workflow Automation", desc: "Automation of internal processes and tasks.", replaces: "Manual processes", saves: "10-15 hrs/week" },
+      { name: "Reporting Automation", desc: "Automatic generation of reports and analytics.", replaces: "Manual reporting", saves: "5-10 hrs/week" },
+    ],
+  },
+}
+
+const JOB_VALUES: Record<string, number> = { bygg: 8000, restaurant: 3600, helse: 1500, eiendom: 70000, advokat: 15000, regnskap: 5000, butikk: 500, frisor: 800, transport: 3000, it: 5000, utdanning: 8000, annet: 3000 }
+const MISSED_DEFAULTS: Record<string, number> = { daily: 60, weekly: 12, occasionally: 4, rarely: 1, unsure: 8 }
+
+/* ────────────────────────────────────────────
+   QUESTIONNAIRE STEPS
+   ──────────────────────────────────────────── */
+type QuestionOption = { value: string; label: string }
+type Question = { id: string; type: string; q: string; options?: QuestionOption[]; hasOther?: boolean; max?: number; optional?: boolean }
+
+const buildQuestions = (lang: string): Question[] => [
+  {
+    id: 'industry', type: 'single',
+    q: lang === 'no' ? 'Hvilken bransje er bedriften din i?' : 'What industry is your business in?',
+    options: INDUSTRIES.map((ind) => ({ value: ind.id, label: (ind as any)[lang] })),
+    hasOther: true,
+  },
+  {
+    id: 'size', type: 'single',
+    q: lang === 'no' ? 'Hvor mange ansatte har bedriften?' : 'How many employees does the business have?',
+    options: [
+      { value: 'solo', label: lang === 'no' ? 'Solo / Enkeltperson' : 'Solo' },
+      { value: '2-5', label: '2-5' }, { value: '6-15', label: '6-15' },
+      { value: '16-50', label: '16-50' }, { value: '51-200', label: '51-200' }, { value: '200+', label: '200+' },
+    ],
+  },
+  {
+    id: 'pain', type: 'multi', max: 3,
+    q: lang === 'no' ? 'Hva bruker dere mest tid på? (velg opptil 3)' : 'What takes the most time? (select up to 3)',
+    options: [
+      { value: 'phone_email', label: lang === 'no' ? 'Telefon og e-post' : 'Phone and email' },
+      { value: 'invoicing', label: lang === 'no' ? 'Manuell fakturering' : 'Manual invoicing' },
+      { value: 'customer_tracking', label: lang === 'no' ? 'Kundeoppfølging' : 'Customer tracking' },
+      { value: 'booking', label: lang === 'no' ? 'Timebestilling' : 'Booking' },
+      { value: 'marketing', label: lang === 'no' ? 'Markedsføring' : 'Marketing' },
+      { value: 'internal_comms', label: lang === 'no' ? 'Intern kommunikasjon' : 'Internal comms' },
+      { value: 'hiring', label: lang === 'no' ? 'Rekruttering' : 'Hiring' },
+      { value: 'reporting', label: lang === 'no' ? 'Rapportering' : 'Reporting' },
+      { value: 'sales', label: lang === 'no' ? 'Salg og oppfølging' : 'Sales and follow-up' },
+      { value: 'inventory', label: lang === 'no' ? 'Varelager' : 'Inventory' },
+    ],
+  },
+  {
+    id: 'tech', type: 'multi',
+    q: lang === 'no' ? 'Hvilke systemer bruker dere i dag?' : 'What systems do you use today?',
+    options: [
+      { value: 'fiken', label: 'Fiken' }, { value: 'tripletex', label: 'Tripletex' },
+      { value: 'visma', label: 'Visma' }, { value: 'poweroffice', label: 'PowerOffice' },
+      { value: 'm365', label: 'Microsoft 365' }, { value: 'google', label: 'Google Workspace' },
+      { value: 'slack', label: 'Slack' }, { value: 'hubspot', label: 'HubSpot' },
+      { value: 'shopify', label: 'Shopify' }, { value: 'vipps', label: 'Vipps' },
+      { value: 'calendly', label: 'Calendly' }, { value: 'facebook', label: 'Facebook Business' },
+      { value: 'none', label: lang === 'no' ? 'Ingen spesielle' : 'None' },
+      { value: 'other', label: lang === 'no' ? 'Andre' : 'Other' },
+    ],
+  },
+  { id: 'manual_tasks', type: 'text', q: lang === 'no' ? 'Hvilke manuelle oppgaver ønsker dere å automatisere?' : 'What manual tasks would you like to automate?' },
+  {
+    id: 'contact_methods', type: 'multi',
+    q: lang === 'no' ? 'Hvordan tar kundene kontakt med dere?' : 'How do customers contact you?',
+    options: [
+      { value: 'phone', label: lang === 'no' ? 'Telefon' : 'Phone' },
+      { value: 'email', label: lang === 'no' ? 'E-post' : 'Email' },
+      { value: 'form', label: lang === 'no' ? 'Kontaktskjema' : 'Contact form' },
+      { value: 'social', label: lang === 'no' ? 'Sosiale medier' : 'Social media' },
+      { value: 'walkin', label: lang === 'no' ? 'Drop-in' : 'Walk-in' },
+      { value: 'receptionist', label: lang === 'no' ? 'Resepsjonist' : 'Receptionist' },
+      { value: 'chatbot', label: lang === 'no' ? 'Chatbot' : 'Chatbot' },
+    ],
+  },
+  {
+    id: 'missed', type: 'single',
+    q: lang === 'no' ? 'Hvor ofte går dere glipp av henvendelser?' : 'How often do you miss inquiries?',
+    options: [
+      { value: 'daily', label: lang === 'no' ? 'Daglig' : 'Daily' },
+      { value: 'weekly', label: lang === 'no' ? 'Ukentlig' : 'Weekly' },
+      { value: 'occasionally', label: lang === 'no' ? 'Av og til' : 'Occasionally' },
+      { value: 'rarely', label: lang === 'no' ? 'Sjelden' : 'Rarely' },
+      { value: 'unsure', label: lang === 'no' ? 'Usikker' : 'Unsure' },
+    ],
+  },
+  {
+    id: 'budget', type: 'single',
+    q: lang === 'no' ? 'Hva er budsjettet for AI-løsninger per måned?' : 'What is your monthly budget for AI solutions?',
+    options: [
+      { value: 'under1k', label: lang === 'no' ? 'Under 1 000 kr' : 'Under 1,000 NOK' },
+      { value: '1-3k', label: lang === 'no' ? '1 000 - 3 000 kr' : '1,000 - 3,000 NOK' },
+      { value: '3-5k', label: lang === 'no' ? '3 000 - 5 000 kr' : '3,000 - 5,000 NOK' },
+      { value: '5-10k', label: lang === 'no' ? '5 000 - 10 000 kr' : '5,000 - 10,000 NOK' },
+      { value: 'over10k', label: lang === 'no' ? 'Over 10 000 kr' : 'Over 10,000 NOK' },
+      { value: 'unsure', label: lang === 'no' ? 'Usikker' : 'Unsure' },
+    ],
+  },
+  {
+    id: 'timeline', type: 'single',
+    q: lang === 'no' ? 'Når ønsker dere å komme i gang?' : 'When would you like to get started?',
+    options: [
+      { value: 'asap', label: lang === 'no' ? 'Så snart som mulig' : 'ASAP' },
+      { value: '1month', label: lang === 'no' ? 'Innen 1 måned' : 'Within 1 month' },
+      { value: '3months', label: lang === 'no' ? 'Innen 3 måneder' : 'Within 3 months' },
+      { value: '6months', label: lang === 'no' ? 'Innen 6 måneder' : 'Within 6 months' },
+      { value: 'exploring', label: lang === 'no' ? 'Bare utforsker' : 'Just exploring' },
+    ],
+  },
+  { id: 'goals', type: 'text', q: lang === 'no' ? 'Hva er de viktigste målene for bedriften det neste året?' : 'What are the most important goals for the business in the next year?' },
+  { id: 'additional', type: 'text', optional: true, q: lang === 'no' ? 'Er det noe annet vi bør vite?' : 'Is there anything else we should know?' },
+]
+
+/* ────────────────────────────────────────────
+   PRICING TIERS
+   ──────────────────────────────────────────── */
+const PRICING = [
+  {
+    id: 'basis', name: { no: 'Basis', en: 'Basic' },
+    price: 5990, setup: 14990, calls: 300, overage: 4, minTerm: 6, popular: false, setupPrefix: false,
+    features: {
+      no: ['AI telefonsvarer + 1 arbeidsflyt', 'E-poststøtte (48t respons)', 'Månedlig ytelsesrapport'],
+      en: ['AI phone answering + 1 workflow', 'Email support (48h response)', 'Monthly performance report'],
+    },
+  },
+  {
+    id: 'pro', name: { no: 'Profesjonell', en: 'Professional' },
+    price: 12990, setup: 29990, calls: 750, overage: 3.5, minTerm: 12, popular: true, setupPrefix: false,
+    features: {
+      no: ['Full pakke: telefon, booking, SMS, CRM, anmeldelser', 'Prioritert støtte (samme dag)', 'Annenhver uke optimalisering'],
+      en: ['Full package: phone, booking, SMS, CRM, reviews', 'Priority support (same day)', 'Bi-weekly optimization'],
+    },
+  },
+  {
+    id: 'enterprise', name: { no: 'Enterprise', en: 'Enterprise' },
+    price: 24990, setup: 49990, calls: 1500, overage: 3, minTerm: 12, popular: false, setupPrefix: true,
+    features: {
+      no: ['Alt inkludert + skreddersydd utvikling', 'Dedikert kontaktperson', 'Kvartalsvis strategigjennomgang', 'Flerlokasjon/multi-team'],
+      en: ['Everything included + custom development', 'Dedicated account manager', 'Quarterly strategy review', 'Multi-location/multi-team'],
+    },
+  },
+]
+
+/* ────────────────────────────────────────────
+   COMPLIANCE + RECEPTIONIST
+   ──────────────────────────────────────────── */
+const COMPLIANCE: Record<string, { title: string; desc: string }[]> = {
+  no: [
+    { title: 'GDPR-kompatibel', desc: 'All databehandling følger personopplysningsloven og GDPR.' },
+    { title: 'Norsk datasenter', desc: 'Data lagres innenfor EØS via EU-baserte API-endepunkter.' },
+    { title: 'EU AI Act-klar', desc: 'Full AI-transparens i henhold til Art. 50.' },
+    { title: 'Databehandleravtale', desc: 'DPA inkludert i alle kontrakter.' },
+    { title: 'Samtykkebasert opptak', desc: 'Samtaleopptak kun med aktivt samtykke.' },
+  ],
+  en: [
+    { title: 'GDPR Compliant', desc: 'All data processing follows GDPR regulations.' },
+    { title: 'European Data Center', desc: 'Data stored within EEA via EU-based API endpoints.' },
+    { title: 'EU AI Act Ready', desc: 'Full AI disclosure compliance (Art. 50).' },
+    { title: 'Data Processing Agreement', desc: 'DPA included with all contracts.' },
+    { title: 'Consent-based Recording', desc: 'Call recording only with active caller consent.' },
+  ],
+}
+
+const RECEPTIONIST: Record<string, { sol: string; cost: string; avail: string; cap: string }[]> = {
+  no: [
+    { sol: 'Ansatt resepsjonist', cost: '63 000 - 66 000 kr', avail: 'Man-fre, 8 timer', cap: '1 samtale om gangen' },
+    { sol: 'Tradisjonell svarservice', cost: '2 000 - 15 000 kr', avail: 'Kontortid', cap: 'Delt kapasitet' },
+    { sol: 'AI Resepsjonist (vår løsning)', cost: '5 990 - 24 990 kr', avail: '24/7/365', cap: 'Ubegrenset samtidige' },
+  ],
+  en: [
+    { sol: 'Employed receptionist', cost: '63,000 - 66,000 NOK', avail: 'Mon-Fri, 8 hours', cap: '1 call at a time' },
+    { sol: 'Traditional answering service', cost: '2,000 - 15,000 NOK', avail: 'Office hours', cap: 'Shared capacity' },
+    { sol: 'AI Receptionist (our solution)', cost: '5,990 - 24,990 NOK', avail: '24/7/365', cap: 'Unlimited simultaneous' },
+  ],
+}
+
+/* ────────────────────────────────────────────
+   UTILITY
+   ──────────────────────────────────────────── */
+const fmtNOK = (n: number) => {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace('.', ',')} mill kr`
+  return n.toLocaleString('nb-NO') + ' kr'
+}
+
+/* ────────────────────────────────────────────
+   ANIMATED NUMBER
+   ──────────────────────────────────────────── */
+function AnimNum({ value, prefix = '', suffix = '' }: { value: number; prefix?: string; suffix?: string }) {
+  const [display, setDisplay] = useState(0)
+  const frameRef = useRef<number>(0)
+  useEffect(() => {
+    const end = value
+    const dur = 800
+    const startTime = Date.now()
+    const tick = () => {
+      const elapsed = Date.now() - startTime
+      const progress = Math.min(elapsed / dur, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setDisplay(Math.round(end * eased))
+      if (progress < 1) frameRef.current = requestAnimationFrame(tick)
+    }
+    frameRef.current = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frameRef.current)
+  }, [value])
+  return <span>{prefix}{display.toLocaleString('nb-NO')}{suffix}</span>
+}
+
+/* ────────────────────────────────────────────
+   FRAMER MOTION VARIANTS
+   ──────────────────────────────────────────── */
+const pageVariants = {
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+  exit: { opacity: 0, y: -12, transition: { duration: 0.2 } },
+}
+
+const cardVariants = {
+  initial: { opacity: 0, y: 20 },
+  animate: (i: number) => ({
+    opacity: 1, y: 0,
+    transition: { delay: i * 0.08, duration: 0.4, ease: 'easeOut' },
+  }),
+}
+
+/* ════════════════════════════════════════════
+   MAIN APP COMPONENT
+   ════════════════════════════════════════════ */
+function KartleggingApp() {
+  const [lang, setLang] = useState('no')
+  const [phase, setPhase] = useState(1)
+  const [contact, setContact] = useState({ company: '', name: '', email: '', phone: '' })
+  const [emailError, setEmailError] = useState('')
+  const [step, setStep] = useState(0)
+  const [answers, setAnswers] = useState<Record<string, any>>({})
+  const [otherIndustry, setOtherIndustry] = useState('')
+  const [roiInputs, setRoiInputs] = useState({ missed: 8, jobValue: 3000, convRate: 25 })
+  const [aiSummary, setAiSummary] = useState('')
+  const [generating, setGenerating] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [refNumber, setRefNumber] = useState('')
+
+  const questions = buildQuestions(lang)
+  const industry = answers.industry || 'annet'
+  const recs = INDUSTRY_RECOMMENDATIONS[industry]?.[lang] || INDUSTRY_RECOMMENDATIONS.annet[lang]
+
+  useEffect(() => {
+    const jv = JOB_VALUES[industry] || 3000
+    const missedKey = answers.missed || 'unsure'
+    const missed = MISSED_DEFAULTS[missedKey] || 8
+    setRoiInputs((prev) => ({ ...prev, jobValue: jv, missed }))
+  }, [industry, answers.missed])
+
+  const validateEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)
+
+  const handleContactSubmit = () => {
+    if (!contact.company.trim() || !contact.name.trim() || !contact.email.trim()) return
+    if (!validateEmail(contact.email)) { setEmailError(lang === 'no' ? 'Ugyldig e-postadresse' : 'Invalid email address'); return }
+    setEmailError('')
+    setPhase(2)
+  }
+
+  const currentQ = questions[step]
+  const canNext = () => {
+    if (!currentQ) return false
+    const a = answers[currentQ.id]
+    if (currentQ.optional) return true
+    if (currentQ.type === 'text') return a && a.trim().length > 0
+    if (currentQ.type === 'single') return !!a
+    if (currentQ.type === 'multi') return Array.isArray(a) && a.length > 0
+    return false
+  }
+
+  const handleAnswer = (qId: string, value: string, type: string) => {
+    if (type === 'single') {
+      setAnswers((p) => ({ ...p, [qId]: value }))
+    } else if (type === 'multi') {
+      setAnswers((p) => {
+        const prev = p[qId] || []
+        const max = currentQ?.max
+        if (prev.includes(value)) return { ...p, [qId]: prev.filter((v: string) => v !== value) }
+        if (max && prev.length >= max) return p
+        return { ...p, [qId]: [...prev, value] }
+      })
+    } else {
+      setAnswers((p) => ({ ...p, [qId]: value }))
+    }
+  }
+
+  const nextStep = () => { if (step < questions.length - 1) setStep(step + 1); else setPhase(3) }
+  const prevStep = () => { if (step > 0) setStep(step - 1); else setPhase(1) }
+
+  const roiCalc = () => {
+    const lostMonth = roiInputs.missed * roiInputs.jobValue * (roiInputs.convRate / 100)
+    const lostYear = lostMonth * 12
+    const sizeMap: Record<string, number> = { solo: 5990, '2-5': 5990, '6-15': 12990, '16-50': 12990, '51-200': 24990, '200+': 24990 }
+    const investment = sizeMap[answers.size] || 12990
+    const roi = investment > 0 ? Math.round(((lostMonth - investment) / investment) * 100) : 0
+    const tierName = investment === 5990 ? 'Basis' : investment === 12990 ? (lang === 'no' ? 'Profesjonell' : 'Professional') : 'Enterprise'
+    return { lostMonth: Math.round(lostMonth), lostYear: Math.round(lostYear), investment, roi, tierName }
+  }
+
+  const generateSummary = async () => {
+    setGenerating(true)
+    const industryLabel = INDUSTRIES.find((i) => i.id === industry)?.[lang as 'no' | 'en'] || industry
+    const prompt = lang === 'no'
+      ? `Du er en AI-forretningsrådgiver for et norsk selskap som selger AI-automatisering til SMB-er. Basert på følgende informasjon, generer en profesjonell analyse på norsk:\n\nBedrift: ${contact.company}\nBransje: ${industryLabel}\nStørrelse: ${answers.size}\nHovedutfordringer: ${(answers.pain || []).join(', ')}\nNåværende systemer: ${(answers.tech || []).join(', ')}\nManuelle oppgaver å automatisere: ${answers.manual_tasks || 'Ikke spesifisert'}\nKundekontaktmetoder: ${(answers.contact_methods || []).join(', ')}\nTapte henvendelser: ${answers.missed}\nBudsjett: ${answers.budget}\nTidslinje: ${answers.timeline}\nMål: ${answers.goals || 'Ikke spesifisert'}\nTilleggsinformasjon: ${answers.additional || 'Ingen'}\n\nGi analyse i dette formatet:\nOPPSUMMERING: 3-4 setninger om bedriftssituasjonen\nANBEFALINGER: 3-5 spesifikke AI-løsninger med forklaringer\nPRIORITET: Hvilken løsning bør implementeres først og hvorfor\nESTIMERT ROI: Forventet avkastning basert på bransjedata`
+      : `You are an AI business advisor for a Norwegian company selling AI automation to SMBs. Based on the following information, generate a professional analysis in English:\n\nCompany: ${contact.company}\nIndustry: ${industryLabel}\nSize: ${answers.size}\nMain challenges: ${(answers.pain || []).join(', ')}\nCurrent systems: ${(answers.tech || []).join(', ')}\nManual tasks to automate: ${answers.manual_tasks || 'Not specified'}\nCustomer contact methods: ${(answers.contact_methods || []).join(', ')}\nMissed inquiries: ${answers.missed}\nBudget: ${answers.budget}\nTimeline: ${answers.timeline}\nGoals: ${answers.goals || 'Not specified'}\nAdditional info: ${answers.additional || 'None'}\n\nProvide analysis in this format:\nSUMMARY: 3-4 sentences about the business situation\nRECOMMENDATIONS: 3-5 specific AI solutions with explanations\nPRIORITY: Which solution to implement first and why\nESTIMATED ROI: Expected return based on industry data`
+
+    try {
+      const res = await fetch('/api/kartlegging', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'analyze', prompt }),
+      })
+      if (!res.ok) throw new Error('API error')
+      const data = await res.json()
+      setAiSummary(data.summary || '')
+    } catch {
+      const r = roiCalc()
+      setAiSummary(
+        lang === 'no'
+          ? `OPPSUMMERING:\n${contact.company} er en ${industryLabel.toLowerCase()}-bedrift med ${answers.size} ansatte som søker AI-integrasjonsløsninger. Basert på kartleggingen ser vi betydelige muligheter for effektivisering, spesielt innen ${(answers.pain || []).slice(0, 2).join(' og ')}.\n\nANBEFALINGER:\n${recs.map((rc: Rec, i: number) => `${i + 1}. ${rc.name}: ${rc.desc}`).join('\n')}\n\nPRIORITET:\nVi anbefaler å starte med ${recs[0]?.name} da dette gir raskest avkastning.\n\nESTIMERT ROI:\nForventet besparelse ca. ${fmtNOK(r.lostYear)} årlig. Med investering på ${fmtNOK(r.investment)}/mnd gir dette ROI på ${r.roi}%.`
+          : `SUMMARY:\n${contact.company} is a ${industryLabel.toLowerCase()} business with ${answers.size} employees seeking AI integration solutions. We see significant opportunities, especially in ${(answers.pain || []).slice(0, 2).join(' and ')}.\n\nRECOMMENDATIONS:\n${recs.map((rc: Rec, i: number) => `${i + 1}. ${rc.name}: ${rc.desc}`).join('\n')}\n\nPRIORITY:\nWe recommend starting with ${recs[0]?.name} as this provides the fastest return.\n\nESTIMATED ROI:\nExpected savings approx. ${fmtNOK(r.lostYear)} annually. With investment of ${fmtNOK(r.investment)}/month, ROI of ${r.roi}%.`
+      )
+    }
+    setGenerating(false)
+    setPhase(5)
+  }
+
+  const handleSubmit = async () => {
+    setSubmitting(true)
+    const roi = roiCalc()
+    try {
+      const res = await fetch('/api/kartlegging', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'submit',
+          contact,
+          answers: { ...answers, industryOther: otherIndustry },
+          aiSummary,
+          roiData: roi,
+          recommendedTier: roi.tierName,
+          language: lang,
+        }),
+      })
+      const data = await res.json()
+      setRefNumber(data.refNumber || 'YAI-' + Math.random().toString(36).substr(2, 8).toUpperCase())
+    } catch {
+      setRefNumber('YAI-' + Math.random().toString(36).substr(2, 8).toUpperCase())
+    }
+    setSubmitting(false)
+    setPhase(7)
+  }
+
+  const roi = roiCalc()
+
+  /* ── Styles ── */
+  const gold = '#c9a96e'
+  const bg = '#0a0a0f'
+  const cardBg = 'rgba(255,255,255,0.03)'
+  const cardBorder = 'rgba(255,255,255,0.06)'
+  const textPrimary = '#f0f0f0'
+  const textSecondary = 'rgba(255,255,255,0.55)'
+  const textMuted = 'rgba(255,255,255,0.35)'
+
+  const wrapStyle: React.CSSProperties = { minHeight: '100vh', background: `linear-gradient(180deg, ${bg} 0%, #0d0d15 50%, ${bg} 100%)`, color: textPrimary, fontFamily: "'DM Sans', sans-serif" }
+  const containerStyle: React.CSSProperties = { maxWidth: 720, margin: '0 auto', padding: '24px 20px 60px' }
+  const cardStyle: React.CSSProperties = { background: cardBg, border: `1px solid ${cardBorder}`, borderRadius: 16, padding: '28px 24px' }
+  const btnPrimary: React.CSSProperties = { background: gold, color: '#0a0a0f', border: 'none', borderRadius: 12, padding: '14px 32px', fontWeight: 600, fontSize: 16, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", width: '100%', transition: 'opacity 0.2s' }
+  const btnSecondary: React.CSSProperties = { background: 'transparent', color: textSecondary, border: `1px solid ${cardBorder}`, borderRadius: 10, padding: '10px 20px', fontWeight: 500, fontSize: 14, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }
+  const inputStyle: React.CSSProperties = { background: 'rgba(255,255,255,0.04)', border: `1px solid ${cardBorder}`, borderRadius: 10, padding: '12px 16px', color: textPrimary, fontSize: 15, width: '100%', boxSizing: 'border-box', fontFamily: "'DM Sans', sans-serif", outline: 'none' }
+  const headingFont: React.CSSProperties = { fontFamily: "'Playfair Display', serif" }
+  const optionBase: React.CSSProperties = { background: 'rgba(255,255,255,0.03)', border: `1px solid ${cardBorder}`, borderRadius: 10, padding: '12px 16px', cursor: 'pointer', transition: 'all 0.15s', fontSize: 14, textAlign: 'left' }
+  const optionSelected: React.CSSProperties = { ...optionBase, border: `1.5px solid ${gold}`, background: 'rgba(201,169,110,0.08)' }
+
+  return (
+    <div style={wrapStyle}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');*{box-sizing:border-box;margin:0;padding:0}::selection{background:rgba(201,169,110,0.3)}input:focus,textarea:focus{border-color:rgba(201,169,110,0.4)!important;outline:none}@keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}`}</style>
+
+      {/* NAV */}
+      <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: 720, margin: '0 auto', padding: '20px 20px 0' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 28, height: 28, borderRadius: 6, background: `linear-gradient(135deg, ${gold}, #a8884d)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: bg }}>AI</div>
+          <span style={{ ...headingFont, fontSize: 17, fontWeight: 600 }}>{t('nav_brand', lang)}</span>
+        </div>
+        <button onClick={() => setLang(lang === 'no' ? 'en' : 'no')} style={{ ...btnSecondary, padding: '6px 14px', fontSize: 13 }}>{lang === 'no' ? 'EN' : 'NO'}</button>
+      </nav>
+
+      <div style={containerStyle}>
+        <AnimatePresence mode="wait">
+
+          {/* ═══════════ PHASE 1: CONTACT ═══════════ */}
+          {phase === 1 && (
+            <motion.div key="phase1" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <div style={{ textAlign: 'center', marginBottom: 36, marginTop: 40 }}>
+                <h1 style={{ ...headingFont, fontSize: 'clamp(26px, 5vw, 36px)', fontWeight: 700, lineHeight: 1.2, marginBottom: 14 }}>{t('phase1_title', lang)}</h1>
+                <p style={{ color: textSecondary, fontSize: 15, maxWidth: 540, margin: '0 auto', lineHeight: 1.6 }}>{t('phase1_subtitle', lang)}</p>
+              </div>
+              <div style={{ ...cardStyle, display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div>
+                  <label style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>{t('company_name', lang)}</label>
+                  <input style={inputStyle} value={contact.company} onChange={(e) => setContact({ ...contact, company: e.target.value })} />
+                </div>
+                <div>
+                  <label style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>{t('contact_name', lang)}</label>
+                  <input style={inputStyle} value={contact.name} onChange={(e) => setContact({ ...contact, name: e.target.value })} />
+                </div>
+                <div>
+                  <label style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>{t('email', lang)}</label>
+                  <input type="email" style={{ ...inputStyle, borderColor: emailError ? '#ef4444' : cardBorder }} value={contact.email} onChange={(e) => { setContact({ ...contact, email: e.target.value }); setEmailError('') }} />
+                  {emailError && <span style={{ color: '#ef4444', fontSize: 12, marginTop: 4, display: 'block' }}>{emailError}</span>}
+                </div>
+                <div>
+                  <label style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>{t('phone', lang)}</label>
+                  <input style={inputStyle} value={contact.phone} onChange={(e) => setContact({ ...contact, phone: e.target.value })} />
+                </div>
+                <button style={{ ...btnPrimary, marginTop: 8, opacity: (!contact.company || !contact.name || !contact.email) ? 0.4 : 1 }} onClick={handleContactSubmit} disabled={!contact.company || !contact.name || !contact.email}>{t('start_btn', lang)}</button>
+                <p style={{ color: textMuted, fontSize: 12, lineHeight: 1.5, textAlign: 'center', marginTop: 4 }}>{t('gdpr_note', lang)}</p>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ═══════════ PHASE 2: QUESTIONNAIRE ═══════════ */}
+          {phase === 2 && currentQ && (
+            <motion.div key={`phase2-${step}`} variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <div style={{ marginTop: 32, marginBottom: 28 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                  <span style={{ fontSize: 13, color: textSecondary }}>{t('step_of', lang).replace('{c}', String(step + 1)).replace('{t}', String(questions.length))}</span>
+                  <span style={{ fontSize: 13, color: gold }}>{Math.round(((step + 1) / questions.length) * 100)}%</span>
+                </div>
+                <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2 }}>
+                  <div style={{ height: '100%', width: `${((step + 1) / questions.length) * 100}%`, background: `linear-gradient(90deg, ${gold}, #a8884d)`, borderRadius: 2, transition: 'width 0.4s ease' }} />
+                </div>
+              </div>
+
+              <div style={cardStyle}>
+                <h2 style={{ ...headingFont, fontSize: 20, fontWeight: 600, marginBottom: 6, lineHeight: 1.35 }}>{currentQ.q}</h2>
+                {currentQ.optional && <span style={{ fontSize: 12, color: textMuted }}>{t('optional', lang)}</span>}
+                {currentQ.type === 'single' && <p style={{ fontSize: 13, color: textMuted, marginBottom: 16, marginTop: 4 }}>{t('select_one', lang)}</p>}
+                {currentQ.type === 'multi' && <p style={{ fontSize: 13, color: textMuted, marginBottom: 16, marginTop: 4 }}>{currentQ.max ? t('select_multi', lang).replace('{n}', String(currentQ.max)) : t('select_multi_any', lang)}</p>}
+
+                {(currentQ.type === 'single' || currentQ.type === 'multi') && (
+                  <div style={{ display: 'grid', gridTemplateColumns: (currentQ.options?.length || 0) > 6 ? '1fr 1fr' : '1fr', gap: 8, marginTop: 16 }}>
+                    {currentQ.options?.map((opt) => {
+                      const isSelected = currentQ.type === 'single' ? answers[currentQ.id] === opt.value : (answers[currentQ.id] || []).includes(opt.value)
+                      return (
+                        <motion.div key={opt.value} style={isSelected ? optionSelected : optionBase} onClick={() => handleAnswer(currentQ.id, opt.value, currentQ.type)}
+                          whileHover={{ borderColor: 'rgba(255,255,255,0.12)' }} whileTap={{ scale: 0.98 }}>
+                          <span style={{ color: isSelected ? gold : textPrimary }}>{opt.label}</span>
+                        </motion.div>
+                      )
+                    })}
+                  </div>
+                )}
+
+                {currentQ.id === 'industry' && answers.industry === 'annet' && (
+                  <input placeholder={lang === 'no' ? 'Spesifiser bransje...' : 'Specify industry...'} style={{ ...inputStyle, marginTop: 12 }} value={otherIndustry} onChange={(e) => setOtherIndustry(e.target.value)} />
+                )}
+
+                {currentQ.type === 'text' && (
+                  <textarea rows={4} placeholder={t('free_text_ph', lang)} style={{ ...inputStyle, resize: 'vertical', marginTop: 16, minHeight: 100 }} value={answers[currentQ.id] || ''} onChange={(e) => handleAnswer(currentQ.id, e.target.value, 'text')} />
+                )}
+
+                <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
+                  <button style={btnSecondary} onClick={prevStep}>{t('back', lang)}</button>
+                  <button style={{ ...btnPrimary, opacity: canNext() || currentQ.optional ? 1 : 0.4 }} onClick={nextStep} disabled={!canNext() && !currentQ.optional}>{step === questions.length - 1 ? (lang === 'no' ? 'Se resultater' : 'See results') : t('next', lang)}</button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ═══════════ PHASE 3: RESULTS ═══════════ */}
+          {phase === 3 && (
+            <motion.div key="phase3" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <div style={{ marginTop: 32, marginBottom: 32 }}>
+                <h2 style={{ ...headingFont, fontSize: 'clamp(22px, 4vw, 30px)', fontWeight: 700, marginBottom: 8, textAlign: 'center' }}>{t('results_title', lang)}</h2>
+                <p style={{ color: textSecondary, fontSize: 14, textAlign: 'center', marginBottom: 28 }}>{INDUSTRIES.find((i) => i.id === industry)?.[lang as 'no' | 'en']}</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  {recs.map((rec: Rec, i: number) => (
+                    <motion.div key={i} custom={i} variants={cardVariants} initial="initial" animate="animate" style={{ ...cardStyle, padding: '22px 22px' }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+                        <div style={{ minWidth: 36, height: 36, borderRadius: 8, background: 'rgba(201,169,110,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: gold, fontWeight: 700, fontSize: 15 }}>{i + 1}</div>
+                        <div style={{ flex: 1 }}>
+                          <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 6, lineHeight: 1.3 }}>{rec.name}</h3>
+                          <p style={{ color: textSecondary, fontSize: 13.5, lineHeight: 1.55, marginBottom: 12 }}>{rec.desc}</p>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                            <span style={{ fontSize: 12, color: textMuted, background: 'rgba(255,255,255,0.03)', padding: '4px 10px', borderRadius: 6, border: `1px solid ${cardBorder}` }}>{t('replaces', lang)}: {rec.replaces}</span>
+                            <span style={{ fontSize: 12, color: gold, background: 'rgba(201,169,110,0.06)', padding: '4px 10px', borderRadius: 6, border: '1px solid rgba(201,169,110,0.15)' }}>{t('saves', lang)}: {rec.saves}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+
+              {/* ROI Calculator */}
+              <div style={{ ...cardStyle, marginBottom: 28, padding: '28px 24px' }}>
+                <h3 style={{ ...headingFont, fontSize: 22, fontWeight: 600, marginBottom: 20 }}>{t('roi_title', lang)}</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+                  <div>
+                    <label style={{ fontSize: 13, color: textSecondary, display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                      <span>{t('roi_missed', lang)}</span><span style={{ color: gold }}>{roiInputs.missed}</span>
+                    </label>
+                    <input type="range" min={1} max={100} value={roiInputs.missed} onChange={(e) => setRoiInputs({ ...roiInputs, missed: +e.target.value })} style={{ width: '100%', accentColor: gold }} />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: 13, color: textSecondary, display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                      <span>{t('roi_value', lang)}</span><span style={{ color: gold }}>{roiInputs.jobValue.toLocaleString('nb-NO')}</span>
+                    </label>
+                    <input type="range" min={200} max={100000} step={100} value={roiInputs.jobValue} onChange={(e) => setRoiInputs({ ...roiInputs, jobValue: +e.target.value })} style={{ width: '100%', accentColor: gold }} />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: 13, color: textSecondary, display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                      <span>{t('roi_conv', lang)}</span><span style={{ color: gold }}>{roiInputs.convRate}%</span>
+                    </label>
+                    <input type="range" min={5} max={80} value={roiInputs.convRate} onChange={(e) => setRoiInputs({ ...roiInputs, convRate: +e.target.value })} style={{ width: '100%', accentColor: gold }} />
+                  </div>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 24 }}>
+                  <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: 10, padding: 16, textAlign: 'center' }}>
+                    <div style={{ fontSize: 12, color: textMuted, marginBottom: 6 }}>{t('roi_lost_month', lang)}</div>
+                    <div style={{ fontSize: 22, fontWeight: 700, color: '#ef4444' }}><AnimNum value={roi.lostMonth} suffix=" kr" /></div>
+                  </div>
+                  <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: 10, padding: 16, textAlign: 'center' }}>
+                    <div style={{ fontSize: 12, color: textMuted, marginBottom: 6 }}>{t('roi_lost_year', lang)}</div>
+                    <div style={{ fontSize: 22, fontWeight: 700, color: '#ef4444' }}><AnimNum value={roi.lostYear} suffix=" kr" /></div>
+                  </div>
+                  <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: 10, padding: 16, textAlign: 'center' }}>
+                    <div style={{ fontSize: 12, color: textMuted, marginBottom: 6 }}>{t('roi_investment', lang)}</div>
+                    <div style={{ fontSize: 22, fontWeight: 700, color: textPrimary }}><AnimNum value={roi.investment} suffix={` kr${t('per_month', lang)}`} /></div>
+                  </div>
+                  <div style={{ background: 'rgba(201,169,110,0.06)', borderRadius: 10, padding: 16, textAlign: 'center', border: '1px solid rgba(201,169,110,0.15)' }}>
+                    <div style={{ fontSize: 12, color: textMuted, marginBottom: 6 }}>{t('roi_return', lang)}</div>
+                    <div style={{ fontSize: 22, fontWeight: 700, color: gold }}><AnimNum value={roi.roi} suffix="%" /></div>
+                  </div>
+                </div>
+                <div style={{ textAlign: 'center', marginTop: 12, fontSize: 13, color: textSecondary }}>{t('roi_solution', lang)}: <span style={{ color: gold, fontWeight: 600 }}>{roi.tierName}</span></div>
+              </div>
+
+              {/* Receptionist Comparison */}
+              <div style={{ ...cardStyle, marginBottom: 28, padding: '24px 20px', overflowX: 'auto' }}>
+                <h4 style={{ ...headingFont, fontSize: 18, fontWeight: 600, marginBottom: 16 }}>{t('receptionist_title', lang)}</h4>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+                  <thead>
+                    <tr style={{ borderBottom: `1px solid ${cardBorder}` }}>
+                      {[t('receptionist_sol', lang), t('receptionist_cost', lang), t('receptionist_avail', lang), t('receptionist_cap', lang)].map((h) => (
+                        <th key={h} style={{ textAlign: 'left', padding: '8px 6px', color: textMuted, fontWeight: 500, fontSize: 12 }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {RECEPTIONIST[lang].map((r, i) => (
+                      <tr key={i} style={{ borderBottom: i < 2 ? `1px solid ${cardBorder}` : 'none', background: i === 2 ? 'rgba(201,169,110,0.04)' : 'transparent' }}>
+                        <td style={{ padding: '10px 6px', fontWeight: i === 2 ? 600 : 400, color: i === 2 ? gold : textPrimary }}>{r.sol}</td>
+                        <td style={{ padding: '10px 6px', color: textSecondary }}>{r.cost}</td>
+                        <td style={{ padding: '10px 6px', color: i === 2 ? gold : textSecondary }}>{r.avail}</td>
+                        <td style={{ padding: '10px 6px', color: i === 2 ? gold : textSecondary }}>{r.cap}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Pricing */}
+              <div style={{ marginBottom: 28 }}>
+                <h3 style={{ ...headingFont, fontSize: 24, fontWeight: 700, textAlign: 'center', marginBottom: 24 }}>{t('pricing_title', lang)}</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14 }}>
+                  {PRICING.map((tier, idx) => (
+                    <motion.div key={tier.id} custom={idx} variants={cardVariants} initial="initial" animate="animate"
+                      style={{ ...cardStyle, padding: '24px 18px', position: 'relative', border: tier.popular ? `1.5px solid ${gold}` : `1px solid ${cardBorder}` }}>
+                      {tier.popular && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: gold, color: bg, fontSize: 11, fontWeight: 600, padding: '3px 12px', borderRadius: 20 }}>{t('pricing_popular', lang)}</div>}
+                      <h4 style={{ ...headingFont, fontSize: 18, fontWeight: 600, marginBottom: 8, marginTop: tier.popular ? 8 : 0 }}>{(tier.name as any)[lang]}</h4>
+                      <div style={{ marginBottom: 12 }}>
+                        <span style={{ fontSize: 28, fontWeight: 700, color: gold }}>{tier.price.toLocaleString('nb-NO')}</span>
+                        <span style={{ fontSize: 13, color: textMuted }}> kr{t('per_month', lang)}</span>
+                      </div>
+                      <div style={{ fontSize: 12, color: textSecondary, marginBottom: 4 }}>{t('pricing_setup', lang)}: {tier.setupPrefix ? (lang === 'no' ? 'Fra ' : 'From ') : ''}{tier.setup.toLocaleString('nb-NO')} kr</div>
+                      <div style={{ fontSize: 12, color: textSecondary, marginBottom: 4 }}>~{tier.calls} {t('pricing_calls', lang)}</div>
+                      <div style={{ fontSize: 12, color: textSecondary, marginBottom: 14 }}>{t('pricing_overage', lang)}: {tier.overage.toLocaleString('nb-NO')} kr{t('per_min', lang)}</div>
+                      <div style={{ borderTop: `1px solid ${cardBorder}`, paddingTop: 12 }}>
+                        {(tier.features as any)[lang].map((f: string, i: number) => (
+                          <div key={i} style={{ fontSize: 13, color: textSecondary, padding: '4px 0', display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                            <span style={{ color: gold, fontSize: 11, marginTop: 3 }}>&#10003;</span>{f}
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{ fontSize: 11, color: textMuted, marginTop: 10 }}>{tier.minTerm} {lang === 'no' ? 'mnd.' : 'mo.'} {t('pricing_min', lang)}</div>
+                      {tier.id === 'pro' && <div style={{ fontSize: 11, color: gold, marginTop: 4 }}>{t('annual_save', lang)}</div>}
+                    </motion.div>
+                  ))}
+                </div>
+                <div style={{ textAlign: 'center', marginTop: 16 }}>
+                  <p style={{ fontSize: 12, color: textMuted }}>{t('pricing_vat', lang)}</p>
+                  <p style={{ fontSize: 12, color: textSecondary, marginTop: 4 }}>{t('pricing_limit', lang)}</p>
+                </div>
+              </div>
+
+              {/* Compliance */}
+              <div style={{ ...cardStyle, marginBottom: 32, padding: '22px 22px' }}>
+                <h4 style={{ ...headingFont, fontSize: 17, fontWeight: 600, marginBottom: 14 }}>{t('compliance_title', lang)}</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {COMPLIANCE[lang].map((c, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                      <span style={{ color: gold, fontSize: 11, marginTop: 4 }}>&#9679;</span>
+                      <div>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: textPrimary }}>{c.title}</span>
+                        <span style={{ fontSize: 12.5, color: textSecondary }}> — {c.desc}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button style={btnPrimary} onClick={() => setPhase(4)}>{t('generate_btn', lang)}</button>
+            </motion.div>
+          )}
+
+          {/* ═══════════ PHASE 4: GENERATING ═══════════ */}
+          {phase === 4 && (
+            <motion.div key="phase4" variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ textAlign: 'center', marginTop: 120 }}>
+              <motion.div
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                style={{ width: 56, height: 56, borderRadius: 14, background: `linear-gradient(135deg, ${gold}, #a8884d)`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', fontSize: 22, fontWeight: 700, color: bg }}>AI</motion.div>
+              <h2 style={{ ...headingFont, fontSize: 24, marginBottom: 12 }}>{t('generating', lang)}</h2>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 20 }}>
+                {[0, 1, 2].map((i) => (
+                  <div key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: gold, animation: `pulse 1.2s ease-in-out ${i * 0.2}s infinite` }} />
+                ))}
+              </div>
+              {!generating && !aiSummary && <div style={{ display: 'none' }}>{(() => { setTimeout(() => generateSummary(), 500); return '' })()}</div>}
+            </motion.div>
+          )}
+
+          {/* ═══════════ PHASE 5: AI SUMMARY ═══════════ */}
+          {phase === 5 && (
+            <motion.div key="phase5" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <div style={{ marginTop: 32, marginBottom: 24, textAlign: 'center' }}>
+                <h2 style={{ ...headingFont, fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 700 }}>{t('summary_title', lang)}</h2>
+              </div>
+              <div style={{ ...cardStyle, marginBottom: 24 }}>
+                <pre style={{ whiteSpace: 'pre-wrap', fontFamily: "'DM Sans', sans-serif", fontSize: 14, lineHeight: 1.65, color: textSecondary }}>{aiSummary}</pre>
+              </div>
+              <button style={btnPrimary} onClick={() => setPhase(6)}>{t('review_title', lang)}</button>
+            </motion.div>
+          )}
+
+          {/* ═══════════ PHASE 6: REVIEW ═══════════ */}
+          {phase === 6 && (
+            <motion.div key="phase6" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <div style={{ marginTop: 32, marginBottom: 24, textAlign: 'center' }}>
+                <h2 style={{ ...headingFont, fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 700 }}>{t('review_title', lang)}</h2>
+              </div>
+
+              <div style={{ ...cardStyle, marginBottom: 16, padding: '18px 20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                  <span style={{ fontSize: 14, fontWeight: 600 }}>{t('contact_name', lang)}</span>
+                  <button style={{ ...btnSecondary, padding: '4px 10px', fontSize: 12 }} onClick={() => setPhase(1)}>{t('review_edit', lang)}</button>
+                </div>
+                <p style={{ fontSize: 13, color: textSecondary }}>{contact.company} / {contact.name} / {contact.email}{contact.phone ? ` / ${contact.phone}` : ''}</p>
+              </div>
+
+              <div style={{ ...cardStyle, marginBottom: 16, padding: '18px 20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                  <span style={{ fontSize: 14, fontWeight: 600 }}>{t('review_answers', lang)}</span>
+                  <button style={{ ...btnSecondary, padding: '4px 10px', fontSize: 12 }} onClick={() => { setStep(0); setPhase(2) }}>{t('review_edit', lang)}</button>
+                </div>
+                {questions.map((q) => {
+                  const a = answers[q.id]
+                  if (!a || (Array.isArray(a) && a.length === 0)) return null
+                  const display = Array.isArray(a) ? a.map((v: string) => q.options?.find((o) => o.value === v)?.label || v).join(', ') : q.options?.find((o) => o.value === a)?.label || a
+                  return (
+                    <div key={q.id} style={{ marginBottom: 10, paddingBottom: 10, borderBottom: `1px solid ${cardBorder}` }}>
+                      <div style={{ fontSize: 12, color: textMuted, marginBottom: 2 }}>{q.q}</div>
+                      <div style={{ fontSize: 13.5, color: textPrimary }}>{display}</div>
+                    </div>
+                  )
+                })}
+              </div>
+
+              {aiSummary && (
+                <div style={{ ...cardStyle, marginBottom: 16, padding: '18px 20px' }}>
+                  <span style={{ fontSize: 14, fontWeight: 600, display: 'block', marginBottom: 8 }}>{t('summary_title', lang)}</span>
+                  <pre style={{ whiteSpace: 'pre-wrap', fontFamily: "'DM Sans', sans-serif", fontSize: 13, lineHeight: 1.55, color: textSecondary, maxHeight: 200, overflow: 'auto' }}>{aiSummary}</pre>
+                </div>
+              )}
+
+              <div style={{ ...cardStyle, marginBottom: 24, padding: '18px 20px' }}>
+                <span style={{ fontSize: 14, fontWeight: 600, display: 'block', marginBottom: 8 }}>ROI</span>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 13 }}>
+                  <div><span style={{ color: textMuted }}>{t('roi_lost_year', lang)}:</span> <span style={{ color: '#ef4444' }}>{fmtNOK(roi.lostYear)}</span></div>
+                  <div><span style={{ color: textMuted }}>{t('roi_investment', lang)}:</span> <span>{fmtNOK(roi.investment)}{t('per_month', lang)}</span></div>
+                  <div><span style={{ color: textMuted }}>{t('roi_return', lang)}:</span> <span style={{ color: gold }}>{roi.roi}%</span></div>
+                  <div><span style={{ color: textMuted }}>{t('roi_solution', lang)}:</span> <span style={{ color: gold }}>{roi.tierName}</span></div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: 12 }}>
+                <button style={btnSecondary} onClick={() => setPhase(3)}>{t('back', lang)}</button>
+                <button style={{ ...btnPrimary, opacity: submitting ? 0.6 : 1 }} onClick={handleSubmit} disabled={submitting}>{submitting ? t('submitting', lang) : t('submit_btn', lang)}</button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ═══════════ PHASE 7: CONFIRMATION ═══════════ */}
+          {phase === 7 && (
+            <motion.div key="phase7" variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ textAlign: 'center', marginTop: 60 }}>
+              <motion.div
+                initial={{ scale: 0 }} animate={{ scale: 1 }}
+                transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+                style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(201,169,110,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', border: `2px solid ${gold}` }}>
+                <span style={{ fontSize: 28, color: gold }}>&#10003;</span>
+              </motion.div>
+              <h2 style={{ ...headingFont, fontSize: 'clamp(24px, 5vw, 32px)', fontWeight: 700, marginBottom: 12 }}>{t('confirm_title', lang)}</h2>
+              <div style={{ ...cardStyle, display: 'inline-block', padding: '10px 24px', marginBottom: 20 }}>
+                <span style={{ fontSize: 13, color: textMuted }}>{t('confirm_ref', lang)}: </span>
+                <span style={{ fontSize: 15, fontWeight: 600, color: gold, letterSpacing: 1 }}>{refNumber}</span>
+              </div>
+              <p style={{ color: textSecondary, fontSize: 15, lineHeight: 1.6, maxWidth: 480, margin: '0 auto 32px' }}>{t('confirm_next', lang)}</p>
+              <div style={{ ...cardStyle, textAlign: 'left', maxWidth: 440, margin: '0 auto' }}>
+                <h4 style={{ fontSize: 15, fontWeight: 600, marginBottom: 12 }}>{t('confirm_steps_title', lang)}</h4>
+                {[t('confirm_step1', lang), t('confirm_step2', lang), t('confirm_step3', lang)].map((s, i) => (
+                  <p key={i} style={{ fontSize: 13.5, color: textSecondary, marginBottom: 8, lineHeight: 1.5 }}>{s}</p>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  )
+}
+
+/* ════════════════════════════════════════════
+   PAGE EXPORT WITH SUSPENSE
+   ════════════════════════════════════════════ */
+export default function KartleggingPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ minHeight: '100vh', background: '#0a0a0f', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ color: '#c9a96e', fontSize: 18, fontFamily: "'DM Sans', sans-serif" }}>Laster...</div>
+      </div>
+    }>
+      <KartleggingApp />
+    </Suspense>
+  )
+}
