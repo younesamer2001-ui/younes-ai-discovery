@@ -676,7 +676,7 @@ export default function LandingPage() {
             </div>
             <div>
               <h3 style={{ fontSize: 18, fontWeight: 600, fontFamily: "'Playfair Display', serif" }}>
-                {lang === 'no' ? 'Se hva du taper' : 'See what you're losing'}
+                {lang === 'no' ? 'Se hva du taper' : "See what you're losing"}
               </h3>
               <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
                 {lang === 'no' ? 'Dra slideren for å se din potensielle besparelse' : 'Drag the slider to see your potential savings'}
