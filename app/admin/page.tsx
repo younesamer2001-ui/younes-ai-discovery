@@ -86,7 +86,7 @@ export default function AdminPage() {
             <Sparkles className="w-6 h-6 text-brand-500" />
             <h1 className="text-xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
           </div>
-          <div className="text-sm text-gray-500">Younes AI Co.</div>
+          <div className="text-sm text-gray-500">Arxon</div>
         </div>
       </header>
 

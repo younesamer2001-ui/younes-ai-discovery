@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
           'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: 'Younes AI Discovery <noreply@younesai.com>',
+          from: 'Arxon <noreply@arxon.no>',
           to: [adminEmail],
           subject: `[Priority ${recommendation.priority_score}/10] New AI Discovery: ${session.ai_summary?.company_name || 'Unknown Company'}`,
           html: emailBody,

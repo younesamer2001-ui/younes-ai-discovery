@@ -339,7 +339,7 @@ export default function LandingPage() {
       items: ['Mister henvendelser etter kl. 16', 'Manuell booking og oppfølging', 'Ingen oversikt over tapte leads', 'Timer på repetitivt arbeid'],
     },
     after: {
-      label: 'Med Younes AI',
+      label: 'Med Arxon',
       items: ['AI svarer 24/7 — aldri mist en kunde', 'Automatisk booking og SMS-påminnelser', 'Full oversikt over alle henvendelser', 'Mindre manuelt arbeid — mer tid til kunder'],
     },
   } : {
@@ -349,7 +349,7 @@ export default function LandingPage() {
       items: ['Missing inquiries after business hours', 'Manual booking and follow-ups', 'No overview of lost leads', 'Hours spent on repetitive tasks'],
     },
     after: {
-      label: 'With Younes AI',
+      label: 'With Arxon',
       items: ['AI answers 24/7 — never miss a customer', 'Automatic booking and SMS reminders', 'Full overview of all inquiries', 'Less manual work — more time for customers'],
     },
   }
@@ -447,8 +447,8 @@ export default function LandingPage() {
           >
             <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 56 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                <div style={{ width: 28, height: 28, borderRadius: 7, background: `linear-gradient(135deg, ${gold}, #a8884d)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: bg }}>AI</div>
-                <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, fontWeight: 600 }}>Younes AI</span>
+                <img src="/arxon-logo.svg" alt="Arxon" style={{ width: 28, height: 28 }} />
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' as const }}>Arxon</span>
               </div>
               {/* Desktop links */}
               <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
@@ -495,8 +495,8 @@ export default function LandingPage() {
       <nav style={{ position: 'relative', zIndex: 10, maxWidth: 1100, margin: '0 auto', padding: '16px 24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 34, height: 34, borderRadius: 9, background: `linear-gradient(135deg, ${gold}, #a8884d)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: bg }}>AI</div>
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 600 }}>Younes AI</span>
+            <img src="/arxon-logo.svg" alt="Arxon" style={{ width: 34, height: 34 }} />
+            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 20, fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase' as const }}>Arxon</span>
           </div>
           {/* Desktop nav links */}
           <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
@@ -561,8 +561,8 @@ export default function LandingPage() {
             {/* Menu header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 64, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ width: 34, height: 34, borderRadius: 9, background: `linear-gradient(135deg, ${gold}, #a8884d)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: bg }}>AI</div>
-                <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 600 }}>Younes AI</span>
+                <img src="/arxon-logo.svg" alt="Arxon" style={{ width: 34, height: 34 }} />
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 20, fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase' as const }}>Arxon</span>
               </div>
               <button onClick={() => setMenuOpen(false)} style={{
                 background: 'none', border: `1px solid rgba(255,255,255,0.1)`, borderRadius: 8,
@@ -956,8 +956,8 @@ export default function LandingPage() {
       {/* ── FOOTER ── */}
       <footer style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '24px 24px 36px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{ width: 24, height: 24, borderRadius: 6, background: `linear-gradient(135deg, ${gold}, #a8884d)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: bg }}>AI</div>
-          <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Younes AI Co.</span>
+          <img src="/arxon-logo.svg" alt="Arxon" style={{ width: 24, height: 24 }} />
+          <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>Arxon</span>
         </div>
         <div style={{ display: 'flex', gap: 20, fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>
           <span>{lang === 'no' ? 'GDPR-kompatibel' : 'GDPR Compliant'}</span>

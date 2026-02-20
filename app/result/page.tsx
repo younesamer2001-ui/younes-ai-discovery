@@ -203,7 +203,7 @@ function ResultPageContent() {
         <div className="text-center text-sm text-gray-500">
           <div className="flex items-center justify-center gap-2">
             <Sparkles className="w-4 h-4 text-brand-500" />
-            <span>Younes AI Co.</span>
+            <span>Arxon</span>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Younes AI Discovery — Finn din AI-løsning',
+  title: 'Arxon — Intelligent AI for din bedrift',
   description: 'Svar på noen smarte spørsmål og få en personlig AI-integrasjonsplan for din bedrift.',
   icons: { icon: '/favicon.ico' },
 }

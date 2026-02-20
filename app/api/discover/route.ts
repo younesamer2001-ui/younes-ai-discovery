@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     if (action === 'next_question') {
       // Generate next adaptive question
-      const systemPrompt = `You are an AI business consultant for Younes AI Co., a company that helps businesses integrate AI into their operations.
+      const systemPrompt = `You are an AI business consultant for Arxon, a company that helps businesses integrate AI into their operations.
 
 Your role is to conduct a discovery interview with a business representative. You must:
 1. Ask ONE question at a time
@@ -114,7 +114,7 @@ Respond in this exact JSON format:
 
     if (action === 'final_recommendation') {
       // Generate the full recommendation
-      const systemPrompt = `You are a senior AI integration consultant at Younes AI Co. Generate a comprehensive, professional AI integration recommendation report.
+      const systemPrompt = `You are a senior AI integration consultant at Arxon Generate a comprehensive, professional AI integration recommendation report.
 
 Respond ONLY in ${lang}.
 

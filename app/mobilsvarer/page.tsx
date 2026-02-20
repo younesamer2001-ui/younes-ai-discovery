@@ -31,8 +31,8 @@ function Nav({ lang, setLang }: { lang: 'no'|'en'; setLang: (l: 'no'|'en') => vo
       <nav style={{ position: 'relative', zIndex: 10, maxWidth: 1100, margin: '0 auto', padding: '16px 24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div onClick={() => router.push('/')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-            <div style={{ width: 34, height: 34, borderRadius: 9, background: `linear-gradient(135deg, ${gold}, #a8884d)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: bg }}>AI</div>
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 600, color: '#f0f0f0' }}>Younes AI</span>
+            <img src="/arxon-logo.svg" alt="Arxon" style={{ width: 34, height: 34 }} />
+            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 20, fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase' as const, color: '#f0f0f0' }}>Arxon</span>
           </div>
           <div className="hide-mob" style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             {links.map(l => (
@@ -76,8 +76,8 @@ function Nav({ lang, setLang }: { lang: 'no'|'en'; setLang: (l: 'no'|'en') => vo
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 64, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ width: 34, height: 34, borderRadius: 9, background: `linear-gradient(135deg, ${gold}, #a8884d)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: bg }}>AI</div>
-                <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 600, color: '#f0f0f0' }}>Younes AI</span>
+                <img src="/arxon-logo.svg" alt="Arxon" style={{ width: 34, height: 34 }} />
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 20, fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase' as const, color: '#f0f0f0' }}>Arxon</span>
               </div>
               <button onClick={() => setMenuOpen(false)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: 7, cursor: 'pointer', display: 'flex' }}>
                 <X size={20} color="rgba(255,255,255,0.7)" />
@@ -441,8 +441,8 @@ export default function MobilsvarerPage() {
       {/* ── FOOTER ── */}
       <footer style={{ maxWidth: 1100, margin: '0 auto', padding: '24px 24px 36px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{ width: 24, height: 24, borderRadius: 6, background: `linear-gradient(135deg, ${gold}, #a8884d)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: bg }}>AI</div>
-          <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Younes AI Co.</span>
+          <img src="/arxon-logo.svg" alt="Arxon" style={{ width: 24, height: 24 }} />
+          <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>Arxon</span>
         </div>
         <div style={{ display: 'flex', gap: 20, fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>
           <span>{lang === 'no' ? 'GDPR-kompatibel' : 'GDPR Compliant'}</span>
