@@ -954,15 +954,37 @@ export default function LandingPage() {
       </motion.section>
 
       {/* ── FOOTER ── */}
-      <footer style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '24px 24px 36px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <img src="/arxon-icon.png" alt="Arxon" style={{ width: 24, height: 24 }} />
-          <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>Arxon</span>
+      <footer style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '40px 24px 36px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 24, marginBottom: 24 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <img src="/arxon-icon.png" alt="Arxon" style={{ width: 24, height: 24 }} />
+              <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' as const }}>Arxon</span>
+            </div>
+            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', maxWidth: 260 }}>
+              {lang === 'no' ? 'Intelligent AI-automatisering for norske bedrifter.' : 'Intelligent AI automation for businesses.'}
+            </span>
+          </div>
+          <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>{lang === 'no' ? 'Tjenester' : 'Services'}</span>
+              <a href="/mobilsvarer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'AI Mobilsvarer' : 'AI Phone Answering'}</a>
+              <a href="/kartlegging" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Gratis kartlegging' : 'Free assessment'}</a>
+              <a href="/kundehistorier" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Kundehistorier' : 'Customer stories'}</a>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>{lang === 'no' ? 'Juridisk' : 'Legal'}</span>
+              <a href="/personvern" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Personvern' : 'Privacy Policy'}</a>
+              <a href="/vilkar" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Vilkår for bruk' : 'Terms of Service'}</a>
+            </div>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: 20, fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>
-          <span>{lang === 'no' ? 'GDPR-kompatibel' : 'GDPR Compliant'}</span>
-          <span>{lang === 'no' ? 'Norsk datasenter' : 'European data center'}</span>
-          <span>&copy; {new Date().getFullYear()}</span>
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>&copy; {new Date().getFullYear()} Arxon. {lang === 'no' ? 'Alle rettigheter reservert.' : 'All rights reserved.'}</span>
+          <div style={{ display: 'flex', gap: 16, fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>
+            <span>{lang === 'no' ? 'GDPR-kompatibel' : 'GDPR Compliant'}</span>
+            <span>{lang === 'no' ? 'Norsk datasenter' : 'EU data center'}</span>
+          </div>
         </div>
       </footer>
     </div>

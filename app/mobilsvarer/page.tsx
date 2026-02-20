@@ -439,15 +439,23 @@ export default function MobilsvarerPage() {
       </motion.section>
 
       {/* ── FOOTER ── */}
-      <footer style={{ maxWidth: 1100, margin: '0 auto', padding: '24px 24px 36px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <img src="/arxon-icon.png" alt="Arxon" style={{ width: 24, height: 24 }} />
-          <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>Arxon</span>
+      <footer style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 24px 36px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, marginBottom: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <img src="/arxon-icon.png" alt="Arxon" style={{ width: 24, height: 24 }} />
+            <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' as const }}>Arxon</span>
+          </div>
+          <div style={{ display: 'flex', gap: 20, fontSize: 12 }}>
+            <a href="/personvern" style={{ color: 'rgba(255,255,255,0.35)', textDecoration: 'none' }}>{lang === 'no' ? 'Personvern' : 'Privacy'}</a>
+            <a href="/vilkar" style={{ color: 'rgba(255,255,255,0.35)', textDecoration: 'none' }}>{lang === 'no' ? 'Vilkår' : 'Terms'}</a>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: 20, fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>
-          <span>{lang === 'no' ? 'GDPR-kompatibel' : 'GDPR Compliant'}</span>
-          <span>{lang === 'no' ? 'Norsk datasenter' : 'European data center'}</span>
-          <span>&copy; {new Date().getFullYear()}</span>
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>&copy; {new Date().getFullYear()} Arxon</span>
+          <div style={{ display: 'flex', gap: 16, fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>
+            <span>{lang === 'no' ? 'GDPR-kompatibel' : 'GDPR Compliant'}</span>
+            <span>{lang === 'no' ? 'Norsk datasenter' : 'EU data center'}</span>
+          </div>
         </div>
       </footer>
     </div>
