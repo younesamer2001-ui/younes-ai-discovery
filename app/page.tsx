@@ -447,7 +447,7 @@ export default function LandingPage() {
           >
             <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 56 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                <img src="/arxon-logo.svg" alt="Arxon" style={{ width: 28, height: 28 }} />
+                <img src="/arxon-icon.png" alt="Arxon" style={{ width: 28, height: 28 }} />
                 <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' as const }}>Arxon</span>
               </div>
               {/* Desktop links */}
@@ -495,7 +495,7 @@ export default function LandingPage() {
       <nav style={{ position: 'relative', zIndex: 10, maxWidth: 1100, margin: '0 auto', padding: '16px 24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <img src="/arxon-logo.svg" alt="Arxon" style={{ width: 34, height: 34 }} />
+            <img src="/arxon-icon.png" alt="Arxon" style={{ width: 34, height: 34 }} />
             <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 20, fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase' as const }}>Arxon</span>
           </div>
           {/* Desktop nav links */}
@@ -561,7 +561,7 @@ export default function LandingPage() {
             {/* Menu header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 64, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <img src="/arxon-logo.svg" alt="Arxon" style={{ width: 34, height: 34 }} />
+                <img src="/arxon-icon.png" alt="Arxon" style={{ width: 34, height: 34 }} />
                 <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 20, fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase' as const }}>Arxon</span>
               </div>
               <button onClick={() => setMenuOpen(false)} style={{
@@ -956,7 +956,7 @@ export default function LandingPage() {
       {/* ── FOOTER ── */}
       <footer style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '24px 24px 36px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <img src="/arxon-logo.svg" alt="Arxon" style={{ width: 24, height: 24 }} />
+          <img src="/arxon-icon.png" alt="Arxon" style={{ width: 24, height: 24 }} />
           <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>Arxon</span>
         </div>
         <div style={{ display: 'flex', gap: 20, fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>
