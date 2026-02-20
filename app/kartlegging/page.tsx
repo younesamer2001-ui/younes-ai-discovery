@@ -370,34 +370,31 @@ const buildQuestions = (lang: string): Question[] => [
 ]
 
 /* ────────────────────────────────────────────
-   PRICING TIERS
+   PACKAGES (no prices — custom pricing after call)
    ──────────────────────────────────────────── */
-const PRICING = [
+const PACKAGES = [
   {
-    id: 'basis', name: { no: 'Basis', en: 'Basic' },
-    price: 5990, setup: 14990, calls: 300, overage: 4, minTerm: 6, popular: false, setupPrefix: false,
+    id: 'standard', name: { no: 'Standard', en: 'Standard' },
+    tagline: { no: 'Perfekt for å komme i gang', en: 'Perfect to get started' },
+    popular: false,
     features: {
-      no: ['AI telefonsvarer + 1 arbeidsflyt', 'E-poststøtte (48t respons)', 'Månedlig ytelsesrapport'],
-      en: ['AI phone answering + 1 workflow', 'Email support (48h response)', 'Monthly performance report'],
+      no: ['AI telefonsvarer 24/7', 'Automatisk booking & påminnelser', 'E-poststøtte', 'Månedlig ytelsesrapport', 'GDPR-sikret'],
+      en: ['AI phone answering 24/7', 'Automatic booking & reminders', 'Email support', 'Monthly performance report', 'GDPR compliant'],
     },
   },
   {
-    id: 'pro', name: { no: 'Profesjonell', en: 'Professional' },
-    price: 12990, setup: 29990, calls: 750, overage: 3.5, minTerm: 12, popular: true, setupPrefix: false,
+    id: 'pro', name: { no: 'Pro', en: 'Pro' },
+    tagline: { no: 'For bedrifter som vil ha alt', en: 'For businesses that want it all' },
+    popular: true,
     features: {
-      no: ['Full pakke: telefon, booking, SMS, CRM, anmeldelser', 'Prioritert støtte (samme dag)', 'Annenhver uke optimalisering'],
-      en: ['Full package: phone, booking, SMS, CRM, reviews', 'Priority support (same day)', 'Bi-weekly optimization'],
-    },
-  },
-  {
-    id: 'enterprise', name: { no: 'Enterprise', en: 'Enterprise' },
-    price: 24990, setup: 49990, calls: 1500, overage: 3, minTerm: 12, popular: false, setupPrefix: true,
-    features: {
-      no: ['Alt inkludert + skreddersydd utvikling', 'Dedikert kontaktperson', 'Kvartalsvis strategigjennomgang', 'Flerlokasjon/multi-team'],
-      en: ['Everything included + custom development', 'Dedicated account manager', 'Quarterly strategy review', 'Multi-location/multi-team'],
+      no: ['Alt i Standard +', 'SMS-oppfølging & CRM-integrasjon', 'Automatiserte anmeldelser', 'Prioritert støtte (samme dag)', 'Skreddersydd AI-trening for din bransje', 'Dedikert kontaktperson'],
+      en: ['Everything in Standard +', 'SMS follow-up & CRM integration', 'Automated reviews', 'Priority support (same day)', 'Custom AI training for your industry', 'Dedicated account manager'],
     },
   },
 ]
+
+/* Google Calendar booking URL — replace with your actual link */
+const BOOKING_URL = 'REPLACE_WITH_YOUR_GOOGLE_CALENDAR_LINK'
 
 /* ────────────────────────────────────────────
    COMPLIANCE + RECEPTIONIST
@@ -423,12 +420,12 @@ const RECEPTIONIST: Record<string, { sol: string; cost: string; avail: string; c
   no: [
     { sol: 'Ansatt resepsjonist', cost: '63 000 - 66 000 kr', avail: 'Man-fre, 8 timer', cap: '1 samtale om gangen' },
     { sol: 'Tradisjonell svarservice', cost: '2 000 - 15 000 kr', avail: 'Kontortid', cap: 'Delt kapasitet' },
-    { sol: 'AI Resepsjonist (vår løsning)', cost: '5 990 - 24 990 kr', avail: '24/7/365', cap: 'Ubegrenset samtidige' },
+    { sol: 'AI Resepsjonist (vår løsning)', cost: 'Tilpasset pris', avail: '24/7/365', cap: 'Ubegrenset samtidige' },
   ],
   en: [
     { sol: 'Employed receptionist', cost: '63,000 - 66,000 NOK', avail: 'Mon-Fri, 8 hours', cap: '1 call at a time' },
     { sol: 'Traditional answering service', cost: '2,000 - 15,000 NOK', avail: 'Office hours', cap: 'Shared capacity' },
-    { sol: 'AI Receptionist (our solution)', cost: '5,990 - 24,990 NOK', avail: '24/7/365', cap: 'Unlimited simultaneous' },
+    { sol: 'AI Receptionist (our solution)', cost: 'Custom pricing', avail: '24/7/365', cap: 'Unlimited simultaneous' },
   ],
 }
 
@@ -497,14 +494,6 @@ function KartleggingApp() {
   const [submitting, setSubmitting] = useState(false)
   const [refNumber, setRefNumber] = useState('')
   const [showResumeBanner, setShowResumeBanner] = useState(false)
-  const [completedCount, setCompletedCount] = useState(147)
-
-  // ── Social proof: simulated counter ──
-  useEffect(() => {
-    const base = 147
-    const daysSinceLaunch = Math.floor((Date.now() - new Date('2025-06-01').getTime()) / (1000 * 60 * 60 * 24))
-    setCompletedCount(base + Math.floor(daysSinceLaunch * 0.8))
-  }, [])
 
   // ── Load saved progress from localStorage ──
   useEffect(() => {
@@ -722,16 +711,6 @@ function KartleggingApp() {
         )}
       </AnimatePresence>
 
-      {/* SOCIAL PROOF COUNTER */}
-      {phase === 1 && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
-          style={{ maxWidth: 720, margin: '16px auto 0', textAlign: 'center' }}>
-          <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', fontFamily: "'DM Sans', sans-serif" }}>
-            <span style={{ color: gold, fontWeight: 600 }}>{completedCount}+</span>{' '}
-            {lang === 'no' ? 'bedrifter har allerede gjennomført kartleggingen' : 'businesses have already completed the discovery'}
-          </span>
-        </motion.div>
-      )}
 
       <div style={containerStyle}>
         <AnimatePresence mode="wait">
@@ -909,37 +888,42 @@ function KartleggingApp() {
                 </table>
               </div>
 
-              {/* Pricing */}
+              {/* Packages — no prices */}
               <div style={{ marginBottom: 28 }}>
-                <h3 style={{ ...headingFont, fontSize: 24, fontWeight: 700, textAlign: 'center', marginBottom: 24 }}>{t('pricing_title', lang)}</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14 }}>
-                  {PRICING.map((tier, idx) => (
-                    <motion.div key={tier.id} custom={idx} variants={cardVariants} initial="initial" animate="animate"
-                      style={{ ...cardStyle, padding: '24px 18px', position: 'relative', border: tier.popular ? `1.5px solid ${gold}` : `1px solid ${cardBorder}` }}>
-                      {tier.popular && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: gold, color: bg, fontSize: 11, fontWeight: 600, padding: '3px 12px', borderRadius: 20 }}>{t('pricing_popular', lang)}</div>}
-                      <h4 style={{ ...headingFont, fontSize: 18, fontWeight: 600, marginBottom: 8, marginTop: tier.popular ? 8 : 0 }}>{(tier.name as any)[lang]}</h4>
-                      <div style={{ marginBottom: 12 }}>
-                        <span style={{ fontSize: 28, fontWeight: 700, color: gold }}>{tier.price.toLocaleString('nb-NO')}</span>
-                        <span style={{ fontSize: 13, color: textMuted }}> kr{t('per_month', lang)}</span>
+                <h3 style={{ ...headingFont, fontSize: 24, fontWeight: 700, textAlign: 'center', marginBottom: 8 }}>
+                  {lang === 'no' ? 'Velg pakken som passer deg' : 'Choose the package that fits you'}
+                </h3>
+                <p style={{ textAlign: 'center', fontSize: 13, color: textMuted, marginBottom: 24 }}>
+                  {lang === 'no' ? 'Prisen tilpasses din bedrift etter en uforpliktende samtale' : 'Pricing is tailored to your business after a free consultation'}
+                </p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
+                  {PACKAGES.map((pkg, idx) => (
+                    <motion.div key={pkg.id} custom={idx} variants={cardVariants} initial="initial" animate="animate"
+                      style={{ ...cardStyle, padding: '28px 22px', position: 'relative', border: pkg.popular ? `1.5px solid ${gold}` : `1px solid ${cardBorder}` }}>
+                      {pkg.popular && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: gold, color: bg, fontSize: 11, fontWeight: 600, padding: '3px 12px', borderRadius: 20 }}>
+                        {lang === 'no' ? 'Anbefalt' : 'Recommended'}
+                      </div>}
+                      <h4 style={{ ...headingFont, fontSize: 22, fontWeight: 700, marginBottom: 4, marginTop: pkg.popular ? 8 : 0 }}>{(pkg.name as any)[lang]}</h4>
+                      <p style={{ fontSize: 13, color: textMuted, marginBottom: 16 }}>{(pkg.tagline as any)[lang]}</p>
+                      <div style={{ fontSize: 22, fontWeight: 700, color: gold, marginBottom: 16 }}>
+                        {lang === 'no' ? 'Tilpasset pris' : 'Custom pricing'}
                       </div>
-                      <div style={{ fontSize: 12, color: textSecondary, marginBottom: 4 }}>{t('pricing_setup', lang)}: {tier.setupPrefix ? (lang === 'no' ? 'Fra ' : 'From ') : ''}{tier.setup.toLocaleString('nb-NO')} kr</div>
-                      <div style={{ fontSize: 12, color: textSecondary, marginBottom: 4 }}>~{tier.calls} {t('pricing_calls', lang)}</div>
-                      <div style={{ fontSize: 12, color: textSecondary, marginBottom: 14 }}>{t('pricing_overage', lang)}: {tier.overage.toLocaleString('nb-NO')} kr{t('per_min', lang)}</div>
-                      <div style={{ borderTop: `1px solid ${cardBorder}`, paddingTop: 12 }}>
-                        {(tier.features as any)[lang].map((f: string, i: number) => (
-                          <div key={i} style={{ fontSize: 13, color: textSecondary, padding: '4px 0', display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-                            <span style={{ color: gold, fontSize: 11, marginTop: 3 }}>&#10003;</span>{f}
+                      <div style={{ borderTop: `1px solid ${cardBorder}`, paddingTop: 14 }}>
+                        {(pkg.features as any)[lang].map((f: string, i: number) => (
+                          <div key={i} style={{ fontSize: 13, color: textSecondary, padding: '5px 0', display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                            <span style={{ color: gold, fontSize: 12, marginTop: 2 }}>&#10003;</span>{f}
                           </div>
                         ))}
                       </div>
-                      <div style={{ fontSize: 11, color: textMuted, marginTop: 10 }}>{tier.minTerm} {lang === 'no' ? 'mnd.' : 'mo.'} {t('pricing_min', lang)}</div>
-                      {tier.id === 'pro' && <div style={{ fontSize: 11, color: gold, marginTop: 4 }}>{t('annual_save', lang)}</div>}
                     </motion.div>
                   ))}
                 </div>
-                <div style={{ textAlign: 'center', marginTop: 16 }}>
-                  <p style={{ fontSize: 12, color: textMuted }}>{t('pricing_vat', lang)}</p>
-                  <p style={{ fontSize: 12, color: textSecondary, marginTop: 4 }}>{t('pricing_limit', lang)}</p>
+                <div style={{ textAlign: 'center', marginTop: 20 }}>
+                  <p style={{ fontSize: 13, color: textSecondary, lineHeight: 1.6 }}>
+                    {lang === 'no'
+                      ? 'Send inn kartleggingen, så kan du booke en gratis samtale med oss for å finne riktig pakke og pris.'
+                      : 'Submit the discovery, then book a free call with us to find the right package and price.'}
+                  </p>
                 </div>
               </div>
 
@@ -1034,13 +1018,16 @@ function KartleggingApp() {
               )}
 
               <div style={{ ...cardStyle, marginBottom: 24, padding: '18px 20px' }}>
-                <span style={{ fontSize: 14, fontWeight: 600, display: 'block', marginBottom: 8 }}>ROI</span>
+                <span style={{ fontSize: 14, fontWeight: 600, display: 'block', marginBottom: 8 }}>
+                  {lang === 'no' ? 'Estimert tapt omsetning' : 'Estimated lost revenue'}
+                </span>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 13 }}>
+                  <div><span style={{ color: textMuted }}>{t('roi_lost_month', lang)}:</span> <span style={{ color: '#ef4444' }}>{fmtNOK(roi.lostMonth)}</span></div>
                   <div><span style={{ color: textMuted }}>{t('roi_lost_year', lang)}:</span> <span style={{ color: '#ef4444' }}>{fmtNOK(roi.lostYear)}</span></div>
-                  <div><span style={{ color: textMuted }}>{t('roi_investment', lang)}:</span> <span>{fmtNOK(roi.investment)}{t('per_month', lang)}</span></div>
-                  <div><span style={{ color: textMuted }}>{t('roi_return', lang)}:</span> <span style={{ color: gold }}>{roi.roi}%</span></div>
-                  <div><span style={{ color: textMuted }}>{t('roi_solution', lang)}:</span> <span style={{ color: gold }}>{roi.tierName}</span></div>
                 </div>
+                <p style={{ fontSize: 11, color: textMuted, marginTop: 8, fontStyle: 'italic' }}>
+                  {lang === 'no' ? 'Eksakt pris diskuteres i samtalen' : 'Exact pricing discussed during consultation'}
+                </p>
               </div>
 
               <div style={{ display: 'flex', gap: 12 }}>
@@ -1050,7 +1037,7 @@ function KartleggingApp() {
             </motion.div>
           )}
 
-          {/* ═══════════ PHASE 7: CONFIRMATION ═══════════ */}
+          {/* ═══════════ PHASE 7: CONFIRMATION + BOOKING ═══════════ */}
           {phase === 7 && (
             <motion.div key="phase7" variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ textAlign: 'center', marginTop: 60 }}>
               <motion.div
@@ -1064,11 +1051,51 @@ function KartleggingApp() {
                 <span style={{ fontSize: 13, color: textMuted }}>{t('confirm_ref', lang)}: </span>
                 <span style={{ fontSize: 15, fontWeight: 600, color: gold, letterSpacing: 1 }}>{refNumber}</span>
               </div>
-              <p style={{ color: textSecondary, fontSize: 15, lineHeight: 1.6, maxWidth: 480, margin: '0 auto 32px' }}>{t('confirm_next', lang)}</p>
-              <div style={{ ...cardStyle, textAlign: 'left', maxWidth: 440, margin: '0 auto' }}>
-                <h4 style={{ fontSize: 15, fontWeight: 600, marginBottom: 12 }}>{t('confirm_steps_title', lang)}</h4>
-                {[t('confirm_step1', lang), t('confirm_step2', lang), t('confirm_step3', lang)].map((s, i) => (
-                  <p key={i} style={{ fontSize: 13.5, color: textSecondary, marginBottom: 8, lineHeight: 1.5 }}>{s}</p>
+
+              {/* ── Booking CTA ── */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.5 }}
+                style={{ ...cardStyle, maxWidth: 500, margin: '0 auto 28px', padding: '32px 28px', border: `1.5px solid ${gold}`, background: 'rgba(201,169,110,0.04)' }}>
+                <div style={{ fontSize: 32, marginBottom: 12 }}>📅</div>
+                <h3 style={{ ...headingFont, fontSize: 22, fontWeight: 700, marginBottom: 8 }}>
+                  {lang === 'no' ? 'Book en gratis samtale' : 'Book a free consultation'}
+                </h3>
+                <p style={{ color: textSecondary, fontSize: 14, lineHeight: 1.6, marginBottom: 24, maxWidth: 380, margin: '0 auto 24px' }}>
+                  {lang === 'no'
+                    ? 'Vi gjennomgår analysen din og finner riktig pakke og pris for din bedrift. Helt uforpliktende.'
+                    : 'We review your analysis and find the right package and price for your business. No obligations.'}
+                </p>
+                <a
+                  href={BOOKING_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-block', background: gold, color: bg, border: 'none', borderRadius: 12,
+                    padding: '16px 36px', fontWeight: 700, fontSize: 16, cursor: 'pointer',
+                    fontFamily: "'DM Sans', sans-serif", textDecoration: 'none',
+                    boxShadow: '0 8px 32px rgba(201,169,110,0.25)', transition: 'all 0.2s',
+                  }}>
+                  {lang === 'no' ? 'Velg tid i kalenderen →' : 'Pick a time in the calendar →'}
+                </a>
+                <p style={{ fontSize: 12, color: textMuted, marginTop: 14 }}>
+                  {lang === 'no' ? '15 min · Gratis · Uforpliktende' : '15 min · Free · No obligations'}
+                </p>
+              </motion.div>
+
+              {/* ── Next steps ── */}
+              <div style={{ ...cardStyle, textAlign: 'left', maxWidth: 500, margin: '0 auto' }}>
+                <h4 style={{ fontSize: 15, fontWeight: 600, marginBottom: 14 }}>
+                  {lang === 'no' ? 'Slik fungerer det videre' : 'What happens next'}
+                </h4>
+                {[
+                  lang === 'no' ? '1. Book en tid som passer deg i kalenderen over' : '1. Book a time that works for you in the calendar above',
+                  lang === 'no' ? '2. Vi gjennomgår AI-analysen din før samtalen' : '2. We review your AI analysis before the call',
+                  lang === 'no' ? '3. Du får et skreddersydd tilbud basert på dine behov' : '3. You get a tailored offer based on your needs',
+                ].map((s, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'flex-start' }}>
+                    <span style={{ color: gold, fontSize: 16, fontWeight: 700, lineHeight: 1.4 }}>{'→'}</span>
+                    <p style={{ fontSize: 13.5, color: textSecondary, lineHeight: 1.5, margin: 0 }}>{s.substring(3)}</p>
+                  </div>
                 ))}
               </div>
             </motion.div>
