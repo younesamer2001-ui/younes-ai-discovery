@@ -300,18 +300,16 @@ export default function LandingPage() {
   /* ── Nav links — mix of page links and scroll-to-section links ── */
   const navLinks = lang === 'no' ? [
     { id: '/mobilsvarer', label: 'Mobilsvarer', isPage: true },
-    { id: '/kundehistorier', label: 'Eksempler', isPage: true },
-    { id: 'tjenester', label: 'Tjenester', isPage: false },
-    { id: 'kalkulator', label: 'Kalkulator', isPage: false },
-    { id: 'resultater', label: 'Bruksområder', isPage: false },
-    { id: 'faq', label: 'FAQ', isPage: false },
+    { id: '/hvordan-det-fungerer', label: 'Hvordan det fungerer', isPage: true },
+    { id: '/integrasjoner', label: 'Integrasjoner', isPage: true },
+    { id: '/blogg', label: 'Blogg', isPage: true },
+    { id: '/om-oss', label: 'Om oss', isPage: true },
   ] : [
     { id: '/mobilsvarer', label: 'AI Answering', isPage: true },
-    { id: '/kundehistorier', label: 'Examples', isPage: true },
-    { id: 'tjenester', label: 'Services', isPage: false },
-    { id: 'kalkulator', label: 'Calculator', isPage: false },
-    { id: 'resultater', label: 'Use Cases', isPage: false },
-    { id: 'faq', label: 'FAQ', isPage: false },
+    { id: '/hvordan-det-fungerer', label: 'How it works', isPage: true },
+    { id: '/integrasjoner', label: 'Integrations', isPage: true },
+    { id: '/blogg', label: 'Blog', isPage: true },
+    { id: '/om-oss', label: 'About', isPage: true },
   ]
 
   const handleNav = (link: { id: string; isPage: boolean }) => {
@@ -1039,9 +1037,16 @@ export default function LandingPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>{lang === 'no' ? 'Tjenester' : 'Services'}</span>
               <a href="/mobilsvarer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'AI Mobilsvarer' : 'AI Phone Answering'}</a>
+              <a href="/hvordan-det-fungerer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Hvordan det fungerer' : 'How it works'}</a>
+              <a href="/integrasjoner" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Integrasjoner' : 'Integrations'}</a>
               <a href="/kartlegging" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Gratis kartlegging' : 'Free assessment'}</a>
+            </div>
+            {/* Ressurser */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>{lang === 'no' ? 'Ressurser' : 'Resources'}</span>
+              <a href="/blogg" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Blogg' : 'Blog'}</a>
               <a href="/kundehistorier" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Kundehistorier' : 'Customer stories'}</a>
-              <a href="#faq" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>FAQ</a>
+              <a href="/om-oss" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Om oss' : 'About us'}</a>
             </div>
             {/* Kontakt */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
