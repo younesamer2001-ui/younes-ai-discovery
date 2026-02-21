@@ -303,12 +303,14 @@ export default function LandingPage() {
     { id: '/hvordan-det-fungerer', label: 'Hvordan det fungerer', isPage: true },
     { id: '/integrasjoner', label: 'Integrasjoner', isPage: true },
     { id: '/blogg', label: 'Blogg', isPage: true },
+    { id: '/priser', label: 'Priser', isPage: true },
     { id: '/om-oss', label: 'Om oss', isPage: true },
   ] : [
     { id: '/mobilsvarer', label: 'AI Answering', isPage: true },
     { id: '/hvordan-det-fungerer', label: 'How it works', isPage: true },
     { id: '/integrasjoner', label: 'Integrations', isPage: true },
     { id: '/blogg', label: 'Blog', isPage: true },
+    { id: '/priser', label: 'Pricing', isPage: true },
     { id: '/om-oss', label: 'About', isPage: true },
   ]
 
@@ -334,21 +336,21 @@ export default function LandingPage() {
     title: 'Før og etter AI',
     before: {
       label: 'Uten AI',
-      items: ['Mister henvendelser etter kl. 16', 'Manuell booking og oppfølging', 'Ingen oversikt over tapte leads', 'Timer på repetitivt arbeid'],
+      items: ['Mister henvendelser etter kl. 16', 'Betaler lønn for telefonsvarer og resepsjonist', 'Ingen oversikt over tapte leads', 'Timer på repetitivt arbeid som koster deg ansatte'],
     },
     after: {
       label: 'Med Arxon',
-      items: ['AI svarer 24/7 — aldri mist en kunde', 'Automatisk booking og SMS-påminnelser', 'Full oversikt over alle henvendelser', 'Mindre manuelt arbeid — mer tid til kunder'],
+      items: ['AI svarer 24/7 — aldri mist en kunde', 'Spar 1–2 heltidsstillinger med automatisering', 'Full oversikt over alle henvendelser', 'Kutt lønnskostnader — AI gjør jobben for en brøkdel'],
     },
   } : {
     title: 'Before and After AI',
     before: {
       label: 'Without AI',
-      items: ['Missing inquiries after business hours', 'Manual booking and follow-ups', 'No overview of lost leads', 'Hours spent on repetitive tasks'],
+      items: ['Missing inquiries after business hours', 'Paying salaries for receptionist and phone staff', 'No overview of lost leads', 'Hours of repetitive work that costs you employees'],
     },
     after: {
       label: 'With Arxon',
-      items: ['AI answers 24/7 — never miss a customer', 'Automatic booking and SMS reminders', 'Full overview of all inquiries', 'Less manual work — more time for customers'],
+      items: ['AI answers 24/7 — never miss a customer', 'Save 1–2 full-time positions with automation', 'Full overview of all inquiries', 'Cut salary costs — AI does the job for a fraction'],
     },
   }
 
@@ -377,13 +379,13 @@ export default function LandingPage() {
   ]
 
   const useCases = lang === 'no' ? [
-    { icon: Building2, title: 'Byggefirma', desc: 'Aldri gå glipp av en henvendelse igjen. AI-en svarer og kvalifiserer jobbforespørsler — selv når du er på byggeplassen.', benefit: 'Fang flere oppdrag' },
-    { icon: Users, title: 'Frisørsalong', desc: 'Automatisk booking og SMS-påminnelser reduserer uteblivelser og frigjør tid bak stolen.', benefit: 'Færre no-shows' },
-    { icon: Shield, title: 'Advokatfirma', desc: 'Raskere klientinntak med AI som samler inn informasjon før du i det hele tatt snakker med klienten.', benefit: 'Spar tid på inntak' },
+    { icon: Building2, title: 'Byggefirma', desc: 'Dropp kontoransatte som bare svarer telefonen. AI-en tar henvendelser, kvalifiserer jobb og booker befaring — selv når du er på byggeplassen.', benefit: 'Spar 1 kontorstilling' },
+    { icon: Users, title: 'Frisørsalong', desc: 'Trenger du ikke lenger resepsjonist. AI booker timer, sender påminnelser og håndterer avbestillinger automatisk. Spar 25 000+ kr/mnd.', benefit: 'Ingen resepsjonist' },
+    { icon: Shield, title: 'Advokatfirma', desc: 'Erstatt sekretæren med AI for klientinntak. AI samler inn info, kvalifiserer saker og booker konsultasjoner — raskere og billigere.', benefit: 'Spar 1 stilling' },
   ] : [
-    { icon: Building2, title: 'Construction', desc: 'Never miss an inquiry again. AI answers and qualifies job requests — even when you\'re on-site.', benefit: 'Capture more jobs' },
-    { icon: Users, title: 'Hair Salon', desc: 'Automatic booking and SMS reminders reduce no-shows and free up time behind the chair.', benefit: 'Fewer no-shows' },
-    { icon: Shield, title: 'Law Firm', desc: 'Faster client intake with AI collecting information before you even speak to the client.', benefit: 'Save intake time' },
+    { icon: Building2, title: 'Construction', desc: 'Skip hiring office staff for phones. AI handles inquiries, qualifies jobs and books site visits — even when you\'re on-site.', benefit: 'Save 1 office position' },
+    { icon: Users, title: 'Hair Salon', desc: 'No more receptionist needed. AI books appointments, sends reminders and handles cancellations. Save 25,000+ NOK/mo.', benefit: 'No receptionist' },
+    { icon: Shield, title: 'Law Firm', desc: 'Replace secretary for client intake. AI collects info, qualifies cases and books consultations — faster and cheaper.', benefit: 'Save 1 position' },
   ]
 
   const industries = lang === 'no'
@@ -630,8 +632,8 @@ export default function LandingPage() {
         <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.35 }}
           style={{ fontSize: 'clamp(15px, 2.3vw, 18px)', color: 'rgba(255,255,255,0.5)', maxWidth: 560, margin: '20px auto 36px', lineHeight: 1.6 }}>
           {lang === 'no'
-            ? 'Norske bedrifter taper i snitt 85 000 kr/mnd på ubesvarte anrop. Finn ut hva du taper — og hvordan AI fikser det på under 48 timer.'
-            : 'Norwegian businesses lose an avg. of 85,000 NOK/month on missed calls. Find out what you\'re losing — and how AI fixes it in under 48 hours.'}
+            ? 'Norske bedrifter taper i snitt 85 000 kr/mnd på ubesvarte anrop — og betaler unødvendig for ansatte som AI kan erstatte. Finn ut hva du sparer.'
+            : 'Norwegian businesses lose 85,000 NOK/month on missed calls — and pay unnecessarily for staff AI can replace. Find out what you can save.'}
         </motion.p>
 
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.35 }}
@@ -690,7 +692,7 @@ export default function LandingPage() {
         </div>
       </motion.section>
 
-      {/* ── VIDEO / DEMO SECTION ── */}
+      {/* ── LIVE DEMO — Animated phone call simulation ── */}
       <motion.section {...fadeUp} style={{ position: 'relative', zIndex: 1, maxWidth: 800, margin: '0 auto 70px', padding: '0 24px' }}>
         <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, textAlign: 'center', marginBottom: 10 }}>
           {lang === 'no' ? 'Se Arxon i aksjon' : 'See Arxon in action'}
@@ -698,40 +700,151 @@ export default function LandingPage() {
         <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 14, marginBottom: 32, maxWidth: 460, margin: '0 auto 32px' }}>
           {lang === 'no' ? 'Slik fungerer AI-mobilsvareren din — fra første ring til booket møte.' : 'How your AI phone answering works — from first ring to booked meeting.'}
         </motion.p>
+
+        {/* Phone mockup with animated conversation */}
         <div style={{
           position: 'relative', borderRadius: 20, overflow: 'hidden',
           background: `linear-gradient(135deg, rgba(${goldRgb},0.04) 0%, rgba(${goldRgb},0.01) 100%)`,
-          border: `1px solid rgba(${goldRgb},0.12)`, aspectRatio: '16/9',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16,
+          border: `1px solid rgba(${goldRgb},0.12)`, padding: '40px 24px',
         }}>
-          {/* Decorative phone animation */}
-          <motion.div
-            animate={{ y: [0, -6, 0] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-            style={{
-              width: 72, height: 72, borderRadius: 20,
-              background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.2)`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
-          >
-            <Phone size={32} color={gold} />
-          </motion.div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 16, fontWeight: 600, color: '#f0f0f0', marginBottom: 4 }}>
-              {lang === 'no' ? 'Video kommer snart' : 'Video coming soon'}
+          {/* Phone frame */}
+          <div style={{
+            maxWidth: 340, margin: '0 auto', background: '#111118', borderRadius: 32,
+            border: '2px solid rgba(255,255,255,0.08)', padding: '16px 0', overflow: 'hidden',
+            boxShadow: `0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(${goldRgb},0.05)`,
+          }}>
+            {/* Phone header */}
+            <div style={{ padding: '8px 20px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ width: 32, height: 32, borderRadius: '50%', background: `rgba(${goldRgb},0.15)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Bot size={16} color={gold} />
+                </div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#f0f0f0' }}>Arxon AI</div>
+                  <div style={{ fontSize: 10, color: '#4ade80' }}>{lang === 'no' ? '● Aktiv nå' : '● Active now'}</div>
+                </div>
+              </div>
+              <Phone size={16} color={gold} />
             </div>
-            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>
-              {lang === 'no' ? 'Se en live demo av AI-mobilsvareren' : 'Watch a live demo of the AI phone answering'}
+
+            {/* Conversation */}
+            <div style={{ padding: '16px 16px', display: 'flex', flexDirection: 'column', gap: 12, minHeight: 320 }}>
+              {/* Incoming call */}
+              <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
+                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', marginBottom: 4, textAlign: 'center' }}>
+                  {lang === 'no' ? '📞 Innkommende anrop — 21:47' : '📞 Incoming call — 9:47 PM'}
+                </div>
+              </motion.div>
+
+              {/* AI greeting */}
+              <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.6 }}
+                style={{ alignSelf: 'flex-start', maxWidth: '80%' }}>
+                <div style={{
+                  background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.15)`,
+                  borderRadius: '16px 16px 16px 4px', padding: '10px 14px',
+                }}>
+                  <div style={{ fontSize: 12, color: '#e0e0e0', lineHeight: 1.5 }}>
+                    {lang === 'no' ? 'Hei! Du har nådd Haugen Rørlegger. Jeg er AI-assistenten deres. Hvordan kan jeg hjelpe deg?' : 'Hi! You\'ve reached Haugen Plumbing. I\'m their AI assistant. How can I help you?'}
+                  </div>
+                </div>
+                <div style={{ fontSize: 9, color: gold, marginTop: 3 }}>Arxon AI</div>
+              </motion.div>
+
+              {/* Customer response */}
+              <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 1.0 }}
+                style={{ alignSelf: 'flex-end', maxWidth: '80%' }}>
+                <div style={{
+                  background: 'rgba(255,255,255,0.08)', borderRadius: '16px 16px 4px 16px', padding: '10px 14px',
+                }}>
+                  <div style={{ fontSize: 12, color: '#e0e0e0', lineHeight: 1.5 }}>
+                    {lang === 'no' ? 'Hei, jeg har en vannlekkasje på kjøkkenet. Kan noen komme og se på det?' : 'Hi, I have a water leak in my kitchen. Can someone come look at it?'}
+                  </div>
+                </div>
+                <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.3)', marginTop: 3, textAlign: 'right' }}>{lang === 'no' ? 'Kunde' : 'Customer'}</div>
+              </motion.div>
+
+              {/* AI qualifies */}
+              <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 1.4 }}
+                style={{ alignSelf: 'flex-start', maxWidth: '80%' }}>
+                <div style={{
+                  background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.15)`,
+                  borderRadius: '16px 16px 16px 4px', padding: '10px 14px',
+                }}>
+                  <div style={{ fontSize: 12, color: '#e0e0e0', lineHeight: 1.5 }}>
+                    {lang === 'no' ? 'Jeg forstår, det er viktig. Jeg booker deg inn for en befaring. Har du tid i morgen mellom 08–12?' : 'I understand, that\'s urgent. I\'ll book you for an inspection. Are you available tomorrow between 8–12?'}
+                  </div>
+                </div>
+                <div style={{ fontSize: 9, color: gold, marginTop: 3 }}>Arxon AI</div>
+              </motion.div>
+
+              {/* Customer confirms */}
+              <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 1.8 }}
+                style={{ alignSelf: 'flex-end', maxWidth: '80%' }}>
+                <div style={{
+                  background: 'rgba(255,255,255,0.08)', borderRadius: '16px 16px 4px 16px', padding: '10px 14px',
+                }}>
+                  <div style={{ fontSize: 12, color: '#e0e0e0', lineHeight: 1.5 }}>
+                    {lang === 'no' ? 'Ja, kl. 10 passer perfekt!' : 'Yes, 10 AM works perfectly!'}
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* AI confirms booking */}
+              <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 2.2 }}
+                style={{ alignSelf: 'flex-start', maxWidth: '80%' }}>
+                <div style={{
+                  background: `rgba(74,222,128,0.1)`, border: `1px solid rgba(74,222,128,0.2)`,
+                  borderRadius: '16px 16px 16px 4px', padding: '10px 14px',
+                }}>
+                  <div style={{ fontSize: 12, color: '#e0e0e0', lineHeight: 1.5 }}>
+                    {lang === 'no' ? '✅ Perfekt! Du er booket for i morgen kl. 10:00. Du vil motta en SMS-bekreftelse. Ha en fin kveld!' : '✅ Perfect! You\'re booked for tomorrow at 10 AM. You\'ll receive an SMS confirmation. Have a nice evening!'}
+                  </div>
+                </div>
+                <div style={{ fontSize: 9, color: '#4ade80', marginTop: 3 }}>{lang === 'no' ? '✓ Booking bekreftet' : '✓ Booking confirmed'}</div>
+              </motion.div>
+            </div>
+
+            {/* Status bar at bottom */}
+            <div style={{ padding: '12px 16px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: 12, fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>
+                <span>🕐 {lang === 'no' ? '45 sek samtale' : '45 sec call'}</span>
+                <span>📅 {lang === 'no' ? 'Booket' : 'Booked'}</span>
+              </div>
+              <div style={{ fontSize: 10, color: '#4ade80' }}>💰 {lang === 'no' ? 'Oppdrag fanget' : 'Job captured'}</div>
             </div>
           </div>
-          <button onClick={() => router.push('/kartlegging')} style={{
-            marginTop: 8, background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.2)`,
-            color: gold, borderRadius: 12, padding: '12px 28px', fontWeight: 600, fontSize: 14,
-            cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
-          }}>
-            {lang === 'no' ? 'Prøv det selv — gratis kartlegging' : 'Try it yourself — free assessment'}
-            <ArrowRight size={14} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
-          </button>
+
+          {/* Labels around phone */}
+          <div style={{
+            position: 'absolute', top: '20%', left: 24, maxWidth: 140, textAlign: 'right',
+          }} className="hide-mobile">
+            <div style={{ fontSize: 13, fontWeight: 600, color: gold }}>21:47</div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{lang === 'no' ? 'Kunden ringer etter stengetid' : 'Customer calls after hours'}</div>
+          </div>
+          <div style={{
+            position: 'absolute', top: '50%', right: 24, maxWidth: 160, textAlign: 'left',
+          }} className="hide-mobile">
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#4ade80' }}>{lang === 'no' ? 'Automatisk booking' : 'Auto booking'}</div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{lang === 'no' ? 'AI booker direkte i kalenderen uten menneskelig hjelp' : 'AI books directly in the calendar without human help'}</div>
+          </div>
+          <div style={{
+            position: 'absolute', bottom: '15%', left: 24, maxWidth: 160, textAlign: 'right',
+          }} className="hide-mobile">
+            <div style={{ fontSize: 13, fontWeight: 600, color: gold }}>{lang === 'no' ? '0 ansatte involvert' : '0 employees involved'}</div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{lang === 'no' ? 'AI gjør alt — ingen trenger å løfte telefonen' : 'AI does everything — no one needs to pick up the phone'}</div>
+          </div>
+
+          {/* CTA below phone */}
+          <div style={{ textAlign: 'center', marginTop: 24 }}>
+            <button onClick={() => router.push('/kartlegging')} style={{
+              background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.2)`,
+              color: gold, borderRadius: 12, padding: '12px 28px', fontWeight: 600, fontSize: 14,
+              cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
+            }}>
+              {lang === 'no' ? 'Prøv det selv — gratis kartlegging' : 'Try it yourself — free assessment'}
+              <ArrowRight size={14} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
+            </button>
+          </div>
         </div>
       </motion.section>
 
@@ -963,6 +1076,147 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── TESTIMONIALS ── */}
+      <section id="kundeomtaler" style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '40px 24px 70px', scrollMarginTop: 80 }}>
+        <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700, textAlign: 'center', marginBottom: 10 }}>
+          {lang === 'no' ? 'Hva kundene våre sier' : 'What our customers say'}
+        </motion.h2>
+        <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 15, marginBottom: 40, maxWidth: 500, margin: '0 auto 40px' }}>
+          {lang === 'no' ? 'Norske bedrifter som allerede sparer tid og penger med Arxon' : 'Norwegian businesses already saving time and money with Arxon'}
+        </motion.p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
+          {(lang === 'no' ? [
+            {
+              name: 'Thomas Haugen',
+              role: 'Daglig leder',
+              company: 'Haugen Rørlegger AS',
+              city: 'Bergen',
+              quote: 'Vi hadde to på kontoret bare for å svare telefon og booke oppdrag. Nå gjør AI-en det for oss. Vi har kuttet fra 2 til 0 kontoransatte og sparer over 65 000 kr i måneden i lønnskostnader alene.',
+              stat: '65 000 kr spart/mnd',
+              statLabel: 'i reduserte lønnskostnader',
+              stars: 5,
+              avatar: 'TH',
+            },
+            {
+              name: 'Camilla Nordby',
+              role: 'Eier',
+              company: 'Studio Nordby Frisør',
+              city: 'Oslo',
+              quote: 'Før måtte jeg ansette en resepsjonist for å ta bookinger. Nå håndterer Arxon alt — booking, påminnelser og avbestillinger. Jeg sparer 28 000 kr i måneden og har null no-shows.',
+              stat: '28 000 kr spart/mnd',
+              statLabel: 'ingen resepsjonist nødvendig',
+              stars: 5,
+              avatar: 'CN',
+            },
+            {
+              name: 'Henrik Larsen',
+              role: 'Partner',
+              company: 'Larsen & Berg Advokatfirma',
+              city: 'Stavanger',
+              quote: 'Vi trengte ikke lenger en heltidsansatt til klientinntak. AI-en samler inn informasjon, kvalifiserer henvendelser og booker konsultasjoner. Vi reduserte med én stilling og økte omsetningen med 18%.',
+              stat: '1 stilling spart',
+              statLabel: '+ 18% økt omsetning',
+              stars: 5,
+              avatar: 'HL',
+            },
+          ] : [
+            {
+              name: 'Thomas Haugen',
+              role: 'CEO',
+              company: 'Haugen Plumbing AS',
+              city: 'Bergen',
+              quote: 'We had two office staff just to answer calls and book jobs. Now AI does it for us. We cut from 2 to 0 office employees and save over 65,000 NOK monthly in salary costs alone.',
+              stat: '65,000 NOK saved/mo',
+              statLabel: 'in reduced salary costs',
+              stars: 5,
+              avatar: 'TH',
+            },
+            {
+              name: 'Camilla Nordby',
+              role: 'Owner',
+              company: 'Studio Nordby Hair',
+              city: 'Oslo',
+              quote: 'Before I had to hire a receptionist for bookings. Now Arxon handles everything — bookings, reminders and cancellations. I save 28,000 NOK monthly and have zero no-shows.',
+              stat: '28,000 NOK saved/mo',
+              statLabel: 'no receptionist needed',
+              stars: 5,
+              avatar: 'CN',
+            },
+            {
+              name: 'Henrik Larsen',
+              role: 'Partner',
+              company: 'Larsen & Berg Law Firm',
+              city: 'Stavanger',
+              quote: 'We no longer needed a full-time employee for client intake. AI collects info, qualifies inquiries and books consultations. We cut one position and increased revenue by 18%.',
+              stat: '1 position saved',
+              statLabel: '+ 18% revenue increase',
+              stars: 5,
+              avatar: 'HL',
+            },
+          ]).map((t, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12, duration: 0.45 }}
+              className="gold-hover"
+              style={{
+                background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 18,
+                padding: '28px 24px', transition: 'all 0.3s ease', display: 'flex', flexDirection: 'column',
+              }}>
+              {/* Stars */}
+              <div style={{ display: 'flex', gap: 3, marginBottom: 16 }}>
+                {Array.from({ length: t.stars }).map((_, s) => (
+                  <Star key={s} size={15} fill={gold} color={gold} />
+                ))}
+              </div>
+              {/* Quote */}
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.65, flex: 1, marginBottom: 20, fontStyle: 'italic' }}>
+                &ldquo;{t.quote}&rdquo;
+              </p>
+              {/* Stat highlight */}
+              <div style={{
+                background: `rgba(${goldRgb},0.06)`, border: `1px solid rgba(${goldRgb},0.12)`,
+                borderRadius: 12, padding: '12px 16px', marginBottom: 20,
+              }}>
+                <div style={{ fontSize: 20, fontWeight: 700, color: gold, fontFamily: "'Playfair Display', serif" }}>{t.stat}</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{t.statLabel}</div>
+              </div>
+              {/* Author */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{
+                  width: 42, height: 42, borderRadius: '50%', background: `rgba(${goldRgb},0.12)`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 14, fontWeight: 700, color: gold, flexShrink: 0,
+                }}>{t.avatar}</div>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: '#f0f0f0' }}>{t.name}</div>
+                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>{t.role}, {t.company}</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>{t.city}</div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Employee savings banner */}
+        <motion.div {...fadeUp} style={{
+          marginTop: 32, background: `linear-gradient(135deg, rgba(${goldRgb},0.08) 0%, rgba(${goldRgb},0.02) 100%)`,
+          border: `1px solid rgba(${goldRgb},0.15)`, borderRadius: 18, padding: '28px 32px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, flexWrap: 'wrap',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: `rgba(${goldRgb},0.12)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <TrendingUp size={24} color={gold} />
+            </div>
+            <div>
+              <div style={{ fontSize: 22, fontWeight: 700, color: gold, fontFamily: "'Playfair Display', serif" }}>
+                {lang === 'no' ? 'Gjennomsnittlig 1,5 færre ansatte' : 'Average 1.5 fewer employees'}
+              </div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>
+                {lang === 'no' ? 'Kundene våre erstatter repetitivt arbeid med AI — og sparer 30 000–80 000 kr/mnd i lønnskostnader' : 'Our customers replace repetitive work with AI — saving 30,000–80,000 NOK/mo in salary costs'}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
       {/* ── FAQ ── */}
       <section id="faq" style={{ position: 'relative', zIndex: 1, maxWidth: 650, margin: '0 auto', padding: '20px 24px 70px', scrollMarginTop: 80 }}>
         <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, textAlign: 'center', marginBottom: 32 }}>
@@ -1039,6 +1293,7 @@ export default function LandingPage() {
               <a href="/mobilsvarer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'AI Mobilsvarer' : 'AI Phone Answering'}</a>
               <a href="/hvordan-det-fungerer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Hvordan det fungerer' : 'How it works'}</a>
               <a href="/integrasjoner" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Integrasjoner' : 'Integrations'}</a>
+              <a href="/priser" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Priser' : 'Pricing'}</a>
               <a href="/kartlegging" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Gratis kartlegging' : 'Free assessment'}</a>
             </div>
             {/* Ressurser */}

@@ -1,7 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { ArrowLeft, ArrowRight, Globe, Menu, X } from 'lucide-react';
 
 const DESIGN = {
   gold: '#c9a96e',
@@ -11,6 +13,16 @@ const DESIGN = {
 
 export default function AINorge2025() {
   const [lang, setLang] = useState('no');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
+
+  const navLinks = [
+    { id: '/mobilsvarer', label: 'Mobilsvarer' },
+    { id: '/hvordan-det-fungerer', label: 'Hvordan det fungerer' },
+    { id: '/integrasjoner', label: 'Integrasjoner' },
+    { id: '/blogg', label: 'Blogg' },
+    { id: '/om-oss', label: 'Om oss' },
+  ];
 
   const content = {
     no: {
@@ -250,57 +262,29 @@ export default function AINorge2025() {
           position: sticky;
           top: 0;
           z-index: 100;
-          padding: 1rem 2rem;
+          padding: 12px 24px;
         }
 
         .nav-container {
-          max-width: 1200px;
+          max-width: 1100px;
           margin: 0 auto;
           display: flex;
           justify-content: space-between;
           align-items: center;
         }
 
-        .nav-logo {
-          font-family: 'Playfair Display', serif;
-          font-size: 1.5rem;
-          font-weight: 700;
-          color: ${DESIGN.gold};
-          text-decoration: none;
-        }
-
         .nav-links {
           display: flex;
-          gap: 2rem;
+          gap: 24px;
           list-style: none;
           align-items: center;
         }
 
-        .nav-links a {
-          color: #e0e0e0;
-          text-decoration: none;
-          transition: color 0.3s ease;
-          font-size: 0.95rem;
-        }
+        .show-mobile-only { display: none !important; }
 
-        .nav-links a:hover {
-          color: ${DESIGN.gold};
-        }
-
-        .lang-toggle {
-          background: rgba(${DESIGN.goldRgb}, 0.1);
-          border: 1px solid rgba(${DESIGN.goldRgb}, 0.3);
-          color: ${DESIGN.gold};
-          padding: 0.5rem 1rem;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          font-size: 0.85rem;
-        }
-
-        .lang-toggle:hover {
-          background: rgba(${DESIGN.goldRgb}, 0.2);
-          border-color: ${DESIGN.gold};
+        @media (max-width: 768px) {
+          .hide-mobile { display: none !important; }
+          .show-mobile-only { display: flex !important; }
         }
 
         /* Main Content */
@@ -758,34 +742,80 @@ export default function AINorge2025() {
       `}</style>
 
       <div className="wrapper">
-        {/* Navigation */}
+        {/* Navigation - matches site design */}
         <nav>
           <div className="nav-container">
-            <a href="/" className="nav-logo">Arxon</a>
-            <ul className="nav-links">
-              {lang_no.navItems.map((item) => (
-                <li key={item.href}>
-                  <a href={item.href}>{item.label}</a>
-                </li>
+            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+              <img src="/arxon-icon.png" alt="Arxon" style={{ width: 28, height: 28 }} />
+              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#f0f0f0' }}>Arxon</span>
+            </Link>
+            <div className="nav-links hide-mobile">
+              {navLinks.map((link) => (
+                <Link key={link.id} href={link.id} style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: 13, fontFamily: "'DM Sans', sans-serif", transition: 'color 0.2s' }}
+                  onMouseEnter={e => e.currentTarget.style.color = DESIGN.gold}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}
+                >{link.label}</Link>
               ))}
-              <li>
-                <button
-                  className="lang-toggle"
-                  onClick={() => setLang(lang === 'no' ? 'en' : 'no')}
-                >
-                  {lang === 'no' ? 'EN' : 'NO'}
-                </button>
-              </li>
-            </ul>
+              <button onClick={() => router.push('/kartlegging')} style={{
+                background: `linear-gradient(110deg, ${DESIGN.gold} 0%, #e0c88a 50%, ${DESIGN.gold} 100%)`,
+                color: DESIGN.bg, border: 'none', borderRadius: 10, padding: '8px 20px',
+                fontWeight: 600, fontSize: 13, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+              }}>
+                Start kartlegging <ArrowRight size={13} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
+              </button>
+            </div>
+            <div className="show-mobile-only" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <button onClick={() => router.push('/kartlegging')} style={{
+                background: `linear-gradient(110deg, ${DESIGN.gold} 0%, #e0c88a 50%, ${DESIGN.gold} 100%)`,
+                color: DESIGN.bg, border: 'none', borderRadius: 8, padding: '7px 16px',
+                fontWeight: 600, fontSize: 12, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+              }}>Start</button>
+              <button onClick={() => setMenuOpen(!menuOpen)} style={{
+                background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8,
+                padding: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                {menuOpen ? <X size={20} color="rgba(255,255,255,0.7)" /> : <Menu size={20} color="rgba(255,255,255,0.7)" />}
+              </button>
+            </div>
           </div>
         </nav>
+
+        {/* Mobile menu overlay */}
+        {menuOpen && (
+          <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 95,
+            background: 'rgba(10,10,15,0.98)', backdropFilter: 'blur(24px)',
+            display: 'flex', flexDirection: 'column', padding: '0 24px',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 64, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+              <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+                <img src="/arxon-icon.png" alt="Arxon" style={{ width: 34, height: 34 }} />
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 20, fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase', color: '#f0f0f0' }}>Arxon</span>
+              </Link>
+              <button onClick={() => setMenuOpen(false)} style={{
+                background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8,
+                padding: 7, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <X size={20} color="rgba(255,255,255,0.7)" />
+              </button>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, paddingTop: 24 }}>
+              {navLinks.map((link, i) => (
+                <Link key={link.id} href={link.id} onClick={() => setMenuOpen(false)} style={{
+                  textDecoration: 'none', color: 'rgba(255,255,255,0.7)', fontSize: 18, fontWeight: 500,
+                  fontFamily: "'DM Sans', sans-serif", padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
+                }}>{link.label}</Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Main Content */}
         <div className="container">
           {/* Back Link */}
-          <a href="/blogg" className="back-link">
-            ← {lang_no.backToBlog}
-          </a>
+          <Link href="/blogg" className="back-link">
+            <ArrowLeft size={16} /> {lang_no.backToBlog}
+          </Link>
 
           {/* Article Header */}
           <header className="article-header">
@@ -895,9 +925,9 @@ export default function AINorge2025() {
                   <div className="cta-content">
                     <h2 className="cta-heading">{section.heading}</h2>
                     <p className="cta-subheading">{section.subheading}</p>
-                    <a href={section.ctaHref} className="cta-button">
+                    <Link href={section.ctaHref} className="cta-button">
                       {section.ctaText}
-                    </a>
+                    </Link>
                   </div>
                 </div>
               );
@@ -916,6 +946,46 @@ export default function AINorge2025() {
             </ul>
           </div>
         </div>
+
+        {/* Footer */}
+        <footer style={{
+          maxWidth: 1100, margin: '0 auto', padding: '48px 24px 36px',
+          borderTop: `1px solid rgba(255,255,255,0.06)`,
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 32, marginBottom: 32 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 280 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <img src="/arxon-icon.png" alt="Arxon" style={{ width: 24, height: 24 }} />
+                <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' }}>Arxon</span>
+              </div>
+              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', lineHeight: 1.6 }}>
+                Intelligent AI-automatisering for norske bedrifter.
+              </span>
+            </div>
+            <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' }}>Tjenester</span>
+                <Link href="/mobilsvarer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>AI Mobilsvarer</Link>
+                <Link href="/hvordan-det-fungerer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>Hvordan det fungerer</Link>
+                <Link href="/kartlegging" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>Gratis kartlegging</Link>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' }}>Kontakt</span>
+                <a href="mailto:kontakt@arxon.no" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>kontakt@arxon.no</a>
+                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Oslo, Norge</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' }}>Juridisk</span>
+                <Link href="/personvern" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>Personvern</Link>
+                <Link href="/vilkar" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>Vilkår for bruk</Link>
+              </div>
+            </div>
+          </div>
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>&copy; {new Date().getFullYear()} Arxon. Alle rettigheter reservert.</span>
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>GDPR-kompatibel · Norsk datasenter</span>
+          </div>
+        </footer>
       </div>
     </>
   );

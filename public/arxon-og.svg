@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="rgba(201,169,110,0.15)"/>
+      <stop offset="100%" stop-color="rgba(10,10,15,0)"/>
+    </radialGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c9a96e"/>
+      <stop offset="50%" stop-color="#e0c88a"/>
+      <stop offset="100%" stop-color="#c9a96e"/>
+    </linearGradient>
+    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(201,169,110,0)"/>
+      <stop offset="50%" stop-color="rgba(201,169,110,0.4)"/>
+      <stop offset="100%" stop-color="rgba(201,169,110,0)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0a0a0f"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- Decorative line top -->
+  <rect x="100" y="160" width="1000" height="1" fill="url(#lineGrad)" opacity="0.3"/>
+
+  <!-- Logo area -->
+  <text x="100" y="120" font-family="system-ui, sans-serif" font-size="28" font-weight="700" letter-spacing="5" fill="rgba(255,255,255,0.6)">ARXON</text>
+
+  <!-- Small gold dot beside logo -->
+  <circle cx="210" cy="113" r="4" fill="#c9a96e"/>
+
+  <!-- Main title -->
+  <text x="100" y="260" font-family="Georgia, serif" font-size="56" font-weight="700" fill="#ffffff">AI som svarer telefonen</text>
+  <text x="100" y="330" font-family="Georgia, serif" font-size="56" font-weight="700" fill="url(#goldGrad)">og sparer deg ansatte</text>
+
+  <!-- Subtitle -->
+  <text x="100" y="395" font-family="system-ui, sans-serif" font-size="22" fill="rgba(255,255,255,0.5)">Automatisk telefonsvarer · Booking · Lead-kvalifisering · 24/7</text>
+
+  <!-- Decorative line bottom -->
+  <rect x="100" y="440" width="1000" height="1" fill="url(#lineGrad)" opacity="0.3"/>
+
+  <!-- Stats row -->
+  <text x="100" y="505" font-family="Georgia, serif" font-size="36" font-weight="700" fill="#c9a96e">24/7</text>
+  <text x="100" y="535" font-family="system-ui, sans-serif" font-size="14" fill="rgba(255,255,255,0.35)">AI-tilgjengelighet</text>
+
+  <text x="330" y="505" font-family="Georgia, serif" font-size="36" font-weight="700" fill="#c9a96e">2 sek</text>
+  <text x="330" y="535" font-family="system-ui, sans-serif" font-size="14" fill="rgba(255,255,255,0.35)">Svartid</text>
+
+  <text x="560" y="505" font-family="Georgia, serif" font-size="36" font-weight="700" fill="#c9a96e">65 000 kr</text>
+  <text x="560" y="535" font-family="system-ui, sans-serif" font-size="14" fill="rgba(255,255,255,0.35)">Spart i lønnskostnader/mnd</text>
+
+  <!-- Domain -->
+  <text x="100" y="600" font-family="system-ui, sans-serif" font-size="16" fill="rgba(201,169,110,0.6)">arxon.no</text>
+
+  <!-- CTA badge -->
+  <rect x="880" y="475" width="220" height="50" rx="10" fill="#c9a96e"/>
+  <text x="990" y="507" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#0a0a0f" text-anchor="middle">Gratis kartlegging →</text>
+
+  <!-- Decorative circles -->
+  <circle cx="1100" cy="150" r="80" fill="none" stroke="rgba(201,169,110,0.08)" stroke-width="1"/>
+  <circle cx="1100" cy="150" r="120" fill="none" stroke="rgba(201,169,110,0.04)" stroke-width="1"/>
+  <circle cx="1100" cy="150" r="160" fill="none" stroke="rgba(201,169,110,0.02)" stroke-width="1"/>
+</svg>
