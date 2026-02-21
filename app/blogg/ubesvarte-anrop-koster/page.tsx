@@ -439,8 +439,43 @@ export default function UbesvarteAnropPage() {
             </div>
           </div>
 
-          <motion.div className="hero-image" variants={itemVariants}>
-            Telefon statistikk illustrasjon
+          <motion.div className="hero-image" variants={itemVariants} style={{ flexDirection: 'column', gap: '1.5rem', padding: '2.5rem', position: 'relative', overflow: 'hidden' }}>
+            {/* Background decorative elements */}
+            <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '200px', height: '200px', borderRadius: '50%', background: `radial-gradient(circle, rgba(${goldRgb}, 0.08) 0%, transparent 70%)` }} />
+            <div style={{ position: 'absolute', bottom: '-60px', left: '-60px', width: '250px', height: '250px', borderRadius: '50%', background: `radial-gradient(circle, rgba(${goldRgb}, 0.05) 0%, transparent 70%)` }} />
+
+            {/* Phone icon */}
+            <div style={{ position: 'relative', zIndex: 2 }}>
+              <svg width="56" height="56" viewBox="0 0 56 56" fill="none" style={{ filter: `drop-shadow(0 0 20px rgba(${goldRgb}, 0.3))` }}>
+                <circle cx="28" cy="28" r="28" fill={`rgba(${goldRgb}, 0.1)`} />
+                <circle cx="28" cy="28" r="20" fill={`rgba(${goldRgb}, 0.08)`} stroke={gold} strokeWidth="1" strokeDasharray="4 4" />
+                <path d="M22 20c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2v16c0 1.1-.9 2-2 2h-8c-1.1 0-2-.9-2-2V20z" stroke={gold} strokeWidth="1.5" fill="none" />
+                <circle cx="28" cy="34" r="1.5" fill={gold} />
+                <line x1="25" y1="22" x2="31" y2="22" stroke={`rgba(${goldRgb}, 0.4)`} strokeWidth="1" />
+                {/* Missed call waves */}
+                <path d="M36 18c2 2 2 5 0 7" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.7" />
+                <path d="M39 15c3.5 3.5 3.5 9 0 12.5" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.4" />
+              </svg>
+            </div>
+
+            {/* Stats row */}
+            <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center', position: 'relative', zIndex: 2 }}>
+              {[
+                { num: '62%', label: 'ubesvarte anrop', color: '#ef4444' },
+                { num: '85%', label: 'ringer ikke igjen', color: '#f59e0b' },
+                { num: '13 000 kr', label: 'tapt per anrop', color: gold },
+              ].map((s, i) => (
+                <div key={i} style={{ textAlign: 'center', minWidth: '120px' }}>
+                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.8rem', fontWeight: 700, color: s.color, lineHeight: 1.2 }}>{s.num}</div>
+                  <div style={{ fontSize: '0.8rem', color: '#a0a0a0', marginTop: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Subtitle */}
+            <div style={{ fontSize: '0.85rem', color: '#808080', position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: '400px' }}>
+              Norske bedrifter taper millioner hvert år på telefoner som ingen svarer
+            </div>
           </motion.div>
 
           <div className="article-content">
