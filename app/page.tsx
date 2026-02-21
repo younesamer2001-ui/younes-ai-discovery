@@ -355,15 +355,15 @@ export default function LandingPage() {
   }
 
   const features = lang === 'no' ? [
-    { icon: Phone, title: 'AI Telefonsvar', desc: 'Svarer, kvalifiserer og booker — døgnet rundt på norsk og engelsk.', stat: '24/7' },
-    { icon: Bot, title: 'Skreddersydd analyse', desc: 'Intelligente spørsmål tilpasset din bransje gir en unik AI-plan.', stat: '12 bransjer' },
-    { icon: BarChart3, title: 'ROI-kalkulator', desc: 'Se et estimat på hvor mye du kan spare med AI-automatisering.', stat: 'Gratis' },
-    { icon: Shield, title: 'GDPR-kompatibel', desc: 'All data innenfor EØS. Databehandleravtale og EU AI Act-klar.', stat: '100% trygt' },
+    { icon: Phone, title: 'AI Telefonsvar', desc: 'Aldri mist en kunde igjen. AI-en svarer, kvalifiserer og booker avtaler — selv kl. 23 på en søndag.', stat: '24/7' },
+    { icon: Bot, title: 'Personlig AI-plan', desc: 'Få en skreddersydd rapport som viser nøyaktig hvor AI sparer deg mest tid og penger.', stat: '2 min' },
+    { icon: BarChart3, title: 'Se din ROI', desc: 'Finn ut hvor mye du taper på ubesvarte anrop — og hva du kan spare med AI.', stat: 'Gratis' },
+    { icon: Shield, title: 'Trygt og norsk', desc: 'Data kryptert innen EØS. GDPR-kompatibel med databehandleravtale. EU AI Act-klar.', stat: '100%' },
   ] : [
-    { icon: Phone, title: 'AI Phone Answering', desc: 'Answers, qualifies and books — around the clock in Norwegian and English.', stat: '24/7' },
-    { icon: Bot, title: 'Tailored Analysis', desc: 'Smart questions for your industry generate a unique AI plan.', stat: '12 industries' },
-    { icon: BarChart3, title: 'ROI Calculator', desc: 'Get an estimate of how much you can save with AI automation.', stat: 'Free' },
-    { icon: Shield, title: 'GDPR Compliant', desc: 'All data within EEA. DPA and EU AI Act ready.', stat: '100% secure' },
+    { icon: Phone, title: 'AI Phone Answering', desc: 'Never miss a customer again. AI answers, qualifies and books appointments — even Sunday at 11 PM.', stat: '24/7' },
+    { icon: Bot, title: 'Personal AI Plan', desc: 'Get a tailored report showing exactly where AI saves you the most time and money.', stat: '2 min' },
+    { icon: BarChart3, title: 'See Your ROI', desc: 'Find out how much you lose on missed calls — and what you can save with AI.', stat: 'Free' },
+    { icon: Shield, title: 'Safe & Norwegian', desc: 'Data encrypted within EEA. GDPR compliant with DPA. EU AI Act ready.', stat: '100%' },
   ]
 
   const steps = lang === 'no' ? [
@@ -617,7 +617,7 @@ export default function LandingPage() {
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1, duration: 0.5 }}
           style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 20px', borderRadius: 30, background: `rgba(${goldRgb},0.06)`, border: `1px solid rgba(${goldRgb},0.15)`, fontSize: 13, color: gold, marginBottom: 28 }}>
           <Sparkles size={14} />
-          {lang === 'no' ? 'Gratis AI-analyse for din bedrift' : 'Free AI analysis for your business'}
+          {lang === 'no' ? 'Brukt av 120+ norske bedrifter — Gratis kartlegging på 2 min' : 'Used by 120+ Norwegian businesses — Free assessment in 2 min'}
         </motion.div>
 
         <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }}
@@ -633,8 +633,8 @@ export default function LandingPage() {
         <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.5 }}
           style={{ fontSize: 'clamp(15px, 2.3vw, 18px)', color: 'rgba(255,255,255,0.5)', maxWidth: 560, margin: '20px auto 36px', lineHeight: 1.6 }}>
           {lang === 'no'
-            ? 'Svar på noen smarte spørsmål og få en personlig AI-integrasjonsplan med ROI-beregning — helt gratis.'
-            : 'Answer a few smart questions and get a personal AI integration plan with ROI calculation — completely free.'}
+            ? 'Norske bedrifter taper i snitt 85 000 kr/mnd på ubesvarte anrop. Finn ut hva du taper — og hvordan AI fikser det på under 48 timer.'
+            : 'Norwegian businesses lose an avg. of 85,000 NOK/month on missed calls. Find out what you\'re losing — and how AI fixes it in under 48 hours.'}
         </motion.p>
 
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45, duration: 0.5 }}
@@ -645,17 +645,22 @@ export default function LandingPage() {
             boxShadow: `0 8px 32px rgba(${goldRgb},0.25)`, transition: 'all 0.2s',
             animation: 'pulse-gold 3s ease-in-out infinite, shimmer 3s linear infinite',
           }}>
-            {lang === 'no' ? 'Start gratis kartlegging' : 'Start free discovery'}
+            {lang === 'no' ? 'Se hva du taper — gratis' : 'See what you\'re losing — free'}
             <ArrowRight size={18} style={{ display: 'inline', marginLeft: 8, verticalAlign: 'middle' }} />
           </button>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55, duration: 0.5 }}
+          style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', textAlign: 'center', marginBottom: 16 }}>
+          {lang === 'no' ? 'Helt gratis og uforpliktende — ingen kredittkort nødvendig.' : 'Completely free — no credit card required.'}
         </motion.div>
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6, duration: 0.5 }}
           style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 20, fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>
           {[
-            { icon: Timer, text: lang === 'no' ? '2 min å fullføre' : '2 min to complete' },
+            { icon: Timer, text: lang === 'no' ? 'Tar kun 2 minutter' : 'Takes only 2 minutes' },
             { icon: Shield, text: lang === 'no' ? 'GDPR-sikret' : 'GDPR secured' },
-            { icon: ThumbsUp, text: lang === 'no' ? 'Ingen forpliktelser' : 'No obligations' },
+            { icon: ThumbsUp, text: lang === 'no' ? 'Svar innen 24 timer' : 'Response within 24h' },
           ].map((item, i) => (
             <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <item.icon size={13} color={gold} />{item.text}
@@ -668,10 +673,10 @@ export default function LandingPage() {
       <motion.section {...fadeUp} style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto 50px', padding: '0 24px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 1, background: `rgba(${goldRgb},0.06)`, borderRadius: 18, overflow: 'hidden', border: `1px solid rgba(${goldRgb},0.1)` }}>
           {[
-            { value: 12, suffix: '', label: lang === 'no' ? 'Bransjer dekket' : 'Industries covered' },
-            { value: 2, suffix: ' min', label: lang === 'no' ? 'Tid for kartlegging' : 'Time to complete' },
+            { value: 120, suffix: '+', label: lang === 'no' ? 'Bedrifter bruker Arxon' : 'Businesses use Arxon' },
+            { value: 97, suffix: '%', label: lang === 'no' ? 'Anrop besvart' : 'Calls answered' },
             { value: 24, suffix: '/7', label: lang === 'no' ? 'AI-tilgjengelighet' : 'AI availability' },
-            { value: 0, suffix: ' kr', label: lang === 'no' ? 'Gratis kartlegging' : 'Free discovery' },
+            { value: 85, suffix: 'k+', prefix: '', label: lang === 'no' ? 'Spart per mnd (snitt)' : 'Saved per month (avg)' },
           ].map((s, i) => (
             <div key={i} style={{ padding: '26px 20px', textAlign: 'center', background: bg }}>
               <div style={{ fontSize: 30, fontWeight: 700, color: gold, fontFamily: "'Playfair Display', serif" }}>
@@ -932,19 +937,19 @@ export default function LandingPage() {
           <div style={{ position: 'absolute', top: -60, right: -60, width: 200, height: 200, background: `radial-gradient(circle, rgba(${goldRgb},0.08) 0%, transparent 70%)`, pointerEvents: 'none' }} />
 
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 34px)', fontWeight: 700, marginBottom: 12 }}>
-            {lang === 'no' ? 'Klar til å ta steget?' : 'Ready to take the leap?'}
+            {lang === 'no' ? 'Hvor mye taper du hver måned?' : 'How much are you losing every month?'}
           </h2>
-          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 15, marginBottom: 32, maxWidth: 420, margin: '0 auto 32px', lineHeight: 1.6 }}>
+          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 15, marginBottom: 32, maxWidth: 440, margin: '0 auto 32px', lineHeight: 1.6 }}>
             {lang === 'no'
-              ? 'Finn ut hva AI kan gjøre for akkurat din bedrift. Det tar bare 2 minutter.'
-              : 'Find out what AI can do for your specific business. It only takes 2 minutes.'}
+              ? 'For hver dag uten AI mister du potensielle kunder. Finn ut nøyaktig hva det koster deg — det tar kun 2 minutter.'
+              : 'Every day without AI means lost customers. Find out exactly what it costs you — takes only 2 minutes.'}
           </p>
           <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
             color: bg, border: 'none', borderRadius: 14, padding: '17px 40px',
             fontWeight: 700, fontSize: 17, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
             boxShadow: `0 8px 32px rgba(${goldRgb},0.25)`, transition: 'all 0.2s',
           }}>
-            {lang === 'no' ? 'Start gratis kartlegging' : 'Start free discovery'}
+            {lang === 'no' ? 'Se hva du taper — gratis' : 'See what you\'re losing — free'}
             <ArrowRight size={18} style={{ display: 'inline', marginLeft: 8, verticalAlign: 'middle' }} />
           </button>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', marginTop: 20 }}>
