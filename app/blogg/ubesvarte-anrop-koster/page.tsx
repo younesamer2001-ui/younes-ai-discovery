@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import styles from './page.module.css';
-
 const gold = '#c9a96e';
 const goldRgb = '201,169,110';
 const bg = '#0a0a0f';
