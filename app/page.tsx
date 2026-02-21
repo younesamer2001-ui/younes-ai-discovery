@@ -427,8 +427,7 @@ export default function LandingPage() {
       {/* Particles background */}
       <Particles />
 
-      {/* Live social proof toasts */}
-      <LiveToasts lang={lang} />
+      {/* Social proof toasts — removed (no real data yet) */}
 
       {/* ── STICKY NAV BAR (appears on scroll) ── */}
       <AnimatePresence>
@@ -614,13 +613,13 @@ export default function LandingPage() {
         {/* Big radial glow */}
         <div style={{ position: 'absolute', top: '-40%', left: '50%', transform: 'translateX(-50%)', width: 800, height: 600, background: `radial-gradient(ellipse, rgba(${goldRgb},0.06) 0%, transparent 70%)`, pointerEvents: 'none' }} />
 
-        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1, duration: 0.5 }}
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0, duration: 0.35 }}
           style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 20px', borderRadius: 30, background: `rgba(${goldRgb},0.06)`, border: `1px solid rgba(${goldRgb},0.15)`, fontSize: 13, color: gold, marginBottom: 28 }}>
           <Sparkles size={14} />
-          {lang === 'no' ? 'Brukt av 120+ norske bedrifter — Gratis kartlegging på 2 min' : 'Used by 120+ Norwegian businesses — Free assessment in 2 min'}
+          {lang === 'no' ? 'AI-drevet kundeservice for norske bedrifter — Gratis kartlegging på 2 min' : 'AI-powered customer service for Norwegian businesses — Free assessment in 2 min'}
         </motion.div>
 
-        <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }}
+        <motion.h1 initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.4 }}
           className="hero-title"
           style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(32px, 6vw, 58px)', fontWeight: 700, lineHeight: 1.1, marginBottom: 6, letterSpacing: '-0.02em', position: 'relative' }}>
           {lang === 'no' ? (
@@ -630,14 +629,14 @@ export default function LandingPage() {
           )}
         </motion.h1>
 
-        <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.5 }}
+        <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.35 }}
           style={{ fontSize: 'clamp(15px, 2.3vw, 18px)', color: 'rgba(255,255,255,0.5)', maxWidth: 560, margin: '20px auto 36px', lineHeight: 1.6 }}>
           {lang === 'no'
             ? 'Norske bedrifter taper i snitt 85 000 kr/mnd på ubesvarte anrop. Finn ut hva du taper — og hvordan AI fikser det på under 48 timer.'
             : 'Norwegian businesses lose an avg. of 85,000 NOK/month on missed calls. Find out what you\'re losing — and how AI fixes it in under 48 hours.'}
         </motion.p>
 
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45, duration: 0.5 }}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.35 }}
           style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 14, marginBottom: 28 }}>
           <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
             color: bg, border: 'none', borderRadius: 14, padding: '17px 40px',
@@ -650,12 +649,12 @@ export default function LandingPage() {
           </button>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55, duration: 0.5 }}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2, duration: 0.35 }}
           style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', textAlign: 'center', marginBottom: 16 }}>
           {lang === 'no' ? 'Helt gratis og uforpliktende — ingen kredittkort nødvendig.' : 'Completely free — no credit card required.'}
         </motion.div>
 
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6, duration: 0.5 }}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25, duration: 0.35 }}
           style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 20, fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>
           {[
             { icon: Timer, text: lang === 'no' ? 'Tar kun 2 minutter' : 'Takes only 2 minutes' },
@@ -672,12 +671,17 @@ export default function LandingPage() {
       {/* ── STATS BAR ── */}
       <motion.section {...fadeUp} style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto 50px', padding: '0 24px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 1, background: `rgba(${goldRgb},0.06)`, borderRadius: 18, overflow: 'hidden', border: `1px solid rgba(${goldRgb},0.1)` }}>
-          {[
-            { value: 120, suffix: '+', label: lang === 'no' ? 'Bedrifter bruker Arxon' : 'Businesses use Arxon' },
-            { value: 97, suffix: '%', label: lang === 'no' ? 'Anrop besvart' : 'Calls answered' },
-            { value: 24, suffix: '/7', label: lang === 'no' ? 'AI-tilgjengelighet' : 'AI availability' },
-            { value: 85, suffix: 'k+', prefix: '', label: lang === 'no' ? 'Spart per mnd (snitt)' : 'Saved per month (avg)' },
-          ].map((s, i) => (
+          {(lang === 'no' ? [
+            { value: 24, suffix: '/7', label: 'AI-tilgjengelighet' },
+            { value: 2, suffix: ' sek', label: 'Svartid på anrop' },
+            { value: 48, suffix: ' timer', label: 'Oppsett og lansering' },
+            { value: 100, suffix: '%', label: 'GDPR-kompatibel' },
+          ] : [
+            { value: 24, suffix: '/7', label: 'AI availability' },
+            { value: 2, suffix: ' sec', label: 'Call response time' },
+            { value: 48, suffix: ' hours', label: 'Setup and launch' },
+            { value: 100, suffix: '%', label: 'GDPR compliant' },
+          ]).map((s, i) => (
             <div key={i} style={{ padding: '26px 20px', textAlign: 'center', background: bg }}>
               <div style={{ fontSize: 30, fontWeight: 700, color: gold, fontFamily: "'Playfair Display', serif" }}>
                 <AnimCounter target={s.value} suffix={s.suffix} />
@@ -685,6 +689,51 @@ export default function LandingPage() {
               <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 4 }}>{s.label}</div>
             </div>
           ))}
+        </div>
+      </motion.section>
+
+      {/* ── VIDEO / DEMO SECTION ── */}
+      <motion.section {...fadeUp} style={{ position: 'relative', zIndex: 1, maxWidth: 800, margin: '0 auto 70px', padding: '0 24px' }}>
+        <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, textAlign: 'center', marginBottom: 10 }}>
+          {lang === 'no' ? 'Se Arxon i aksjon' : 'See Arxon in action'}
+        </motion.h2>
+        <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 14, marginBottom: 32, maxWidth: 460, margin: '0 auto 32px' }}>
+          {lang === 'no' ? 'Slik fungerer AI-mobilsvareren din — fra første ring til booket møte.' : 'How your AI phone answering works — from first ring to booked meeting.'}
+        </motion.p>
+        <div style={{
+          position: 'relative', borderRadius: 20, overflow: 'hidden',
+          background: `linear-gradient(135deg, rgba(${goldRgb},0.04) 0%, rgba(${goldRgb},0.01) 100%)`,
+          border: `1px solid rgba(${goldRgb},0.12)`, aspectRatio: '16/9',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16,
+        }}>
+          {/* Decorative phone animation */}
+          <motion.div
+            animate={{ y: [0, -6, 0] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+            style={{
+              width: 72, height: 72, borderRadius: 20,
+              background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.2)`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            <Phone size={32} color={gold} />
+          </motion.div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: 16, fontWeight: 600, color: '#f0f0f0', marginBottom: 4 }}>
+              {lang === 'no' ? 'Video kommer snart' : 'Video coming soon'}
+            </div>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>
+              {lang === 'no' ? 'Se en live demo av AI-mobilsvareren' : 'Watch a live demo of the AI phone answering'}
+            </div>
+          </div>
+          <button onClick={() => router.push('/kartlegging')} style={{
+            marginTop: 8, background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.2)`,
+            color: gold, borderRadius: 12, padding: '12px 28px', fontWeight: 600, fontSize: 14,
+            cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
+          }}>
+            {lang === 'no' ? 'Prøv det selv — gratis kartlegging' : 'Try it yourself — free assessment'}
+            <ArrowRight size={14} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
+          </button>
         </div>
       </motion.section>
 
@@ -1021,6 +1070,42 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* ── STICKY MOBILE CTA (bottom bar) ── */}
+      <AnimatePresence>
+        {showSticky && (
+          <motion.div
+            className="show-mobile-only"
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 80, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            style={{
+              position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 90,
+              background: 'rgba(10,10,15,0.95)', backdropFilter: 'blur(20px)',
+              borderTop: `1px solid rgba(${goldRgb},0.1)`,
+              padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+            }}
+          >
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: '#f0f0f0' }}>
+                {lang === 'no' ? 'Gratis AI-kartlegging' : 'Free AI assessment'}
+              </div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>
+                {lang === 'no' ? 'Tar kun 2 minutter' : 'Takes only 2 minutes'}
+              </div>
+            </div>
+            <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
+              color: bg, border: 'none', borderRadius: 10, padding: '11px 22px',
+              fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+              flexShrink: 0, whiteSpace: 'nowrap' as const,
+            }}>
+              {lang === 'no' ? 'Start nå' : 'Start now'}
+              <ArrowRight size={14} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
