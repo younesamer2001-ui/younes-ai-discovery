@@ -325,16 +325,8 @@ Arxon is designed to make this job easier. We handle the complexity behind the s
   const t = content[language];
 
   return (
-    <html lang={language}>
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta
-          name="description"
-          content={t.subtitle}
-        />
-        <title>{t.title} | Arxon</title>
-        <style>{`
+    <>
+      <style>{`
           @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap');
 
           * {
@@ -656,9 +648,7 @@ Arxon is designed to make this job easier. We handle the complexity behind the s
             }
           }
         `}</style>
-      </head>
-      <body>
-        <div className="nav-container">
+      <div className="nav-container">
           <nav>
             <Link href="/" className="nav-logo">
               ARXON
@@ -769,7 +759,6 @@ Arxon is designed to make this job easier. We handle the complexity behind the s
             </div>
           </article>
         </div>
-      </body>
-    </html>
+    </>
   );
 }
