@@ -3,6 +3,54 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
+function RenderContent({ text }: { text: string }) {
+  const paragraphs = text.split('\n\n').filter(p => p.trim());
+
+  return (
+    <div>
+      {paragraphs.map((para, i) => {
+        const trimmed = para.trim();
+
+        // Numbered list (starts with 1. 2. 3. etc)
+        if (/^\d+\.\s/.test(trimmed)) {
+          const items = trimmed.split(/\n/).filter(l => l.trim());
+          return (
+            <ol key={i} style={{ paddingLeft: '1.5rem', marginBottom: '1.5rem', color: '#d0d0d0', listStyleType: 'decimal' }}>
+              {items.map((item, j) => (
+                <li key={j} style={{ marginBottom: '0.5rem', lineHeight: 1.7 }}
+                  dangerouslySetInnerHTML={{ __html: item.replace(/^\d+\.\s*/, '').replace(/\*\*(.*?)\*\*/g, '<strong style="color:#c9a96e;font-weight:600">$1</strong>') }}
+                />
+              ))}
+            </ol>
+          );
+        }
+
+        // Bullet list (starts with -)
+        if (/^-\s/.test(trimmed)) {
+          const items = trimmed.split(/\n/).filter(l => l.trim());
+          return (
+            <ul key={i} style={{ paddingLeft: '1.5rem', marginBottom: '1.5rem', color: '#d0d0d0', listStyleType: 'none' }}>
+              {items.map((item, j) => (
+                <li key={j} style={{ marginBottom: '0.5rem', lineHeight: 1.7, paddingLeft: '1rem', position: 'relative' }}>
+                  <span style={{ position: 'absolute', left: 0, color: '#c9a96e' }}>•</span>
+                  <span dangerouslySetInnerHTML={{ __html: item.replace(/^-\s*/, '').replace(/\*\*(.*?)\*\*/g, '<strong style="color:#c9a96e;font-weight:600">$1</strong>') }} />
+                </li>
+              ))}
+            </ul>
+          );
+        }
+
+        // Regular paragraph with bold support
+        return (
+          <p key={i} style={{ marginBottom: '1.5rem', lineHeight: 1.8, color: '#d0d0d0' }}
+            dangerouslySetInnerHTML={{ __html: trimmed.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#c9a96e;font-weight:600">$1</strong>') }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 export default function GDPRAndAIPhonePage() {
   const [language, setLanguage] = useState<'no' | 'en'>('no');
 
@@ -687,42 +735,42 @@ Arxon is designed to make this job easier. We handle the complexity behind the s
 
             <div className="article-content">
               <section className="section">
-                <p>{t.sections.intro}</p>
+                <RenderContent text={t.sections.intro} />
               </section>
 
               <section className="section">
                 <h2>{t.sections.section1Title}</h2>
-                <p>{t.sections.section1Content}</p>
+                <RenderContent text={t.sections.section1Content} />
               </section>
 
               <section className="section">
                 <h2>{t.sections.section2Title}</h2>
-                <p>{t.sections.section2Content}</p>
+                <RenderContent text={t.sections.section2Content} />
               </section>
 
               <section className="section">
                 <h2>{t.sections.section3Title}</h2>
-                <p>{t.sections.section3Content}</p>
+                <RenderContent text={t.sections.section3Content} />
               </section>
 
               <section className="section">
                 <h2>{t.sections.section4Title}</h2>
-                <p>{t.sections.section4Content}</p>
+                <RenderContent text={t.sections.section4Content} />
               </section>
 
               <section className="section">
                 <h2>{t.sections.section5Title}</h2>
-                <p>{t.sections.section5Content}</p>
+                <RenderContent text={t.sections.section5Content} />
               </section>
 
               <section className="section">
                 <h2>{t.sections.section6Title}</h2>
-                <p>{t.sections.section6Content}</p>
+                <RenderContent text={t.sections.section6Content} />
               </section>
 
               <section className="section">
                 <h2>{t.sections.section7Title}</h2>
-                <p>{t.sections.section7Content}</p>
+                <RenderContent text={t.sections.section7Content} />
                 <div className="checklist-box">
                   <h3>
                     {language === 'no' ? 'GDPR Samsvarsjekkliste' : 'GDPR Compliance Checklist'}
@@ -737,7 +785,7 @@ Arxon is designed to make this job easier. We handle the complexity behind the s
 
               <section className="section">
                 <h2>{t.sections.section8Title}</h2>
-                <p>{t.sections.section8Content}</p>
+                <RenderContent text={t.sections.section8Content} />
               </section>
 
               <div className="sources">
