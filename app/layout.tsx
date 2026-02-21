@@ -150,7 +150,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
       </head>
-      <body className="min-h-screen bg-gray-50 dark:bg-gray-950 antialiased">
+      <body className="min-h-screen antialiased" style={{ backgroundColor: '#0a0a0f', color: '#e0e0e0' }}>
         {children}
       </body>
     </html>
