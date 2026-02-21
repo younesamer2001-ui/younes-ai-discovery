@@ -466,15 +466,15 @@ export default function UbesvarteAnropPage() {
               </p>
 
               <div className="stat-highlight">
-                "Et ubesvart anrop til en tjenesteytingsbedrift koster i gjennomsnitt $1.200 (rundt 13.000 NOK) – målt som tapt
+                "Et ubesvart anrop til en tjenesteytingsbedrift koster i gjennomsnitt 13 000 kr – målt som tapt
                 inntekt, ressursinvestering, og potensielle fremtidsverdier fra en kunde som aldri vendte tilbake."
               </div>
 
               <h2>Hva er den samlede kostnaden for norske SMB-er?</h2>
               <p>
                 For å forstå skalaen på problemet, må vi se på dataene fra Dialora.ai, som viser at gjennomsnittlige små og
-                mellomstore bedrifter (SMB-er) i OECD-land mister rundt <strong>$126.000 årlig</strong> på grunn av ubesvarte
-                anrop. I norsk kontekst, hvor SMB-sektoren genererer omkring <strong>700 milliarder NOK i årlig verdiskapning</strong>,
+                mellomstore bedrifter (SMB-er) i OECD-land mister rundt <strong>1,4 millioner kr årlig</strong> på grunn av ubesvarte
+                anrop. I norsk kontekst, hvor SMB-sektoren genererer omkring <strong>700 milliarder kr i årlig verdiskapning</strong>,
                 er dette betydelig.
               </p>
 
@@ -545,8 +545,8 @@ export default function UbesvarteAnropPage() {
 
               <h2>Konklusjon: Ikke la ubesvarte anrop bli dine viktigste konkurrenter</h2>
               <p>
-                Ubesvarte anrop koster norske bedrifter enormt mye penger og muligheter hvert eneste år. Med en gjennomsnittlig tap på
-                $126.000 per SMB, og kun 37,8 prosent av anrop som besvares, er det klart at dette er et område hvor selv små
+                Ubesvarte anrop koster norske bedrifter enormt mye penger og muligheter hvert eneste år. Med et gjennomsnittlig tap på
+                1,4 millioner kr per SMB, og kun 37,8 prosent av anrop som besvares, er det klart at dette er et område hvor selv små
                 forbedringer kan ha stor innvirkning.
               </p>
 
@@ -567,7 +567,7 @@ export default function UbesvarteAnropPage() {
                 <h4>Nøkkeltall</h4>
 
                 <div className="stat-item">
-                  <div className="stat-number">$126.000</div>
+                  <div className="stat-number">1,4M kr</div>
                   <div className="stat-label">Årlig tap per SMB</div>
                 </div>
 
@@ -587,12 +587,12 @@ export default function UbesvarteAnropPage() {
                 </div>
 
                 <div className="stat-item">
-                  <div className="stat-number">$1.200</div>
+                  <div className="stat-number">13 000 kr</div>
                   <div className="stat-label">Kost per ubesvart anrop</div>
                 </div>
 
                 <div className="stat-item">
-                  <div className="stat-number">700B NOK</div>
+                  <div className="stat-number">700 mrd kr</div>
                   <div className="stat-label">Årlig SME verdiskapning</div>
                 </div>
               </div>
