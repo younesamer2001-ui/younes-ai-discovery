@@ -297,20 +297,16 @@ export default function LandingPage() {
     return () => { document.body.style.overflow = '' }
   }, [menuOpen])
 
-  /* ── Nav links — mix of page links and scroll-to-section links ── */
+  /* ── Nav links — clean, 4 items max for desktop ── */
   const navLinks = lang === 'no' ? [
-    { id: '/mobilsvarer', label: 'Mobilsvarer', isPage: true },
-    { id: '/hvordan-det-fungerer', label: 'Hvordan det fungerer', isPage: true },
-    { id: '/integrasjoner', label: 'Integrasjoner', isPage: true },
-    { id: '/blogg', label: 'Blogg', isPage: true },
+    { id: '/mobilsvarer', label: 'Tjenester', isPage: true },
     { id: '/priser', label: 'Priser', isPage: true },
+    { id: '/blogg', label: 'Blogg', isPage: true },
     { id: '/om-oss', label: 'Om oss', isPage: true },
   ] : [
-    { id: '/mobilsvarer', label: 'AI Answering', isPage: true },
-    { id: '/hvordan-det-fungerer', label: 'How it works', isPage: true },
-    { id: '/integrasjoner', label: 'Integrations', isPage: true },
-    { id: '/blogg', label: 'Blog', isPage: true },
+    { id: '/mobilsvarer', label: 'Services', isPage: true },
     { id: '/priser', label: 'Pricing', isPage: true },
+    { id: '/blogg', label: 'Blog', isPage: true },
     { id: '/om-oss', label: 'About', isPage: true },
   ]
 
@@ -572,7 +568,11 @@ export default function LandingPage() {
             </div>
             {/* Menu links */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4, paddingTop: 24 }}>
-              {navLinks.map((link, i) => (
+              {[
+                ...navLinks,
+                { id: '/hvordan-det-fungerer', label: lang === 'no' ? 'Hvordan det fungerer' : 'How it works', isPage: true },
+                { id: '/integrasjoner', label: lang === 'no' ? 'Integrasjoner' : 'Integrations', isPage: true },
+              ].map((link, i) => (
                 <motion.button
                   key={link.id}
                   initial={{ opacity: 0, x: -20 }}
