@@ -26,81 +26,39 @@ export default function PricingPage() {
     { id: '/om-oss', label: 'Om oss' },
   ]
 
-  const plans = [
+  const tiers = [
     {
       name: 'Starter',
-      desc: 'For bedrifter som vil komme i gang med AI og fange opp tapte henvendelser.',
-      fromMonthly: '2 490',
-      setupFrom: '15 000',
+      desc: 'Kom i gang med 1–2 automasjoner og fang opp tapte henvendelser.',
+      automations: '1–2',
+      timeSaved: '10–20 t/uke',
       icon: Phone,
-      features: [
-        'AI-telefonsvarer 24/7',
-        'Automatisk booking og kalender',
-        'SMS-bekreftelser til kunder',
-        'Samtaleoppsummering på e-post',
-        'Norsk språkstøtte',
-        'GDPR-kompatibel',
-        'Månedlig ytelsesrapport',
-      ],
+      examples: ['AI-telefonsvarer 24/7', 'Automatisk booking og kalender', 'SMS-bekreftelser'],
       idealFor: 'Enkeltpersonforetak, frisører, håndverkere',
       popular: false,
+      color: '#6ee7b7',
     },
     {
       name: 'Profesjonell',
-      desc: 'For etablerte bedrifter som vil automatisere kundemottak, oppfølging og salg.',
-      fromMonthly: '4 990',
-      setupFrom: '30 000',
+      desc: 'Automatiser kundemottak, oppfølging og salg med 3–5 automasjoner.',
+      automations: '3–5',
+      timeSaved: '20–35 t/uke',
       icon: Zap,
-      features: [
-        'Alt i Starter, pluss:',
-        'Ubegrensede samtaler',
-        'CRM-integrasjon',
-        'Lead-kvalifisering og scoring',
-        'Flerbruker-dashbord',
-        'Tilpasset AI-stemme og personlighet',
-        'SMS og e-post-oppfølging',
-        'Prioritert støtte',
-      ],
+      examples: ['Alt i Starter +', 'CRM-integrasjon & lead-scoring', 'E-post og SMS-oppfølging', 'Fakturering & purring', 'Kundetilfredshet & anmeldelser'],
       idealFor: 'Voksende bedrifter, klinikker, advokatkontor',
       popular: true,
+      color: gold,
     },
     {
       name: 'Vekst',
-      desc: 'For bedrifter som vil skalere med full automatisering og avansert analyse.',
-      fromMonthly: '7 990',
-      setupFrom: '50 000',
+      desc: 'Full automatisering med 6+ automasjoner og avansert analyse.',
+      automations: '6+',
+      timeSaved: '35–50+ t/uke',
       icon: TrendingUp,
-      features: [
-        'Alt i Profesjonell, pluss:',
-        'API-tilgang',
-        'Flerbruker-dashbord (15+ brukere)',
-        'Flerspråklig støtte',
-        'Avansert analyse og rapportering',
-        'Multi-lokasjon støtte',
-        'Dedikert kontaktperson',
-        'Prioritert onboarding',
-      ],
+      examples: ['Alt i Profesjonell +', 'Intern rapportering & dashboards', 'Social media auto-publisering', 'Dokumentgenerering med AI', 'Automatisert onboarding', 'Dedikert kontaktperson'],
       idealFor: 'Bedrifter med flere lokasjoner, kjeder',
       popular: false,
-    },
-    {
-      name: 'Enterprise',
-      desc: 'Skreddersydd løsning for store bedrifter med komplekse behov og full kontroll.',
-      fromMonthly: null,
-      setupFrom: null,
-      icon: Building2,
-      features: [
-        'Alt i Vekst, pluss:',
-        'Ubegrensede brukere',
-        'Skreddersydd AI-opplæring',
-        'On-premise muligheter',
-        'SLA-garanti (99,9% oppetid)',
-        'Prioritert 24/7 support',
-        'Egendefinerte integrasjoner',
-        'Kvartalsvis forretningsgjennomgang',
-      ],
-      idealFor: 'Enterprise, 50+ ansatte',
-      popular: false,
+      color: '#a78bfa',
     },
   ]
 
@@ -136,13 +94,9 @@ export default function PricingPage() {
         .gold-hover { transition: all 0.3s ease; }
         .gold-hover:hover { border-color: rgba(${goldRgb},0.3) !important; transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
         .show-mobile-only { display: none !important; }
-        @media (max-width: 1100px) {
-          .grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
-        }
         @media (max-width: 768px) {
           .hide-mobile { display: none !important; }
           .show-mobile-only { display: flex !important; }
-          .grid-4 { grid-template-columns: 1fr !important; }
           .comparison-grid { grid-template-columns: 1.5fr 1fr 1fr 1fr !important; font-size: 12px !important; }
           .comparison-grid span { font-size: inherit !important; }
         }
@@ -206,12 +160,12 @@ export default function PricingPage() {
             <ArrowLeft size={14} /> Tilbake til forsiden
           </Link>
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(30px, 5vw, 48px)', fontWeight: 700, marginBottom: 16 }}>
-            Investering som betaler seg<br />
-            <span style={{ color: gold }}>fra dag én.</span>
+            Bygg pakken din.<br />
+            <span style={{ color: gold }}>Få tilpasset pris.</span>
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 17, maxWidth: 600, margin: '0 auto 20px', lineHeight: 1.6 }}>
-            Hver bedrift er unik — derfor tilpasser vi løsningen og prisen til dine behov.
-            Start med en gratis kartlegging, så lager vi et skreddersydd tilbud.
+            Velg automasjonene som passer din bedrift — vi tilpasser prisen basert på ditt valg.
+            Ingen faste pakker, bare det du faktisk trenger.
           </p>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(74,222,128,0.06)', border: '1px solid rgba(74,222,128,0.15)', borderRadius: 10, padding: '10px 20px', fontSize: 14, color: '#4ade80' }}>
             <CheckCircle2 size={16} />
@@ -227,91 +181,88 @@ export default function PricingPage() {
           border: `1px solid rgba(${goldRgb},0.12)`, borderRadius: 18, padding: '28px 28px',
         }}>
           <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, marginBottom: 12, textAlign: 'center' }}>
-            Hvordan prismodellen fungerer
+            Slik fungerer det
           </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <MessageSquare size={18} color={gold} style={{ flexShrink: 0, marginTop: 2 }} />
+              <div><strong style={{ color: '#f0f0f0' }}>1. Kartlegging</strong><br />Vi analyserer bedriften din og anbefaler automasjoner for din bransje.</div>
+            </div>
             <div style={{ display: 'flex', gap: 10 }}>
               <Sparkles size={18} color={gold} style={{ flexShrink: 0, marginTop: 2 }} />
-              <div><strong style={{ color: '#f0f0f0' }}>Engangs setup-fee</strong><br />Vi bygger, trener og integrerer AI-løsningen tilpasset din bedrift. Høyere setup = lavere månedsbeløp.</div>
+              <div><strong style={{ color: '#f0f0f0' }}>2. Bygg pakken</strong><br />Du velger hvilke automasjoner du vil ha — vi viser tidsbesparelse og kompleksitet.</div>
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
               <Clock size={18} color={gold} style={{ flexShrink: 0, marginTop: 2 }} />
-              <div><strong style={{ color: '#f0f0f0' }}>Fast månedlig pris</strong><br />Drift, oppdateringer, support og alle integrasjoner inkludert. Ingen skjulte kostnader.</div>
+              <div><strong style={{ color: '#f0f0f0' }}>3. Tilpasset pris</strong><br />Du får et skreddersydd tilbud basert på akkurat det du valgte. Setup + fast mnd.</div>
             </div>
           </div>
         </motion.div>
       </section>
 
-      {/* Pricing Cards */}
-      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px 60px' }}>
-        <div className="grid-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-          {plans.map((plan, i) => {
-            const Icon = plan.icon
+      {/* Tier Examples */}
+      <section style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px 60px' }}>
+        <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 28px)', fontWeight: 700, textAlign: 'center', marginBottom: 8 }}>
+          Tre nivåer — <span style={{ color: gold }}>du velger innholdet</span>
+        </motion.h2>
+        <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 14, marginBottom: 36, maxWidth: 520, margin: '0 auto 36px' }}>
+          Prisen bestemmes av hvor mange automasjoner du velger. Jo mer du automatiserer, desto mer sparer du.
+        </motion.p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+          {tiers.map((tier, i) => {
+            const Icon = tier.icon
             return (
             <motion.div key={i} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.45 }}
               className="gold-hover"
               style={{
-                background: plan.popular ? `linear-gradient(135deg, rgba(${goldRgb},0.06) 0%, rgba(${goldRgb},0.02) 100%)` : 'rgba(255,255,255,0.02)',
-                border: `1px solid ${plan.popular ? `rgba(${goldRgb},0.25)` : 'rgba(255,255,255,0.06)'}`,
+                background: tier.popular ? `linear-gradient(135deg, rgba(${goldRgb},0.06) 0%, rgba(${goldRgb},0.02) 100%)` : 'rgba(255,255,255,0.02)',
+                border: `1px solid ${tier.popular ? `rgba(${goldRgb},0.25)` : 'rgba(255,255,255,0.06)'}`,
                 borderRadius: 20, padding: '28px 22px',
                 position: 'relative', display: 'flex', flexDirection: 'column',
               }}>
-              {plan.popular && (
+              {tier.popular && (
                 <div style={{
                   position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)',
                   background: gold, color: bg, fontSize: 11, fontWeight: 700, padding: '4px 16px',
                   borderRadius: 20, letterSpacing: '0.5px', textTransform: 'uppercase' as const,
                   whiteSpace: 'nowrap',
-                }}>Mest populær</div>
+                }}>Mest valgt</div>
               )}
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                 <div style={{ width: 36, height: 36, borderRadius: 10, background: `rgba(${goldRgb},0.1)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Icon size={18} color={gold} />
+                  <Icon size={18} color={tier.color} />
                 </div>
-                <h3 style={{ fontSize: 22, fontWeight: 700, fontFamily: "'Playfair Display', serif" }}>{plan.name}</h3>
+                <h3 style={{ fontSize: 22, fontWeight: 700, fontFamily: "'Playfair Display', serif", color: tier.color }}>{tier.name}</h3>
               </div>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 20, lineHeight: 1.5 }}>{plan.desc}</p>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 20, lineHeight: 1.5 }}>{tier.desc}</p>
 
-              {/* Price */}
-              {plan.fromMonthly ? (
-                <div style={{ marginBottom: 6 }}>
-                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>fra</span>
-                  <span style={{ fontSize: 36, fontWeight: 700, color: gold, fontFamily: "'Playfair Display', serif", marginLeft: 6 }}>
-                    {plan.fromMonthly} kr
-                  </span>
-                  <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)', marginLeft: 4 }}>/mnd</span>
+              {/* Key stats */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
+                <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, padding: '12px', textAlign: 'center' }}>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginBottom: 4 }}>Automasjoner</div>
+                  <div style={{ fontSize: 20, fontWeight: 700, color: tier.color }}>{tier.automations}</div>
                 </div>
-              ) : (
-                <div style={{ marginBottom: 6 }}>
-                  <span style={{ fontSize: 32, fontWeight: 700, color: gold, fontFamily: "'Playfair Display', serif" }}>Tilpasset</span>
+                <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, padding: '12px', textAlign: 'center' }}>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginBottom: 4 }}>Tidsbesparelse</div>
+                  <div style={{ fontSize: 20, fontWeight: 700, color: tier.color }}>{tier.timeSaved}</div>
                 </div>
-              )}
-
-              {/* Setup fee */}
-              {plan.setupFrom ? (
-                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 20 }}>
-                  Setup fra <span style={{ color: '#f0f0f0', fontWeight: 600 }}>{plan.setupFrom} kr</span> (engangs)
-                </div>
-              ) : (
-                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 20 }}>
-                  Setup og pris etter kartlegging
-                </div>
-              )}
+              </div>
 
               {/* Ideal for */}
               <div style={{
                 background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
                 borderRadius: 10, padding: '8px 12px', marginBottom: 20, fontSize: 12, color: 'rgba(255,255,255,0.45)',
               }}>
-                Passer for: <span style={{ color: 'rgba(255,255,255,0.7)' }}>{plan.idealFor}</span>
+                Passer for: <span style={{ color: 'rgba(255,255,255,0.7)' }}>{tier.idealFor}</span>
               </div>
 
-              {/* Features */}
+              {/* Example automations */}
               <div style={{ flex: 1, marginBottom: 24 }}>
-                {plan.features.map((f, j) => (
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginBottom: 10, fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase' as const }}>Eksempel på innhold</div>
+                {tier.examples.map((f, j) => (
                   <div key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 10 }}>
-                    <CheckCircle2 size={15} color={gold} style={{ flexShrink: 0, marginTop: 2 }} />
+                    <CheckCircle2 size={15} color={tier.color} style={{ flexShrink: 0, marginTop: 2 }} />
                     <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.4 }}>{f}</span>
                   </div>
                 ))}
@@ -319,17 +270,17 @@ export default function PricingPage() {
 
               {/* CTA */}
               <button onClick={() => router.push('/kartlegging')}
-                className={plan.popular ? 'cta-shimmer' : ''}
+                className={tier.popular ? 'cta-shimmer' : ''}
                 style={{
                   width: '100%', padding: '14px', borderRadius: 12, fontWeight: 600, fontSize: 15,
                   cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
-                  ...(plan.popular ? {
+                  ...(tier.popular ? {
                     color: bg, border: 'none',
                   } : {
                     background: `rgba(${goldRgb},0.08)`, border: `1px solid rgba(${goldRgb},0.2)`, color: gold,
                   }),
                 }}>
-                {plan.fromMonthly ? 'Få tilpasset pris' : 'Kontakt oss'}
+                Bygg din pakke
                 <ArrowRight size={14} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
               </button>
             </motion.div>
@@ -338,7 +289,7 @@ export default function PricingPage() {
 
         {/* Note under cards */}
         <motion.p {...fadeUp} style={{ textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.3)', marginTop: 20, maxWidth: 600, margin: '20px auto 0' }}>
-          Eksakt pris avhenger av antall automatiseringer, integrasjoner og kompleksitet.
+          Prisen tilpasses basert på dine valg. Inkluderer engangs setup-fee + fast månedlig pris.
           Alle priser eks. mva. Ingen bindingstid etter oppsett.
         </motion.p>
       </section>
@@ -438,10 +389,10 @@ export default function PricingPage() {
         </motion.h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
           {[
-            { step: '1', title: 'Gratis kartlegging', desc: 'Vi analyserer bedriften din og identifiserer de beste automatiseringsmulighetene.' },
-            { step: '2', title: 'Skreddersydd tilbud', desc: 'Du får en konkret plan med eksakt pris basert på dine behov — ingen overraskelser.' },
-            { step: '3', title: 'Vi bygger og integrerer', desc: 'Vårt team setter opp alt. Du trenger ikke gjøre noe teknisk.' },
-            { step: '4', title: 'Lansering og resultater', desc: 'AI-løsningen går live. Du ser besparelsene fra dag én.' },
+            { step: '1', title: 'Gratis kartlegging', desc: 'Svar på noen spørsmål om bedriften din. Vi identifiserer de beste automatiseringsmulighetene for din bransje.' },
+            { step: '2', title: 'Bygg din pakke', desc: 'Velg hvilke automasjoner du vil ha fra anbefalingene. Se tidsbesparelse og kompleksitet for hver løsning.' },
+            { step: '3', title: 'Få tilpasset tilbud', desc: 'Vi kontakter deg med eksakt pris basert på det du valgte — setup-fee og fast månedlig kostnad.' },
+            { step: '4', title: 'Vi bygger og lanserer', desc: 'Vårt team setter opp alt. Du trenger ikke gjøre noe teknisk. Du ser besparelsene fra dag én.' },
           ].map((s, i) => (
             <motion.div key={i} {...fadeUp} style={{ display: 'flex', gap: 20, padding: '20px 0', borderBottom: i < 3 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
               <div style={{
@@ -485,16 +436,16 @@ export default function PricingPage() {
       <section style={{ maxWidth: 700, margin: '0 auto', padding: '0 24px 70px', textAlign: 'center' }}>
         <motion.div {...fadeUp}>
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, marginBottom: 14 }}>
-            Klar for å kutte kostnader?
+            Klar for å bygge din pakke?
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 15, marginBottom: 24, maxWidth: 480, margin: '0 auto 24px' }}>
-            Start med en gratis kartlegging. Vi viser deg nøyaktig hva du kan spare — helt uforpliktende.
+            Start med en gratis kartlegging, velg dine automasjoner, og få et skreddersydd tilbud — helt uforpliktende.
           </p>
           <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
             color: bg, border: 'none', borderRadius: 14, padding: '16px 40px',
             fontWeight: 700, fontSize: 17, cursor: 'pointer',
           }}>
-            Start gratis kartlegging
+            Start kartlegging og bygg pakke
             <ArrowRight size={16} style={{ display: 'inline', marginLeft: 8, verticalAlign: 'middle' }} />
           </button>
         </motion.div>

@@ -1478,43 +1478,44 @@ export default function LandingPage() {
           border: `1px solid rgba(${goldRgb},0.12)`, borderRadius: 22, padding: '40px 32px', textAlign: 'center',
         }}>
           <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, marginBottom: 12 }}>
-            {lang === 'no' ? 'Investering som betaler seg fra dag én' : 'An investment that pays for itself from day one'}
+            {lang === 'no' ? 'Bygg pakken din — få tilpasset pris' : 'Build your package — get custom pricing'}
           </motion.h2>
           <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.45)', fontSize: 15, marginBottom: 28, maxWidth: 480, margin: '0 auto 28px', lineHeight: 1.6 }}>
             {lang === 'no'
-              ? 'Skreddersydd pris basert på dine behov. Setup-fee + fast månedlig — ingen skjulte kostnader.'
-              : 'Tailored pricing based on your needs. Setup fee + fixed monthly — no hidden costs.'}
+              ? 'Velg automasjonene du trenger — vi tilpasser prisen basert på ditt valg. Ingen faste pakker, bare det du trenger.'
+              : 'Choose the automations you need — we tailor pricing based on your selection. No fixed packages, just what you need.'}
           </motion.p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap', marginBottom: 28 }}>
             {(lang === 'no' ? [
-              { name: 'Starter', price: 'fra 2 490', setup: 'Setup fra 15 000 kr', desc: 'Fang tapte henvendelser' },
-              { name: 'Profesjonell', price: 'fra 4 990', setup: 'Setup fra 30 000 kr', desc: 'Automatiser kundemottak' },
-              { name: 'Vekst', price: 'fra 7 990', setup: 'Setup fra 50 000 kr', desc: 'Full automatisering' },
+              { name: 'Starter', automations: '1–2', time: '10–20 t/uke', desc: 'Fang tapte henvendelser', color: '#6ee7b7' },
+              { name: 'Profesjonell', automations: '3–5', time: '20–35 t/uke', desc: 'Automatiser kundemottak', color: gold },
+              { name: 'Vekst', automations: '6+', time: '35–50+ t/uke', desc: 'Full automatisering', color: '#a78bfa' },
             ] : [
-              { name: 'Starter', price: 'from 2,490', setup: 'Setup from 15,000 NOK', desc: 'Catch missed inquiries' },
-              { name: 'Professional', price: 'from 4,990', setup: 'Setup from 30,000 NOK', desc: 'Automate customer intake' },
-              { name: 'Growth', price: 'from 7,990', setup: 'Setup from 50,000 NOK', desc: 'Full automation' },
-            ]).map((plan, i) => (
+              { name: 'Starter', automations: '1–2', time: '10–20 h/week', desc: 'Catch missed inquiries', color: '#6ee7b7' },
+              { name: 'Professional', automations: '3–5', time: '20–35 h/week', desc: 'Automate customer intake', color: gold },
+              { name: 'Growth', automations: '6+', time: '35–50+ h/week', desc: 'Full automation', color: '#a78bfa' },
+            ]).map((tier, i) => (
               <div key={i} style={{
                 background: i === 1 ? `rgba(${goldRgb},0.06)` : 'rgba(255,255,255,0.02)',
                 border: `1px solid ${i === 1 ? `rgba(${goldRgb},0.2)` : 'rgba(255,255,255,0.06)'}`,
                 borderRadius: 14, padding: '20px 24px', minWidth: 160, transition: 'all 0.2s',
               }}>
-                <div style={{ fontSize: 13, color: i === 1 ? gold : 'rgba(255,255,255,0.5)', fontWeight: 600, marginBottom: 4 }}>{plan.name}</div>
-                <div style={{ fontSize: 22, fontWeight: 700, fontFamily: "'Playfair Display', serif", color: '#f0f0f0' }}>
-                  {plan.price}<span style={{ fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.35)' }}> kr/mnd</span>
+                <div style={{ fontSize: 13, color: tier.color, fontWeight: 600, marginBottom: 4 }}>{tier.name}</div>
+                <div style={{ fontSize: 26, fontWeight: 700, fontFamily: "'Playfair Display', serif", color: '#f0f0f0' }}>
+                  {tier.automations}
                 </div>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>{plan.setup}</div>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', marginTop: 2 }}>{plan.desc}</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>{lang === 'no' ? 'automasjoner' : 'automations'}</div>
+                <div style={{ fontSize: 12, color: tier.color, marginTop: 6, fontWeight: 600 }}>{tier.time}</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', marginTop: 2 }}>{tier.desc}</div>
               </div>
             ))}
           </div>
-          <button onClick={() => router.push('/priser')} style={{
-            background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.2)`,
-            color: gold, borderRadius: 12, padding: '13px 32px', fontWeight: 600, fontSize: 14,
+          <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
+            color: bg, border: 'none',
+            borderRadius: 12, padding: '13px 32px', fontWeight: 600, fontSize: 14,
             cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
           }}>
-            {lang === 'no' ? 'Se priser og sammenlign' : 'See pricing and compare'}
+            {lang === 'no' ? 'Bygg din pakke nå' : 'Build your package now'}
             <ArrowRight size={14} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
           </button>
         </div>
