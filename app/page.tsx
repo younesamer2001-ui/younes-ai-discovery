@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import {
   ArrowRight, Globe, Phone, Bot, Zap, Shield, Clock, BarChart3,
@@ -258,6 +259,8 @@ export default function LandingPage() {
   const [showSticky, setShowSticky] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const heroRef = useRef<HTMLDivElement>(null)
+  const footerRef = useRef<HTMLElement>(null)
+  const [nearFooter, setNearFooter] = useState(false)
 
   /* ── Industry data for ROI calculator ── */
   const industryData = lang === 'no' ? [
@@ -289,6 +292,18 @@ export default function LandingPage() {
     const handler = () => setShowSticky(window.scrollY > 600)
     window.addEventListener('scroll', handler, { passive: true })
     return () => window.removeEventListener('scroll', handler)
+  }, [])
+
+  /* ── Hide sticky mobile CTA when near footer ── */
+  useEffect(() => {
+    const footer = footerRef.current
+    if (!footer) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setNearFooter(entry.isIntersecting),
+      { threshold: 0, rootMargin: '60px 0px 0px 0px' }
+    )
+    observer.observe(footer)
+    return () => observer.disconnect()
   }, [])
 
   /* ── Lock body scroll when menu open ── */
@@ -991,10 +1006,11 @@ export default function LandingPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: 16 }}>
           {features.map((f, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.45 }}
+              onClick={() => router.push(i === 0 ? '/mobilsvarer' : '/kartlegging')}
               className="gold-hover"
               style={{
                 background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 18,
-                padding: '28px 24px', transition: 'all 0.3s ease', cursor: 'default',
+                padding: '28px 24px', transition: 'all 0.3s ease', cursor: 'pointer',
               }}>
               <div style={{ width: 48, height: 48, borderRadius: 12, background: `rgba(${goldRgb},0.08)`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
                 <f.icon size={22} color={gold} />
@@ -1043,10 +1059,11 @@ export default function LandingPage() {
           {industries.map((ind, i) => (
             <motion.span key={i}
               whileHover={{ scale: 1.05, borderColor: `rgba(${goldRgb},0.3)` }}
+              onClick={() => router.push('/kartlegging')}
               style={{
                 padding: '9px 20px', borderRadius: 22, fontSize: 13, fontWeight: 500,
                 background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)',
-                color: 'rgba(255,255,255,0.5)', transition: 'all 0.2s', cursor: 'default',
+                color: 'rgba(255,255,255,0.5)', transition: 'all 0.2s', cursor: 'pointer',
               }}>{ind}</motion.span>
           ))}
         </motion.div>
@@ -1063,8 +1080,9 @@ export default function LandingPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
           {useCases.map((uc, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.4 }}
+              onClick={() => router.push('/kartlegging')}
               className="gold-hover"
-              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 18, padding: '28px 24px', transition: 'all 0.3s ease' }}>
+              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 18, padding: '28px 24px', transition: 'all 0.3s ease', cursor: 'pointer' }}>
               <div style={{ width: 48, height: 48, borderRadius: 12, background: `rgba(${goldRgb},0.08)`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
                 <uc.icon size={22} color={gold} />
               </div>
@@ -1260,7 +1278,7 @@ export default function LandingPage() {
       </motion.section>
 
       {/* ── FOOTER ── */}
-      <footer style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '48px 24px 36px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+      <footer ref={footerRef} style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '48px 24px 36px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 32, marginBottom: 32 }}>
           {/* Left: Logo + description + socials */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 280 }}>
@@ -1290,18 +1308,18 @@ export default function LandingPage() {
             {/* Tjenester */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>{lang === 'no' ? 'Tjenester' : 'Services'}</span>
-              <a href="/mobilsvarer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'AI Mobilsvarer' : 'AI Phone Answering'}</a>
-              <a href="/hvordan-det-fungerer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Hvordan det fungerer' : 'How it works'}</a>
-              <a href="/integrasjoner" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Integrasjoner' : 'Integrations'}</a>
-              <a href="/priser" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Priser' : 'Pricing'}</a>
-              <a href="/kartlegging" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Gratis kartlegging' : 'Free assessment'}</a>
+              <Link href="/mobilsvarer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'AI Mobilsvarer' : 'AI Phone Answering'}</Link>
+              <Link href="/hvordan-det-fungerer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Hvordan det fungerer' : 'How it works'}</Link>
+              <Link href="/integrasjoner" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Integrasjoner' : 'Integrations'}</Link>
+              <Link href="/priser" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Priser' : 'Pricing'}</Link>
+              <Link href="/kartlegging" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Gratis kartlegging' : 'Free assessment'}</Link>
             </div>
             {/* Ressurser */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>{lang === 'no' ? 'Ressurser' : 'Resources'}</span>
-              <a href="/blogg" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Blogg' : 'Blog'}</a>
-              <a href="/kundehistorier" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Kundehistorier' : 'Customer stories'}</a>
-              <a href="/om-oss" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Om oss' : 'About us'}</a>
+              <Link href="/blogg" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Blogg' : 'Blog'}</Link>
+              <Link href="/kundehistorier" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Kundehistorier' : 'Customer stories'}</Link>
+              <Link href="/om-oss" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Om oss' : 'About us'}</Link>
             </div>
             {/* Kontakt */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -1313,8 +1331,8 @@ export default function LandingPage() {
             {/* Juridisk */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>{lang === 'no' ? 'Juridisk' : 'Legal'}</span>
-              <a href="/personvern" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Personvern' : 'Privacy Policy'}</a>
-              <a href="/vilkar" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Vilkår for bruk' : 'Terms of Service'}</a>
+              <Link href="/personvern" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Personvern' : 'Privacy Policy'}</Link>
+              <Link href="/vilkar" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Vilkår for bruk' : 'Terms of Service'}</Link>
             </div>
           </div>
         </div>
@@ -1333,7 +1351,7 @@ export default function LandingPage() {
 
       {/* ── STICKY MOBILE CTA (bottom bar) ── */}
       <AnimatePresence>
-        {showSticky && (
+        {showSticky && !nearFooter && (
           <motion.div
             className="show-mobile-only"
             initial={{ y: 80, opacity: 0 }}
