@@ -9,10 +9,8 @@ import {
   Users, TrendingUp, Star, Menu, CheckCircle2, AlertCircle, Building2,
   Sparkles, BarChart3, MessageSquare
 } from 'lucide-react'
-
-const gold = '#c9a96e'
-const goldRgb = '201,169,110'
-const bg = '#0a0a0f'
+import { gold, goldRgb, bg } from '@/lib/constants'
+import Footer from '@/app/components/Footer'
 
 export default function PricingPage() {
   const router = useRouter()
@@ -632,42 +630,7 @@ export default function PricingPage() {
         </motion.div>
       </section>
 
-      {/* Footer */}
-      <footer style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 24px 36px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 32, marginBottom: 32 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 280 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <img src="/arxon-icon.png" alt="Arxon" style={{ width: 24, height: 24 }} />
-              <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' as const }}>Arxon</span>
-            </div>
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', lineHeight: 1.6 }}>
-              {tx.footerTagline}
-            </span>
-          </div>
-          <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>{tx.footerServices}</span>
-              <Link href="/mobilsvarer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{tx.footerMobilsvarer}</Link>
-              <Link href="/hvordan-det-fungerer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{tx.footerHowItWorks}</Link>
-              <Link href="/kartlegging" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{tx.footerKartlegging}</Link>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>{tx.footerContact}</span>
-              <a href="mailto:kontakt@arxon.no" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>kontakt@arxon.no</a>
-              <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Oslo, Norge</span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>{tx.footerLegal}</span>
-              <Link href="/personvern" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{tx.footerPrivacy}</Link>
-              <Link href="/vilkar" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{tx.footerTerms}</Link>
-            </div>
-          </div>
-        </div>
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>&copy; {new Date().getFullYear()} Arxon. {tx.footerRights}</span>
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>{tx.footerGdpr}</span>
-        </div>
-      </footer>
+      <Footer lang={lang} />
     </div>
   )
 }

@@ -74,7 +74,7 @@ export default function RootLayout({
     contactPoint: {
       '@type': 'ContactPoint',
       email: 'kontakt@arxon.no',
-      telephone: '+4712345678',
+      telephone: '', // TODO: Add phone number when ENK is registered
       contactType: 'customer service',
       availableLanguage: ['Norwegian', 'English'],
     },
@@ -137,8 +137,8 @@ export default function RootLayout({
   return (
     <html lang="no" suppressHydrationWarning>
       <head>
-        {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX" />
+        {/* Google Analytics - DISABLED - TODO: Add GA measurement ID when Google account is created */}
+        {/* <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -154,7 +154,7 @@ export default function RootLayout({
               });
             `,
           }}
-        />
+        /> */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}

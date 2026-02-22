@@ -1,12 +1,14 @@
 'use client'
 
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-
-const gold = '#c9a96e'
-const bg = '#0a0a0f'
+import Nav from '@/app/components/Nav'
+import Footer from '@/app/components/Footer'
+import { gold, bg, globalStyles } from '@/lib/constants'
 
 export default function PersonvernPage() {
   const router = useRouter()
+  const [lang, setLang] = useState<'no'|'en'>('no')
 
   const sectionStyle: React.CSSProperties = { marginBottom: 32 }
   const h2Style: React.CSSProperties = { fontSize: 20, fontWeight: 600, color: '#fff', marginBottom: 12, fontFamily: "'DM Sans', sans-serif" }
@@ -14,13 +16,8 @@ export default function PersonvernPage() {
 
   return (
     <div style={{ background: bg, minHeight: '100vh', color: '#fff' }}>
-      {/* Nav */}
-      <nav style={{ maxWidth: 800, margin: '0 auto', padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div onClick={() => router.push('/')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-          <img src="/arxon-icon.png" alt="Arxon" style={{ width: 30, height: 30 }} />
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 18, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' }}>Arxon</span>
-        </div>
-      </nav>
+      <style>{globalStyles()}</style>
+      <Nav lang={lang} setLang={setLang} />
 
       <main style={{ maxWidth: 800, margin: '0 auto', padding: '40px 24px 80px' }}>
         <h1 style={{ fontSize: 32, fontWeight: 700, color: '#fff', marginBottom: 8, fontFamily: "'DM Sans', sans-serif" }}>
@@ -91,15 +88,8 @@ export default function PersonvernPage() {
           </p>
         </div>
 
-        <div style={{ marginTop: 48, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          <button onClick={() => router.push('/')} style={{
-            background: 'none', border: `1px solid rgba(255,255,255,0.1)`, color: 'rgba(255,255,255,0.5)',
-            borderRadius: 8, padding: '8px 16px', fontSize: 13, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-          }}>
-            ← Tilbake til forsiden
-          </button>
-        </div>
       </main>
+      <Footer lang={lang} minimal />
     </div>
   )
 }

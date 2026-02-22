@@ -657,8 +657,8 @@ const buildQuestions = (lang: string, selectedIndustry?: string): Question[] => 
 ]
 }
 
-/* Google Calendar booking URL — replace with your actual link */
-const BOOKING_URL = 'REPLACE_WITH_YOUR_GOOGLE_CALENDAR_LINK'
+/* TODO: Replace with actual Google Calendar appointment link when ENK is registered */
+const BOOKING_URL = '#'
 
 /* ────────────────────────────────────────────
    COMPLIANCE + RECEPTIONIST

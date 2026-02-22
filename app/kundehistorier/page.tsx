@@ -4,112 +4,14 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  ArrowRight, Phone, Bot, Shield, BarChart3, CheckCircle2, Globe,
+  ArrowRight, Phone, Bot, Shield, BarChart3, CheckCircle2,
   Star, Users, TrendingUp, Building2, Menu, X, Clock, Zap,
   ArrowUpRight, Sparkles, Quote
 } from 'lucide-react'
+import Nav from '@/app/components/Nav'
+import Footer from '@/app/components/Footer'
+import { gold, goldRgb, bg, globalStyles } from '@/lib/constants'
 
-const gold = '#c9a96e'
-const goldRgb = '201,169,110'
-const bg = '#0a0a0f'
-
-/* ── Shared Nav (same as mobilsvarer) ── */
-function Nav({ lang, setLang }: { lang: 'no'|'en'; setLang: (l: 'no'|'en') => void }) {
-  const router = useRouter()
-  const [menuOpen, setMenuOpen] = useState(false)
-  const links = lang === 'no'
-    ? [{ href: '/', label: 'Hjem' }, { href: '/mobilsvarer', label: 'Mobilsvarer' }, { href: '/kundehistorier', label: 'Kundehistorier' }]
-    : [{ href: '/', label: 'Home' }, { href: '/mobilsvarer', label: 'AI Answering' }, { href: '/kundehistorier', label: 'Case Studies' }]
-
-  return (
-    <>
-      <style>{`
-        .show-mob{display:none!important}
-        @media(max-width:768px){.hide-mob{display:none!important}.show-mob{display:flex!important}}
-      `}</style>
-      <nav style={{ position: 'relative', zIndex: 10, maxWidth: 1100, margin: '0 auto', padding: '16px 24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div onClick={() => router.push('/')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-            <img src="/arxon-icon.png" alt="Arxon" style={{ width: 34, height: 34 }} />
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 20, fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase' as const, color: '#f0f0f0' }}>Arxon</span>
-          </div>
-          <div className="hide-mob" style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            {links.map(l => (
-              <button key={l.href} onClick={() => router.push(l.href)} style={{
-                background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', fontSize: 13,
-                cursor: 'pointer', fontFamily: "'DM Sans',sans-serif", transition: 'color .2s', padding: 0,
-              }}
-              onMouseEnter={e => e.currentTarget.style.color = gold}
-              onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}
-              >{l.label}</button>
-            ))}
-            <button onClick={() => setLang(lang === 'no' ? 'en' : 'no')} style={{
-              background: 'transparent', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.45)',
-              borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: "'DM Sans',sans-serif",
-            }}>
-              <Globe size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              {lang === 'no' ? 'EN' : 'NO'}
-            </button>
-            <button onClick={() => router.push('/kartlegging')} style={{
-              background: `linear-gradient(110deg, ${gold}, #e0c88a, ${gold})`, backgroundSize: '200% 100%',
-              color: bg, border: 'none', borderRadius: 10, padding: '9px 22px',
-              fontWeight: 600, fontSize: 14, cursor: 'pointer', fontFamily: "'DM Sans',sans-serif",
-            }}>
-              {lang === 'no' ? 'Start kartlegging' : 'Start discovery'}
-              <ArrowRight size={14} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
-            </button>
-          </div>
-          <div className="show-mob" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button onClick={() => setLang(lang === 'no' ? 'en' : 'no')} style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.45)', borderRadius: 8, padding: '6px 10px', fontSize: 12, cursor: 'pointer' }}>{lang === 'no' ? 'EN' : 'NO'}</button>
-            <button onClick={() => setMenuOpen(!menuOpen)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: 7, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              {menuOpen ? <X size={20} color="rgba(255,255,255,0.7)" /> : <Menu size={20} color="rgba(255,255,255,0.7)" />}
-            </button>
-          </div>
-        </div>
-      </nav>
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} style={{
-            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 95,
-            background: 'rgba(10,10,15,0.98)', backdropFilter: 'blur(24px)', display: 'flex', flexDirection: 'column', padding: '0 24px',
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 64, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <img src="/arxon-icon.png" alt="Arxon" style={{ width: 34, height: 34 }} />
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 20, fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase' as const, color: '#f0f0f0' }}>Arxon</span>
-              </div>
-              <button onClick={() => setMenuOpen(false)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: 7, cursor: 'pointer', display: 'flex' }}>
-                <X size={20} color="rgba(255,255,255,0.7)" />
-              </button>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, paddingTop: 24 }}>
-              {links.map((l, i) => (
-                <motion.button key={l.href} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 + 0.1 }}
-                  onClick={() => { setMenuOpen(false); router.push(l.href) }}
-                  style={{ background: 'none', border: 'none', textAlign: 'left', color: 'rgba(255,255,255,0.7)', fontSize: 18, fontWeight: 500, cursor: 'pointer', fontFamily: "'DM Sans',sans-serif", padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                  <span style={{ color: `rgba(${goldRgb},0.3)`, fontSize: 13, marginRight: 12, fontWeight: 600 }}>0{i + 1}</span>{l.label}
-                </motion.button>
-              ))}
-            </div>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} style={{ marginTop: 'auto', paddingBottom: 40 }}>
-              <button onClick={() => { setMenuOpen(false); router.push('/kartlegging') }} style={{
-                width: '100%', background: gold, color: bg, border: 'none', borderRadius: 14, padding: '17px',
-                fontWeight: 700, fontSize: 17, cursor: 'pointer', fontFamily: "'DM Sans',sans-serif",
-              }}>
-                {lang === 'no' ? 'Start gratis kartlegging' : 'Start free discovery'}
-                <ArrowRight size={18} style={{ display: 'inline', marginLeft: 8, verticalAlign: 'middle' }} />
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  )
-}
-
-/* ══════════════════════════════════════════════════
-   KUNDEHISTORIER PAGE
-   ══════════════════════════════════════════════════ */
 export default function KundehistorierPage() {
   const [lang, setLang] = useState<'no' | 'en'>('no')
   const router = useRouter()
@@ -229,7 +131,7 @@ export default function KundehistorierPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: `linear-gradient(180deg, ${bg} 0%, #0d0d15 50%, ${bg} 100%)`, color: '#f0f0f0', fontFamily: "'DM Sans', sans-serif" }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');::selection{background:rgba(${goldRgb},0.3)}@media(max-width:768px){.story-grid{grid-template-columns:1fr!important}}`}</style>
+      <style>{globalStyles() + `@media(max-width:768px){.story-grid{grid-template-columns:1fr!important}}`}</style>
 
       <Nav lang={lang} setLang={setLang} />
 
@@ -400,26 +302,7 @@ export default function KundehistorierPage() {
         </div>
       </motion.section>
 
-      {/* ── FOOTER ── */}
-      <footer style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 24px 36px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, marginBottom: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <img src="/arxon-icon.png" alt="Arxon" style={{ width: 24, height: 24 }} />
-            <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' as const }}>Arxon</span>
-          </div>
-          <div style={{ display: 'flex', gap: 20, fontSize: 12 }}>
-            <a href="/personvern" style={{ color: 'rgba(255,255,255,0.35)', textDecoration: 'none' }}>{lang === 'no' ? 'Personvern' : 'Privacy'}</a>
-            <a href="/vilkar" style={{ color: 'rgba(255,255,255,0.35)', textDecoration: 'none' }}>{lang === 'no' ? 'Vilkår' : 'Terms'}</a>
-          </div>
-        </div>
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>&copy; {new Date().getFullYear()} Arxon</span>
-          <div style={{ display: 'flex', gap: 16, fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>
-            <span>{lang === 'no' ? 'GDPR-kompatibel' : 'GDPR Compliant'}</span>
-            <span>{lang === 'no' ? 'Norsk datasenter' : 'EU data center'}</span>
-          </div>
-        </div>
-      </footer>
+      <Footer lang={lang} />
     </div>
   )
 }

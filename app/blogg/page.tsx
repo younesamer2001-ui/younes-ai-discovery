@@ -3,70 +3,10 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { ArrowRight, Globe, Menu, X, Clock, ArrowUpRight, BookOpen } from 'lucide-react'
-
-const gold = '#c9a96e'
-const goldRgb = '201,169,110'
-const bg = '#0a0a0f'
-
-function Nav({ lang, setLang }: { lang: 'no'|'en'; setLang: (l: 'no'|'en') => void }) {
-  const router = useRouter()
-  const [menuOpen, setMenuOpen] = useState(false)
-  const links = lang === 'no'
-    ? [{ href: '/', label: 'Hjem' }, { href: '/mobilsvarer', label: 'Mobilsvarer' }, { href: '/blogg', label: 'Blogg' }, { href: '/om-oss', label: 'Om oss' }]
-    : [{ href: '/', label: 'Home' }, { href: '/mobilsvarer', label: 'AI Answering' }, { href: '/blogg', label: 'Blog' }, { href: '/om-oss', label: 'About' }]
-
-  return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
-        ::selection{background:rgba(${goldRgb},0.3)}
-        .show-mob{display:none!important}
-        @media(max-width:768px){.hide-mob{display:none!important}.show-mob{display:flex!important}}
-      `}</style>
-      <nav style={{ position: 'relative', zIndex: 10, maxWidth: 1100, margin: '0 auto', padding: '16px 24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div onClick={() => router.push('/')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-            <img src="/arxon-icon.png" alt="Arxon" style={{ width: 34, height: 34 }} />
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 20, fontWeight: 700, letterSpacing: '3px', textTransform: 'uppercase' as const, color: '#f0f0f0' }}>Arxon</span>
-          </div>
-          <div className="hide-mob" style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            {links.map(l => (
-              <button key={l.href} onClick={() => router.push(l.href)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', fontSize: 13, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>{l.label}</button>
-            ))}
-            <button onClick={() => setLang(lang === 'no' ? 'en' : 'no')} style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.45)', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>
-              <Globe size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />{lang === 'no' ? 'EN' : 'NO'}
-            </button>
-            <button onClick={() => router.push('/kartlegging')} style={{ background: gold, color: bg, border: 'none', borderRadius: 10, padding: '9px 22px', fontWeight: 600, fontSize: 14, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>
-              {lang === 'no' ? 'Gratis kartlegging' : 'Free assessment'}<ArrowRight size={14} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
-            </button>
-          </div>
-          <div className="show-mob" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button onClick={() => router.push('/kartlegging')} style={{ background: gold, color: bg, border: 'none', borderRadius: 8, padding: '7px 16px', fontWeight: 600, fontSize: 12, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>Start</button>
-            <button onClick={() => setMenuOpen(!menuOpen)} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: 6, cursor: 'pointer', display: 'flex' }}>
-              {menuOpen ? <X size={20} color="rgba(255,255,255,0.7)" /> : <Menu size={20} color="rgba(255,255,255,0.7)" />}
-            </button>
-          </div>
-        </div>
-      </nav>
-      {menuOpen && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 95, background: 'rgba(10,10,15,0.98)', padding: '80px 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <button onClick={() => setMenuOpen(false)} style={{ position: 'absolute', top: 20, right: 20, background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: 7, cursor: 'pointer', display: 'flex' }}><X size={20} color="rgba(255,255,255,0.7)" /></button>
-          {links.map(l => (
-            <button key={l.href} onClick={() => { setMenuOpen(false); router.push(l.href) }} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.7)', fontSize: 18, fontWeight: 500, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textAlign: 'left', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>{l.label}</button>
-          ))}
-        </div>
-      )}
-    </>
-  )
-}
-
-const fadeUp = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.5, ease: 'easeOut' },
-}
+import { Clock, ArrowUpRight, BookOpen } from 'lucide-react'
+import Nav from '@/app/components/Nav'
+import Footer from '@/app/components/Footer'
+import { gold, goldRgb, bg, fadeUp, globalStyles } from '@/lib/constants'
 
 const articles = [
   {
@@ -110,6 +50,7 @@ export default function BlogPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: `linear-gradient(180deg, ${bg} 0%, #0d0d15 50%, ${bg} 100%)`, color: '#f0f0f0', fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{globalStyles()}</style>
       <Nav lang={lang} setLang={setLang} />
 
       <section style={{ maxWidth: 800, margin: '0 auto', padding: '60px 24px 40px', textAlign: 'center' }}>
@@ -162,9 +103,7 @@ export default function BlogPage() {
         ))}
       </section>
 
-      <footer style={{ maxWidth: 1100, margin: '0 auto', padding: '36px 24px', borderTop: '1px solid rgba(255,255,255,0.06)', textAlign: 'center' }}>
-        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>&copy; {new Date().getFullYear()} Arxon. {lang === 'no' ? 'Alle rettigheter reservert.' : 'All rights reserved.'}</span>
-      </footer>
+      <Footer lang={lang} minimal />
     </div>
   )
 }
