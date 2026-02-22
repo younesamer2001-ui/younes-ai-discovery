@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 
 /* ────────────────────────────────────────────
@@ -13,7 +14,7 @@ const T: Record<string, Record<string, string>> = {
   company_name: { no: "Bedriftsnavn", en: "Company name" },
   contact_name: { no: "Kontaktperson", en: "Contact name" },
   email: { no: "E-post", en: "Email" },
-  phone: { no: "Telefon (valgfritt)", en: "Phone (optional)" },
+  phone: { no: "Telefon", en: "Phone" },
   gdpr_note: { no: "Vi behandler dine data i henhold til GDPR og personopplysningsloven. Informasjonen brukes kun til å utarbeide din AI-analyse.", en: "We process your data in accordance with GDPR. Information is used solely to prepare your AI analysis." },
   start_btn: { no: "Start kartlegging", en: "Start Discovery" },
   next: { no: "Neste", en: "Next" },
@@ -272,101 +273,109 @@ type QuestionOption = { value: string; label: string }
 type Question = { id: string; type: string; q: string; options?: QuestionOption[]; hasOther?: boolean; max?: number; optional?: boolean }
 
 const buildQuestions = (lang: string): Question[] => [
+  /* ── 1. BRANSJE (lett start — identitet, ikke innsats) ── */
   {
     id: 'industry', type: 'single',
-    q: lang === 'no' ? 'Hvilken bransje er bedriften din i?' : 'What industry is your business in?',
+    q: lang === 'no' ? 'Hvilken bransje tilhører bedriften din?' : 'What industry is your business in?',
     options: INDUSTRIES.map((ind) => ({ value: ind.id, label: (ind as any)[lang] })),
     hasOther: true,
   },
+  /* ── 2. STØRRELSE (fortsatt lett — bygger profil) ── */
   {
     id: 'size', type: 'single',
-    q: lang === 'no' ? 'Hvor mange ansatte har bedriften?' : 'How many employees does the business have?',
+    q: lang === 'no' ? 'Hvor stort er teamet ditt?' : 'How big is your team?',
     options: [
-      { value: 'solo', label: lang === 'no' ? 'Solo / Enkeltperson' : 'Solo' },
-      { value: '2-5', label: '2-5' }, { value: '6-15', label: '6-15' },
-      { value: '16-50', label: '16-50' }, { value: '51-200', label: '51-200' }, { value: '200+', label: '200+' },
+      { value: 'solo', label: lang === 'no' ? 'Bare meg' : 'Just me' },
+      { value: '2-5', label: lang === 'no' ? '2–5 personer' : '2–5 people' },
+      { value: '6-15', label: lang === 'no' ? '6–15 personer' : '6–15 people' },
+      { value: '16-50', label: lang === 'no' ? '16–50 personer' : '16–50 people' },
+      { value: '51-200', label: lang === 'no' ? '51–200 personer' : '51–200 people' },
+      { value: '200+', label: lang === 'no' ? 'Over 200' : 'Over 200' },
     ],
   },
+  /* ── 3. KONTAKTKANALER (lett — beskrivende, ikke vurderende) ── */
   {
-    id: 'pain', type: 'multi', max: 3,
-    q: lang === 'no' ? 'Hva bruker dere mest tid på? (velg opptil 3)' : 'What takes the most time? (select up to 3)',
+    id: 'contact_methods', type: 'multi',
+    q: lang === 'no' ? 'Hvordan når kundene dere i dag?' : 'How do customers reach you today?',
     options: [
-      { value: 'phone_email', label: lang === 'no' ? 'Telefon og e-post' : 'Phone and email' },
-      { value: 'invoicing', label: lang === 'no' ? 'Manuell fakturering' : 'Manual invoicing' },
-      { value: 'customer_tracking', label: lang === 'no' ? 'Kundeoppfølging' : 'Customer tracking' },
-      { value: 'booking', label: lang === 'no' ? 'Timebestilling' : 'Booking' },
-      { value: 'marketing', label: lang === 'no' ? 'Markedsføring' : 'Marketing' },
-      { value: 'internal_comms', label: lang === 'no' ? 'Intern kommunikasjon' : 'Internal comms' },
-      { value: 'hiring', label: lang === 'no' ? 'Rekruttering' : 'Hiring' },
-      { value: 'reporting', label: lang === 'no' ? 'Rapportering' : 'Reporting' },
-      { value: 'sales', label: lang === 'no' ? 'Salg og oppfølging' : 'Sales and follow-up' },
-      { value: 'inventory', label: lang === 'no' ? 'Varelager' : 'Inventory' },
+      { value: 'phone', label: lang === 'no' ? 'Telefon' : 'Phone' },
+      { value: 'email', label: lang === 'no' ? 'E-post' : 'Email' },
+      { value: 'form', label: lang === 'no' ? 'Kontaktskjema på nett' : 'Online form' },
+      { value: 'social', label: lang === 'no' ? 'Sosiale medier / DM' : 'Social media / DM' },
+      { value: 'walkin', label: lang === 'no' ? 'Drop-in / fysisk besøk' : 'Walk-in' },
+      { value: 'chatbot', label: lang === 'no' ? 'Chat / chatbot' : 'Chat / chatbot' },
     ],
   },
+  /* ── 4. SYSTEMER (nøytral kartlegging) ── */
   {
     id: 'tech', type: 'multi',
-    q: lang === 'no' ? 'Hvilke systemer bruker dere i dag?' : 'What systems do you use today?',
+    q: lang === 'no' ? 'Hvilke verktøy og systemer bruker dere?' : 'What tools and systems do you use?',
     options: [
       { value: 'fiken', label: 'Fiken' }, { value: 'tripletex', label: 'Tripletex' },
       { value: 'visma', label: 'Visma' }, { value: 'poweroffice', label: 'PowerOffice' },
       { value: 'm365', label: 'Microsoft 365' }, { value: 'google', label: 'Google Workspace' },
-      { value: 'slack', label: 'Slack' }, { value: 'hubspot', label: 'HubSpot' },
-      { value: 'shopify', label: 'Shopify' }, { value: 'vipps', label: 'Vipps' },
-      { value: 'calendly', label: 'Calendly' }, { value: 'facebook', label: 'Facebook Business' },
-      { value: 'none', label: lang === 'no' ? 'Ingen spesielle' : 'None' },
-      { value: 'other', label: lang === 'no' ? 'Andre' : 'Other' },
+      { value: 'slack', label: 'Slack / Teams' }, { value: 'hubspot', label: 'HubSpot / CRM' },
+      { value: 'shopify', label: 'Shopify / Nettbutikk' }, { value: 'vipps', label: 'Vipps' },
+      { value: 'calendly', label: 'Calendly / Cal.com' }, { value: 'facebook', label: 'Meta Business Suite' },
+      { value: 'none', label: lang === 'no' ? 'Få / ingen digitale verktøy' : 'Few / none' },
     ],
+    hasOther: true,
   },
-  { id: 'manual_tasks', type: 'text', q: lang === 'no' ? 'Hvilke manuelle oppgaver ønsker dere å automatisere?' : 'What manual tasks would you like to automate?' },
+  /* ── 5. FRIGJØRINGSMULIGHETER (reframet fra «pain» til vekst) ── */
   {
-    id: 'contact_methods', type: 'multi',
-    q: lang === 'no' ? 'Hvordan tar kundene kontakt med dere?' : 'How do customers contact you?',
+    id: 'pain', type: 'multi', max: 3,
+    q: lang === 'no' ? 'Hvor vil dere frigjøre mest tid? (velg opptil 3)' : 'Where would you free up the most time? (pick up to 3)',
     options: [
-      { value: 'phone', label: lang === 'no' ? 'Telefon' : 'Phone' },
-      { value: 'email', label: lang === 'no' ? 'E-post' : 'Email' },
-      { value: 'form', label: lang === 'no' ? 'Kontaktskjema' : 'Contact form' },
-      { value: 'social', label: lang === 'no' ? 'Sosiale medier' : 'Social media' },
-      { value: 'walkin', label: lang === 'no' ? 'Drop-in' : 'Walk-in' },
-      { value: 'receptionist', label: lang === 'no' ? 'Resepsjonist' : 'Receptionist' },
-      { value: 'chatbot', label: lang === 'no' ? 'Chatbot' : 'Chatbot' },
+      { value: 'phone_email', label: lang === 'no' ? 'Svare telefon og e-post' : 'Answering phone & email' },
+      { value: 'invoicing', label: lang === 'no' ? 'Fakturering og purring' : 'Invoicing & reminders' },
+      { value: 'customer_tracking', label: lang === 'no' ? 'Følge opp kunder' : 'Following up with customers' },
+      { value: 'booking', label: lang === 'no' ? 'Timebestilling og kalender' : 'Booking & scheduling' },
+      { value: 'marketing', label: lang === 'no' ? 'Markedsføring og innhold' : 'Marketing & content' },
+      { value: 'leads', label: lang === 'no' ? 'Finne og følge opp nye kunder' : 'Finding & following up leads' },
+      { value: 'reporting', label: lang === 'no' ? 'Rapportering og oversikt' : 'Reporting & dashboards' },
+      { value: 'onboarding', label: lang === 'no' ? 'Onboarding av kunder' : 'Customer onboarding' },
+      { value: 'internal', label: lang === 'no' ? 'Interne rutiner og oppgaver' : 'Internal routines & tasks' },
     ],
   },
+  /* ── 6. TAPTE MULIGHETER (reframet fra «miss» til vekstpotensial) ── */
   {
     id: 'missed', type: 'single',
-    q: lang === 'no' ? 'Hvor ofte går dere glipp av henvendelser?' : 'How often do you miss inquiries?',
+    q: lang === 'no' ? 'Hender det at henvendelser ikke blir fulgt opp i tide?' : 'Do inquiries sometimes go unanswered or get delayed?',
     options: [
-      { value: 'daily', label: lang === 'no' ? 'Daglig' : 'Daily' },
-      { value: 'weekly', label: lang === 'no' ? 'Ukentlig' : 'Weekly' },
+      { value: 'daily', label: lang === 'no' ? 'Ja, det skjer ofte' : 'Yes, quite often' },
+      { value: 'weekly', label: lang === 'no' ? 'Noen ganger i uken' : 'A few times a week' },
       { value: 'occasionally', label: lang === 'no' ? 'Av og til' : 'Occasionally' },
-      { value: 'rarely', label: lang === 'no' ? 'Sjelden' : 'Rarely' },
-      { value: 'unsure', label: lang === 'no' ? 'Usikker' : 'Unsure' },
+      { value: 'rarely', label: lang === 'no' ? 'Sjelden, vi er gode på det' : 'Rarely, we handle it well' },
+      { value: 'unsure', label: lang === 'no' ? 'Vet ikke — har ikke oversikt' : 'Not sure — no tracking' },
     ],
   },
-  {
-    id: 'budget', type: 'single',
-    q: lang === 'no' ? 'Hva er budsjettet for AI-løsninger per måned?' : 'What is your monthly budget for AI solutions?',
-    options: [
-      { value: 'under1k', label: lang === 'no' ? 'Under 1 000 kr' : 'Under 1,000 NOK' },
-      { value: '1-3k', label: lang === 'no' ? '1 000 - 3 000 kr' : '1,000 - 3,000 NOK' },
-      { value: '3-5k', label: lang === 'no' ? '3 000 - 5 000 kr' : '3,000 - 5,000 NOK' },
-      { value: '5-10k', label: lang === 'no' ? '5 000 - 10 000 kr' : '5,000 - 10,000 NOK' },
-      { value: 'over10k', label: lang === 'no' ? 'Over 10 000 kr' : 'Over 10,000 NOK' },
-      { value: 'unsure', label: lang === 'no' ? 'Usikker' : 'Unsure' },
-    ],
-  },
+  /* ── 7. DRØMMESCENARIO (fremtidsrettet — bygger verdi) ── */
+  { id: 'goals', type: 'text', q: lang === 'no' ? 'Hvis alt kunne gå på autopilot — hva ville du brukt tiden din på i stedet?' : 'If everything ran on autopilot — what would you spend your time on instead?' },
+  /* ── 8. TIDSLINJE (urgency — men uten press) ── */
   {
     id: 'timeline', type: 'single',
-    q: lang === 'no' ? 'Når ønsker dere å komme i gang?' : 'When would you like to get started?',
+    q: lang === 'no' ? 'Når er det aktuelt å starte?' : 'When would it make sense to start?',
     options: [
-      { value: 'asap', label: lang === 'no' ? 'Så snart som mulig' : 'ASAP' },
-      { value: '1month', label: lang === 'no' ? 'Innen 1 måned' : 'Within 1 month' },
-      { value: '3months', label: lang === 'no' ? 'Innen 3 måneder' : 'Within 3 months' },
-      { value: '6months', label: lang === 'no' ? 'Innen 6 måneder' : 'Within 6 months' },
-      { value: 'exploring', label: lang === 'no' ? 'Bare utforsker' : 'Just exploring' },
+      { value: 'asap', label: lang === 'no' ? 'Jo før, jo bedre' : 'The sooner, the better' },
+      { value: '1month', label: lang === 'no' ? 'I løpet av en måned' : 'Within a month' },
+      { value: '3months', label: lang === 'no' ? 'I løpet av et kvartal' : 'Within a quarter' },
+      { value: 'later', label: lang === 'no' ? 'Senere i år' : 'Later this year' },
+      { value: 'exploring', label: lang === 'no' ? 'Bare nysgjerrig akkurat nå' : 'Just curious for now' },
     ],
   },
-  { id: 'goals', type: 'text', q: lang === 'no' ? 'Hva er de viktigste målene for bedriften det neste året?' : 'What are the most important goals for the business in the next year?' },
-  { id: 'additional', type: 'text', optional: true, q: lang === 'no' ? 'Er det noe annet vi bør vite?' : 'Is there anything else we should know?' },
+  /* ── 9. INVESTERINGSVILJE (erstatter budsjett — verdibasert framing) ── */
+  {
+    id: 'investment', type: 'single',
+    q: lang === 'no' ? 'Hvor mye er det verdt å investere for å spare 20+ timer i måneden?' : 'How much would it be worth investing to save 20+ hours per month?',
+    options: [
+      { value: 'low', label: lang === 'no' ? 'Ønsker å starte lite og skalere' : 'Start small and scale' },
+      { value: 'medium', label: lang === 'no' ? 'Klar for en skikkelig løsning' : 'Ready for a proper solution' },
+      { value: 'high', label: lang === 'no' ? 'Vil ha full pakke — alt automatisert' : 'Full package — automate everything' },
+      { value: 'roi_first', label: lang === 'no' ? 'Vis meg avkastningen først' : 'Show me the ROI first' },
+    ],
+  },
+  /* ── 10. FRITEKST UTDYPING (enkel, valgfri) ── */
+  { id: 'additional', type: 'text', optional: true, q: lang === 'no' ? 'Noe spesifikt du vil at vi tar hensyn til?' : 'Anything specific you\'d like us to consider?' },  /* optional — siste spørsmål trenger ikke blokkere */
 ]
 
 /* ────────────────────────────────────────────
@@ -481,6 +490,7 @@ const cardVariants = {
    MAIN APP COMPONENT
    ════════════════════════════════════════════ */
 function KartleggingApp() {
+  const searchParams = useSearchParams()
   const [lang, setLang] = useState('no')
   const [phase, setPhase] = useState(1)
   const [contact, setContact] = useState({ company: '', name: '', email: '', phone: '' })
@@ -494,6 +504,17 @@ function KartleggingApp() {
   const [submitting, setSubmitting] = useState(false)
   const [refNumber, setRefNumber] = useState('')
   const [showResumeBanner, setShowResumeBanner] = useState(false)
+
+  // ── Pre-select industry from URL query param ──
+  useEffect(() => {
+    const bransje = searchParams.get('bransje')
+    if (bransje) {
+      const validIds = INDUSTRIES.map(i => i.id)
+      if (validIds.includes(bransje)) {
+        setAnswers(prev => ({ ...prev, industry: bransje }))
+      }
+    }
+  }, [searchParams])
 
   // ── Load saved progress from localStorage ──
   useEffect(() => {
@@ -556,10 +577,15 @@ function KartleggingApp() {
 
   const validateEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)
 
+  const validatePhone = (p: string) => /^[\d\s+()-]{8,}$/.test(p.trim())
+  const [phoneError, setPhoneError] = useState('')
+
   const handleContactSubmit = () => {
-    if (!contact.company.trim() || !contact.name.trim() || !contact.email.trim()) return
+    if (!contact.company.trim() || !contact.name.trim() || !contact.email.trim() || !contact.phone.trim()) return
     if (!validateEmail(contact.email)) { setEmailError(lang === 'no' ? 'Ugyldig e-postadresse' : 'Invalid email address'); return }
+    if (!validatePhone(contact.phone)) { setPhoneError(lang === 'no' ? 'Ugyldig telefonnummer' : 'Invalid phone number'); return }
     setEmailError('')
+    setPhoneError('')
     setPhase(2)
   }
 
@@ -607,8 +633,8 @@ function KartleggingApp() {
     setGenerating(true)
     const industryLabel = INDUSTRIES.find((i) => i.id === industry)?.[lang as 'no' | 'en'] || industry
     const prompt = lang === 'no'
-      ? `Du er en AI-forretningsrådgiver for et norsk selskap som selger AI-automatisering til SMB-er. Basert på følgende informasjon, generer en profesjonell analyse på norsk:\n\nBedrift: ${contact.company}\nBransje: ${industryLabel}\nStørrelse: ${answers.size}\nHovedutfordringer: ${(answers.pain || []).join(', ')}\nNåværende systemer: ${(answers.tech || []).join(', ')}\nManuelle oppgaver å automatisere: ${answers.manual_tasks || 'Ikke spesifisert'}\nKundekontaktmetoder: ${(answers.contact_methods || []).join(', ')}\nTapte henvendelser: ${answers.missed}\nBudsjett: ${answers.budget}\nTidslinje: ${answers.timeline}\nMål: ${answers.goals || 'Ikke spesifisert'}\nTilleggsinformasjon: ${answers.additional || 'Ingen'}\n\nGi analyse i dette formatet:\nOPPSUMMERING: 3-4 setninger om bedriftssituasjonen\nANBEFALINGER: 3-5 spesifikke AI-løsninger med forklaringer\nPRIORITET: Hvilken løsning bør implementeres først og hvorfor\nESTIMERT ROI: Forventet avkastning basert på bransjedata`
-      : `You are an AI business advisor for a Norwegian company selling AI automation to SMBs. Based on the following information, generate a professional analysis in English:\n\nCompany: ${contact.company}\nIndustry: ${industryLabel}\nSize: ${answers.size}\nMain challenges: ${(answers.pain || []).join(', ')}\nCurrent systems: ${(answers.tech || []).join(', ')}\nManual tasks to automate: ${answers.manual_tasks || 'Not specified'}\nCustomer contact methods: ${(answers.contact_methods || []).join(', ')}\nMissed inquiries: ${answers.missed}\nBudget: ${answers.budget}\nTimeline: ${answers.timeline}\nGoals: ${answers.goals || 'Not specified'}\nAdditional info: ${answers.additional || 'None'}\n\nProvide analysis in this format:\nSUMMARY: 3-4 sentences about the business situation\nRECOMMENDATIONS: 3-5 specific AI solutions with explanations\nPRIORITY: Which solution to implement first and why\nESTIMATED ROI: Expected return based on industry data`
+      ? `Du er en AI-forretningsrådgiver for et norsk selskap som selger AI-automatisering til SMB-er. Basert på følgende informasjon, generer en profesjonell analyse på norsk:\n\nBedrift: ${contact.company}\nBransje: ${industryLabel}\nStørrelse: ${answers.size}\nØnsker å frigjøre tid på: ${(answers.pain || []).join(', ')}\nNåværende systemer: ${(answers.tech || []).join(', ')}\nKundekontaktmetoder: ${(answers.contact_methods || []).join(', ')}\nHenvendelser som ikke følges opp: ${answers.missed}\nInvesteringsvilje: ${answers.investment}\nTidslinje: ${answers.timeline}\nDrømmescenario: ${answers.goals || 'Ikke spesifisert'}\nTilleggsinformasjon: ${answers.additional || 'Ingen'}\n\nGi analyse i dette formatet:\nOPPSUMMERING: 3-4 setninger om bedriftssituasjonen\nANBEFALINGER: 3-5 spesifikke AI-løsninger med forklaringer\nPRIORITET: Hvilken løsning bør implementeres først og hvorfor\nESTIMERT ROI: Forventet avkastning basert på bransjedata`
+      : `You are an AI business advisor for a Norwegian company selling AI automation to SMBs. Based on the following information, generate a professional analysis in English:\n\nCompany: ${contact.company}\nIndustry: ${industryLabel}\nSize: ${answers.size}\nWants to free up time on: ${(answers.pain || []).join(', ')}\nCurrent systems: ${(answers.tech || []).join(', ')}\nCustomer contact methods: ${(answers.contact_methods || []).join(', ')}\nUnanswered inquiries: ${answers.missed}\nInvestment willingness: ${answers.investment}\nTimeline: ${answers.timeline}\nDream scenario: ${answers.goals || 'Not specified'}\nAdditional info: ${answers.additional || 'None'}\n\nProvide analysis in this format:\nSUMMARY: 3-4 sentences about the business situation\nRECOMMENDATIONS: 3-5 specific AI solutions with explanations\nPRIORITY: Which solution to implement first and why\nESTIMATED ROI: Expected return based on industry data`
 
     try {
       const res = await fetch('/api/kartlegging', {
@@ -684,10 +710,10 @@ function KartleggingApp() {
 
       {/* NAV */}
       <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: 720, margin: '0 auto', padding: '20px 20px 0' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{ width: 28, height: 28, borderRadius: 6, background: `linear-gradient(135deg, ${gold}, #a8884d)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: bg }}>AI</div>
-          <span style={{ ...headingFont, fontSize: 17, fontWeight: 600 }}>{t('nav_brand', lang)}</span>
-        </div>
+        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
+          <img src="/arxon-icon.png" alt="Arxon" style={{ width: 30, height: 30 }} />
+          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 18, fontWeight: 700, letterSpacing: '2.5px', textTransform: 'uppercase' as const }}>Arxon</span>
+        </a>
         <button onClick={() => setLang(lang === 'no' ? 'en' : 'no')} style={{ ...btnSecondary, padding: '6px 14px', fontSize: 13 }}>{lang === 'no' ? 'EN' : 'NO'}</button>
       </nav>
 
@@ -737,10 +763,11 @@ function KartleggingApp() {
                   {emailError && <span style={{ color: '#ef4444', fontSize: 12, marginTop: 4, display: 'block' }}>{emailError}</span>}
                 </div>
                 <div>
-                  <label style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>{t('phone', lang)}</label>
-                  <input style={inputStyle} value={contact.phone} onChange={(e) => setContact({ ...contact, phone: e.target.value })} />
+                  <label style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>{t('phone', lang)} <span style={{ color: gold }}>*</span></label>
+                  <input type="tel" style={{ ...inputStyle, borderColor: phoneError ? '#ef4444' : cardBorder }} value={contact.phone} onChange={(e) => { setContact({ ...contact, phone: e.target.value }); setPhoneError('') }} placeholder={lang === 'no' ? 'F.eks. 412 34 567' : 'E.g. 412 34 567'} />
+                  {phoneError && <span style={{ color: '#ef4444', fontSize: 12, marginTop: 4, display: 'block' }}>{phoneError}</span>}
                 </div>
-                <button style={{ ...btnPrimary, marginTop: 8, opacity: (!contact.company || !contact.name || !contact.email) ? 0.4 : 1 }} onClick={handleContactSubmit} disabled={!contact.company || !contact.name || !contact.email}>{t('start_btn', lang)}</button>
+                <button style={{ ...btnPrimary, marginTop: 8, opacity: (!contact.company || !contact.name || !contact.email || !contact.phone) ? 0.4 : 1 }} onClick={handleContactSubmit} disabled={!contact.company || !contact.name || !contact.email || !contact.phone}>{t('start_btn', lang)}</button>
                 <p style={{ color: textMuted, fontSize: 12, lineHeight: 1.5, textAlign: 'center', marginTop: 4 }}>{t('gdpr_note', lang)}</p>
               </div>
             </motion.div>
