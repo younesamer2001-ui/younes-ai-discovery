@@ -1478,33 +1478,34 @@ export default function LandingPage() {
           border: `1px solid rgba(${goldRgb},0.12)`, borderRadius: 22, padding: '40px 32px', textAlign: 'center',
         }}>
           <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, marginBottom: 12 }}>
-            {lang === 'no' ? 'Enkle, transparente priser' : 'Simple, transparent pricing'}
+            {lang === 'no' ? 'Investering som betaler seg fra dag én' : 'An investment that pays for itself from day one'}
           </motion.h2>
-          <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.45)', fontSize: 15, marginBottom: 28, maxWidth: 440, margin: '0 auto 28px', lineHeight: 1.6 }}>
+          <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.45)', fontSize: 15, marginBottom: 28, maxWidth: 480, margin: '0 auto 28px', lineHeight: 1.6 }}>
             {lang === 'no'
-              ? 'Fra 2 490 kr/mnd — billigere enn én ansatt, men jobber 24/7.'
-              : 'From 2,490 NOK/mo — cheaper than one employee, but works 24/7.'}
+              ? 'Skreddersydd pris basert på dine behov. Setup-fee + fast månedlig — ingen skjulte kostnader.'
+              : 'Tailored pricing based on your needs. Setup fee + fixed monthly — no hidden costs.'}
           </motion.p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap', marginBottom: 28 }}>
             {(lang === 'no' ? [
-              { name: 'Starter', price: '2 490', desc: 'For småbedrifter' },
-              { name: 'Pro', price: '4 990', desc: 'For voksende bedrifter' },
-              { name: 'Elite', price: '9 990', desc: 'For ambisiøse selskaper' },
+              { name: 'Starter', price: 'fra 2 490', setup: 'Setup fra 15 000 kr', desc: 'Fang tapte henvendelser' },
+              { name: 'Profesjonell', price: 'fra 4 990', setup: 'Setup fra 30 000 kr', desc: 'Automatiser kundemottak' },
+              { name: 'Vekst', price: 'fra 7 990', setup: 'Setup fra 50 000 kr', desc: 'Full automatisering' },
             ] : [
-              { name: 'Starter', price: '2,490', desc: 'For small businesses' },
-              { name: 'Pro', price: '4,990', desc: 'For growing businesses' },
-              { name: 'Elite', price: '9,990', desc: 'For ambitious companies' },
+              { name: 'Starter', price: 'from 2,490', setup: 'Setup from 15,000 NOK', desc: 'Catch missed inquiries' },
+              { name: 'Professional', price: 'from 4,990', setup: 'Setup from 30,000 NOK', desc: 'Automate customer intake' },
+              { name: 'Growth', price: 'from 7,990', setup: 'Setup from 50,000 NOK', desc: 'Full automation' },
             ]).map((plan, i) => (
               <div key={i} style={{
                 background: i === 1 ? `rgba(${goldRgb},0.06)` : 'rgba(255,255,255,0.02)',
                 border: `1px solid ${i === 1 ? `rgba(${goldRgb},0.2)` : 'rgba(255,255,255,0.06)'}`,
-                borderRadius: 14, padding: '20px 24px', minWidth: 150, transition: 'all 0.2s',
+                borderRadius: 14, padding: '20px 24px', minWidth: 160, transition: 'all 0.2s',
               }}>
                 <div style={{ fontSize: 13, color: i === 1 ? gold : 'rgba(255,255,255,0.5)', fontWeight: 600, marginBottom: 4 }}>{plan.name}</div>
-                <div style={{ fontSize: 24, fontWeight: 700, fontFamily: "'Playfair Display', serif", color: '#f0f0f0' }}>
+                <div style={{ fontSize: 22, fontWeight: 700, fontFamily: "'Playfair Display', serif", color: '#f0f0f0' }}>
                   {plan.price}<span style={{ fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.35)' }}> kr/mnd</span>
                 </div>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>{plan.desc}</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>{plan.setup}</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', marginTop: 2 }}>{plan.desc}</div>
               </div>
             ))}
           </div>
@@ -1513,7 +1514,7 @@ export default function LandingPage() {
             color: gold, borderRadius: 12, padding: '13px 32px', fontWeight: 600, fontSize: 14,
             cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
           }}>
-            {lang === 'no' ? 'Se alle pakker og sammenlign' : 'See all plans and compare'}
+            {lang === 'no' ? 'Se priser og sammenlign' : 'See pricing and compare'}
             <ArrowRight size={14} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
           </button>
         </div>
