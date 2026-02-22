@@ -305,12 +305,265 @@ const JOB_VALUES: Record<string, number> = { bygg: 8000, restaurant: 3600, helse
 const MISSED_DEFAULTS: Record<string, number> = { daily: 60, weekly: 12, occasionally: 4, rarely: 1, unsure: 8 }
 
 /* ────────────────────────────────────────────
-   QUESTIONNAIRE STEPS
+   INDUSTRY-SPECIFIC QUESTIONS
    ──────────────────────────────────────────── */
 type QuestionOption = { value: string; label: string }
 type Question = { id: string; type: string; q: string; options?: QuestionOption[]; hasOther?: boolean; max?: number; optional?: boolean }
 
-const buildQuestions = (lang: string): Question[] => [
+const INDUSTRY_QUESTIONS: Record<string, (lang: string) => Question[]> = {
+  bygg: (lang) => [
+    {
+      id: 'ind_quotes', type: 'single',
+      q: lang === 'no' ? 'Hvordan håndterer dere tilbudsforespørsler i dag?' : 'How do you handle quote requests today?',
+      options: [
+        { value: 'manual_slow', label: lang === 'no' ? 'Manuelt — tar ofte lang tid' : 'Manually — often takes a long time' },
+        { value: 'manual_ok', label: lang === 'no' ? 'Manuelt — men det fungerer greit' : 'Manually — but it works okay' },
+        { value: 'template', label: lang === 'no' ? 'Vi har maler, men det tar fortsatt tid' : 'We have templates, but it still takes time' },
+        { value: 'system', label: lang === 'no' ? 'Vi har et system for det' : 'We have a system for it' },
+      ],
+    },
+    {
+      id: 'ind_field', type: 'single',
+      q: lang === 'no' ? 'Hvor mye tid brukes på koordinering mellom kontor og felt?' : 'How much time is spent coordinating between office and field?',
+      options: [
+        { value: 'a_lot', label: lang === 'no' ? 'Veldig mye — daglige telefoner og meldinger' : 'A lot — daily calls and messages' },
+        { value: 'some', label: lang === 'no' ? 'Noe — men det går' : 'Some — but it works' },
+        { value: 'little', label: lang === 'no' ? 'Lite — vi har gode rutiner' : 'Little — we have good routines' },
+      ],
+    },
+  ],
+  restaurant: (lang) => [
+    {
+      id: 'ind_reservations', type: 'single',
+      q: lang === 'no' ? 'Hvordan håndterer dere bordreservasjoner?' : 'How do you handle table reservations?',
+      options: [
+        { value: 'phone_only', label: lang === 'no' ? 'Kun telefon' : 'Phone only' },
+        { value: 'phone_online', label: lang === 'no' ? 'Telefon + nettside/app' : 'Phone + website/app' },
+        { value: 'system', label: lang === 'no' ? 'Vi bruker et bookingsystem' : 'We use a booking system' },
+        { value: 'walkin', label: lang === 'no' ? 'Mest drop-in' : 'Mostly walk-in' },
+      ],
+    },
+    {
+      id: 'ind_noshow', type: 'single',
+      q: lang === 'no' ? 'Er no-shows (kunder som ikke dukker opp) et problem?' : 'Are no-shows a problem?',
+      options: [
+        { value: 'big', label: lang === 'no' ? 'Ja, det koster oss mye' : 'Yes, it costs us a lot' },
+        { value: 'some', label: lang === 'no' ? 'Av og til' : 'Sometimes' },
+        { value: 'no', label: lang === 'no' ? 'Ikke et stort problem' : 'Not a big problem' },
+      ],
+    },
+  ],
+  helse: (lang) => [
+    {
+      id: 'ind_patient_comms', type: 'single',
+      q: lang === 'no' ? 'Hvor mye tid brukes på pasient-/klientkommunikasjon utenom konsultasjoner?' : 'How much time is spent on patient/client communication outside consultations?',
+      options: [
+        { value: 'hours_daily', label: lang === 'no' ? 'Flere timer daglig' : 'Several hours daily' },
+        { value: '1-2_hours', label: lang === 'no' ? '1–2 timer daglig' : '1–2 hours daily' },
+        { value: 'little', label: lang === 'no' ? 'Relativt lite' : 'Relatively little' },
+      ],
+    },
+    {
+      id: 'ind_journal', type: 'single',
+      q: lang === 'no' ? 'Bruker dere mye tid på journalføring og dokumentasjon?' : 'Do you spend a lot of time on record-keeping and documentation?',
+      options: [
+        { value: 'too_much', label: lang === 'no' ? 'Ja, det tar for mye tid' : 'Yes, it takes too much time' },
+        { value: 'some', label: lang === 'no' ? 'Det er overkommelig' : 'It\'s manageable' },
+        { value: 'digital', label: lang === 'no' ? 'Vi har gode digitale systemer' : 'We have good digital systems' },
+      ],
+    },
+  ],
+  eiendom: (lang) => [
+    {
+      id: 'ind_leads_volume', type: 'single',
+      q: lang === 'no' ? 'Hvor mange henvendelser mottar dere i uken fra potensielle kjøpere/selgere?' : 'How many inquiries do you receive weekly from potential buyers/sellers?',
+      options: [
+        { value: '0-10', label: lang === 'no' ? 'Under 10' : 'Under 10' },
+        { value: '10-30', label: lang === 'no' ? '10–30' : '10–30' },
+        { value: '30-100', label: lang === 'no' ? '30–100' : '30–100' },
+        { value: '100+', label: lang === 'no' ? 'Over 100' : 'Over 100' },
+      ],
+    },
+    {
+      id: 'ind_followup', type: 'single',
+      q: lang === 'no' ? 'Hvor raskt klarer dere å følge opp nye leads?' : 'How quickly can you follow up on new leads?',
+      options: [
+        { value: 'instant', label: lang === 'no' ? 'Innen minutter' : 'Within minutes' },
+        { value: 'hours', label: lang === 'no' ? 'Innen noen timer' : 'Within a few hours' },
+        { value: 'next_day', label: lang === 'no' ? 'Neste virkedag' : 'Next business day' },
+        { value: 'varies', label: lang === 'no' ? 'Varierer — noen faller mellom' : 'Varies — some fall through' },
+      ],
+    },
+  ],
+  advokat: (lang) => [
+    {
+      id: 'ind_intake', type: 'single',
+      q: lang === 'no' ? 'Hvordan kvalifiserer dere nye klienter (intake)?' : 'How do you qualify new clients (intake)?',
+      options: [
+        { value: 'phone_meeting', label: lang === 'no' ? 'Telefon + møte med hver enkelt' : 'Phone + meeting with each one' },
+        { value: 'form', label: lang === 'no' ? 'Skjema på nett + oppfølging' : 'Online form + follow-up' },
+        { value: 'referral', label: lang === 'no' ? 'Mest via referanser' : 'Mostly via referrals' },
+        { value: 'mixed', label: lang === 'no' ? 'Blanding av alt' : 'Mix of everything' },
+      ],
+    },
+    {
+      id: 'ind_timekeeping', type: 'single',
+      q: lang === 'no' ? 'Hvor mye tid bruker advokatene på timeføring og fakturering?' : 'How much time do lawyers spend on time tracking and billing?',
+      options: [
+        { value: 'too_much', label: lang === 'no' ? 'For mye — det er frustrerende' : 'Too much — it\'s frustrating' },
+        { value: 'ok', label: lang === 'no' ? 'Det fungerer, men kan forbedres' : 'It works, but could be better' },
+        { value: 'automated', label: lang === 'no' ? 'Vi har gode systemer for det' : 'We have good systems for it' },
+      ],
+    },
+  ],
+  regnskap: (lang) => [
+    {
+      id: 'ind_client_docs', type: 'single',
+      q: lang === 'no' ? 'Hvor mye tid brukes på å hente inn dokumenter fra kunder?' : 'How much time is spent collecting documents from clients?',
+      options: [
+        { value: 'too_much', label: lang === 'no' ? 'Altfor mye — vi må mase konstant' : 'Way too much — we have to nag constantly' },
+        { value: 'some', label: lang === 'no' ? 'En del, men det går' : 'Quite a bit, but it works' },
+        { value: 'smooth', label: lang === 'no' ? 'Det går ganske smertefritt' : 'It goes fairly smoothly' },
+      ],
+    },
+    {
+      id: 'ind_peak', type: 'single',
+      q: lang === 'no' ? 'Hvordan håndterer dere toppperioder (årsoppgjør, MVA-frister)?' : 'How do you handle peak periods (year-end, VAT deadlines)?',
+      options: [
+        { value: 'overtime', label: lang === 'no' ? 'Overtid og stress' : 'Overtime and stress' },
+        { value: 'extra_staff', label: lang === 'no' ? 'Vi leier inn ekstra folk' : 'We hire extra staff' },
+        { value: 'managed', label: lang === 'no' ? 'Vi har gode rutiner for det' : 'We have good routines' },
+      ],
+    },
+  ],
+  butikk: (lang) => [
+    {
+      id: 'ind_channels', type: 'single',
+      q: lang === 'no' ? 'Selger dere i fysisk butikk, på nett, eller begge deler?' : 'Do you sell in a physical store, online, or both?',
+      options: [
+        { value: 'physical', label: lang === 'no' ? 'Kun fysisk butikk' : 'Physical store only' },
+        { value: 'online', label: lang === 'no' ? 'Kun nettbutikk' : 'Online store only' },
+        { value: 'both', label: lang === 'no' ? 'Begge deler' : 'Both' },
+      ],
+    },
+    {
+      id: 'ind_customer_service', type: 'single',
+      q: lang === 'no' ? 'Hvor mange kundehenvendelser (retur, spørsmål, klager) håndterer dere i uken?' : 'How many customer inquiries (returns, questions, complaints) do you handle per week?',
+      options: [
+        { value: '0-20', label: lang === 'no' ? 'Under 20' : 'Under 20' },
+        { value: '20-50', label: lang === 'no' ? '20–50' : '20–50' },
+        { value: '50-100', label: lang === 'no' ? '50–100' : '50–100' },
+        { value: '100+', label: lang === 'no' ? 'Over 100' : 'Over 100' },
+      ],
+    },
+  ],
+  frisor: (lang) => [
+    {
+      id: 'ind_booking_system', type: 'single',
+      q: lang === 'no' ? 'Hvordan booker kundene timer hos dere?' : 'How do customers book appointments with you?',
+      options: [
+        { value: 'phone_walkin', label: lang === 'no' ? 'Telefon og drop-in' : 'Phone and walk-in' },
+        { value: 'online_system', label: lang === 'no' ? 'Nettbooking (f.eks. Planyo, Fixit)' : 'Online booking (e.g. Planyo, Fixit)' },
+        { value: 'social', label: lang === 'no' ? 'Via sosiale medier / DM' : 'Via social media / DM' },
+        { value: 'mixed', label: lang === 'no' ? 'Blanding av flere' : 'Mix of several' },
+      ],
+    },
+    {
+      id: 'ind_cancellations', type: 'single',
+      q: lang === 'no' ? 'Opplever dere mye avbestillinger eller tomme tider?' : 'Do you experience many cancellations or empty slots?',
+      options: [
+        { value: 'a_lot', label: lang === 'no' ? 'Ja, det er et stort problem' : 'Yes, it\'s a big problem' },
+        { value: 'some', label: lang === 'no' ? 'Av og til' : 'Sometimes' },
+        { value: 'rare', label: lang === 'no' ? 'Sjelden' : 'Rarely' },
+      ],
+    },
+  ],
+  transport: (lang) => [
+    {
+      id: 'ind_dispatch', type: 'single',
+      q: lang === 'no' ? 'Hvor mye tid brukes på planlegging og koordinering av kjøretøy/sjåfører?' : 'How much time is spent planning and coordinating vehicles/drivers?',
+      options: [
+        { value: 'hours_daily', label: lang === 'no' ? 'Flere timer daglig' : 'Several hours daily' },
+        { value: 'some', label: lang === 'no' ? 'Noe — men det fungerer' : 'Some — but it works' },
+        { value: 'automated', label: lang === 'no' ? 'Vi har system for det meste' : 'We have systems for most of it' },
+      ],
+    },
+    {
+      id: 'ind_tracking', type: 'single',
+      q: lang === 'no' ? 'Får kundene automatisk statusoppdateringer på leveranser?' : 'Do customers receive automatic delivery status updates?',
+      options: [
+        { value: 'no', label: lang === 'no' ? 'Nei, de må ringe oss' : 'No, they have to call us' },
+        { value: 'partial', label: lang === 'no' ? 'Delvis — noen ganger' : 'Partially — sometimes' },
+        { value: 'yes', label: lang === 'no' ? 'Ja, automatisk' : 'Yes, automatically' },
+      ],
+    },
+  ],
+  it: (lang) => [
+    {
+      id: 'ind_support_tickets', type: 'single',
+      q: lang === 'no' ? 'Hvor mange support-henvendelser håndterer dere i uken?' : 'How many support tickets do you handle per week?',
+      options: [
+        { value: '0-20', label: lang === 'no' ? 'Under 20' : 'Under 20' },
+        { value: '20-50', label: lang === 'no' ? '20–50' : '20–50' },
+        { value: '50-100', label: lang === 'no' ? '50–100' : '50–100' },
+        { value: '100+', label: lang === 'no' ? 'Over 100' : 'Over 100' },
+      ],
+    },
+    {
+      id: 'ind_onboarding_clients', type: 'single',
+      q: lang === 'no' ? 'Hvor mye tid brukes på onboarding av nye kunder?' : 'How much time is spent on onboarding new clients?',
+      options: [
+        { value: 'days', label: lang === 'no' ? 'Flere dager per kunde' : 'Several days per client' },
+        { value: 'hours', label: lang === 'no' ? 'Noen timer per kunde' : 'A few hours per client' },
+        { value: 'streamlined', label: lang === 'no' ? 'Vi har en effektiv prosess' : 'We have an efficient process' },
+      ],
+    },
+  ],
+  utdanning: (lang) => [
+    {
+      id: 'ind_enrollment', type: 'single',
+      q: lang === 'no' ? 'Hvordan melder deltakere seg på kurs/programmer?' : 'How do participants enroll in courses/programs?',
+      options: [
+        { value: 'manual', label: lang === 'no' ? 'Manuelt via e-post/telefon' : 'Manually via email/phone' },
+        { value: 'form', label: lang === 'no' ? 'Skjema på nett' : 'Online form' },
+        { value: 'lms', label: lang === 'no' ? 'Via LMS/plattform' : 'Via LMS/platform' },
+        { value: 'mixed', label: lang === 'no' ? 'Blanding av flere' : 'Mix of several' },
+      ],
+    },
+    {
+      id: 'ind_followup_students', type: 'single',
+      q: lang === 'no' ? 'Hvor mye tid brukes på oppfølging og kommunikasjon med deltakere?' : 'How much time is spent on follow-up and communication with participants?',
+      options: [
+        { value: 'too_much', label: lang === 'no' ? 'Mye — det er en flaskehals' : 'A lot — it\'s a bottleneck' },
+        { value: 'some', label: lang === 'no' ? 'En del, men det går' : 'Quite a bit, but it works' },
+        { value: 'automated', label: lang === 'no' ? 'Vi har automatisert det meste' : 'We\'ve automated most of it' },
+      ],
+    },
+  ],
+  annet: (lang) => [
+    {
+      id: 'ind_biggest_bottleneck', type: 'single',
+      q: lang === 'no' ? 'Hva er den største flaskehalsen i bedriften din akkurat nå?' : 'What is the biggest bottleneck in your business right now?',
+      options: [
+        { value: 'customer_comms', label: lang === 'no' ? 'Kundekommunikasjon' : 'Customer communication' },
+        { value: 'admin', label: lang === 'no' ? 'Administrasjon og papirarbeid' : 'Administration and paperwork' },
+        { value: 'sales', label: lang === 'no' ? 'Salg og markedsføring' : 'Sales and marketing' },
+        { value: 'operations', label: lang === 'no' ? 'Drift og logistikk' : 'Operations and logistics' },
+        { value: 'hiring', label: lang === 'no' ? 'Rekruttering og HR' : 'Recruitment and HR' },
+      ],
+    },
+  ],
+}
+
+/* ────────────────────────────────────────────
+   QUESTIONNAIRE STEPS
+   ──────────────────────────────────────────── */
+const buildQuestions = (lang: string, selectedIndustry?: string): Question[] => {
+  const industryQ: Question[] = selectedIndustry && INDUSTRY_QUESTIONS[selectedIndustry]
+    ? INDUSTRY_QUESTIONS[selectedIndustry](lang)
+    : []
+
+  return [
   /* ── 1. BRANSJE (lett start — identitet, ikke innsats) ── */
   {
     id: 'industry', type: 'single',
@@ -318,6 +571,8 @@ const buildQuestions = (lang: string): Question[] => [
     options: INDUSTRIES.map((ind) => ({ value: ind.id, label: (ind as any)[lang] })),
     hasOther: true,
   },
+  /* ── 1b-1c. BRANSJESPESIFIKKE SPØRSMÅL (injisert dynamisk) ── */
+  ...industryQ,
   /* ── 2. STØRRELSE (fortsatt lett — bygger profil) ── */
   {
     id: 'size', type: 'single',
@@ -415,6 +670,7 @@ const buildQuestions = (lang: string): Question[] => [
   /* ── 10. FRITEKST UTDYPING (enkel, valgfri) ── */
   { id: 'additional', type: 'text', optional: true, q: lang === 'no' ? 'Noe spesifikt du vil at vi tar hensyn til?' : 'Anything specific you\'d like us to consider?' },  /* optional — siste spørsmål trenger ikke blokkere */
 ]
+}
 
 /* ────────────────────────────────────────────
    PACKAGES (no prices — custom pricing after call)
@@ -544,6 +800,21 @@ function KartleggingApp() {
   const [showResumeBanner, setShowResumeBanner] = useState(false)
   const [selectedAutomations, setSelectedAutomations] = useState<string[]>([])
 
+  // ── Reset step when industry changes (so user sees new industry-specific questions) ──
+  const prevIndustryRef = useRef(answers.industry)
+  useEffect(() => {
+    if (prevIndustryRef.current && prevIndustryRef.current !== answers.industry && phase === 2 && step > 0) {
+      // Clear old industry-specific answers
+      setAnswers(prev => {
+        const cleaned = { ...prev }
+        Object.keys(cleaned).forEach(k => { if (k.startsWith('ind_')) delete cleaned[k] })
+        return cleaned
+      })
+      setStep(1) // go to first industry-specific question
+    }
+    prevIndustryRef.current = answers.industry
+  }, [answers.industry, phase, step])
+
   // ── Pre-select industry from URL query param ──
   useEffect(() => {
     const bransje = searchParams.get('bransje')
@@ -604,7 +875,7 @@ function KartleggingApp() {
     }
   }, [contact, answers, step, phase, lang, otherIndustry, selectedAutomations])
 
-  const questions = buildQuestions(lang)
+  const questions = buildQuestions(lang, answers.industry)
   const industry = answers.industry || 'annet'
   const recs = INDUSTRY_RECOMMENDATIONS[industry]?.[lang] || INDUSTRY_RECOMMENDATIONS.annet[lang]
 
@@ -672,9 +943,21 @@ function KartleggingApp() {
   const generateSummary = async () => {
     setGenerating(true)
     const industryLabel = INDUSTRIES.find((i) => i.id === industry)?.[lang as 'no' | 'en'] || industry
+    // Collect industry-specific answers for AI context
+    const indAnswers = Object.entries(answers)
+      .filter(([k]) => k.startsWith('ind_'))
+      .map(([k, v]) => {
+        const q = questions.find(q => q.id === k)
+        const label = q ? q.q : k
+        const val = Array.isArray(v) ? v.join(', ') : (typeof v === 'string' ? (q?.options?.find(o => o.value === v)?.label || v) : String(v))
+        return `${label}: ${val}`
+      })
+      .join('\n')
+    const indSection = indAnswers ? `\nBransjespesifikke svar:\n${indAnswers}` : ''
+    const indSectionEn = indAnswers ? `\nIndustry-specific answers:\n${indAnswers}` : ''
     const prompt = lang === 'no'
-      ? `Du er en AI-forretningsrådgiver for et norsk selskap som selger AI-automatisering til SMB-er. Basert på følgende informasjon, generer en profesjonell analyse på norsk:\n\nBedrift: ${contact.company}\nBransje: ${industryLabel}\nStørrelse: ${answers.size}\nØnsker å frigjøre tid på: ${(answers.pain || []).join(', ')}\nNåværende systemer: ${(answers.tech || []).join(', ')}\nKundekontaktmetoder: ${(answers.contact_methods || []).join(', ')}\nHenvendelser som ikke følges opp: ${answers.missed}\nInvesteringsvilje: ${answers.investment}\nTidslinje: ${answers.timeline}\nDrømmescenario: ${answers.goals || 'Ikke spesifisert'}\nValgte automasjoner: ${selectedAutomations.join(', ') || 'Ingen valgt'}\nTilleggsinformasjon: ${answers.additional || 'Ingen'}\n\nGi analyse i dette formatet:\nOPPSUMMERING: 3-4 setninger om bedriftssituasjonen\nANBEFALINGER: 3-5 spesifikke AI-løsninger med forklaringer\nPRIORITET: Hvilken løsning bør implementeres først og hvorfor\nESTIMERT ROI: Forventet avkastning basert på bransjedata`
-      : `You are an AI business advisor for a Norwegian company selling AI automation to SMBs. Based on the following information, generate a professional analysis in English:\n\nCompany: ${contact.company}\nIndustry: ${industryLabel}\nSize: ${answers.size}\nWants to free up time on: ${(answers.pain || []).join(', ')}\nCurrent systems: ${(answers.tech || []).join(', ')}\nCustomer contact methods: ${(answers.contact_methods || []).join(', ')}\nUnanswered inquiries: ${answers.missed}\nInvestment willingness: ${answers.investment}\nTimeline: ${answers.timeline}\nDream scenario: ${answers.goals || 'Not specified'}\nSelected automations: ${selectedAutomations.join(', ') || 'None selected'}\nAdditional info: ${answers.additional || 'None'}\n\nProvide analysis in this format:\nSUMMARY: 3-4 sentences about the business situation\nRECOMMENDATIONS: 3-5 specific AI solutions with explanations\nPRIORITY: Which solution to implement first and why\nESTIMATED ROI: Expected return based on industry data`
+      ? `Du er en AI-forretningsrådgiver for et norsk selskap som selger AI-automatisering til SMB-er. Basert på følgende informasjon, generer en profesjonell analyse på norsk:\n\nBedrift: ${contact.company}\nBransje: ${industryLabel}\nStørrelse: ${answers.size}${indSection}\nØnsker å frigjøre tid på: ${(answers.pain || []).join(', ')}\nNåværende systemer: ${(answers.tech || []).join(', ')}\nKundekontaktmetoder: ${(answers.contact_methods || []).join(', ')}\nHenvendelser som ikke følges opp: ${answers.missed}\nInvesteringsvilje: ${answers.investment}\nTidslinje: ${answers.timeline}\nDrømmescenario: ${answers.goals || 'Ikke spesifisert'}\nValgte automasjoner: ${selectedAutomations.join(', ') || 'Ingen valgt'}\nTilleggsinformasjon: ${answers.additional || 'Ingen'}\n\nBruk de bransjespesifikke svarene aktivt til å tilpasse anbefalingene. Gi analyse i dette formatet:\nOPPSUMMERING: 3-4 setninger om bedriftssituasjonen\nANBEFALINGER: 3-5 spesifikke AI-løsninger med forklaringer\nPRIORITET: Hvilken løsning bør implementeres først og hvorfor\nESTIMERT ROI: Forventet avkastning basert på bransjedata`
+      : `You are an AI business advisor for a Norwegian company selling AI automation to SMBs. Based on the following information, generate a professional analysis in English:\n\nCompany: ${contact.company}\nIndustry: ${industryLabel}\nSize: ${answers.size}${indSectionEn}\nWants to free up time on: ${(answers.pain || []).join(', ')}\nCurrent systems: ${(answers.tech || []).join(', ')}\nCustomer contact methods: ${(answers.contact_methods || []).join(', ')}\nUnanswered inquiries: ${answers.missed}\nInvestment willingness: ${answers.investment}\nTimeline: ${answers.timeline}\nDream scenario: ${answers.goals || 'Not specified'}\nSelected automations: ${selectedAutomations.join(', ') || 'None selected'}\nAdditional info: ${answers.additional || 'None'}\n\nUse the industry-specific answers to actively tailor recommendations. Provide analysis in this format:\nSUMMARY: 3-4 sentences about the business situation\nRECOMMENDATIONS: 3-5 specific AI solutions with explanations\nPRIORITY: Which solution to implement first and why\nESTIMATED ROI: Expected return based on industry data`
 
     try {
       const res = await fetch('/api/kartlegging', {
