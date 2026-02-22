@@ -21,16 +21,68 @@ const statusLabels: Record<string, { no: string; en: string }> = {
   rejected: { no: 'Avvist', en: 'Rejected' },
 }
 
+const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASS || 'arxon2024'
+
 export default function AdminPage() {
   const [submissions, setSubmissions] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<string>('all')
   const [selectedSubmission, setSelectedSubmission] = useState<any>(null)
+  const [authed, setAuthed] = useState(false)
+  const [passInput, setPassInput] = useState('')
+  const [passError, setPassError] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
-    loadSubmissions()
-  }, [filter])
+    if (typeof window !== 'undefined') {
+      const saved = sessionStorage.getItem('arxon_admin')
+      if (saved === 'true') setAuthed(true)
+    }
+  }, [])
+
+  const handleLogin = () => {
+    if (passInput === ADMIN_PASS) {
+      setAuthed(true)
+      setPassError(false)
+      sessionStorage.setItem('arxon_admin', 'true')
+    } else {
+      setPassError(true)
+    }
+  }
+
+  useEffect(() => {
+    if (authed) loadSubmissions()
+  }, [filter, authed])
+
+  if (!authed) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#0a0a0f', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'DM Sans', sans-serif" }}>
+        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 18, padding: '40px 36px', maxWidth: 380, width: '100%', textAlign: 'center' }}>
+          <img src="/arxon-icon.png" alt="Arxon" style={{ width: 40, height: 40, margin: '0 auto 16px' }} />
+          <h2 style={{ color: '#f0f0f0', fontSize: 20, fontWeight: 700, marginBottom: 8 }}>Admin</h2>
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14, marginBottom: 24 }}>Skriv inn passord for å fortsette</p>
+          <input
+            type="password"
+            value={passInput}
+            onChange={e => { setPassInput(e.target.value); setPassError(false) }}
+            onKeyDown={e => e.key === 'Enter' && handleLogin()}
+            placeholder="Passord"
+            style={{
+              width: '100%', padding: '12px 16px', borderRadius: 10, border: `1px solid ${passError ? '#ef4444' : 'rgba(255,255,255,0.1)'}`,
+              background: 'rgba(255,255,255,0.04)', color: '#f0f0f0', fontSize: 15, outline: 'none', marginBottom: 12,
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          />
+          {passError && <p style={{ color: '#ef4444', fontSize: 13, marginBottom: 12 }}>Feil passord</p>}
+          <button onClick={handleLogin} style={{
+            width: '100%', padding: '12px', borderRadius: 10, border: 'none',
+            background: '#c9a96e', color: '#0a0a0f', fontWeight: 700, fontSize: 15, cursor: 'pointer',
+            fontFamily: "'DM Sans', sans-serif",
+          }}>Logg inn</button>
+        </div>
+      </div>
+    )
+  }
 
   const loadSubmissions = async () => {
     setLoading(true)
