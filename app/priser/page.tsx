@@ -30,10 +30,10 @@ export default function PricingPage() {
     {
       name: 'Starter',
       desc: 'For enkeltpersonforetak og små bedrifter som vil fange opp tapte anrop.',
-      priceMonthly: 1490,
-      priceAnnual: 1190,
+      priceMonthly: 2490,
+      priceAnnual: 1990,
       employeeSaving: 'Erstatter 0,5 stilling',
-      monthlySaving: '~15 000 kr spart/mnd',
+      monthlySaving: '~30 000 kr spart/mnd',
       features: [
         'AI-telefonsvarer 24/7',
         'Opptil 100 samtaler/mnd',
@@ -53,10 +53,10 @@ export default function PricingPage() {
     {
       name: 'Profesjonell',
       desc: 'For voksende bedrifter som vil erstatte resepsjonist og kutte lønnskostnader.',
-      priceMonthly: 2990,
-      priceAnnual: 2490,
+      priceMonthly: 4990,
+      priceAnnual: 3990,
       employeeSaving: 'Erstatter 1–2 stillinger',
-      monthlySaving: '~45 000 kr spart/mnd',
+      monthlySaving: '~55 000 kr spart/mnd',
       features: [
         'Alt i Starter, pluss:',
         'Ubegrensede samtaler',
@@ -77,10 +77,10 @@ export default function PricingPage() {
     {
       name: 'Vekst',
       desc: 'For bedrifter som skalerer raskt og trenger avanserte funksjoner uten enterprise-prosess.',
-      priceMonthly: 4990,
-      priceAnnual: 3990,
+      priceMonthly: 7990,
+      priceAnnual: 6490,
       employeeSaving: 'Erstatter 2–3 stillinger',
-      monthlySaving: '~80 000 kr spart/mnd',
+      monthlySaving: '~85 000 kr spart/mnd',
       features: [
         'Alt i Profesjonell, pluss:',
         'API-tilgang',
@@ -122,10 +122,10 @@ export default function PricingPage() {
   ]
 
   const employeeComparison = [
-    { role: 'Resepsjonist / telefonsvarer', annualCost: '420 000 kr', arxonCost: '29 880 kr', saving: '390 120 kr' },
-    { role: 'Kundeservice-medarbeider', annualCost: '480 000 kr', arxonCost: '29 880 kr', saving: '450 120 kr' },
-    { role: 'Booking-koordinator', annualCost: '440 000 kr', arxonCost: '29 880 kr', saving: '410 120 kr' },
-    { role: 'Lead-kvalifiserer (salg)', annualCost: '520 000 kr', arxonCost: '47 880 kr', saving: '472 120 kr' },
+    { role: 'Resepsjonist / telefonsvarer', annualCost: '420 000 kr', arxonCost: '47 880 kr', saving: '372 120 kr' },
+    { role: 'Kundeservice-medarbeider', annualCost: '480 000 kr', arxonCost: '47 880 kr', saving: '432 120 kr' },
+    { role: 'Booking-koordinator', annualCost: '440 000 kr', arxonCost: '47 880 kr', saving: '392 120 kr' },
+    { role: 'Lead-kvalifiserer (salg)', annualCost: '520 000 kr', arxonCost: '77 880 kr', saving: '442 120 kr' },
   ]
 
   const fadeUp = {
@@ -207,7 +207,7 @@ export default function PricingPage() {
             <span style={{ color: gold }}>La AI gjøre jobben.</span>
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 17, maxWidth: 560, margin: '0 auto 32px', lineHeight: 1.6 }}>
-            Hvorfor betale 400 000+ kr/år for en resepsjonist når AI gjør samme jobb for under 30 000 kr/år? Velg planen som passer din bedrift.
+            Hvorfor betale 400 000+ kr/år for en resepsjonist når AI gjør samme jobb for en brøkdel av prisen? Velg planen som passer din bedrift.
           </p>
 
           {/* Toggle */}
@@ -360,8 +360,8 @@ export default function PricingPage() {
         }}>
           <div>
             <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 4 }}>Gjennomsnittlig besparelse per stilling</div>
-            <div style={{ fontSize: 32, fontWeight: 700, color: gold, fontFamily: "'Playfair Display', serif" }}>433 620 kr/år</div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>= 36 135 kr spart per måned per erstattede stilling</div>
+            <div style={{ fontSize: 32, fontWeight: 700, color: gold, fontFamily: "'Playfair Display', serif" }}>409 620 kr/år</div>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>= 34 135 kr spart per måned per erstattede stilling</div>
           </div>
           <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
             color: bg, border: 'none', borderRadius: 12, padding: '14px 32px',
