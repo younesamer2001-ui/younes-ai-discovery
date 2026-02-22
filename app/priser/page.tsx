@@ -75,22 +75,45 @@ export default function PricingPage() {
       cta: 'Start gratis prøveperiode',
     },
     {
-      name: 'Enterprise',
-      desc: 'For bedrifter med høyt volum som vil automatisere hele kundemottaket.',
-      priceMonthly: null,
-      priceAnnual: null,
-      employeeSaving: 'Erstatter 2–5 stillinger',
-      monthlySaving: '~120 000 kr+ spart/mnd',
+      name: 'Vekst',
+      desc: 'For bedrifter som skalerer raskt og trenger avanserte funksjoner uten enterprise-prosess.',
+      priceMonthly: 4990,
+      priceAnnual: 3990,
+      employeeSaving: 'Erstatter 2–3 stillinger',
+      monthlySaving: '~80 000 kr spart/mnd',
       features: [
         'Alt i Profesjonell, pluss:',
-        'Ubegrensede brukere',
-        'Full API-tilgang',
+        'API-tilgang',
+        'Flerbruker-dashbord (15 brukere)',
+        'Flerspråklig støtte (4 språk)',
+        'Avansert analyse og rapportering',
+        'Multi-lokasjon støtte',
         'Dedikert kontaktperson',
-        'Skreddersydd AI-opplæring',
-        'Flerspråklig støtte',
+        'Prioritert onboarding',
+      ],
+      notIncluded: [
         'On-premise muligheter',
         'SLA-garanti',
-        'Prioritert onboarding',
+      ],
+      popular: false,
+      cta: 'Start gratis prøveperiode',
+    },
+    {
+      name: 'Enterprise',
+      desc: 'For store bedrifter som vil automatisere hele kundemottaket med full kontroll.',
+      priceMonthly: null,
+      priceAnnual: null,
+      employeeSaving: 'Erstatter 3–5+ stillinger',
+      monthlySaving: '~120 000 kr+ spart/mnd',
+      features: [
+        'Alt i Vekst, pluss:',
+        'Ubegrensede brukere',
+        'Skreddersydd AI-opplæring',
+        'On-premise muligheter',
+        'SLA-garanti (99,9% oppetid)',
+        'Prioritert 24/7 support',
+        'Egendefinerte integrasjoner',
+        'Kvartalsvis forretningsgjennomgang',
       ],
       notIncluded: [],
       popular: false,
@@ -102,7 +125,7 @@ export default function PricingPage() {
     { role: 'Resepsjonist / telefonsvarer', annualCost: '420 000 kr', arxonCost: '29 880 kr', saving: '390 120 kr' },
     { role: 'Kundeservice-medarbeider', annualCost: '480 000 kr', arxonCost: '29 880 kr', saving: '450 120 kr' },
     { role: 'Booking-koordinator', annualCost: '440 000 kr', arxonCost: '29 880 kr', saving: '410 120 kr' },
-    { role: 'Lead-kvalifiserer (salg)', annualCost: '520 000 kr', arxonCost: '35 880 kr', saving: '484 120 kr' },
+    { role: 'Lead-kvalifiserer (salg)', annualCost: '520 000 kr', arxonCost: '47 880 kr', saving: '472 120 kr' },
   ]
 
   const fadeUp = {
@@ -122,10 +145,13 @@ export default function PricingPage() {
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
         .gold-hover:hover { border-color: rgba(${goldRgb},0.3) !important; transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
         .show-mobile-only { display: none !important; }
+        @media (max-width: 1100px) {
+          .grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+        }
         @media (max-width: 768px) {
           .hide-mobile { display: none !important; }
           .show-mobile-only { display: flex !important; }
-          .grid-3 { grid-template-columns: 1fr !important; }
+          .grid-4 { grid-template-columns: 1fr !important; }
         }
       `}</style>
 
@@ -204,14 +230,14 @@ export default function PricingPage() {
 
       {/* Pricing Cards */}
       <section style={{ maxWidth: 1100, margin: '0 auto', padding: '30px 24px 60px' }}>
-        <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+        <div className="grid-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
           {plans.map((plan, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.45 }}
               className="gold-hover"
               style={{
                 background: plan.popular ? `linear-gradient(135deg, rgba(${goldRgb},0.06) 0%, rgba(${goldRgb},0.02) 100%)` : 'rgba(255,255,255,0.02)',
                 border: `1px solid ${plan.popular ? `rgba(${goldRgb},0.25)` : 'rgba(255,255,255,0.06)'}`,
-                borderRadius: 20, padding: '32px 28px', transition: 'all 0.3s ease',
+                borderRadius: 20, padding: '28px 22px', transition: 'all 0.3s ease',
                 position: 'relative', display: 'flex', flexDirection: 'column',
               }}>
               {plan.popular && (
