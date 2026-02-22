@@ -78,7 +78,7 @@ const T: Record<string, Record<string, string>> = {
   builder_tier: { no: "Estimert pakkenivå", en: "Estimated package level" },
   builder_time: { no: "Estimert tidsbesparelse", en: "Estimated time savings" },
   builder_scope: { no: "Kompleksitet", en: "Complexity" },
-  builder_cta: { no: "Få tilpasset pris", en: "Get custom pricing" },
+  builder_cta: { no: "Generer AI-analyse", en: "Generate AI analysis" },
   builder_summary: { no: "Din valgte pakke", en: "Your selected package" },
   builder_per_week: { no: "/uke", en: "/week" },
 }
@@ -1239,45 +1239,6 @@ function KartleggingApp() {
                 </table>
               </div>
 
-              {/* Packages — no prices */}
-              <div style={{ marginBottom: 28 }}>
-                <h3 style={{ ...headingFont, fontSize: 24, fontWeight: 700, textAlign: 'center', marginBottom: 8 }}>
-                  {lang === 'no' ? 'Velg pakken som passer deg' : 'Choose the package that fits you'}
-                </h3>
-                <p style={{ textAlign: 'center', fontSize: 13, color: textMuted, marginBottom: 24 }}>
-                  {lang === 'no' ? 'Prisen tilpasses din bedrift etter en uforpliktende samtale' : 'Pricing is tailored to your business after a free consultation'}
-                </p>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
-                  {PACKAGES.map((pkg, idx) => (
-                    <motion.div key={pkg.id} custom={idx} variants={cardVariants} initial="initial" animate="animate"
-                      style={{ ...cardStyle, padding: '28px 22px', position: 'relative', border: pkg.popular ? `1.5px solid ${gold}` : `1px solid ${cardBorder}` }}>
-                      {pkg.popular && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: gold, color: bg, fontSize: 11, fontWeight: 600, padding: '3px 12px', borderRadius: 20 }}>
-                        {lang === 'no' ? 'Anbefalt' : 'Recommended'}
-                      </div>}
-                      <h4 style={{ ...headingFont, fontSize: 22, fontWeight: 700, marginBottom: 4, marginTop: pkg.popular ? 8 : 0 }}>{(pkg.name as any)[lang]}</h4>
-                      <p style={{ fontSize: 13, color: textMuted, marginBottom: 16 }}>{(pkg.tagline as any)[lang]}</p>
-                      <div style={{ fontSize: 22, fontWeight: 700, color: gold, marginBottom: 16 }}>
-                        {lang === 'no' ? 'Tilpasset pris' : 'Custom pricing'}
-                      </div>
-                      <div style={{ borderTop: `1px solid ${cardBorder}`, paddingTop: 14 }}>
-                        {(pkg.features as any)[lang].map((f: string, i: number) => (
-                          <div key={i} style={{ fontSize: 13, color: textSecondary, padding: '5px 0', display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-                            <span style={{ color: gold, fontSize: 12, marginTop: 2 }}>&#10003;</span>{f}
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-                <div style={{ textAlign: 'center', marginTop: 20 }}>
-                  <p style={{ fontSize: 13, color: textSecondary, lineHeight: 1.6 }}>
-                    {lang === 'no'
-                      ? 'Send inn kartleggingen, så kan du booke en gratis samtale med oss for å finne riktig pakke og pris.'
-                      : 'Submit the discovery, then book a free call with us to find the right package and price.'}
-                  </p>
-                </div>
-              </div>
-
               {/* Compliance */}
               <div style={{ ...cardStyle, marginBottom: 32, padding: '22px 22px' }}>
                 <h4 style={{ ...headingFont, fontSize: 17, fontWeight: 600, marginBottom: 14 }}>{t('compliance_title', lang)}</h4>
@@ -1498,7 +1459,7 @@ function KartleggingApp() {
             </motion.div>
           )}
 
-          {/* ═══════════ PHASE 6: AI SUMMARY ═══════════ */}
+          {/* ═══════════ PHASE 6: AI SUMMARY + BOOKING ═══════════ */}
           {phase === 6 && (
             <motion.div key="phase6" variants={pageVariants} initial="initial" animate="animate" exit="exit">
               <div style={{ marginTop: 32, marginBottom: 24, textAlign: 'center' }}>
@@ -1507,52 +1468,13 @@ function KartleggingApp() {
               <div style={{ ...cardStyle, marginBottom: 24 }}>
                 <pre style={{ whiteSpace: 'pre-wrap', fontFamily: "'DM Sans', sans-serif", fontSize: 14, lineHeight: 1.65, color: textSecondary }}>{aiSummary}</pre>
               </div>
-              <button style={btnPrimary} onClick={() => setPhase(7)}>{t('review_title', lang)}</button>
-            </motion.div>
-          )}
 
-          {/* ═══════════ PHASE 7: REVIEW ═══════════ */}
-          {phase === 7 && (
-            <motion.div key="phase7" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-              <div style={{ marginTop: 32, marginBottom: 24, textAlign: 'center' }}>
-                <h2 style={{ ...headingFont, fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 700 }}>{t('review_title', lang)}</h2>
-              </div>
-
-              <div style={{ ...cardStyle, marginBottom: 16, padding: '18px 20px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                  <span style={{ fontSize: 14, fontWeight: 600 }}>{t('contact_name', lang)}</span>
-                  <button style={{ ...btnSecondary, padding: '4px 10px', fontSize: 12 }} onClick={() => setPhase(1)}>{t('review_edit', lang)}</button>
-                </div>
-                <p style={{ fontSize: 13, color: textSecondary }}>{contact.company} / {contact.name} / {contact.email}{contact.phone ? ` / ${contact.phone}` : ''}</p>
-              </div>
-
-              <div style={{ ...cardStyle, marginBottom: 16, padding: '18px 20px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                  <span style={{ fontSize: 14, fontWeight: 600 }}>{t('review_answers', lang)}</span>
-                  <button style={{ ...btnSecondary, padding: '4px 10px', fontSize: 12 }} onClick={() => { setStep(0); setPhase(2) }}>{t('review_edit', lang)}</button>
-                </div>
-                {questions.map((q) => {
-                  const a = answers[q.id]
-                  if (!a || (Array.isArray(a) && a.length === 0)) return null
-                  const display = Array.isArray(a) ? a.map((v: string) => q.options?.find((o) => o.value === v)?.label || v).join(', ') : q.options?.find((o) => o.value === a)?.label || a
-                  return (
-                    <div key={q.id} style={{ marginBottom: 10, paddingBottom: 10, borderBottom: `1px solid ${cardBorder}` }}>
-                      <div style={{ fontSize: 12, color: textMuted, marginBottom: 2 }}>{q.q}</div>
-                      <div style={{ fontSize: 13.5, color: textPrimary }}>{display}</div>
-                    </div>
-                  )
-                })}
-              </div>
-
-              {/* Selected automations review */}
+              {/* Selected automations summary */}
               {selectedAutomations.length > 0 && (
-                <div style={{ ...cardStyle, marginBottom: 16, padding: '18px 20px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                    <span style={{ fontSize: 14, fontWeight: 600 }}>{t('builder_summary', lang)} ({selectedAutomations.length})</span>
-                    <button style={{ ...btnSecondary, padding: '4px 10px', fontSize: 12 }} onClick={() => setPhase(4)}>{t('review_edit', lang)}</button>
-                  </div>
+                <div style={{ ...cardStyle, marginBottom: 24, padding: '18px 20px' }}>
+                  <span style={{ fontSize: 14, fontWeight: 600, display: 'block', marginBottom: 12 }}>{t('builder_summary', lang)} ({selectedAutomations.length})</span>
                   {selectedAutomations.map((name, i) => (
-                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '6px 0', borderBottom: i < selectedAutomations.length - 1 ? `1px solid ${cardBorder}` : 'none' }}>
+                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '5px 0' }}>
                       <span style={{ color: gold, fontSize: 12 }}>&#10003;</span>
                       <span style={{ fontSize: 13, color: textPrimary }}>{name}</span>
                     </div>
@@ -1560,13 +1482,7 @@ function KartleggingApp() {
                 </div>
               )}
 
-              {aiSummary && (
-                <div style={{ ...cardStyle, marginBottom: 16, padding: '18px 20px' }}>
-                  <span style={{ fontSize: 14, fontWeight: 600, display: 'block', marginBottom: 8 }}>{t('summary_title', lang)}</span>
-                  <pre style={{ whiteSpace: 'pre-wrap', fontFamily: "'DM Sans', sans-serif", fontSize: 13, lineHeight: 1.55, color: textSecondary, maxHeight: 200, overflow: 'auto' }}>{aiSummary}</pre>
-                </div>
-              )}
-
+              {/* ROI estimate */}
               <div style={{ ...cardStyle, marginBottom: 24, padding: '18px 20px' }}>
                 <span style={{ fontSize: 14, fontWeight: 600, display: 'block', marginBottom: 8 }}>
                   {lang === 'no' ? 'Estimert tapt omsetning' : 'Estimated lost revenue'}
@@ -1575,17 +1491,56 @@ function KartleggingApp() {
                   <div><span style={{ color: textMuted }}>{t('roi_lost_month', lang)}:</span> <span style={{ color: '#ef4444' }}>{fmtNOK(roi.lostMonth)}</span></div>
                   <div><span style={{ color: textMuted }}>{t('roi_lost_year', lang)}:</span> <span style={{ color: '#ef4444' }}>{fmtNOK(roi.lostYear)}</span></div>
                 </div>
-                <p style={{ fontSize: 11, color: textMuted, marginTop: 8, fontStyle: 'italic' }}>
-                  {lang === 'no' ? 'Eksakt pris diskuteres i samtalen' : 'Exact pricing discussed during consultation'}
-                </p>
               </div>
 
-              <div style={{ display: 'flex', gap: 12 }}>
-                <button style={btnSecondary} onClick={() => setPhase(4)}>{t('back', lang)}</button>
-                <button style={{ ...btnPrimary, opacity: submitting ? 0.6 : 1 }} onClick={handleSubmit} disabled={submitting}>{submitting ? t('submitting', lang) : t('submit_btn', lang)}</button>
+              {/* Booking CTA */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.5 }}
+                style={{ ...cardStyle, marginBottom: 24, padding: '32px 24px', textAlign: 'center', border: `1.5px solid ${gold}`, background: 'rgba(201,169,110,0.04)' }}>
+                <h3 style={{ ...headingFont, fontSize: 20, fontWeight: 700, marginBottom: 8 }}>
+                  {lang === 'no' ? 'Book en gratis samtale' : 'Book a free consultation'}
+                </h3>
+                <p style={{ fontSize: 13.5, color: textSecondary, marginBottom: 20, lineHeight: 1.55 }}>
+                  {lang === 'no'
+                    ? 'Vi gjennomgår analysen din og gir deg et tilpasset tilbud basert på pakken du har bygget.'
+                    : 'We review your analysis and give you a custom offer based on the package you built.'}
+                </p>
+                <a
+                  href={BOOKING_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ ...btnPrimary, display: 'inline-block', textDecoration: 'none', textAlign: 'center', maxWidth: 320, margin: '0 auto' }}
+                  onClick={() => { if (!submitting && !refNumber) handleSubmit() }}
+                >
+                  {lang === 'no' ? 'Book tid i kalenderen →' : 'Book a time →'}
+                </a>
+                <div style={{ marginTop: 16 }}>
+                  {[
+                    lang === 'no' ? '30 min uforpliktende samtale' : '30 min no-obligation call',
+                    lang === 'no' ? 'Vi diskuterer pris og løsning' : 'We discuss pricing and solution',
+                    lang === 'no' ? 'Du forplikter deg til ingenting' : 'No commitment required',
+                  ].map((s, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 4 }}>
+                      <span style={{ color: gold, fontSize: 11 }}>&#10003;</span>
+                      <span style={{ fontSize: 12.5, color: textMuted }}>{s}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Send inn uten å booke */}
+              <div style={{ textAlign: 'center' }}>
+                <button
+                  style={{ ...btnSecondary, fontSize: 13 }}
+                  onClick={() => { if (!submitting && !refNumber) handleSubmit(); setPhase(8) }}
+                >
+                  {lang === 'no' ? 'Send inn uten å booke — vi ringer deg' : 'Submit without booking — we\'ll call you'}
+                </button>
               </div>
             </motion.div>
           )}
+
+          {/* Phase 7 removed — booking + submit now handled in Phase 6 */}
 
           {/* ═══════════ PHASE 8: CONFIRMATION + BOOKING ═══════════ */}
           {phase === 8 && (
@@ -1612,8 +1567,8 @@ function KartleggingApp() {
                 </h3>
                 <p style={{ color: textSecondary, fontSize: 14, lineHeight: 1.6, marginBottom: 24, maxWidth: 380, margin: '0 auto 24px' }}>
                   {lang === 'no'
-                    ? 'Vi gjennomgår analysen din og finner riktig pakke og pris for din bedrift. Helt uforpliktende.'
-                    : 'We review your analysis and find the right package and price for your business. No obligations.'}
+                    ? 'Kartleggingen din er sendt! Book en samtale så diskuterer vi pris og løsning.'
+                    : 'Your discovery is submitted! Book a call and we\'ll discuss pricing and solution.'}
                 </p>
                 <a
                   href={BOOKING_URL}
