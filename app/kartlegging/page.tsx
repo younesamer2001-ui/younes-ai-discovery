@@ -895,7 +895,7 @@ function KartleggingApp() {
     const lostMonth = roiInputs.missed * roiInputs.jobValue * (roiInputs.convRate / 100)
     const lostYear = lostMonth * 12
     const autoCount = selectedAutomations.length
-    const tierName = autoCount >= 6 ? 'Vekst' : autoCount >= 3 ? 'Profesjonell' : 'Starter'
+    const tierName = autoCount >= 6 ? (lang === 'en' ? 'Growth' : 'Vekst') : autoCount >= 3 ? (lang === 'en' ? 'Professional' : 'Profesjonell') : 'Starter'
     return { lostMonth: Math.round(lostMonth), lostYear: Math.round(lostYear), tierName }
   }
 
@@ -1225,8 +1225,8 @@ function KartleggingApp() {
             const totalCount = selected.length
 
             /* Tier calculation */
-            const tierLevel = totalCount <= 2 ? 'Starter' : totalCount <= 5 ? 'Profesjonell' : 'Vekst'
-            const tierColor = tierLevel === 'Starter' ? '#6ee7b7' : tierLevel === 'Profesjonell' ? '#c9a96e' : '#a78bfa'
+            const tierLevel = totalCount <= 2 ? 'Starter' : totalCount <= 5 ? (lang === 'en' ? 'Professional' : 'Profesjonell') : (lang === 'en' ? 'Growth' : 'Vekst')
+            const tierColor = totalCount <= 2 ? '#6ee7b7' : totalCount <= 5 ? '#c9a96e' : '#a78bfa'
 
             /* Parse time savings */
             const parseHours = (s: string): number => {
