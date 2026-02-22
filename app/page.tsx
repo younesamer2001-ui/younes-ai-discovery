@@ -732,12 +732,12 @@ export default function LandingPage() {
             { value: 24, suffix: '/7', label: 'AI-tilgjengelighet' },
             { value: 150, suffix: '+', label: 'Ferdige automatiseringer' },
             { value: 2, suffix: ' sek', label: 'Svartid på anrop' },
-            { value: 200, suffix: '+', label: 'Integrasjoner' },
+            { value: 85, suffix: '+', label: 'Integrasjoner' },
           ] : [
             { value: 24, suffix: '/7', label: 'AI availability' },
             { value: 150, suffix: '+', label: 'Ready automations' },
             { value: 2, suffix: ' sec', label: 'Call response time' },
-            { value: 200, suffix: '+', label: 'Integrations' },
+            { value: 85, suffix: '+', label: 'Integrations' },
           ]).map((s, i) => (
             <div key={i} style={{ padding: '26px 20px', textAlign: 'center', background: bg }}>
               <div style={{ fontSize: 30, fontWeight: 700, color: gold, fontFamily: "'Playfair Display', serif" }}>
@@ -1171,7 +1171,7 @@ export default function LandingPage() {
           {lang === 'no' ? 'Integrerer med verktøyene du bruker' : 'Integrates with your existing tools'}
         </motion.h2>
         <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 14, marginBottom: 36, maxWidth: 460, margin: '0 auto 36px' }}>
-          {lang === 'no' ? 'Over 200+ integrasjoner via n8n og Make — kobler AI til hele virksomheten din.' : 'Over 200+ integrations via n8n and Make — connecting AI to your entire business.'}
+          {lang === 'no' ? '85+ integrasjoner via n8n og Make — kobler AI til hele virksomheten din.' : '85+ integrations via n8n and Make — connecting AI to your entire business.'}
         </motion.p>
         <motion.div {...fadeUp} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
           {(lang === 'no' ? [
@@ -1213,7 +1213,7 @@ export default function LandingPage() {
             borderRadius: 12, padding: '11px 28px', fontWeight: 600, fontSize: 13,
             cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
           }}>
-            {lang === 'no' ? 'Se alle 200+ integrasjoner' : 'See all 200+ integrations'}
+            {lang === 'no' ? 'Se alle 85+ integrasjoner' : 'See all 85+ integrations'}
             <ArrowRight size={14} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
           </button>
         </motion.div>
