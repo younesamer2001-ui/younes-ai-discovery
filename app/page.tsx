@@ -340,41 +340,69 @@ export default function LandingPage() {
   }
 
   const heroWords = lang === 'no'
-    ? ['svare telefonen 24/7', 'booke møter automatisk', 'kvalifisere leads med AI', 'frigjøre tid til det viktige']
-    : ['answer calls 24/7', 'book meetings automatically', 'qualify leads with AI', 'free up time for what matters']
+    ? ['svare telefonen 24/7', 'booke møter automatisk', 'kvalifisere leads med AI', 'automatisere fakturering', 'generere innhold med AI', 'frigjøre tid til det viktige']
+    : ['answer calls 24/7', 'book meetings automatically', 'qualify leads with AI', 'automate invoicing', 'generate content with AI', 'free up time for what matters']
 
   const beforeAfter = lang === 'no' ? {
-    title: 'Før og etter AI',
+    title: 'Før og etter Arxon',
     before: {
       label: 'Uten AI',
-      items: ['Mister henvendelser etter kl. 16', 'Betaler lønn for telefonsvarer og resepsjonist', 'Ingen oversikt over tapte leads', 'Timer på repetitivt arbeid som koster deg ansatte'],
+      items: [
+        'Mister henvendelser etter kl. 16 — tapt omsetning',
+        'Betaler lønn for telefonsvarer, resepsjonist og sekretær',
+        'Manuell fakturering, booking og lead-oppfølging',
+        'Ingen automatisk lead-scoring — behandler alle likt',
+        'Timer på repetitivt arbeid: e-post, notater, rapporter',
+      ],
     },
     after: {
-      label: 'Med Arxon',
-      items: ['AI svarer 24/7 — aldri mist en kunde', 'Spar 1–2 heltidsstillinger med automatisering', 'Full oversikt over alle henvendelser', 'Kutt lønnskostnader — AI gjør jobben for en brøkdel'],
+      label: 'Med Arxon — 150+ automatiseringer',
+      items: [
+        'AI-sekretær svarer 24/7 og booker direkte i kalenderen',
+        'Spar 1–2 stillinger — AI håndterer kundeservice, booking og faktura',
+        'Automatisk lead-scoring (BANT) prioriterer de beste kundene',
+        'Full-syklus faktura-automatisering fra oppdrag til betaling',
+        'AI møtenotat-taker, KPI-varsler og daglig bedriftsdigest',
+      ],
     },
   } : {
-    title: 'Before and After AI',
+    title: 'Before and After Arxon',
     before: {
       label: 'Without AI',
-      items: ['Missing inquiries after business hours', 'Paying salaries for receptionist and phone staff', 'No overview of lost leads', 'Hours of repetitive work that costs you employees'],
+      items: [
+        'Missing inquiries after hours — lost revenue',
+        'Paying salaries for receptionist, phone staff and secretary',
+        'Manual invoicing, booking and lead follow-up',
+        'No automatic lead scoring — treating all leads equally',
+        'Hours on repetitive work: emails, notes, reports',
+      ],
     },
     after: {
-      label: 'With Arxon',
-      items: ['AI answers 24/7 — never miss a customer', 'Save 1–2 full-time positions with automation', 'Full overview of all inquiries', 'Cut salary costs — AI does the job for a fraction'],
+      label: 'With Arxon — 150+ automations',
+      items: [
+        'AI secretary answers 24/7 and books directly in your calendar',
+        'Save 1–2 positions — AI handles service, booking and invoicing',
+        'Automatic lead scoring (BANT) prioritizes best customers',
+        'Full-cycle invoice automation from job to payment',
+        'AI meeting notes, KPI alerts and daily business digest',
+      ],
     },
   }
 
   const features = lang === 'no' ? [
-    { icon: Phone, title: 'AI Telefonsvar', desc: 'Aldri mist en kunde igjen. AI-en svarer, kvalifiserer og booker avtaler — selv kl. 23 på en søndag.', stat: '24/7' },
-    { icon: Bot, title: 'Personlig AI-plan', desc: 'Få en skreddersydd rapport som viser nøyaktig hvor AI sparer deg mest tid og penger.', stat: '2 min' },
-    { icon: BarChart3, title: 'Se din ROI', desc: 'Finn ut hvor mye du taper på ubesvarte anrop — og hva du kan spare med AI.', stat: 'Gratis' },
-    { icon: Shield, title: 'Trygt og norsk', desc: 'Data kryptert innen EØS. GDPR-kompatibel med databehandleravtale. EU AI Act-klar.', stat: '100%' },
+    { icon: Phone, title: 'AI Telefonsvar & Booking', desc: 'AI-sekretær som svarer anrop, kvalifiserer leads og booker direkte i Cal.com eller Google Kalender. Stemmestyrt booking med ElevenLabs, automatisk no-show-sporing og WhatsApp-påminnelser.', stat: '24/7 · 12 automatiseringer', subs: ['WhatsApp AI-bookingsystem', 'Stemmestyrt booking', 'Automatisk no-show-sporing'] },
+    { icon: Zap, title: 'Lead-generering & Salg', desc: 'Fang leads fra Google Maps, LinkedIn og Facebook — automatisk beriket med AI. Speed-to-lead auto-respons sørger for at ingen henvendelse venter, og BANT lead-scoring prioriterer de beste.', stat: '20 automatiseringer', subs: ['AI lead-scoring (BANT)', 'Speed-to-lead respons', 'LinkedIn lead-pipeline'] },
+    { icon: MessageSquare, title: 'Kundeservice & Kommunikasjon', desc: 'AI-chatbot med kunnskapsbase som håndterer henvendelser på tvers av WhatsApp, e-post og nettside. Automatisk klassifisering av support-tickets og human-in-the-loop for komplekse saker.', stat: '15 automatiseringer', subs: ['AI kundesupport-chatbot', 'Flerkanals henvendelsessystem', 'AI e-post auto-responder'] },
+    { icon: BarChart3, title: 'Faktura & Økonomi', desc: 'Full-syklus faktura-automatisering fra opprettelse til betaling. AI leser fakturaer fra e-post, kobler Stripe-betalinger til regnskap og sender automatiske purringer ved forfall.', stat: '15 automatiseringer', subs: ['AI fakturaprosessering', 'Forfalt faktura-påminnelse', 'Stripe → regnskapssystem'] },
+    { icon: TrendingUp, title: 'Markedsføring & Innhold', desc: 'AI-generert innhold for LinkedIn, Instagram og blogg. Automatisert SEO-pipeline, Google-anmeldelser til sosiale medier og merkeovervåkning — alt på autopilot.', stat: '18 automatiseringer', subs: ['AI SEO-blogginnhold', 'AI LinkedIn-postgenerator', 'Merkeovervåkning'] },
+    { icon: Clock, title: 'Drift & Rapportering', desc: 'E-poster blir automatisk til oppgaver i Notion/Trello. Zoom AI-møteassistent tar notater, KPI-varsler holder deg oppdatert, og daglig AI-digest samler alt viktig.', stat: '25 automatiseringer', subs: ['Zoom AI-møteassistent', 'KPI-varslingssystem', 'Daglig AI bedriftsdigest'] },
   ] : [
-    { icon: Phone, title: 'AI Phone Answering', desc: 'Never miss a customer again. AI answers, qualifies and books appointments — even Sunday at 11 PM.', stat: '24/7' },
-    { icon: Bot, title: 'Personal AI Plan', desc: 'Get a tailored report showing exactly where AI saves you the most time and money.', stat: '2 min' },
-    { icon: BarChart3, title: 'See Your ROI', desc: 'Find out how much you lose on missed calls — and what you can save with AI.', stat: 'Free' },
-    { icon: Shield, title: 'Safe & Norwegian', desc: 'Data encrypted within EEA. GDPR compliant with DPA. EU AI Act ready.', stat: '100%' },
+    { icon: Phone, title: 'AI Phone & Booking', desc: 'AI secretary that answers calls, qualifies leads and books directly in Cal.com or Google Calendar. Voice-powered booking with ElevenLabs, automatic no-show tracking and WhatsApp reminders.', stat: '24/7 · 12 automations', subs: ['WhatsApp AI booking system', 'Voice-powered booking', 'Auto no-show tracking'] },
+    { icon: Zap, title: 'Lead Generation & Sales', desc: 'Capture leads from Google Maps, LinkedIn and Facebook — auto-enriched with AI. Speed-to-lead auto-response ensures no inquiry waits, and BANT lead scoring prioritizes the best.', stat: '20 automations', subs: ['AI lead scoring (BANT)', 'Speed-to-lead response', 'LinkedIn lead pipeline'] },
+    { icon: MessageSquare, title: 'Customer Service', desc: 'AI chatbot with knowledge base handling inquiries across WhatsApp, email and web. Auto classification of support tickets and human-in-the-loop for complex cases.', stat: '15 automations', subs: ['AI support chatbot', 'Multi-channel system', 'AI email auto-responder'] },
+    { icon: BarChart3, title: 'Invoicing & Finance', desc: 'Full-cycle invoice automation from creation to payment. AI reads invoices from email, connects Stripe payments to accounting and sends automatic reminders on due dates.', stat: '15 automations', subs: ['AI invoice processing', 'Overdue reminders', 'Stripe → accounting'] },
+    { icon: TrendingUp, title: 'Marketing & Content', desc: 'AI-generated content for LinkedIn, Instagram and blog. Automated SEO pipeline, Google reviews to social media and brand monitoring — all on autopilot.', stat: '18 automations', subs: ['AI SEO blog content', 'AI LinkedIn generator', 'Brand monitoring'] },
+    { icon: Clock, title: 'Ops & Reporting', desc: 'Emails auto-convert to tasks in Notion/Trello. Zoom AI meeting assistant takes notes, KPI alerts keep you updated, and daily AI digest summarizes everything.', stat: '25 automations', subs: ['Zoom AI meeting assistant', 'KPI alert system', 'Daily AI digest'] },
   ]
 
   const steps = lang === 'no' ? [
@@ -390,18 +418,28 @@ export default function LandingPage() {
   ]
 
   const useCases = lang === 'no' ? [
-    { icon: Building2, title: 'Byggefirma', desc: 'Dropp kontoransatte som bare svarer telefonen. AI-en tar henvendelser, kvalifiserer jobb og booker befaring — selv når du er på byggeplassen.', benefit: 'Spar 1 kontorstilling' },
-    { icon: Users, title: 'Frisørsalong', desc: 'Trenger du ikke lenger resepsjonist. AI booker timer, sender påminnelser og håndterer avbestillinger automatisk. Spar 25 000+ kr/mnd.', benefit: 'Ingen resepsjonist' },
-    { icon: Shield, title: 'Advokatfirma', desc: 'Erstatt sekretæren med AI for klientinntak. AI samler inn info, kvalifiserer saker og booker konsultasjoner — raskere og billigere.', benefit: 'Spar 1 stilling' },
+    { icon: Building2, title: 'Byggefirma & Håndverk', desc: 'AI svarer telefonen og booker befaring direkte i kalenderen. Automatisert jobbplanlegging, Google Maps lead-scraper finner nye kunder, og PDF-faktura genereres fra oppdragsinformasjon.', benefit: 'Spar 10–20 timer/uke', automations: ['AI-sekretær for tidsbestilling', 'Google Maps lead-scraper', 'PDF-fakturagenerering', 'Automatisert jobbplanlegging'] },
+    { icon: Users, title: 'Frisør & Salong', desc: 'WhatsApp AI-bookingsystem lar kunder booke 24/7. Automatisk no-show-sporing, påminnelser via SMS, og post-service kundetilfredshetsundersøkelse øker lojaliteten.', benefit: 'Spar 25 000+ kr/mnd', automations: ['WhatsApp AI-bookingsystem', 'Automatisk no-show-sporing', 'Post-service kundeundersøkelse', 'Cal.com → Google Kalender'] },
+    { icon: Shield, title: 'Advokat & Regnskap', desc: 'AI kvalifiserer henvendelser, samler inn klientinformasjon og booker konsultasjoner. Full-syklus faktura-automatisering og AI fakturaprosessering frigjør 600+ timer per år.', benefit: 'Spar 600 timer/år', automations: ['AI fakturaprosessering fra e-post', 'Klient-onboarding med PDF + Trello', 'AI lead-scoring (BANT)', 'Full-syklus faktura-automatisering'] },
   ] : [
-    { icon: Building2, title: 'Construction', desc: 'Skip hiring office staff for phones. AI handles inquiries, qualifies jobs and books site visits — even when you\'re on-site.', benefit: 'Save 1 office position' },
-    { icon: Users, title: 'Hair Salon', desc: 'No more receptionist needed. AI books appointments, sends reminders and handles cancellations. Save 25,000+ NOK/mo.', benefit: 'No receptionist' },
-    { icon: Shield, title: 'Law Firm', desc: 'Replace secretary for client intake. AI collects info, qualifies cases and books consultations — faster and cheaper.', benefit: 'Save 1 position' },
+    { icon: Building2, title: 'Construction & Trades', desc: 'AI answers calls and books site visits directly in your calendar. Automated job scheduling, Google Maps lead scraper finds new customers, and PDF invoices generate from job info.', benefit: 'Save 10–20 hrs/week', automations: ['AI secretary for scheduling', 'Google Maps lead scraper', 'PDF invoice generation', 'Automated job scheduling'] },
+    { icon: Users, title: 'Hair & Beauty', desc: 'WhatsApp AI booking system lets customers book 24/7. Auto no-show tracking, SMS reminders, and post-service satisfaction surveys boost loyalty.', benefit: 'Save 25,000+ NOK/mo', automations: ['WhatsApp AI booking', 'Auto no-show tracking', 'Post-service survey', 'Cal.com → Google Calendar'] },
+    { icon: Shield, title: 'Legal & Accounting', desc: 'AI qualifies inquiries, collects client info and books consultations. Full-cycle invoice automation and AI invoice processing frees up 600+ hours per year.', benefit: 'Save 600 hrs/year', automations: ['AI invoice processing', 'Client onboarding with PDF + Trello', 'AI lead scoring (BANT)', 'Full-cycle invoice automation'] },
   ]
 
   const industries = lang === 'no'
-    ? ['Bygg & Håndverk', 'Restaurant', 'Helse', 'Eiendom', 'Advokat', 'Regnskap', 'Butikk', 'Frisør', 'Transport', 'IT', 'Utdanning', 'Og flere...']
-    : ['Construction', 'Restaurant', 'Healthcare', 'Real Estate', 'Legal', 'Accounting', 'Retail', 'Beauty', 'Transport', 'IT', 'Education', 'And more...']
+    ? [
+        { label: 'Bygg & Håndverk', id: 'bygg' }, { label: 'Restaurant', id: 'restaurant' }, { label: 'Helse', id: 'helse' },
+        { label: 'Eiendom', id: 'eiendom' }, { label: 'Advokat', id: 'advokat' }, { label: 'Regnskap', id: 'regnskap' },
+        { label: 'Butikk', id: 'butikk' }, { label: 'Frisør', id: 'frisor' }, { label: 'Transport', id: 'annet' },
+        { label: 'IT', id: 'it' }, { label: 'Utdanning', id: 'annet' }, { label: 'Og flere...', id: '' },
+      ]
+    : [
+        { label: 'Construction', id: 'bygg' }, { label: 'Restaurant', id: 'restaurant' }, { label: 'Healthcare', id: 'helse' },
+        { label: 'Real Estate', id: 'eiendom' }, { label: 'Legal', id: 'advokat' }, { label: 'Accounting', id: 'regnskap' },
+        { label: 'Retail', id: 'butikk' }, { label: 'Beauty', id: 'frisor' }, { label: 'Transport', id: 'annet' },
+        { label: 'IT', id: 'it' }, { label: 'Education', id: 'annet' }, { label: 'And more...', id: '' },
+      ]
 
   const fadeUp = {
     initial: { opacity: 0, y: 28 },
@@ -419,6 +457,9 @@ export default function LandingPage() {
         ::selection { background: rgba(${goldRgb},0.3); }
         @keyframes blink { 50% { border-color: transparent; } }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .logo-track { display: flex; gap: 48px; animation: scroll-left 30s linear infinite; width: max-content; }
+        .logo-track:hover { animation-play-state: paused; }
         @keyframes pulse-gold { 0%, 100% { box-shadow: 0 0 0 0 rgba(${goldRgb}, 0.3); } 50% { box-shadow: 0 0 0 12px rgba(${goldRgb}, 0); } }
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
         .gold-hover:hover { border-color: rgba(${goldRgb},0.3) !important; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
@@ -430,6 +471,7 @@ export default function LandingPage() {
         @media (max-width: 768px) {
           .hero-title { font-size: 28px !important; }
           .grid-2 { grid-template-columns: 1fr !important; }
+          .use-case-card { grid-template-columns: 1fr !important; }
           .hide-mobile { display: none !important; }
           .show-mobile-only { display: flex !important; }
         }
@@ -631,7 +673,7 @@ export default function LandingPage() {
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0, duration: 0.35 }}
           style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 20px', borderRadius: 30, background: `rgba(${goldRgb},0.06)`, border: `1px solid rgba(${goldRgb},0.15)`, fontSize: 13, color: gold, marginBottom: 28 }}>
           <Sparkles size={14} />
-          {lang === 'no' ? 'AI-drevet kundeservice for norske bedrifter — Gratis kartlegging på 2 min' : 'AI-powered customer service for Norwegian businesses — Free assessment in 2 min'}
+          {lang === 'no' ? '150+ AI-automatiseringer for norske bedrifter — Gratis kartlegging på 2 min' : '150+ AI automations for Norwegian businesses — Free assessment in 2 min'}
         </motion.div>
 
         <motion.h1 initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.4 }}
@@ -647,8 +689,8 @@ export default function LandingPage() {
         <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.35 }}
           style={{ fontSize: 'clamp(15px, 2.3vw, 18px)', color: 'rgba(255,255,255,0.5)', maxWidth: 560, margin: '20px auto 36px', lineHeight: 1.6 }}>
           {lang === 'no'
-            ? 'Norske bedrifter taper i snitt 85 000 kr/mnd på ubesvarte anrop — og betaler unødvendig for ansatte som AI kan erstatte. Finn ut hva du sparer.'
-            : 'Norwegian businesses lose 85,000 NOK/month on missed calls — and pay unnecessarily for staff AI can replace. Find out what you can save.'}
+            ? 'Med 150+ ferdige automatiseringer erstatter vi telefonsvarer, booking, fakturering, lead-oppfølging og kundeservice — slik at du slipper å betale for ansatte som AI kan gjøre bedre.'
+            : 'With 150+ ready automations we replace phone answering, booking, invoicing, lead follow-up and customer service — so you don\'t pay for staff AI can do better.'}
         </motion.p>
 
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.35 }}
@@ -688,14 +730,14 @@ export default function LandingPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 1, background: `rgba(${goldRgb},0.06)`, borderRadius: 18, overflow: 'hidden', border: `1px solid rgba(${goldRgb},0.1)` }}>
           {(lang === 'no' ? [
             { value: 24, suffix: '/7', label: 'AI-tilgjengelighet' },
+            { value: 150, suffix: '+', label: 'Ferdige automatiseringer' },
             { value: 2, suffix: ' sek', label: 'Svartid på anrop' },
-            { value: 48, suffix: ' timer', label: 'Oppsett og lansering' },
-            { value: 100, suffix: '%', label: 'GDPR-kompatibel' },
+            { value: 200, suffix: '+', label: 'Integrasjoner' },
           ] : [
             { value: 24, suffix: '/7', label: 'AI availability' },
+            { value: 150, suffix: '+', label: 'Ready automations' },
             { value: 2, suffix: ' sec', label: 'Call response time' },
-            { value: 48, suffix: ' hours', label: 'Setup and launch' },
-            { value: 100, suffix: '%', label: 'GDPR compliant' },
+            { value: 200, suffix: '+', label: 'Integrations' },
           ]).map((s, i) => (
             <div key={i} style={{ padding: '26px 20px', textAlign: 'center', background: bg }}>
               <div style={{ fontSize: 30, fontWeight: 700, color: gold, fontFamily: "'Playfair Display', serif" }}>
@@ -704,6 +746,39 @@ export default function LandingPage() {
               <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 4 }}>{s.label}</div>
             </div>
           ))}
+        </div>
+      </motion.section>
+
+      {/* ── SOCIAL PROOF LOGO BAR ── */}
+      <motion.section {...fadeUp} style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto 50px', padding: '0 24px', textAlign: 'center' }}>
+        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', marginBottom: 20, letterSpacing: '0.5px' }}>
+          {lang === 'no' ? 'Bygget med teknologi fra verdensledende selskaper' : 'Built with technology from world-leading companies'}
+        </p>
+        <div style={{ overflow: 'hidden', mask: 'linear-gradient(90deg, transparent, black 15%, black 85%, transparent)', WebkitMask: 'linear-gradient(90deg, transparent, black 15%, black 85%, transparent)' }}>
+          <div className="logo-track">
+            {[...Array(2)].map((_, setIdx) => (
+              <div key={setIdx} style={{ display: 'flex', alignItems: 'center', gap: 48, flexShrink: 0 }}>
+                {[
+                  { name: 'Google Cloud', svg: <svg width="100" height="20" viewBox="0 0 100 20" fill="none"><text x="0" y="15" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" fill="rgba(255,255,255,0.25)">Google Cloud</text></svg> },
+                  { name: 'Microsoft', svg: <svg width="80" height="20" viewBox="0 0 80 20" fill="none"><text x="0" y="15" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" fill="rgba(255,255,255,0.25)">Microsoft</text></svg> },
+                  { name: 'OpenAI', svg: <svg width="60" height="20" viewBox="0 0 60 20" fill="none"><text x="0" y="15" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" fill="rgba(255,255,255,0.25)">OpenAI</text></svg> },
+                  { name: 'Vapi', svg: <svg width="40" height="20" viewBox="0 0 40 20" fill="none"><text x="0" y="15" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" fill="rgba(255,255,255,0.25)">Vapi</text></svg> },
+                  { name: 'n8n', svg: <svg width="30" height="20" viewBox="0 0 30 20" fill="none"><text x="0" y="15" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" fill="rgba(255,255,255,0.25)">n8n</text></svg> },
+                  { name: 'Make.com', svg: <svg width="70" height="20" viewBox="0 0 70 20" fill="none"><text x="0" y="15" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" fill="rgba(255,255,255,0.25)">Make.com</text></svg> },
+                  { name: 'Twilio', svg: <svg width="50" height="20" viewBox="0 0 50 20" fill="none"><text x="0" y="15" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" fill="rgba(255,255,255,0.25)">Twilio</text></svg> },
+                  { name: 'Cal.com', svg: <svg width="60" height="20" viewBox="0 0 60 20" fill="none"><text x="0" y="15" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" fill="rgba(255,255,255,0.25)">Cal.com</text></svg> },
+                  { name: 'Vercel', svg: <svg width="50" height="20" viewBox="0 0 50 20" fill="none"><text x="0" y="15" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" fill="rgba(255,255,255,0.25)">Vercel</text></svg> },
+                  { name: 'Supabase', svg: <svg width="70" height="20" viewBox="0 0 70 20" fill="none"><text x="0" y="15" fontFamily="DM Sans, sans-serif" fontSize="13" fontWeight="500" fill="rgba(255,255,255,0.25)">Supabase</text></svg> },
+                ].map((logo) => (
+                  <span key={logo.name} style={{ flexShrink: 0, opacity: 0.7, transition: 'opacity 0.3s' }}
+                    onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
+                    onMouseLeave={e => (e.currentTarget.style.opacity = '0.7')}>
+                    {logo.svg}
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </motion.section>
 
@@ -995,28 +1070,49 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── FEATURES ── */}
+      {/* ── FEATURES — Bento Grid ── */}
       <section id="tjenester" style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '20px 24px 60px', scrollMarginTop: 80 }}>
         <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700, textAlign: 'center', marginBottom: 10 }}>
-          {lang === 'no' ? 'Alt du trenger for AI-suksess' : 'Everything you need for AI success'}
+          {lang === 'no' ? '150+ automatiseringer fordelt på 10 kategorier' : '150+ automations across 10 categories'}
         </motion.h2>
-        <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 15, marginBottom: 44, maxWidth: 500, margin: '0 auto 44px' }}>
-          {lang === 'no' ? 'Vi kombinerer AI-ekspertise med bransjekunnskap.' : 'We combine AI expertise with industry knowledge.'}
+        <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 15, marginBottom: 44, maxWidth: 560, margin: '0 auto 44px' }}>
+          {lang === 'no' ? 'Fra telefonsvar og booking til fakturering, lead-generering og markedsføring — alt på autopilot.' : 'From phone answering and booking to invoicing, lead generation and marketing — all on autopilot.'}
         </motion.p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: 16 }}>
+        {/* Bento grid — first two items are large, rest standard */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }} className="grid-2">
           {features.map((f, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.45 }}
               onClick={() => router.push(i === 0 ? '/mobilsvarer' : '/kartlegging')}
               className="gold-hover"
               style={{
-                background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 18,
-                padding: '28px 24px', transition: 'all 0.3s ease', cursor: 'pointer',
+                background: i < 2
+                  ? `linear-gradient(135deg, rgba(${goldRgb},0.04) 0%, rgba(${goldRgb},0.01) 100%)`
+                  : 'rgba(255,255,255,0.02)',
+                border: `1px solid ${i < 2 ? `rgba(${goldRgb},0.12)` : 'rgba(255,255,255,0.06)'}`,
+                borderRadius: 18, padding: i < 2 ? '32px 28px' : '24px 22px',
+                transition: 'all 0.3s ease', cursor: 'pointer', position: 'relative', overflow: 'hidden',
               }}>
-              <div style={{ width: 48, height: 48, borderRadius: 12, background: `rgba(${goldRgb},0.08)`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-                <f.icon size={22} color={gold} />
+              {i < 2 && <div style={{ position: 'absolute', top: -40, right: -40, width: 120, height: 120, background: `radial-gradient(circle, rgba(${goldRgb},0.06) 0%, transparent 70%)`, pointerEvents: 'none' }} />}
+              <div style={{
+                width: i < 2 ? 52 : 44, height: i < 2 ? 52 : 44, borderRadius: 12,
+                background: `rgba(${goldRgb},0.08)`, border: `1px solid rgba(${goldRgb},0.12)`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14,
+              }}>
+                <f.icon size={i < 2 ? 24 : 20} color={gold} />
               </div>
-              <h3 style={{ fontSize: 17, fontWeight: 600, marginBottom: 8 }}>{f.title}</h3>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.55, marginBottom: 16 }}>{f.desc}</p>
+              <h3 style={{ fontSize: i < 2 ? 19 : 16, fontWeight: 600, marginBottom: 8 }}>{f.title}</h3>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6, marginBottom: 14 }}>{f.desc}</p>
+              {/* Concrete automation examples */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 14 }}>
+                {f.subs.map((sub, si) => (
+                  <span key={si} style={{
+                    fontSize: 11, color: 'rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.06)', borderRadius: 6, padding: '3px 10px',
+                  }}>
+                    {sub}
+                  </span>
+                ))}
+              </div>
               <span style={{ fontSize: 12, color: gold, background: `rgba(${goldRgb},0.06)`, padding: '5px 12px', borderRadius: 8, border: `1px solid rgba(${goldRgb},0.12)`, fontWeight: 600 }}>{f.stat}</span>
             </motion.div>
           ))}
@@ -1048,7 +1144,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── INDUSTRIES ── */}
-      <section style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '20px 24px 60px' }}>
+      <section style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '20px 24px 30px' }}>
         <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, textAlign: 'center', marginBottom: 8 }}>
           {lang === 'no' ? 'Skreddersydd for din bransje' : 'Tailored for your industry'}
         </motion.h2>
@@ -1059,36 +1155,131 @@ export default function LandingPage() {
           {industries.map((ind, i) => (
             <motion.span key={i}
               whileHover={{ scale: 1.05, borderColor: `rgba(${goldRgb},0.3)` }}
-              onClick={() => router.push('/kartlegging')}
+              onClick={() => router.push(ind.id ? `/kartlegging?bransje=${ind.id}` : '/kartlegging')}
               style={{
                 padding: '9px 20px', borderRadius: 22, fontSize: 13, fontWeight: 500,
                 background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)',
                 color: 'rgba(255,255,255,0.5)', transition: 'all 0.2s', cursor: 'pointer',
-              }}>{ind}</motion.span>
+              }}>{ind.label}</motion.span>
           ))}
         </motion.div>
       </section>
 
-      {/* ── USE CASES ── */}
-      <section id="resultater" style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '20px 24px 70px', scrollMarginTop: 80 }}>
+      {/* ── INTEGRATIONS ── */}
+      <section style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '20px 24px 70px' }}>
+        <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, textAlign: 'center', marginBottom: 8 }}>
+          {lang === 'no' ? 'Integrerer med verktøyene du bruker' : 'Integrates with your existing tools'}
+        </motion.h2>
+        <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 14, marginBottom: 36, maxWidth: 460, margin: '0 auto 36px' }}>
+          {lang === 'no' ? 'Over 200+ integrasjoner via n8n og Make — kobler AI til hele virksomheten din.' : 'Over 200+ integrations via n8n and Make — connecting AI to your entire business.'}
+        </motion.p>
+        <motion.div {...fadeUp} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
+          {(lang === 'no' ? [
+            { name: 'Google Kalender', emoji: '📅', desc: 'Automatisk booking' },
+            { name: 'Microsoft Teams', emoji: '💬', desc: 'Chat & varsler' },
+            { name: 'Slack', emoji: '🔔', desc: 'Notifikasjoner' },
+            { name: 'HubSpot CRM', emoji: '📊', desc: 'Lead-håndtering' },
+            { name: 'Tripletex', emoji: '🧾', desc: 'Regnskap & faktura' },
+            { name: 'Twilio / Vapi', emoji: '📞', desc: 'AI-telefoni' },
+            { name: 'Gmail / Outlook', emoji: '📧', desc: 'E-post automatisering' },
+            { name: 'Shopify / WooCommerce', emoji: '🛒', desc: 'Netthandel' },
+          ] : [
+            { name: 'Google Calendar', emoji: '📅', desc: 'Auto booking' },
+            { name: 'Microsoft Teams', emoji: '💬', desc: 'Chat & alerts' },
+            { name: 'Slack', emoji: '🔔', desc: 'Notifications' },
+            { name: 'HubSpot CRM', emoji: '📊', desc: 'Lead management' },
+            { name: 'Tripletex', emoji: '🧾', desc: 'Accounting & invoicing' },
+            { name: 'Twilio / Vapi', emoji: '📞', desc: 'AI telephony' },
+            { name: 'Gmail / Outlook', emoji: '📧', desc: 'Email automation' },
+            { name: 'Shopify / WooCommerce', emoji: '🛒', desc: 'E-commerce' },
+          ]).map((integ, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06, duration: 0.35 }}
+              className="gold-hover"
+              style={{
+                background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 14,
+                padding: '20px 16px', textAlign: 'center', transition: 'all 0.3s ease', cursor: 'pointer',
+              }}
+              onClick={() => router.push('/integrasjoner')}
+            >
+              <div style={{ fontSize: 28, marginBottom: 8 }}>{integ.emoji}</div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: '#f0f0f0', marginBottom: 4 }}>{integ.name}</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{integ.desc}</div>
+            </motion.div>
+          ))}
+        </motion.div>
+        <motion.div {...fadeUp} style={{ textAlign: 'center', marginTop: 24 }}>
+          <button onClick={() => router.push('/integrasjoner')} style={{
+            background: 'transparent', border: `1px solid rgba(${goldRgb},0.2)`, color: gold,
+            borderRadius: 12, padding: '11px 28px', fontWeight: 600, fontSize: 13,
+            cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
+          }}>
+            {lang === 'no' ? 'Se alle 200+ integrasjoner' : 'See all 200+ integrations'}
+            <ArrowRight size={14} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
+          </button>
+        </motion.div>
+      </section>
+
+      {/* ── USE CASES — Alternating layout ── */}
+      <section id="resultater" style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '20px 24px 70px', scrollMarginTop: 80 }}>
         <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, textAlign: 'center', marginBottom: 10 }}>
           {lang === 'no' ? 'Slik kan AI hjelpe din bransje' : 'How AI can help your industry'}
         </motion.h2>
-        <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 14, marginBottom: 36, maxWidth: 460, margin: '0 auto 36px' }}>
-          {lang === 'no' ? 'Typiske bruksområder for AI-mobilsvarer' : 'Typical use cases for AI phone answering'}
+        <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 14, marginBottom: 44, maxWidth: 460, margin: '0 auto 44px' }}>
+          {lang === 'no' ? 'Konkrete automatiseringer tilpasset din bransje' : 'Concrete automations tailored to your industry'}
         </motion.p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           {useCases.map((uc, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.4 }}
+            <motion.div key={i} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.45 }}
               onClick={() => router.push('/kartlegging')}
-              className="gold-hover"
-              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 18, padding: '28px 24px', transition: 'all 0.3s ease', cursor: 'pointer' }}>
-              <div style={{ width: 48, height: 48, borderRadius: 12, background: `rgba(${goldRgb},0.08)`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
-                <uc.icon size={22} color={gold} />
+              className="gold-hover use-case-card"
+              style={{
+                display: 'grid', gridTemplateColumns: i % 2 === 0 ? '1fr 1.2fr' : '1.2fr 1fr',
+                gap: 0, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)',
+                borderRadius: 20, overflow: 'hidden', transition: 'all 0.3s ease', cursor: 'pointer',
+              }}>
+              {/* Visual side */}
+              {i % 2 === 0 && (
+                <div style={{
+                  background: `linear-gradient(135deg, rgba(${goldRgb},0.06) 0%, rgba(${goldRgb},0.02) 100%)`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 32, minHeight: 180,
+                }}>
+                  <div style={{
+                    width: 80, height: 80, borderRadius: 20, background: `rgba(${goldRgb},0.1)`,
+                    border: `1px solid rgba(${goldRgb},0.15)`, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <uc.icon size={36} color={gold} />
+                  </div>
+                </div>
+              )}
+              {/* Text side */}
+              <div style={{ padding: '28px 24px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <h3 style={{ fontSize: 19, fontWeight: 600, marginBottom: 8 }}>{uc.title}</h3>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, marginBottom: 14 }}>{uc.desc}</p>
+                {/* Automation list */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginBottom: 16 }}>
+                  {uc.automations.map((auto: string, ai: number) => (
+                    <div key={ai} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>
+                      <CheckCircle2 size={12} color={gold} style={{ flexShrink: 0 }} />
+                      <span>{auto}</span>
+                    </div>
+                  ))}
+                </div>
+                <span style={{ fontSize: 12, color: gold, background: `rgba(${goldRgb},0.06)`, padding: '6px 14px', borderRadius: 8, border: `1px solid rgba(${goldRgb},0.12)`, fontWeight: 600, alignSelf: 'flex-start' }}>{uc.benefit}</span>
               </div>
-              <h3 style={{ fontSize: 17, fontWeight: 600, marginBottom: 8 }}>{uc.title}</h3>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.55, marginBottom: 16 }}>{uc.desc}</p>
-              <span style={{ fontSize: 12, color: gold, background: `rgba(${goldRgb},0.06)`, padding: '5px 12px', borderRadius: 8, border: `1px solid rgba(${goldRgb},0.12)`, fontWeight: 600 }}>{uc.benefit}</span>
+              {/* Visual side (when reversed) */}
+              {i % 2 !== 0 && (
+                <div style={{
+                  background: `linear-gradient(135deg, rgba(${goldRgb},0.06) 0%, rgba(${goldRgb},0.02) 100%)`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 32, minHeight: 180,
+                }}>
+                  <div style={{
+                    width: 80, height: 80, borderRadius: 20, background: `rgba(${goldRgb},0.1)`,
+                    border: `1px solid rgba(${goldRgb},0.15)`, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <uc.icon size={36} color={gold} />
+                  </div>
+                </div>
+              )}
             </motion.div>
           ))}
         </div>
@@ -1235,6 +1426,41 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
+      {/* ── TRUST & COMPLIANCE ── */}
+      <motion.section {...fadeUp} style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', padding: '20px 24px 60px' }}>
+        <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 28px)', fontWeight: 700, textAlign: 'center', marginBottom: 8 }}>
+          {lang === 'no' ? 'Sikkerhet du kan stole på' : 'Security you can trust'}
+        </motion.h2>
+        <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 14, marginBottom: 32, maxWidth: 460, margin: '0 auto 32px' }}>
+          {lang === 'no' ? 'Vi tar personvern og datasikkerhet på alvor — alltid.' : 'We take privacy and data security seriously — always.'}
+        </motion.p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
+          {(lang === 'no' ? [
+            { icon: Shield, title: 'GDPR-kompatibel', desc: 'Fullt i henhold til EUs personvernforordning. Dine data behandles kun i EU/EØS.' },
+            { icon: '🔒', title: 'Ende-til-ende kryptert', desc: 'All kommunikasjon og data er kryptert med AES-256. Ingen uautorisert tilgang.' },
+            { icon: '🇳🇴', title: 'Norsk datasenter', desc: 'Data lagres på norske/europeiske servere. Ingen data sendes utenfor EØS.' },
+            { icon: '🛡️', title: 'NorSIS-anbefalt', desc: 'Vi følger NorSIS sine anbefalinger for sikker AI-bruk i norske bedrifter.' },
+          ] : [
+            { icon: Shield, title: 'GDPR Compliant', desc: 'Fully compliant with EU\'s General Data Protection Regulation. Data processed within EU/EEA only.' },
+            { icon: '🔒', title: 'End-to-end Encrypted', desc: 'All communication and data encrypted with AES-256. No unauthorized access.' },
+            { icon: '🇳🇴', title: 'Norwegian Data Center', desc: 'Data stored on Norwegian/European servers. No data sent outside EEA.' },
+            { icon: '🛡️', title: 'NorSIS Recommended', desc: 'We follow NorSIS recommendations for secure AI use in Norwegian businesses.' },
+          ]).map((trust, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.35 }}
+              style={{
+                background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16,
+                padding: '24px 20px', textAlign: 'center',
+              }}>
+              <div style={{ fontSize: 32, marginBottom: 12 }}>
+                {typeof trust.icon === 'string' ? trust.icon : <trust.icon size={28} color={gold} />}
+              </div>
+              <h4 style={{ fontSize: 15, fontWeight: 600, marginBottom: 8, color: '#f0f0f0' }}>{trust.title}</h4>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>{trust.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
       {/* ── FAQ ── */}
       <section id="faq" style={{ position: 'relative', zIndex: 1, maxWidth: 650, margin: '0 auto', padding: '20px 24px 70px', scrollMarginTop: 80 }}>
         <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, textAlign: 'center', marginBottom: 32 }}>
@@ -1244,6 +1470,54 @@ export default function LandingPage() {
           <FAQ lang={lang} />
         </motion.div>
       </section>
+
+      {/* ── PRICING TEASER ── */}
+      <motion.section {...fadeUp} style={{ position: 'relative', zIndex: 1, maxWidth: 800, margin: '0 auto', padding: '0 24px 70px' }}>
+        <div style={{
+          background: `linear-gradient(135deg, rgba(${goldRgb},0.04) 0%, rgba(${goldRgb},0.01) 100%)`,
+          border: `1px solid rgba(${goldRgb},0.12)`, borderRadius: 22, padding: '40px 32px', textAlign: 'center',
+        }}>
+          <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, marginBottom: 12 }}>
+            {lang === 'no' ? 'Enkle, transparente priser' : 'Simple, transparent pricing'}
+          </motion.h2>
+          <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.45)', fontSize: 15, marginBottom: 28, maxWidth: 440, margin: '0 auto 28px', lineHeight: 1.6 }}>
+            {lang === 'no'
+              ? 'Fra 2 490 kr/mnd — billigere enn én ansatt, men jobber 24/7.'
+              : 'From 2,490 NOK/mo — cheaper than one employee, but works 24/7.'}
+          </motion.p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap', marginBottom: 28 }}>
+            {(lang === 'no' ? [
+              { name: 'Starter', price: '2 490', desc: 'For småbedrifter' },
+              { name: 'Pro', price: '4 990', desc: 'For voksende bedrifter' },
+              { name: 'Elite', price: '9 990', desc: 'For ambisiøse selskaper' },
+            ] : [
+              { name: 'Starter', price: '2,490', desc: 'For small businesses' },
+              { name: 'Pro', price: '4,990', desc: 'For growing businesses' },
+              { name: 'Elite', price: '9,990', desc: 'For ambitious companies' },
+            ]).map((plan, i) => (
+              <div key={i} style={{
+                background: i === 1 ? `rgba(${goldRgb},0.06)` : 'rgba(255,255,255,0.02)',
+                border: `1px solid ${i === 1 ? `rgba(${goldRgb},0.2)` : 'rgba(255,255,255,0.06)'}`,
+                borderRadius: 14, padding: '20px 24px', minWidth: 150, transition: 'all 0.2s',
+              }}>
+                <div style={{ fontSize: 13, color: i === 1 ? gold : 'rgba(255,255,255,0.5)', fontWeight: 600, marginBottom: 4 }}>{plan.name}</div>
+                <div style={{ fontSize: 24, fontWeight: 700, fontFamily: "'Playfair Display', serif", color: '#f0f0f0' }}>
+                  {plan.price}<span style={{ fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.35)' }}> kr/mnd</span>
+                </div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>{plan.desc}</div>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => router.push('/priser')} style={{
+            background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.2)`,
+            color: gold, borderRadius: 12, padding: '13px 32px', fontWeight: 600, fontSize: 14,
+            cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
+          }}>
+            {lang === 'no' ? 'Se alle pakker og sammenlign' : 'See all plans and compare'}
+            <ArrowRight size={14} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
+          </button>
+        </div>
+      </motion.section>
 
       {/* ── FINAL CTA ── */}
       <motion.section {...fadeUp} style={{ position: 'relative', zIndex: 1, maxWidth: 700, margin: '0 auto', padding: '0 24px 80px', textAlign: 'center' }}>
