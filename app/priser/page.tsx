@@ -6,50 +6,36 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
   ArrowRight, ArrowLeft, Check, X, Phone, Bot, Zap, Shield, Clock,
-  Users, TrendingUp, Star, Menu, CheckCircle2, AlertCircle, Building2,
+  Users, TrendingUp, Star, CheckCircle2, AlertCircle, Building2,
   Sparkles, BarChart3, MessageSquare
 } from 'lucide-react'
-import { gold, goldRgb, bg } from '@/lib/constants'
+import { gold, goldRgb, bg, fadeUp, globalStyles } from '@/lib/constants'
+import Nav from '@/app/components/Nav'
 import Footer from '@/app/components/Footer'
 
 export default function PricingPage() {
   const router = useRouter()
-  const [menuOpen, setMenuOpen] = useState(false)
   const [lang, setLang] = useState<'no' | 'en'>('no')
-
-  const navLinks = lang === 'no' ? [
-    { id: '/mobilsvarer', label: 'Mobilsvarer' },
-    { id: '/hvordan-det-fungerer', label: 'Hvordan det fungerer' },
-    { id: '/integrasjoner', label: 'Integrasjoner' },
-    { id: '/blogg', label: 'Blogg' },
-    { id: '/om-oss', label: 'Om oss' },
-  ] : [
-    { id: '/mobilsvarer', label: 'AI Receptionist' },
-    { id: '/hvordan-det-fungerer', label: 'How it works' },
-    { id: '/integrasjoner', label: 'Integrations' },
-    { id: '/blogg', label: 'Blog' },
-    { id: '/om-oss', label: 'About us' },
-  ]
 
   const tiers = lang === 'no' ? [
     {
       name: 'Starter',
-      desc: 'Kom i gang med 1–2 automasjoner og fang opp tapte henvendelser.',
-      automations: '1–2',
-      timeSaved: '10–20 t/uke',
+      desc: 'Kom i gang med 1\u20132 automasjoner og fang opp tapte henvendelser.',
+      automations: '1\u20132',
+      timeSaved: '10\u201320 t/uke',
       icon: Phone,
       examples: ['AI-telefonsvarer 24/7', 'Automatisk booking og kalender', 'SMS-bekreftelser'],
-      idealFor: 'Enkeltpersonforetak, frisører, håndverkere',
+      idealFor: 'Enkeltpersonforetak, fris\u00f8rer, h\u00e5ndverkere',
       popular: false,
       color: '#6ee7b7',
     },
     {
       name: 'Profesjonell',
-      desc: 'Automatiser kundemottak, oppfølging og salg med 3–5 automasjoner.',
-      automations: '3–5',
-      timeSaved: '20–35 t/uke',
+      desc: 'Automatiser kundemottak, oppf\u00f8lging og salg med 3\u20135 automasjoner.',
+      automations: '3\u20135',
+      timeSaved: '20\u201335 t/uke',
       icon: Zap,
-      examples: ['Alt i Starter +', 'CRM-integrasjon & lead-scoring', 'E-post og SMS-oppfølging', 'Fakturering & purring', 'Kundetilfredshet & anmeldelser'],
+      examples: ['Alt i Starter +', 'CRM-integrasjon & lead-scoring', 'E-post og SMS-oppf\u00f8lging', 'Fakturering & purring', 'Kundetilfredshet & anmeldelser'],
       idealFor: 'Voksende bedrifter, klinikker, advokatkontor',
       popular: true,
       color: gold,
@@ -58,7 +44,7 @@ export default function PricingPage() {
       name: 'Vekst',
       desc: 'Full automatisering med 6+ automasjoner og avansert analyse.',
       automations: '6+',
-      timeSaved: '35–50+ t/uke',
+      timeSaved: '35\u201350+ t/uke',
       icon: TrendingUp,
       examples: ['Alt i Profesjonell +', 'Intern rapportering & dashboards', 'Social media auto-publisering', 'Dokumentgenerering med AI', 'Automatisert onboarding', 'Dedikert kontaktperson'],
       idealFor: 'Bedrifter med flere lokasjoner, kjeder',
@@ -68,9 +54,9 @@ export default function PricingPage() {
   ] : [
     {
       name: 'Starter',
-      desc: 'Get started with 1–2 automations and capture missed inquiries.',
-      automations: '1–2',
-      timeSaved: '10–20 h/week',
+      desc: 'Get started with 1\u20132 automations and capture missed inquiries.',
+      automations: '1\u20132',
+      timeSaved: '10\u201320 h/week',
       icon: Phone,
       examples: ['AI phone answering 24/7', 'Automatic booking & calendar', 'SMS confirmations'],
       idealFor: 'Sole proprietors, salons, contractors',
@@ -79,9 +65,9 @@ export default function PricingPage() {
     },
     {
       name: 'Professional',
-      desc: 'Automate customer intake, follow-ups and sales with 3–5 automations.',
-      automations: '3–5',
-      timeSaved: '20–35 h/week',
+      desc: 'Automate customer intake, follow-ups and sales with 3\u20135 automations.',
+      automations: '3\u20135',
+      timeSaved: '20\u201335 h/week',
       icon: Zap,
       examples: ['Everything in Starter +', 'CRM integration & lead scoring', 'Email and SMS follow-up', 'Invoicing & reminders', 'Customer satisfaction & reviews'],
       idealFor: 'Growing businesses, clinics, law firms',
@@ -92,7 +78,7 @@ export default function PricingPage() {
       name: 'Growth',
       desc: 'Full automation with 6+ automations and advanced analytics.',
       automations: '6+',
-      timeSaved: '35–50+ h/week',
+      timeSaved: '35\u201350+ h/week',
       icon: TrendingUp,
       examples: ['Everything in Professional +', 'Internal reporting & dashboards', 'Social media auto-publishing', 'AI document generation', 'Automated onboarding', 'Dedicated contact person'],
       idealFor: 'Multi-location businesses, chains',
@@ -102,107 +88,93 @@ export default function PricingPage() {
   ]
 
   const employeeComparison = lang === 'no' ? [
-    { role: 'Resepsjonist / telefonsvarer', annualCost: '420 000', arxonRange: '50 000 – 90 000', savingRange: '330 000 – 370 000' },
-    { role: 'Kundeservice-medarbeider', annualCost: '480 000', arxonRange: '75 000 – 120 000', savingRange: '360 000 – 405 000' },
-    { role: 'Booking-koordinator', annualCost: '440 000', arxonRange: '50 000 – 90 000', savingRange: '350 000 – 390 000' },
-    { role: 'Lead-kvalifiserer (salg)', annualCost: '520 000', arxonRange: '90 000 – 150 000', savingRange: '370 000 – 430 000' },
+    { role: 'Resepsjonist / telefonsvarer', annualCost: '420 000', arxonRange: '50 000 \u2013 90 000', savingRange: '330 000 \u2013 370 000' },
+    { role: 'Kundeservice-medarbeider', annualCost: '480 000', arxonRange: '75 000 \u2013 120 000', savingRange: '360 000 \u2013 405 000' },
+    { role: 'Booking-koordinator', annualCost: '440 000', arxonRange: '50 000 \u2013 90 000', savingRange: '350 000 \u2013 390 000' },
+    { role: 'Lead-kvalifiserer (salg)', annualCost: '520 000', arxonRange: '90 000 \u2013 150 000', savingRange: '370 000 \u2013 430 000' },
   ] : [
-    { role: 'Receptionist / answering service', annualCost: '420 000', arxonRange: '50 000 – 90 000', savingRange: '330 000 – 370 000' },
-    { role: 'Customer service rep', annualCost: '480 000', arxonRange: '75 000 – 120 000', savingRange: '360 000 – 405 000' },
-    { role: 'Booking coordinator', annualCost: '440 000', arxonRange: '50 000 – 90 000', savingRange: '350 000 – 390 000' },
-    { role: 'Lead qualifier (sales)', annualCost: '520 000', arxonRange: '90 000 – 150 000', savingRange: '370 000 – 430 000' },
+    { role: 'Receptionist / answering service', annualCost: '420 000', arxonRange: '50 000 \u2013 90 000', savingRange: '330 000 \u2013 370 000' },
+    { role: 'Customer service rep', annualCost: '480 000', arxonRange: '75 000 \u2013 120 000', savingRange: '360 000 \u2013 405 000' },
+    { role: 'Booking coordinator', annualCost: '440 000', arxonRange: '50 000 \u2013 90 000', savingRange: '350 000 \u2013 390 000' },
+    { role: 'Lead qualifier (sales)', annualCost: '520 000', arxonRange: '90 000 \u2013 150 000', savingRange: '370 000 \u2013 430 000' },
   ]
 
   const whySetup = lang === 'no' ? [
-    { icon: Bot, title: 'Skreddersydd AI-opplæring', desc: 'Vi trener AI-en på din bedrift, dine tjenester, priser og vanlige spørsmål — så den svarer som en av dine egne.' },
-    { icon: Zap, title: 'Integrasjon med dine systemer', desc: 'Vi kobler AI til kalender, CRM, regnskap og de verktøyene du allerede bruker — alt satt opp for deg.' },
-    { icon: Shield, title: 'Testing og kvalitetssikring', desc: 'Vi tester alt grundig før lansering og justerer til du er 100% fornøyd med hvordan AI-en representerer bedriften din.' },
-    { icon: BarChart3, title: 'Lavere løpende kostnader', desc: 'Høyere setup-fee = lavere månedskostnad. Du investerer i en skikkelig løsning, og sparer mer over tid.' },
+    { icon: Bot, title: 'Skreddersydd AI-oppl\u00e6ring', desc: 'Vi trener AI-en p\u00e5 din bedrift, dine tjenester, priser og vanlige sp\u00f8rsm\u00e5l \u2014 s\u00e5 den svarer som en av dine egne.' },
+    { icon: Zap, title: 'Integrasjon med dine systemer', desc: 'Vi kobler AI til kalender, CRM, regnskap og de verkt\u00f8yene du allerede bruker \u2014 alt satt opp for deg.' },
+    { icon: Shield, title: 'Testing og kvalitetssikring', desc: 'Vi tester alt grundig f\u00f8r lansering og justerer til du er 100% forn\u00f8yd med hvordan AI-en representerer bedriften din.' },
+    { icon: BarChart3, title: 'Lavere l\u00f8pende kostnader', desc: 'H\u00f8yere setup-fee = lavere m\u00e5nedskostnad. Du investerer i en skikkelig l\u00f8sning, og sparer mer over tid.' },
   ] : [
-    { icon: Bot, title: 'Custom AI training', desc: 'We train the AI on your business, services, pricing and common questions — so it answers like one of your own team.' },
-    { icon: Zap, title: 'System integration', desc: 'We connect the AI to your calendar, CRM, accounting and the tools you already use — all set up for you.' },
+    { icon: Bot, title: 'Custom AI training', desc: 'We train the AI on your business, services, pricing and common questions \u2014 so it answers like one of your own team.' },
+    { icon: Zap, title: 'System integration', desc: 'We connect the AI to your calendar, CRM, accounting and the tools you already use \u2014 all set up for you.' },
     { icon: Shield, title: 'Testing & quality assurance', desc: 'We test everything thoroughly before launch and adjust until you are 100% satisfied with how the AI represents your business.' },
     { icon: BarChart3, title: 'Lower ongoing costs', desc: 'Higher setup fee = lower monthly cost. You invest in a proper solution and save more over time.' },
   ]
 
   const tx = lang === 'no' ? {
-    backHome: 'Tilbake til forsiden',
     heroTitle1: 'Bygg pakken din.',
     heroTitle2: 'Book en samtale.',
-    heroSub: 'Velg automasjonene som passer din bedrift — vi tilpasser prisen basert på ditt valg. Ingen faste pakker, bare det du faktisk trenger.',
+    heroSub: 'Velg automasjonene som passer din bedrift \u2014 vi tilpasser prisen basert p\u00e5 ditt valg. Ingen faste pakker, bare det du faktisk trenger.',
     savingBadge: 'Bedrifter sparer typisk',
-    savingAmount: '300 000 – 450 000 kr/år',
+    savingAmount: '300 000 \u2013 450 000 kr/\u00e5r',
     savingWith: 'med Arxon',
     howTitle: 'Slik fungerer det',
     step1Title: '1. Kartlegging',
     step1Desc: 'Vi analyserer bedriften din og anbefaler automasjoner for din bransje.',
     step2Title: '2. Bygg pakken',
-    step2Desc: 'Du velger hvilke automasjoner du vil ha — vi viser tidsbesparelse og kompleksitet.',
+    step2Desc: 'Du velger hvilke automasjoner du vil ha \u2014 vi viser tidsbesparelse og kompleksitet.',
     step3Title: '3. Book en samtale',
-    step3Desc: 'Vi gjennomgår analysen din og gir deg et skreddersydd tilbud basert på det du valgte.',
-    tiersHeading1: 'Tre nivåer —',
+    step3Desc: 'Vi gjennomg\u00e5r analysen din og gir deg et skreddersydd tilbud basert p\u00e5 det du valgte.',
+    tiersHeading1: 'Tre niv\u00e5er \u2014',
     tiersHeading2: 'du velger innholdet',
     tiersSub: 'Prisen bestemmes av hvor mange automasjoner du velger. Jo mer du automatiserer, desto mer sparer du.',
     tierPopular: 'Mest valgt',
     tierAutomations: 'Automasjoner',
     tierTimeSaved: 'Tidsbesparelse',
     tierIdealFor: 'Passer for:',
-    tierExamples: 'Eksempel på innhold',
+    tierExamples: 'Eksempel p\u00e5 innhold',
     tierCta: 'Bygg din pakke',
-    tierNote: 'Prisen tilpasses basert på dine valg og diskuteres på samtalen. Ingen bindingstid. Alle priser eks. mva.',
+    tierNote: 'Prisen tilpasses basert p\u00e5 dine valg og diskuteres p\u00e5 samtalen. Ingen bindingstid. Alle priser eks. mva.',
     setupTitle: 'Hvorfor engangs setup-fee?',
-    setupSub: 'Du investerer i en skreddersydd AI-løsning — ikke et ferdigprodukt fra hylla. Setup-fee dekker alt det arbeidet som gjør at AI-en faktisk leverer resultater.',
+    setupSub: 'Du investerer i en skreddersydd AI-l\u00f8sning \u2014 ikke et ferdigprodukt fra hylla. Setup-fee dekker alt det arbeidet som gj\u00f8r at AI-en faktisk leverer resultater.',
     compTitle1: 'Hva koster en ansatt vs.',
     compTitle2: 'Arxon?',
-    compSub: 'Se hvor mye du sparer ved å automatisere repetitivt arbeid med AI. Tallene inkluderer lønn, arbeidsgiveravgift og sosiale kostnader.',
+    compSub: 'Se hvor mye du sparer ved \u00e5 automatisere repetitivt arbeid med AI. Tallene inkluderer l\u00f8nn, arbeidsgiveravgift og sosiale kostnader.',
     compRole: 'Rolle',
-    compEmployee: 'Ansatt (årlig)',
-    compArxon: 'Arxon (årlig)',
+    compEmployee: 'Ansatt (\u00e5rlig)',
+    compArxon: 'Arxon (\u00e5rlig)',
     compSave: 'Du sparer',
     compSummaryLabel: 'Typisk besparelse per erstattede stilling',
-    compSummaryRange: '300 000 – 430 000 kr/år',
-    compSummaryNote: 'Inkludert setup-fee og månedlige kostnader',
+    compSummaryRange: '300 000 \u2013 430 000 kr/\u00e5r',
+    compSummaryNote: 'Inkludert setup-fee og m\u00e5nedlige kostnader',
     compCta: 'Beregn dine besparelser',
     stepsTitle1: 'Fra kartlegging til',
     stepsTitle2: 'resultater',
-    step1: { step: '1', title: 'Gratis kartlegging', desc: 'Svar på noen spørsmål om bedriften din. Vi identifiserer de beste automatiseringsmulighetene for din bransje.' },
-    step2: { step: '2', title: 'Bygg din pakke', desc: 'Velg hvilke automasjoner du vil ha fra anbefalingene. Se tidsbesparelse og kompleksitet for hver løsning.' },
-    step3: { step: '3', title: 'Book en samtale', desc: 'Vi gjennomgår analysen din og gir deg et skreddersydd tilbud. Du forplikter deg til ingenting.' },
-    step4: { step: '4', title: 'Vi bygger og lanserer', desc: 'Vårt team setter opp alt. Du trenger ikke gjøre noe teknisk. Du ser besparelsene fra dag én.' },
-    guaranteeTitle: 'Fornøyd-garanti',
-    guaranteeDesc: 'Vi justerer og optimaliserer til du er 100% fornøyd med løsningen. Ingen bindingstid på månedlig drift — du kan avslutte når som helst.',
+    step1: { step: '1', title: 'Gratis kartlegging', desc: 'Svar p\u00e5 noen sp\u00f8rsm\u00e5l om bedriften din. Vi identifiserer de beste automatiseringsmulighetene for din bransje.' },
+    step2: { step: '2', title: 'Bygg din pakke', desc: 'Velg hvilke automasjoner du vil ha fra anbefalingene. Se tidsbesparelse og kompleksitet for hver l\u00f8sning.' },
+    step3: { step: '3', title: 'Book en samtale', desc: 'Vi gjennomg\u00e5r analysen din og gir deg et skreddersydd tilbud. Du forplikter deg til ingenting.' },
+    step4: { step: '4', title: 'Vi bygger og lanserer', desc: 'V\u00e5rt team setter opp alt. Du trenger ikke gj\u00f8re noe teknisk. Du ser besparelsene fra dag \u00e9n.' },
+    guaranteeTitle: 'Forn\u00f8yd-garanti',
+    guaranteeDesc: 'Vi justerer og optimaliserer til du er 100% forn\u00f8yd med l\u00f8sningen. Ingen bindingstid p\u00e5 m\u00e5nedlig drift \u2014 du kan avslutte n\u00e5r som helst.',
     guaranteeItems: ['Ingen bindingstid', 'GDPR-sikret', 'Norsk datasenter'],
-    finalTitle: 'Klar for å bygge din pakke?',
-    finalSub: 'Start med en gratis kartlegging, velg dine automasjoner, og få et skreddersydd tilbud — helt uforpliktende.',
+    finalTitle: 'Klar for \u00e5 bygge din pakke?',
+    finalSub: 'Start med en gratis kartlegging, velg dine automasjoner, og f\u00e5 et skreddersydd tilbud \u2014 helt uforpliktende.',
     finalCta: 'Start kartlegging og bygg pakke',
-    navCta: 'Start kartlegging',
-    footerTagline: 'Intelligent AI-automatisering for norske bedrifter.',
-    footerServices: 'Tjenester',
-    footerContact: 'Kontakt',
-    footerLegal: 'Juridisk',
-    footerMobilsvarer: 'AI Mobilsvarer',
-    footerHowItWorks: 'Hvordan det fungerer',
-    footerKartlegging: 'Gratis kartlegging',
-    footerPrivacy: 'Personvern',
-    footerTerms: 'Vilkår for bruk',
-    footerRights: 'Alle rettigheter reservert.',
-    footerGdpr: 'GDPR-kompatibel · Norsk datasenter',
   } : {
-    backHome: 'Back to home',
     heroTitle1: 'Build your package.',
     heroTitle2: 'Book a call.',
-    heroSub: 'Choose the automations that fit your business — we tailor the price based on your choices. No fixed packages, just what you actually need.',
+    heroSub: 'Choose the automations that fit your business \u2014 we tailor the price based on your choices. No fixed packages, just what you actually need.',
     savingBadge: 'Businesses typically save',
-    savingAmount: '300 000 – 450 000 NOK/year',
+    savingAmount: '300 000 \u2013 450 000 NOK/year',
     savingWith: 'with Arxon',
     howTitle: 'How it works',
     step1Title: '1. Assessment',
     step1Desc: 'We analyze your business and recommend automations for your industry.',
     step2Title: '2. Build your package',
-    step2Desc: 'You choose which automations you want — we show time savings and complexity.',
+    step2Desc: 'You choose which automations you want \u2014 we show time savings and complexity.',
     step3Title: '3. Book a call',
     step3Desc: 'We review your analysis and give you a tailored offer based on your choices.',
-    tiersHeading1: 'Three tiers —',
+    tiersHeading1: 'Three tiers \u2014',
     tiersHeading2: 'you choose the content',
     tiersSub: 'The price depends on how many automations you choose. The more you automate, the more you save.',
     tierPopular: 'Most popular',
@@ -213,7 +185,7 @@ export default function PricingPage() {
     tierCta: 'Build your package',
     tierNote: 'Pricing is tailored based on your choices and discussed on the call. No lock-in. All prices excl. VAT.',
     setupTitle: 'Why a one-time setup fee?',
-    setupSub: 'You are investing in a custom AI solution — not an off-the-shelf product. The setup fee covers all the work that makes the AI actually deliver results.',
+    setupSub: 'You are investing in a custom AI solution \u2014 not an off-the-shelf product. The setup fee covers all the work that makes the AI actually deliver results.',
     compTitle1: 'What does an employee cost vs.',
     compTitle2: 'Arxon?',
     compSub: 'See how much you save by automating repetitive work with AI. Numbers include salary, employer contributions and social costs.',
@@ -222,7 +194,7 @@ export default function PricingPage() {
     compArxon: 'Arxon (annual)',
     compSave: 'You save',
     compSummaryLabel: 'Typical savings per replaced position',
-    compSummaryRange: '300 000 – 430 000 NOK/year',
+    compSummaryRange: '300 000 \u2013 430 000 NOK/year',
     compSummaryNote: 'Including setup fee and monthly costs',
     compCta: 'Calculate your savings',
     stepsTitle1: 'From assessment to',
@@ -232,119 +204,29 @@ export default function PricingPage() {
     step3: { step: '3', title: 'Book a call', desc: 'We review your analysis and give you a tailored offer. No commitment required.' },
     step4: { step: '4', title: 'We build and launch', desc: 'Our team sets everything up. You don\u2019t need to do anything technical. You see the savings from day one.' },
     guaranteeTitle: 'Satisfaction guarantee',
-    guaranteeDesc: 'We adjust and optimize until you are 100% satisfied with the solution. No lock-in on monthly operation — you can cancel at any time.',
+    guaranteeDesc: 'We adjust and optimize until you are 100% satisfied with the solution. No lock-in on monthly operation \u2014 you can cancel at any time.',
     guaranteeItems: ['No lock-in', 'GDPR compliant', 'Norwegian data center'],
     finalTitle: 'Ready to build your package?',
-    finalSub: 'Start with a free assessment, choose your automations, and get a tailored offer — completely non-binding.',
+    finalSub: 'Start with a free assessment, choose your automations, and get a tailored offer \u2014 completely non-binding.',
     finalCta: 'Start assessment and build package',
-    navCta: 'Start assessment',
-    footerTagline: 'Intelligent AI automation for Norwegian businesses.',
-    footerServices: 'Services',
-    footerContact: 'Contact',
-    footerLegal: 'Legal',
-    footerMobilsvarer: 'AI Receptionist',
-    footerHowItWorks: 'How it works',
-    footerKartlegging: 'Free assessment',
-    footerPrivacy: 'Privacy policy',
-    footerTerms: 'Terms of use',
-    footerRights: 'All rights reserved.',
-    footerGdpr: 'GDPR compliant · Norwegian data center',
-  }
-
-  const fadeUp = {
-    initial: { opacity: 0, y: 24 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true },
-    transition: { duration: 0.5 },
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: bg, color: '#f0f0f0', fontFamily: "'DM Sans', sans-serif" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
-        ::selection { background: rgba(${goldRgb},0.3); }
-        .cta-shimmer { background: linear-gradient(110deg, ${gold} 0%, #e0c88a 25%, ${gold} 50%, #a8884d 75%, ${gold} 100%); background-size: 200% 100%; animation: shimmer 3s linear infinite; }
-        .cta-shimmer:hover { transform: translateY(-1px); box-shadow: 0 12px 40px rgba(${goldRgb},0.35) !important; }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-        .gold-hover { transition: all 0.3s ease; }
-        .gold-hover:hover { border-color: rgba(${goldRgb},0.3) !important; transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
-        .show-mobile-only { display: none !important; }
+    <div style={{ minHeight: '100vh', background: `linear-gradient(180deg, ${bg} 0%, #0d0d15 50%, ${bg} 100%)`, color: '#f0f0f0', fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{globalStyles(`
+        .comparison-grid { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr; }
         @media (max-width: 768px) {
-          .hide-mobile { display: none !important; }
-          .show-mobile-only { display: flex !important; }
           .comparison-grid { grid-template-columns: 1.5fr 1fr 1fr 1fr !important; font-size: 12px !important; }
           .comparison-grid span { font-size: inherit !important; }
         }
-      `}</style>
-
-      {/* Nav */}
-      <nav style={{
-        background: 'rgba(10,10,15,0.95)', backdropFilter: 'blur(20px)',
-        borderBottom: `1px solid rgba(${goldRgb},0.1)`, padding: '0 24px',
-        position: 'sticky', top: 0, zIndex: 90,
-      }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 56 }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <img src="/arxon-icon.png" alt="Arxon" style={{ width: 28, height: 28 }} />
-            <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' as const, color: '#f0f0f0' }}>Arxon</span>
-          </Link>
-          <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-            {navLinks.map((link) => (
-              <Link key={link.id} href={link.id} style={{
-                color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: 13, transition: 'color 0.2s',
-              }}
-              onMouseEnter={e => e.currentTarget.style.color = gold}
-              onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}
-              >{link.label}</Link>
-            ))}
-            <button onClick={() => setLang(lang === 'no' ? 'en' : 'no')} style={{
-              background: 'none', border: `1px solid rgba(${goldRgb},0.2)`, borderRadius: 6,
-              padding: '4px 10px', color: gold, fontSize: 12, fontWeight: 600, cursor: 'pointer',
-            }}>
-              {lang === 'no' ? 'EN' : 'NO'}
-            </button>
-            <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
-              color: bg, border: 'none', borderRadius: 10, padding: '8px 20px',
-              fontWeight: 600, fontSize: 13, cursor: 'pointer',
-            }}>
-              {tx.navCta} <ArrowRight size={13} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
-            </button>
-          </div>
-          <div className="show-mobile-only" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button onClick={() => setLang(lang === 'no' ? 'en' : 'no')} style={{
-              background: 'none', border: `1px solid rgba(${goldRgb},0.2)`, borderRadius: 6,
-              padding: '4px 10px', color: gold, fontSize: 12, fontWeight: 600, cursor: 'pointer',
-            }}>
-              {lang === 'no' ? 'EN' : 'NO'}
-            </button>
-            <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
-              color: bg, border: 'none', borderRadius: 8, padding: '7px 16px', fontWeight: 600, fontSize: 12, cursor: 'pointer',
-            }}>{lang === 'no' ? 'Start' : 'Start'}</button>
-            <button onClick={() => setMenuOpen(!menuOpen)} style={{
-              background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8,
-              padding: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              {menuOpen ? <X size={20} color="rgba(255,255,255,0.7)" /> : <Menu size={20} color="rgba(255,255,255,0.7)" />}
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 95, background: 'rgba(10,10,15,0.98)', padding: '80px 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <button onClick={() => setMenuOpen(false)} style={{ position: 'absolute', top: 20, right: 20, background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: 7, cursor: 'pointer', display: 'flex' }}><X size={20} color="rgba(255,255,255,0.7)" /></button>
-          {navLinks.map(l => (
-            <button key={l.id} onClick={() => { setMenuOpen(false); router.push(l.id) }} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.7)', fontSize: 18, fontWeight: 500, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textAlign: 'left', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>{l.label}</button>
-          ))}
-        </div>
-      )}
+      `)}</style>
+      <Nav lang={lang} setLang={setLang} sticky />
 
       {/* Hero */}
       <section style={{ maxWidth: 900, margin: '0 auto', padding: '60px 24px 30px', textAlign: 'center' }}>
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: gold, textDecoration: 'none', fontSize: 14, marginBottom: 24 }}>
-            <ArrowLeft size={14} /> {tx.backHome}
+            <ArrowLeft size={14} /> {lang === 'no' ? 'Tilbake til forsiden' : 'Back to home'}
           </Link>
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(30px, 5vw, 48px)', fontWeight: 700, marginBottom: 16 }}>
             {tx.heroTitle1}<br />
@@ -369,7 +251,7 @@ export default function PricingPage() {
           <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, marginBottom: 12, textAlign: 'center' }}>
             {tx.howTitle}
           </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
+          <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>
             <div style={{ display: 'flex', gap: 10 }}>
               <MessageSquare size={18} color={gold} style={{ flexShrink: 0, marginTop: 2 }} />
               <div><strong style={{ color: '#f0f0f0' }}>{tx.step1Title}</strong><br />{tx.step1Desc}</div>
@@ -394,7 +276,7 @@ export default function PricingPage() {
         <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 14, marginBottom: 36, maxWidth: 520, margin: '0 auto 36px' }}>
           {tx.tiersSub}
         </motion.p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+        <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
           {tiers.map((tier, i) => {
             const Icon = tier.icon
             return (
@@ -424,7 +306,7 @@ export default function PricingPage() {
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginBottom: 20, lineHeight: 1.5 }}>{tier.desc}</p>
 
               {/* Key stats */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
+              <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
                 <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, padding: '12px', textAlign: 'center' }}>
                   <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginBottom: 4 }}>{tx.tierAutomations}</div>
                   <div style={{ fontSize: 20, fontWeight: 700, color: tier.color }}>{tier.automations}</div>
@@ -487,7 +369,7 @@ export default function PricingPage() {
         <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 14, marginBottom: 36, maxWidth: 520, margin: '0 auto 36px' }}>
           {tx.setupSub}
         </motion.p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
+        <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
           {whySetup.map((item, i) => {
             const Icon = item.icon
             return (
@@ -521,7 +403,7 @@ export default function PricingPage() {
         }}>
           {/* Table header */}
           <div className="comparison-grid" style={{
-            display: 'grid', gridTemplateColumns: '1.8fr 1fr 1fr 1fr', padding: '16px 24px',
+            padding: '16px 24px',
             background: `rgba(${goldRgb},0.06)`, borderBottom: `1px solid rgba(${goldRgb},0.1)`,
             fontSize: 12, fontWeight: 600, color: gold, textTransform: 'uppercase' as const, letterSpacing: '0.5px',
           }}>
@@ -534,7 +416,7 @@ export default function PricingPage() {
           {/* Table rows */}
           {employeeComparison.map((row, i) => (
             <div key={i} className="comparison-grid" style={{
-              display: 'grid', gridTemplateColumns: '1.8fr 1fr 1fr 1fr', padding: '16px 24px',
+              padding: '16px 24px',
               borderBottom: i < employeeComparison.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
               fontSize: 14, alignItems: 'center',
             }}>
