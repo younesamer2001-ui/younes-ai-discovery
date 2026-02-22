@@ -161,7 +161,7 @@ export default function PricingPage() {
           </Link>
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(30px, 5vw, 48px)', fontWeight: 700, marginBottom: 16 }}>
             Bygg pakken din.<br />
-            <span style={{ color: gold }}>Få tilpasset pris.</span>
+            <span style={{ color: gold }}>Book en samtale.</span>
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 17, maxWidth: 600, margin: '0 auto 20px', lineHeight: 1.6 }}>
             Velg automasjonene som passer din bedrift — vi tilpasser prisen basert på ditt valg.
@@ -194,7 +194,7 @@ export default function PricingPage() {
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
               <Clock size={18} color={gold} style={{ flexShrink: 0, marginTop: 2 }} />
-              <div><strong style={{ color: '#f0f0f0' }}>3. Tilpasset pris</strong><br />Du får et skreddersydd tilbud basert på akkurat det du valgte. Setup + fast mnd.</div>
+              <div><strong style={{ color: '#f0f0f0' }}>3. Book en samtale</strong><br />Vi gjennomgår analysen din og gir deg et skreddersydd tilbud basert på det du valgte.</div>
             </div>
           </div>
         </motion.div>
@@ -289,8 +289,8 @@ export default function PricingPage() {
 
         {/* Note under cards */}
         <motion.p {...fadeUp} style={{ textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.3)', marginTop: 20, maxWidth: 600, margin: '20px auto 0' }}>
-          Prisen tilpasses basert på dine valg. Inkluderer engangs setup-fee + fast månedlig pris.
-          Alle priser eks. mva. Ingen bindingstid etter oppsett.
+          Prisen tilpasses basert på dine valg og diskuteres på samtalen.
+          Ingen bindingstid. Alle priser eks. mva.
         </motion.p>
       </section>
 
@@ -391,7 +391,7 @@ export default function PricingPage() {
           {[
             { step: '1', title: 'Gratis kartlegging', desc: 'Svar på noen spørsmål om bedriften din. Vi identifiserer de beste automatiseringsmulighetene for din bransje.' },
             { step: '2', title: 'Bygg din pakke', desc: 'Velg hvilke automasjoner du vil ha fra anbefalingene. Se tidsbesparelse og kompleksitet for hver løsning.' },
-            { step: '3', title: 'Få tilpasset tilbud', desc: 'Vi kontakter deg med eksakt pris basert på det du valgte — setup-fee og fast månedlig kostnad.' },
+            { step: '3', title: 'Book en samtale', desc: 'Vi gjennomgår analysen din og gir deg et skreddersydd tilbud. Du forplikter deg til ingenting.' },
             { step: '4', title: 'Vi bygger og lanserer', desc: 'Vårt team setter opp alt. Du trenger ikke gjøre noe teknisk. Du ser besparelsene fra dag én.' },
           ].map((s, i) => (
             <motion.div key={i} {...fadeUp} style={{ display: 'flex', gap: 20, padding: '20px 0', borderBottom: i < 3 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>

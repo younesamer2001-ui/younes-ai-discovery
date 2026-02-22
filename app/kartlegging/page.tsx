@@ -33,28 +33,16 @@ const T: Record<string, Record<string, string>> = {
   roi_lost_month: { no: "Tapt omsetning per måned", en: "Lost revenue per month" },
   roi_lost_year: { no: "Tapt omsetning per år", en: "Lost revenue per year" },
   roi_solution: { no: "Anbefalt løsning", en: "Recommended solution" },
-  roi_investment: { no: "Månedlig investering", en: "Monthly investment" },
-  roi_return: { no: "Avkastning (ROI)", en: "Return on investment (ROI)" },
   receptionist_title: { no: "Resepsjonist-sammenligningen", en: "Receptionist comparison" },
   receptionist_sol: { no: "Løsning", en: "Solution" },
   receptionist_cost: { no: "Månedlig kostnad", en: "Monthly cost" },
   receptionist_avail: { no: "Tilgjengelighet", en: "Availability" },
   receptionist_cap: { no: "Kapasitet", en: "Capacity" },
-  pricing_title: { no: "Velg din pakke", en: "Choose your plan" },
-  pricing_popular: { no: "Mest populær", en: "Most popular" },
-  pricing_setup: { no: "Oppstart", en: "Setup" },
-  pricing_calls: { no: "samtaler/mnd inkludert", en: "calls/month included" },
-  pricing_overage: { no: "Overtakst", en: "Overage" },
-  pricing_min: { no: "minimum", en: "minimum" },
-  pricing_vat: { no: "Alle priser eks. mva.", en: "All prices excl. VAT." },
   pricing_limit: { no: "Vi tar inn maksimalt 3 nye kunder per måned for å sikre kvalitet.", en: "We onboard a maximum of 3 new clients per month to ensure quality." },
   compliance_title: { no: "Sikkerhet og regelverk", en: "Security and compliance" },
   generate_btn: { no: "Generer AI-analyse", en: "Generate AI analysis" },
   generating: { no: "Genererer din personlige analyse...", en: "Generating your personalized analysis..." },
   summary_title: { no: "Din AI-analyse", en: "Your AI analysis" },
-  review_title: { no: "Gjennomgang", en: "Review" },
-  review_edit: { no: "Rediger", en: "Edit" },
-  review_answers: { no: "Dine svar", en: "Your answers" },
   submit_btn: { no: "Send inn", en: "Submit" },
   submitting: { no: "Sender...", en: "Submitting..." },
   confirm_title: { no: "Takk for din henvendelse!", en: "Thank you for your inquiry!" },
@@ -66,9 +54,6 @@ const T: Record<string, Record<string, string>> = {
   confirm_step3: { no: "3. Vi utarbeider et skreddersydd forslag", en: "3. We prepare a customized proposal" },
   replaces: { no: "Erstatter", en: "Replaces" },
   saves: { no: "Sparer", en: "Saves" },
-  per_month: { no: "/mnd", en: "/mo" },
-  per_min: { no: "/min", en: "/min" },
-  annual_save: { no: "Spar 15% med årlig betaling", en: "Save 15% with annual billing" },
   builder_title: { no: "Bygg din pakke", en: "Build your package" },
   builder_subtitle: { no: "Velg løsningene du vil ha — vi tilpasser pris basert på valget ditt", en: "Select the solutions you want — we tailor pricing based on your selection" },
   builder_recommended: { no: "Anbefalt for din bransje", en: "Recommended for your industry" },
@@ -672,30 +657,6 @@ const buildQuestions = (lang: string, selectedIndustry?: string): Question[] => 
 ]
 }
 
-/* ────────────────────────────────────────────
-   PACKAGES (no prices — custom pricing after call)
-   ──────────────────────────────────────────── */
-const PACKAGES = [
-  {
-    id: 'standard', name: { no: 'Standard', en: 'Standard' },
-    tagline: { no: 'Perfekt for å komme i gang', en: 'Perfect to get started' },
-    popular: false,
-    features: {
-      no: ['AI telefonsvarer 24/7', 'Automatisk booking & påminnelser', 'E-poststøtte', 'Månedlig ytelsesrapport', 'GDPR-sikret'],
-      en: ['AI phone answering 24/7', 'Automatic booking & reminders', 'Email support', 'Monthly performance report', 'GDPR compliant'],
-    },
-  },
-  {
-    id: 'pro', name: { no: 'Pro', en: 'Pro' },
-    tagline: { no: 'For bedrifter som vil ha alt', en: 'For businesses that want it all' },
-    popular: true,
-    features: {
-      no: ['Alt i Standard +', 'SMS-oppfølging & CRM-integrasjon', 'Automatiserte anmeldelser', 'Prioritert støtte (samme dag)', 'Skreddersydd AI-trening for din bransje', 'Dedikert kontaktperson'],
-      en: ['Everything in Standard +', 'SMS follow-up & CRM integration', 'Automated reviews', 'Priority support (same day)', 'Custom AI training for your industry', 'Dedicated account manager'],
-    },
-  },
-]
-
 /* Google Calendar booking URL — replace with your actual link */
 const BOOKING_URL = 'REPLACE_WITH_YOUR_GOOGLE_CALENDAR_LINK'
 
@@ -933,11 +894,9 @@ function KartleggingApp() {
   const roiCalc = () => {
     const lostMonth = roiInputs.missed * roiInputs.jobValue * (roiInputs.convRate / 100)
     const lostYear = lostMonth * 12
-    const sizeMap: Record<string, number> = { solo: 5990, '2-5': 5990, '6-15': 12990, '16-50': 12990, '51-200': 24990, '200+': 24990 }
-    const investment = sizeMap[answers.size] || 12990
-    const roi = investment > 0 ? Math.round(((lostMonth - investment) / investment) * 100) : 0
-    const tierName = investment === 5990 ? 'Basis' : investment === 12990 ? (lang === 'no' ? 'Profesjonell' : 'Professional') : 'Enterprise'
-    return { lostMonth: Math.round(lostMonth), lostYear: Math.round(lostYear), investment, roi, tierName }
+    const autoCount = selectedAutomations.length
+    const tierName = autoCount >= 6 ? 'Vekst' : autoCount >= 3 ? 'Profesjonell' : 'Starter'
+    return { lostMonth: Math.round(lostMonth), lostYear: Math.round(lostYear), tierName }
   }
 
   const generateSummary = async () => {
@@ -972,8 +931,8 @@ function KartleggingApp() {
       const r = roiCalc()
       setAiSummary(
         lang === 'no'
-          ? `OPPSUMMERING:\n${contact.company} er en ${industryLabel.toLowerCase()}-bedrift med ${answers.size} ansatte som søker AI-integrasjonsløsninger. Basert på kartleggingen ser vi betydelige muligheter for effektivisering, spesielt innen ${(answers.pain || []).slice(0, 2).join(' og ')}.\n\nANBEFALINGER:\n${recs.map((rc: Rec, i: number) => `${i + 1}. ${rc.name}: ${rc.desc}`).join('\n')}\n\nPRIORITET:\nVi anbefaler å starte med ${recs[0]?.name} da dette gir raskest avkastning.\n\nESTIMERT ROI:\nForventet besparelse ca. ${fmtNOK(r.lostYear)} årlig. Med investering på ${fmtNOK(r.investment)}/mnd gir dette ROI på ${r.roi}%.`
-          : `SUMMARY:\n${contact.company} is a ${industryLabel.toLowerCase()} business with ${answers.size} employees seeking AI integration solutions. We see significant opportunities, especially in ${(answers.pain || []).slice(0, 2).join(' and ')}.\n\nRECOMMENDATIONS:\n${recs.map((rc: Rec, i: number) => `${i + 1}. ${rc.name}: ${rc.desc}`).join('\n')}\n\nPRIORITY:\nWe recommend starting with ${recs[0]?.name} as this provides the fastest return.\n\nESTIMATED ROI:\nExpected savings approx. ${fmtNOK(r.lostYear)} annually. With investment of ${fmtNOK(r.investment)}/month, ROI of ${r.roi}%.`
+          ? `OPPSUMMERING:\n${contact.company} er en ${industryLabel.toLowerCase()}-bedrift med ${answers.size} ansatte som søker AI-integrasjonsløsninger. Basert på kartleggingen ser vi betydelige muligheter for effektivisering, spesielt innen ${(answers.pain || []).slice(0, 2).join(' og ')}.\n\nANBEFALINGER:\n${recs.map((rc: Rec, i: number) => `${i + 1}. ${rc.name}: ${rc.desc}`).join('\n')}\n\nPRIORITET:\nVi anbefaler å starte med ${recs[0]?.name} da dette gir raskest avkastning.\n\nPOTENSIAL:\nEstimert tapt omsetning uten AI: ca. ${fmtNOK(r.lostYear)} årlig. Anbefalt pakkenivå: ${r.tierName}. Book en samtale for tilpasset pris.`
+          : `SUMMARY:\n${contact.company} is a ${industryLabel.toLowerCase()} business with ${answers.size} employees seeking AI integration solutions. We see significant opportunities, especially in ${(answers.pain || []).slice(0, 2).join(' and ')}.\n\nRECOMMENDATIONS:\n${recs.map((rc: Rec, i: number) => `${i + 1}. ${rc.name}: ${rc.desc}`).join('\n')}\n\nPRIORITY:\nWe recommend starting with ${recs[0]?.name} as this provides the fastest return.\n\nPOTENTIAL:\nEstimated lost revenue without AI: approx. ${fmtNOK(r.lostYear)} annually. Recommended tier: ${r.tierName}. Book a call for custom pricing.`
       )
     }
     setGenerating(false)
@@ -1203,16 +1162,12 @@ function KartleggingApp() {
                     <div style={{ fontSize: 12, color: textMuted, marginBottom: 6 }}>{t('roi_lost_year', lang)}</div>
                     <div style={{ fontSize: 22, fontWeight: 700, color: '#ef4444' }}><AnimNum value={roi.lostYear} suffix=" kr" /></div>
                   </div>
-                  <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: 10, padding: 16, textAlign: 'center' }}>
-                    <div style={{ fontSize: 12, color: textMuted, marginBottom: 6 }}>{t('roi_investment', lang)}</div>
-                    <div style={{ fontSize: 22, fontWeight: 700, color: textPrimary }}><AnimNum value={roi.investment} suffix={` kr${t('per_month', lang)}`} /></div>
-                  </div>
-                  <div style={{ background: 'rgba(201,169,110,0.06)', borderRadius: 10, padding: 16, textAlign: 'center', border: '1px solid rgba(201,169,110,0.15)' }}>
-                    <div style={{ fontSize: 12, color: textMuted, marginBottom: 6 }}>{t('roi_return', lang)}</div>
-                    <div style={{ fontSize: 22, fontWeight: 700, color: gold }}><AnimNum value={roi.roi} suffix="%" /></div>
-                  </div>
                 </div>
-                <div style={{ textAlign: 'center', marginTop: 12, fontSize: 13, color: textSecondary }}>{t('roi_solution', lang)}: <span style={{ color: gold, fontWeight: 600 }}>{roi.tierName}</span></div>
+                <p style={{ textAlign: 'center', marginTop: 16, fontSize: 13, color: textSecondary, lineHeight: 1.5 }}>
+                  {lang === 'no'
+                    ? 'Bygg pakken din i neste steg, så diskuterer vi pris på samtalen.'
+                    : 'Build your package in the next step, and we\'ll discuss pricing on the call.'}
+                </p>
               </div>
 
               {/* Receptionist Comparison */}

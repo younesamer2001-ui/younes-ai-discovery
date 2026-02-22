@@ -1478,12 +1478,12 @@ export default function LandingPage() {
           border: `1px solid rgba(${goldRgb},0.12)`, borderRadius: 22, padding: '40px 32px', textAlign: 'center',
         }}>
           <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, marginBottom: 12 }}>
-            {lang === 'no' ? 'Bygg pakken din — få tilpasset pris' : 'Build your package — get custom pricing'}
+            {lang === 'no' ? 'Bygg pakken din — book en samtale' : 'Build your package — book a call'}
           </motion.h2>
           <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.45)', fontSize: 15, marginBottom: 28, maxWidth: 480, margin: '0 auto 28px', lineHeight: 1.6 }}>
             {lang === 'no'
-              ? 'Velg automasjonene du trenger — vi tilpasser prisen basert på ditt valg. Ingen faste pakker, bare det du trenger.'
-              : 'Choose the automations you need — we tailor pricing based on your selection. No fixed packages, just what you need.'}
+              ? 'Velg automasjonene du trenger, generer en AI-analyse, og book en gratis samtale der vi diskuterer pris og løsning.'
+              : 'Choose the automations you need, generate an AI analysis, and book a free call where we discuss pricing and solution.'}
           </motion.p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap', marginBottom: 28 }}>
             {(lang === 'no' ? [
