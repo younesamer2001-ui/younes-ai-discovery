@@ -69,6 +69,18 @@ const T: Record<string, Record<string, string>> = {
   per_month: { no: "/mnd", en: "/mo" },
   per_min: { no: "/min", en: "/min" },
   annual_save: { no: "Spar 15% med årlig betaling", en: "Save 15% with annual billing" },
+  builder_title: { no: "Bygg din pakke", en: "Build your package" },
+  builder_subtitle: { no: "Velg løsningene du vil ha — vi tilpasser pris basert på valget ditt", en: "Select the solutions you want — we tailor pricing based on your selection" },
+  builder_recommended: { no: "Anbefalt for din bransje", en: "Recommended for your industry" },
+  builder_general: { no: "Flere automasjoner", en: "More automations" },
+  builder_selected: { no: "valgt", en: "selected" },
+  builder_none: { no: "Ingen valgt ennå", en: "None selected yet" },
+  builder_tier: { no: "Estimert pakkenivå", en: "Estimated package level" },
+  builder_time: { no: "Estimert tidsbesparelse", en: "Estimated time savings" },
+  builder_scope: { no: "Kompleksitet", en: "Complexity" },
+  builder_cta: { no: "Få tilpasset pris", en: "Get custom pricing" },
+  builder_summary: { no: "Din valgte pakke", en: "Your selected package" },
+  builder_per_week: { no: "/uke", en: "/week" },
 }
 
 const t = (key: string, lang: string) => T[key]?.[lang] || T[key]?.['no'] || key
@@ -261,6 +273,32 @@ const INDUSTRY_RECOMMENDATIONS: Record<string, Record<string, Rec[]>> = {
       { name: "Reporting Automation", desc: "Automatic generation of reports and analytics.", replaces: "Manual reporting", saves: "5-10 hrs/week" },
     ],
   },
+}
+
+/* ────────────────────────────────────────────
+   GENERAL AUTOMATIONS (available to all industries)
+   ──────────────────────────────────────────── */
+const GENERAL_AUTOMATIONS: Record<string, Rec[]> = {
+  no: [
+    { name: "Automatisk fakturering & purring", desc: "Fakturaer genereres og sendes automatisk etter fullført oppdrag. Purring går ut etter fastsatte intervaller uten manuelt arbeid.", replaces: "3-5 timer/uke med fakturahåndtering", saves: "3-5 t/uke" },
+    { name: "AI Chatbot på nettsiden", desc: "Intelligent chatbot som svarer på vanlige spørsmål, kvalifiserer leads og booker møter — 24/7 uten ventetid.", replaces: "Manuell chat-support", saves: "10-15 t/uke" },
+    { name: "Automatisert e-postoppfølging", desc: "Leads og kunder får automatiske, personaliserte e-poster basert på handling og tidspunkt. Ingen faller mellom stolene.", replaces: "Manuell e-post utsending", saves: "5-8 t/uke" },
+    { name: "Social media auto-publisering", desc: "Innhold planlegges og publiseres automatisk på tvers av sosiale medier. AI foreslår innhold basert på bransjetrender.", replaces: "Manuell posting og planlegging", saves: "4-6 t/uke" },
+    { name: "Kundetilfredshet & anmeldelser", desc: "Automatisk utsending av tilfredshetsmåling etter oppdrag. Fornøyde kunder sendes til Google Reviews, misfornøyde fanges opp internt.", replaces: "Manuell oppfølging av anmeldelser", saves: "2-3 t/uke" },
+    { name: "Automatisert onboarding-flyt", desc: "Nye kunder mottar automatisk velkomst-e-post, kontrakter, skjemaer og oppstartsinfo uten manuelt arbeid.", replaces: "Manuell onboarding-prosess", saves: "3-4 t/uke" },
+    { name: "Intern rapportering & dashboard", desc: "Automatisk genererte rapporter og dashboards som gir sanntidsoversikt over KPIer, omsetning og aktivitet.", replaces: "Manuell rapportskriving", saves: "4-6 t/uke" },
+    { name: "Dokumentgenerering med AI", desc: "Kontrakter, tilbud og dokumenter genereres automatisk basert på maler og kundedata. Klar til signering på minutter.", replaces: "Manuell dokumentskriving", saves: "3-5 t/uke" },
+  ],
+  en: [
+    { name: "Automated Invoicing & Reminders", desc: "Invoices are generated and sent automatically after completed work. Reminders go out at set intervals without manual effort.", replaces: "3-5 hours/week of invoice handling", saves: "3-5 h/week" },
+    { name: "AI Website Chatbot", desc: "Intelligent chatbot that answers common questions, qualifies leads and books meetings — 24/7 with no wait time.", replaces: "Manual chat support", saves: "10-15 h/week" },
+    { name: "Automated Email Follow-up", desc: "Leads and customers receive automatic, personalized emails based on actions and timing. No one falls through the cracks.", replaces: "Manual email sending", saves: "5-8 h/week" },
+    { name: "Social Media Auto-publishing", desc: "Content is planned and published automatically across social media. AI suggests content based on industry trends.", replaces: "Manual posting and planning", saves: "4-6 h/week" },
+    { name: "Customer Satisfaction & Reviews", desc: "Automatic satisfaction surveys after completed work. Happy customers are sent to Google Reviews, unhappy ones are caught internally.", replaces: "Manual review follow-up", saves: "2-3 h/week" },
+    { name: "Automated Onboarding Flow", desc: "New customers automatically receive welcome emails, contracts, forms and onboarding info without manual work.", replaces: "Manual onboarding process", saves: "3-4 h/week" },
+    { name: "Internal Reporting & Dashboard", desc: "Automatically generated reports and dashboards providing real-time overview of KPIs, revenue and activity.", replaces: "Manual report writing", saves: "4-6 h/week" },
+    { name: "AI Document Generation", desc: "Contracts, quotes and documents are generated automatically based on templates and customer data. Ready for signing in minutes.", replaces: "Manual document writing", saves: "3-5 h/week" },
+  ],
 }
 
 const JOB_VALUES: Record<string, number> = { bygg: 8000, restaurant: 3600, helse: 1500, eiendom: 70000, advokat: 15000, regnskap: 5000, butikk: 500, frisor: 800, transport: 3000, it: 5000, utdanning: 8000, annet: 3000 }
@@ -504,6 +542,7 @@ function KartleggingApp() {
   const [submitting, setSubmitting] = useState(false)
   const [refNumber, setRefNumber] = useState('')
   const [showResumeBanner, setShowResumeBanner] = useState(false)
+  const [selectedAutomations, setSelectedAutomations] = useState<string[]>([])
 
   // ── Pre-select industry from URL query param ──
   useEffect(() => {
@@ -522,7 +561,7 @@ function KartleggingApp() {
       const saved = localStorage.getItem('kartlegging_progress')
       if (saved) {
         const data = JSON.parse(saved)
-        if (data.contact?.email && data.phase > 1 && data.phase < 7) {
+        if (data.contact?.email && data.phase > 1 && data.phase < 8) {
           setShowResumeBanner(true)
         }
       }
@@ -540,6 +579,7 @@ function KartleggingApp() {
         if (data.phase) setPhase(data.phase)
         if (data.lang) setLang(data.lang)
         if (data.otherIndustry) setOtherIndustry(data.otherIndustry)
+        if (data.selectedAutomations) setSelectedAutomations(data.selectedAutomations)
       }
     } catch {}
     setShowResumeBanner(false)
@@ -552,17 +592,17 @@ function KartleggingApp() {
 
   // ── Save progress to localStorage whenever state changes ──
   useEffect(() => {
-    if (phase >= 2 && phase < 7) {
+    if (phase >= 2 && phase < 8) {
       try {
         localStorage.setItem('kartlegging_progress', JSON.stringify({
-          contact, answers, step, phase, lang, otherIndustry,
+          contact, answers, step, phase, lang, otherIndustry, selectedAutomations,
         }))
       } catch {}
     }
-    if (phase === 7) {
+    if (phase === 8) {
       localStorage.removeItem('kartlegging_progress')
     }
-  }, [contact, answers, step, phase, lang, otherIndustry])
+  }, [contact, answers, step, phase, lang, otherIndustry, selectedAutomations])
 
   const questions = buildQuestions(lang)
   const industry = answers.industry || 'annet'
@@ -633,8 +673,8 @@ function KartleggingApp() {
     setGenerating(true)
     const industryLabel = INDUSTRIES.find((i) => i.id === industry)?.[lang as 'no' | 'en'] || industry
     const prompt = lang === 'no'
-      ? `Du er en AI-forretningsrådgiver for et norsk selskap som selger AI-automatisering til SMB-er. Basert på følgende informasjon, generer en profesjonell analyse på norsk:\n\nBedrift: ${contact.company}\nBransje: ${industryLabel}\nStørrelse: ${answers.size}\nØnsker å frigjøre tid på: ${(answers.pain || []).join(', ')}\nNåværende systemer: ${(answers.tech || []).join(', ')}\nKundekontaktmetoder: ${(answers.contact_methods || []).join(', ')}\nHenvendelser som ikke følges opp: ${answers.missed}\nInvesteringsvilje: ${answers.investment}\nTidslinje: ${answers.timeline}\nDrømmescenario: ${answers.goals || 'Ikke spesifisert'}\nTilleggsinformasjon: ${answers.additional || 'Ingen'}\n\nGi analyse i dette formatet:\nOPPSUMMERING: 3-4 setninger om bedriftssituasjonen\nANBEFALINGER: 3-5 spesifikke AI-løsninger med forklaringer\nPRIORITET: Hvilken løsning bør implementeres først og hvorfor\nESTIMERT ROI: Forventet avkastning basert på bransjedata`
-      : `You are an AI business advisor for a Norwegian company selling AI automation to SMBs. Based on the following information, generate a professional analysis in English:\n\nCompany: ${contact.company}\nIndustry: ${industryLabel}\nSize: ${answers.size}\nWants to free up time on: ${(answers.pain || []).join(', ')}\nCurrent systems: ${(answers.tech || []).join(', ')}\nCustomer contact methods: ${(answers.contact_methods || []).join(', ')}\nUnanswered inquiries: ${answers.missed}\nInvestment willingness: ${answers.investment}\nTimeline: ${answers.timeline}\nDream scenario: ${answers.goals || 'Not specified'}\nAdditional info: ${answers.additional || 'None'}\n\nProvide analysis in this format:\nSUMMARY: 3-4 sentences about the business situation\nRECOMMENDATIONS: 3-5 specific AI solutions with explanations\nPRIORITY: Which solution to implement first and why\nESTIMATED ROI: Expected return based on industry data`
+      ? `Du er en AI-forretningsrådgiver for et norsk selskap som selger AI-automatisering til SMB-er. Basert på følgende informasjon, generer en profesjonell analyse på norsk:\n\nBedrift: ${contact.company}\nBransje: ${industryLabel}\nStørrelse: ${answers.size}\nØnsker å frigjøre tid på: ${(answers.pain || []).join(', ')}\nNåværende systemer: ${(answers.tech || []).join(', ')}\nKundekontaktmetoder: ${(answers.contact_methods || []).join(', ')}\nHenvendelser som ikke følges opp: ${answers.missed}\nInvesteringsvilje: ${answers.investment}\nTidslinje: ${answers.timeline}\nDrømmescenario: ${answers.goals || 'Ikke spesifisert'}\nValgte automasjoner: ${selectedAutomations.join(', ') || 'Ingen valgt'}\nTilleggsinformasjon: ${answers.additional || 'Ingen'}\n\nGi analyse i dette formatet:\nOPPSUMMERING: 3-4 setninger om bedriftssituasjonen\nANBEFALINGER: 3-5 spesifikke AI-løsninger med forklaringer\nPRIORITET: Hvilken løsning bør implementeres først og hvorfor\nESTIMERT ROI: Forventet avkastning basert på bransjedata`
+      : `You are an AI business advisor for a Norwegian company selling AI automation to SMBs. Based on the following information, generate a professional analysis in English:\n\nCompany: ${contact.company}\nIndustry: ${industryLabel}\nSize: ${answers.size}\nWants to free up time on: ${(answers.pain || []).join(', ')}\nCurrent systems: ${(answers.tech || []).join(', ')}\nCustomer contact methods: ${(answers.contact_methods || []).join(', ')}\nUnanswered inquiries: ${answers.missed}\nInvestment willingness: ${answers.investment}\nTimeline: ${answers.timeline}\nDream scenario: ${answers.goals || 'Not specified'}\nSelected automations: ${selectedAutomations.join(', ') || 'None selected'}\nAdditional info: ${answers.additional || 'None'}\n\nProvide analysis in this format:\nSUMMARY: 3-4 sentences about the business situation\nRECOMMENDATIONS: 3-5 specific AI solutions with explanations\nPRIORITY: Which solution to implement first and why\nESTIMATED ROI: Expected return based on industry data`
 
     try {
       const res = await fetch('/api/kartlegging', {
@@ -654,7 +694,7 @@ function KartleggingApp() {
       )
     }
     setGenerating(false)
-    setPhase(5)
+    setPhase(6)
   }
 
   const handleSubmit = async () => {
@@ -668,6 +708,7 @@ function KartleggingApp() {
           action: 'submit',
           contact,
           answers: { ...answers, industryOther: otherIndustry },
+          selectedAutomations,
           aiSummary,
           roiData: roi,
           recommendedTier: roi.tierName,
@@ -680,7 +721,7 @@ function KartleggingApp() {
       setRefNumber('YAI-' + Math.random().toString(36).substr(2, 8).toUpperCase())
     }
     setSubmitting(false)
-    setPhase(7)
+    setPhase(8)
   }
 
   const roi = roiCalc()
@@ -970,13 +1011,196 @@ function KartleggingApp() {
                 </div>
               </div>
 
-              <button style={btnPrimary} onClick={() => setPhase(4)}>{t('generate_btn', lang)}</button>
+              <button style={btnPrimary} onClick={() => { /* Pre-select all industry recommendations */setSelectedAutomations(recs.map((r: Rec) => r.name)); setPhase(4) }}>
+                {lang === 'no' ? 'Bygg din pakke →' : 'Build your package →'}
+              </button>
             </motion.div>
           )}
 
-          {/* ═══════════ PHASE 4: GENERATING ═══════════ */}
-          {phase === 4 && (
-            <motion.div key="phase4" variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ textAlign: 'center', marginTop: 120 }}>
+          {/* ═══════════ PHASE 4: PACKAGE BUILDER ═══════════ */}
+          {phase === 4 && (() => {
+            const industryRecs = recs
+            const generalRecs = GENERAL_AUTOMATIONS[lang] || GENERAL_AUTOMATIONS.no
+            const allAutomations = [...industryRecs.map((r: Rec, i: number) => ({ ...r, source: 'industry' as const, idx: i })), ...generalRecs.map((r: Rec, i: number) => ({ ...r, source: 'general' as const, idx: i + industryRecs.length }))]
+            const selected = allAutomations.filter(a => selectedAutomations.includes(a.name))
+            const totalCount = selected.length
+
+            /* Tier calculation */
+            const tierLevel = totalCount <= 2 ? 'Starter' : totalCount <= 5 ? 'Profesjonell' : 'Vekst'
+            const tierColor = tierLevel === 'Starter' ? '#6ee7b7' : tierLevel === 'Profesjonell' ? '#c9a96e' : '#a78bfa'
+
+            /* Parse time savings */
+            const parseHours = (s: string): number => {
+              const m1 = s.match(/(\d+)-(\d+)\s*t/)
+              if (m1) return (parseInt(m1[1]) + parseInt(m1[2])) / 2
+              const m2 = s.match(/(\d+)\s*t/)
+              if (m2) return parseInt(m2[1])
+              return 0
+            }
+            const totalHours = selected.reduce((sum, a) => sum + parseHours(a.saves), 0)
+
+            /* Scope bar (0-100) */
+            const scopePercent = Math.min(100, Math.round((totalCount / 8) * 100))
+
+            const toggleAutomation = (name: string) => {
+              setSelectedAutomations(prev =>
+                prev.includes(name) ? prev.filter(n => n !== name) : [...prev, name]
+              )
+            }
+
+            return (
+              <motion.div key="phase4" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+                <div style={{ marginTop: 32, marginBottom: 28, textAlign: 'center' }}>
+                  <h2 style={{ ...headingFont, fontSize: 'clamp(22px, 4vw, 30px)', fontWeight: 700, marginBottom: 8 }}>{t('builder_title', lang)}</h2>
+                  <p style={{ color: textSecondary, fontSize: 14, maxWidth: 500, margin: '0 auto', lineHeight: 1.6 }}>{t('builder_subtitle', lang)}</p>
+                </div>
+
+                {/* ── Summary panel (sticky) ── */}
+                <div style={{
+                  ...cardStyle, marginBottom: 24, padding: '20px 22px',
+                  border: `1.5px solid ${totalCount > 0 ? gold : cardBorder}`,
+                  background: totalCount > 0 ? 'rgba(201,169,110,0.04)' : cardBg,
+                  position: 'sticky', top: 12, zIndex: 10,
+                  backdropFilter: 'blur(16px)',
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: totalCount > 0 ? 16 : 0 }}>
+                    <span style={{ fontSize: 15, fontWeight: 600 }}>{t('builder_summary', lang)}</span>
+                    <span style={{ fontSize: 13, color: totalCount > 0 ? gold : textMuted }}>
+                      {totalCount} {t('builder_selected', lang)}
+                    </span>
+                  </div>
+
+                  {totalCount > 0 && (
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+                      {/* Tier */}
+                      <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 10, padding: '12px 14px', textAlign: 'center' }}>
+                        <div style={{ fontSize: 11, color: textMuted, marginBottom: 6 }}>{t('builder_tier', lang)}</div>
+                        <div style={{ fontSize: 16, fontWeight: 700, color: tierColor }}>{tierLevel}</div>
+                      </div>
+                      {/* Time */}
+                      <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 10, padding: '12px 14px', textAlign: 'center' }}>
+                        <div style={{ fontSize: 11, color: textMuted, marginBottom: 6 }}>{t('builder_time', lang)}</div>
+                        <div style={{ fontSize: 16, fontWeight: 700, color: gold }}>~{Math.round(totalHours)}t{t('builder_per_week', lang)}</div>
+                      </div>
+                      {/* Scope */}
+                      <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 10, padding: '12px 14px', textAlign: 'center' }}>
+                        <div style={{ fontSize: 11, color: textMuted, marginBottom: 6 }}>{t('builder_scope', lang)}</div>
+                        <div style={{ height: 6, background: 'rgba(255,255,255,0.06)', borderRadius: 3, marginTop: 8 }}>
+                          <div style={{ height: '100%', width: `${scopePercent}%`, background: `linear-gradient(90deg, #6ee7b7, ${gold}, #a78bfa)`, borderRadius: 3, transition: 'width 0.4s ease' }} />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {totalCount === 0 && (
+                    <p style={{ fontSize: 13, color: textMuted, marginTop: 8 }}>{t('builder_none', lang)}</p>
+                  )}
+                </div>
+
+                {/* ── Industry Recommendations ── */}
+                <div style={{ marginBottom: 24 }}>
+                  <h3 style={{ fontSize: 15, fontWeight: 600, color: gold, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ width: 20, height: 20, borderRadius: 5, background: 'rgba(201,169,110,0.15)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 11 }}>★</span>
+                    {t('builder_recommended', lang)}
+                  </h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {industryRecs.map((rec: Rec, i: number) => {
+                      const isSelected = selectedAutomations.includes(rec.name)
+                      return (
+                        <motion.div key={`ind-${i}`}
+                          style={{
+                            ...cardStyle, padding: '18px 20px', cursor: 'pointer',
+                            border: isSelected ? `1.5px solid ${gold}` : `1px solid ${cardBorder}`,
+                            background: isSelected ? 'rgba(201,169,110,0.06)' : cardBg,
+                          }}
+                          whileHover={{ borderColor: isSelected ? gold : 'rgba(255,255,255,0.12)' }}
+                          whileTap={{ scale: 0.99 }}
+                          onClick={() => toggleAutomation(rec.name)}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 14 }}>
+                            <div style={{ flex: 1 }}>
+                              <h4 style={{ fontSize: 15, fontWeight: 600, marginBottom: 5, color: isSelected ? gold : textPrimary }}>{rec.name}</h4>
+                              <p style={{ fontSize: 13, color: textSecondary, lineHeight: 1.5, marginBottom: 10 }}>{rec.desc}</p>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                                <span style={{ fontSize: 11, color: textMuted, background: 'rgba(255,255,255,0.03)', padding: '3px 8px', borderRadius: 5, border: `1px solid ${cardBorder}` }}>{t('replaces', lang)}: {rec.replaces}</span>
+                                <span style={{ fontSize: 11, color: gold, background: 'rgba(201,169,110,0.06)', padding: '3px 8px', borderRadius: 5, border: '1px solid rgba(201,169,110,0.15)' }}>{t('saves', lang)}: {rec.saves}</span>
+                              </div>
+                            </div>
+                            <div style={{
+                              minWidth: 28, height: 28, borderRadius: 8,
+                              border: isSelected ? `2px solid ${gold}` : `2px solid rgba(255,255,255,0.15)`,
+                              background: isSelected ? gold : 'transparent',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              transition: 'all 0.2s', marginTop: 2,
+                            }}>
+                              {isSelected && <span style={{ color: bg, fontSize: 14, fontWeight: 700 }}>✓</span>}
+                            </div>
+                          </div>
+                        </motion.div>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* ── General Automations ── */}
+                <div style={{ marginBottom: 28 }}>
+                  <h3 style={{ fontSize: 15, fontWeight: 600, color: textPrimary, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ width: 20, height: 20, borderRadius: 5, background: 'rgba(255,255,255,0.06)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 11 }}>+</span>
+                    {t('builder_general', lang)}
+                  </h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {generalRecs.map((rec: Rec, i: number) => {
+                      const isSelected = selectedAutomations.includes(rec.name)
+                      return (
+                        <motion.div key={`gen-${i}`}
+                          style={{
+                            ...cardStyle, padding: '18px 20px', cursor: 'pointer',
+                            border: isSelected ? `1.5px solid ${gold}` : `1px solid ${cardBorder}`,
+                            background: isSelected ? 'rgba(201,169,110,0.06)' : cardBg,
+                          }}
+                          whileHover={{ borderColor: isSelected ? gold : 'rgba(255,255,255,0.12)' }}
+                          whileTap={{ scale: 0.99 }}
+                          onClick={() => toggleAutomation(rec.name)}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 14 }}>
+                            <div style={{ flex: 1 }}>
+                              <h4 style={{ fontSize: 15, fontWeight: 600, marginBottom: 5, color: isSelected ? gold : textPrimary }}>{rec.name}</h4>
+                              <p style={{ fontSize: 13, color: textSecondary, lineHeight: 1.5, marginBottom: 10 }}>{rec.desc}</p>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                                <span style={{ fontSize: 11, color: textMuted, background: 'rgba(255,255,255,0.03)', padding: '3px 8px', borderRadius: 5, border: `1px solid ${cardBorder}` }}>{t('replaces', lang)}: {rec.replaces}</span>
+                                <span style={{ fontSize: 11, color: gold, background: 'rgba(201,169,110,0.06)', padding: '3px 8px', borderRadius: 5, border: '1px solid rgba(201,169,110,0.15)' }}>{t('saves', lang)}: {rec.saves}</span>
+                              </div>
+                            </div>
+                            <div style={{
+                              minWidth: 28, height: 28, borderRadius: 8,
+                              border: isSelected ? `2px solid ${gold}` : `2px solid rgba(255,255,255,0.15)`,
+                              background: isSelected ? gold : 'transparent',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              transition: 'all 0.2s', marginTop: 2,
+                            }}>
+                              {isSelected && <span style={{ color: bg, fontSize: 14, fontWeight: 700 }}>✓</span>}
+                            </div>
+                          </div>
+                        </motion.div>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* ── Navigation ── */}
+                <div style={{ display: 'flex', gap: 12 }}>
+                  <button style={btnSecondary} onClick={() => setPhase(3)}>{t('back', lang)}</button>
+                  <button
+                    style={{ ...btnPrimary, opacity: totalCount > 0 ? 1 : 0.4 }}
+                    disabled={totalCount === 0}
+                    onClick={() => setPhase(5)}>
+                    {t('builder_cta', lang)}
+                  </button>
+                </div>
+              </motion.div>
+            )
+          })()}
+
+          {/* ═══════════ PHASE 5: GENERATING ═══════════ */}
+          {phase === 5 && (
+            <motion.div key="phase5" variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ textAlign: 'center', marginTop: 120 }}>
               <motion.div
                 animate={{ scale: [1, 1.05, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
@@ -991,22 +1215,22 @@ function KartleggingApp() {
             </motion.div>
           )}
 
-          {/* ═══════════ PHASE 5: AI SUMMARY ═══════════ */}
-          {phase === 5 && (
-            <motion.div key="phase5" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+          {/* ═══════════ PHASE 6: AI SUMMARY ═══════════ */}
+          {phase === 6 && (
+            <motion.div key="phase6" variants={pageVariants} initial="initial" animate="animate" exit="exit">
               <div style={{ marginTop: 32, marginBottom: 24, textAlign: 'center' }}>
                 <h2 style={{ ...headingFont, fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 700 }}>{t('summary_title', lang)}</h2>
               </div>
               <div style={{ ...cardStyle, marginBottom: 24 }}>
                 <pre style={{ whiteSpace: 'pre-wrap', fontFamily: "'DM Sans', sans-serif", fontSize: 14, lineHeight: 1.65, color: textSecondary }}>{aiSummary}</pre>
               </div>
-              <button style={btnPrimary} onClick={() => setPhase(6)}>{t('review_title', lang)}</button>
+              <button style={btnPrimary} onClick={() => setPhase(7)}>{t('review_title', lang)}</button>
             </motion.div>
           )}
 
-          {/* ═══════════ PHASE 6: REVIEW ═══════════ */}
-          {phase === 6 && (
-            <motion.div key="phase6" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+          {/* ═══════════ PHASE 7: REVIEW ═══════════ */}
+          {phase === 7 && (
+            <motion.div key="phase7" variants={pageVariants} initial="initial" animate="animate" exit="exit">
               <div style={{ marginTop: 32, marginBottom: 24, textAlign: 'center' }}>
                 <h2 style={{ ...headingFont, fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 700 }}>{t('review_title', lang)}</h2>
               </div>
@@ -1037,6 +1261,22 @@ function KartleggingApp() {
                 })}
               </div>
 
+              {/* Selected automations review */}
+              {selectedAutomations.length > 0 && (
+                <div style={{ ...cardStyle, marginBottom: 16, padding: '18px 20px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                    <span style={{ fontSize: 14, fontWeight: 600 }}>{t('builder_summary', lang)} ({selectedAutomations.length})</span>
+                    <button style={{ ...btnSecondary, padding: '4px 10px', fontSize: 12 }} onClick={() => setPhase(4)}>{t('review_edit', lang)}</button>
+                  </div>
+                  {selectedAutomations.map((name, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '6px 0', borderBottom: i < selectedAutomations.length - 1 ? `1px solid ${cardBorder}` : 'none' }}>
+                      <span style={{ color: gold, fontSize: 12 }}>&#10003;</span>
+                      <span style={{ fontSize: 13, color: textPrimary }}>{name}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               {aiSummary && (
                 <div style={{ ...cardStyle, marginBottom: 16, padding: '18px 20px' }}>
                   <span style={{ fontSize: 14, fontWeight: 600, display: 'block', marginBottom: 8 }}>{t('summary_title', lang)}</span>
@@ -1058,15 +1298,15 @@ function KartleggingApp() {
               </div>
 
               <div style={{ display: 'flex', gap: 12 }}>
-                <button style={btnSecondary} onClick={() => setPhase(3)}>{t('back', lang)}</button>
+                <button style={btnSecondary} onClick={() => setPhase(4)}>{t('back', lang)}</button>
                 <button style={{ ...btnPrimary, opacity: submitting ? 0.6 : 1 }} onClick={handleSubmit} disabled={submitting}>{submitting ? t('submitting', lang) : t('submit_btn', lang)}</button>
               </div>
             </motion.div>
           )}
 
-          {/* ═══════════ PHASE 7: CONFIRMATION + BOOKING ═══════════ */}
-          {phase === 7 && (
-            <motion.div key="phase7" variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ textAlign: 'center', marginTop: 60 }}>
+          {/* ═══════════ PHASE 8: CONFIRMATION + BOOKING ═══════════ */}
+          {phase === 8 && (
+            <motion.div key="phase8" variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ textAlign: 'center', marginTop: 60 }}>
               <motion.div
                 initial={{ scale: 0 }} animate={{ scale: 1 }}
                 transition={{ type: 'spring', stiffness: 200, damping: 15 }}
