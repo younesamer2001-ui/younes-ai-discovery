@@ -14,6 +14,7 @@
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "@vapi-ai/web": "^2.5.2",
     "autoprefixer": "^10.4.24",
     "framer-motion": "^12.34.1",
     "lucide-react": "^0.574.0",
