@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import ChatWidget from './components/ChatWidget'
 
 export const metadata: Metadata = {
   title: 'Arxon — AI-telefonsvarer og automatisering for norske bedrifter',
@@ -170,6 +171,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen antialiased" style={{ backgroundColor: '#0a0a0f', color: '#e0e0e0' }}>
         {children}
+        <ChatWidget />
       </body>
     </html>
   )
