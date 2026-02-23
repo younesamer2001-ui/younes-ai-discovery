@@ -35,14 +35,14 @@ export default function HowItWorksPage() {
   const techSpecs = lang === 'no' ? [
     { icon: Zap, title: 'Svartid under 2 sekunder', desc: 'Fra kundens spørsmål til AI-ens svar — raskere enn de fleste mennesker.' },
     { icon: Shield, title: 'GDPR og EU AI Act-klar', desc: 'All data lagres kryptert innen EØS. Vi følger Datatilsynets retningslinjer.' },
-    { icon: Clock, title: 'Oppsett på 48 timer', desc: 'Fra kartlegging til live AI-mobilsvarer — ingen lang onboarding.' },
+    { icon: Clock, title: 'Oppsett på 5–10 dager', desc: 'Fra kartlegging til live AI-mobilsvarer — grundig, skreddersydd oppsett.' },
     { icon: Lock, title: 'Kryptert ende-til-ende', desc: 'Samtaler og data beskyttes med industristandard kryptering (AES-256).' },
     { icon: Server, title: 'Norsk skyinfrastruktur', desc: 'Data behandles og lagres på europeiske servere for maksimal sikkerhet.' },
     { icon: Bot, title: 'Kontinuerlig læring', desc: 'AI-en blir bedre over tid basert på dine kunder og bedriftens behov.' },
   ] : [
     { icon: Zap, title: 'Response time under 2 seconds', desc: 'From question to AI answer — faster than most humans.' },
     { icon: Shield, title: 'GDPR and EU AI Act ready', desc: 'All data stored encrypted within EEA. Following Datatilsynet guidelines.' },
-    { icon: Clock, title: 'Setup in 48 hours', desc: 'From assessment to live AI answering — no long onboarding.' },
+    { icon: Clock, title: 'Setup in 5–10 days', desc: 'From assessment to live AI answering — thorough, tailored setup.' },
     { icon: Lock, title: 'End-to-end encrypted', desc: 'Calls and data protected with industry standard encryption (AES-256).' },
     { icon: Server, title: 'European cloud infrastructure', desc: 'Data processed and stored on European servers for maximum security.' },
     { icon: Bot, title: 'Continuous learning', desc: 'AI improves over time based on your customers and business needs.' },

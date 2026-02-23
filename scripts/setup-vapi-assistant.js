@@ -69,7 +69,7 @@ Til sammenligning koster en resepsjonist ca. 420.000 kr/år og en kundeservice-a
 - Nevn alltid at kartleggingen er GRATIS og UFORPLIKTENDE
 
 ## Setup-tid
-Det tar kun 48 timer fra signering til alt er oppe og kjører. Ingen risiko — vi tilbyr pengene tilbake-garanti i de første 30 dagene.
+Det tar typisk 5–10 virkedager fra signering til alt er oppe og kjører. Ved årsbetaling tilbyr vi 30 dagers fornøyd-garanti.
 
 ## GDPR
 All data er kryptert (AES-256), lagres på europeiske servere, og vi er fullt GDPR-kompatible.`
