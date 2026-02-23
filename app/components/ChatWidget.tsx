@@ -72,27 +72,29 @@ export default function ChatWidget() {
       setVolumeLevel(level)
     })
     vapi.on('message', (msg: any) => {
+      /* Use transcript events ONLY for speaking/listening indicators — not for messages */
       if (msg.type === 'transcript') {
-        if (msg.transcriptType === 'final') {
-          if (msg.role === 'user') {
-            setMessages(prev => [...prev, { role: 'user', content: msg.transcript, timestamp: new Date() }])
-            setIsListening(false)
-          } else if (msg.role === 'assistant') {
-            setMessages(prev => [...prev, { role: 'assistant', content: msg.transcript, timestamp: new Date() }])
-          }
-        } else if (msg.transcriptType === 'partial' && msg.role === 'user') {
+        if (msg.transcriptType === 'partial' && msg.role === 'user') {
           setIsListening(true)
         }
-      }
-      if (msg.type === 'conversation-update' && msg.conversation) {
-        const lastMsg = msg.conversation[msg.conversation.length - 1]
-        if (lastMsg && lastMsg.role === 'assistant' && lastMsg.content) {
-          setMessages(prev => {
-            const last = prev[prev.length - 1]
-            if (last?.role === 'assistant' && last.content === lastMsg.content) return prev
-            return [...prev, { role: 'assistant', content: lastMsg.content, timestamp: new Date() }]
-          })
+        if (msg.transcriptType === 'final' && msg.role === 'user') {
+          setIsListening(false)
         }
+      }
+      /* Use conversation-update for actual message display (accurate LLM text, no STT errors) */
+      if (msg.type === 'conversation-update' && msg.conversation) {
+        setMessages(prev => {
+          const conv = msg.conversation.filter(
+            (m: any) => (m.role === 'user' || m.role === 'assistant') && m.content
+          )
+          /* Only update if conversation has grown */
+          if (conv.length <= prev.length) return prev
+          return conv.map((m: any) => ({
+            role: m.role as 'user' | 'assistant',
+            content: m.content,
+            timestamp: new Date(),
+          }))
+        })
       }
     })
     vapi.on('error', (err: any) => {
