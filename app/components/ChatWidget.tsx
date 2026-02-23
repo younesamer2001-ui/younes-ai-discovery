@@ -23,6 +23,7 @@ export default function ChatWidget() {
   const assistantId = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID
 
   /* state */
+  const [mounted, setMounted] = useState(false)
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState('')
@@ -31,6 +32,9 @@ export default function ChatWidget() {
   const [isListening, setIsListening] = useState(false)
   const [volumeLevel, setVolumeLevel] = useState(0)
   const [isConnecting, setIsConnecting] = useState(false)
+
+  /* wait for client mount to avoid hydration mismatch */
+  useEffect(() => { setMounted(true) }, [])
 
   const vapiRef = useRef<Vapi | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -149,7 +153,7 @@ export default function ChatWidget() {
     }
   }, [inputValue, isCallActive, assistantId])
 
-  if (!publicKey || !assistantId) return null
+  if (!publicKey || !assistantId || !mounted) return null
 
   /* ───────── orb glow ───────── */
   const orbScale = 1 + volumeLevel * 0.3
