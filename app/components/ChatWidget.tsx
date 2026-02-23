@@ -10,6 +10,18 @@ interface Message {
   timestamp: Date
 }
 
+/* ───────── fix common STT misspellings ───────── */
+const sttFixes: [RegExp, string][] = [
+  [/\b(AKS+on|Aksen|Akson|Arkson|Axon|Arx[oe]n)\b/gi, 'Arxon'],
+]
+function fixStt(text: string): string {
+  let fixed = text
+  for (const [pattern, replacement] of sttFixes) {
+    fixed = fixed.replace(pattern, replacement)
+  }
+  return fixed
+}
+
 /* ───────── constants ───────── */
 const gold = '#c9a96e'
 const bg = '#0d0d14'
@@ -91,7 +103,7 @@ export default function ChatWidget() {
           if (conv.length <= prev.length) return prev
           return conv.map((m: any) => ({
             role: m.role as 'user' | 'assistant',
-            content: m.content,
+            content: fixStt(m.content),
             timestamp: new Date(),
           }))
         })
