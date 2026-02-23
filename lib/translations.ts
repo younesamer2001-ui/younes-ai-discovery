@@ -19,8 +19,8 @@ export const translations = {
     en: 'No obligations',
   },
   hero_trust_2: {
-    no: 'Svar innen 48 timer',
-    en: 'Response within 48 hours',
+    no: 'Rask responstid',
+    en: 'Fast response time',
   },
   hero_trust_3: {
     no: 'Tilpasset din bransje',
@@ -156,8 +156,8 @@ export const translations = {
     en: 'Your AI Integration Recommendation',
   },
   result_submitted: {
-    no: 'Rapporten er sendt til vårt team! Vi tar kontakt innen 48 timer.',
-    en: 'Report submitted to our team! We\'ll be in touch within 48 hours.',
+    no: 'Rapporten er sendt til vårt team! Vi tar kontakt så snart som mulig.',
+    en: 'Report submitted to our team! We\'ll be in touch as soon as possible.',
   },
   result_download: {
     no: 'Last ned rapport',
