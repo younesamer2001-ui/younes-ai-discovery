@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from 'next'
+import dynamic from 'next/dynamic'
 import './globals.css'
-import ChatWidget from './components/ChatWidget'
-import CookieConsent from './components/CookieConsent'
+
+const ChatWidget = dynamic(() => import('./components/ChatWidget'), { ssr: false })
+const CookieConsent = dynamic(() => import('./components/CookieConsent'), { ssr: false })
 
 export const viewport: Viewport = {
   width: 'device-width',

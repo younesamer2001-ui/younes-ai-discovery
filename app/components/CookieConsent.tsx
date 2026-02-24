@@ -13,7 +13,6 @@ type ConsentState = {
 }
 
 export default function CookieConsent() {
-  const [mounted, setMounted] = useState(false)
   const [visible, setVisible] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
   const [consent, setConsent] = useState<ConsentState>({
@@ -23,7 +22,6 @@ export default function CookieConsent() {
   })
 
   useEffect(() => {
-    setMounted(true)
     const stored = localStorage.getItem('arxon-cookie-consent')
     if (!stored) {
       setVisible(true)
@@ -54,7 +52,7 @@ export default function CookieConsent() {
     saveConsent(consent)
   }
 
-  if (!mounted || !visible) return null
+  if (!visible) return null
 
   const btnBase: React.CSSProperties = {
     padding: '10px 22px',

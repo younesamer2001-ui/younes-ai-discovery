@@ -42,7 +42,6 @@ export default function ChatWidget() {
   const assistantId = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID
 
   /* state */
-  const [mounted, setMounted] = useState(false)
   const [open, setOpen] = useState(false)
   const [lang, setLang] = useState<Lang>('no')
   const [langOpen, setLangOpen] = useState(false)
@@ -57,8 +56,6 @@ export default function ChatWidget() {
   const vapiRef = useRef<Vapi | null>(null)
   const langRef = useRef(lang)
   langRef.current = lang
-
-  useEffect(() => { setMounted(true) }, [])
 
   /* initialise Vapi */
   useEffect(() => {
@@ -151,7 +148,7 @@ export default function ChatWidget() {
     }
   }, [inputValue, isCallActive, assistantId, lang])
 
-  if (!publicKey || !assistantId || !mounted) return null
+  if (!publicKey || !assistantId) return null
 
   const t = labels[lang]
   const statusText = statusKey ? t[statusKey] || '' : ''
