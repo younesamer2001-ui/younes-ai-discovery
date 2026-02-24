@@ -98,23 +98,22 @@ export default function ChatWidget() {
     }
   }, [])
 
-  /* when language changes mid-call, stop and restart with correct language */
+  /* when language changes mid-call, tell the assistant */
   const switchLang = useCallback((newLang: Lang) => {
     setLang(newLang)
     setLangOpen(false)
     if (isCallActive && vapiRef.current) {
-      /* must restart call to change transcriber language */
-      vapiRef.current.stop()
-      setTimeout(() => {
-        if (!vapiRef.current || !assistantId) return
-        setIsConnecting(true)
-        setStatusKey('connecting')
-        vapiRef.current.start(assistantId, {
-          assistantOverrides: getOverrides(newLang),
-        }).catch(() => { setIsConnecting(false); setStatusKey('') })
-      }, 500)
+      vapiRef.current.send({
+        type: 'add-message',
+        message: {
+          role: 'user',
+          content: newLang === 'en'
+            ? '[System: The user has switched to English. Please respond only in English from now on.]'
+            : '[System: Brukeren har byttet til norsk. Svar kun på norsk fra nå av.]',
+        },
+      })
     }
-  }, [isCallActive, assistantId, getOverrides])
+  }, [isCallActive])
 
   /* toggle voice call */
   const toggleCall = useCallback(async () => {
@@ -124,14 +123,23 @@ export default function ChatWidget() {
     } else {
       setIsConnecting(true)
       setStatusKey('connecting')
+      const overrides = getOverrides(lang)
       try {
-        await vapiRef.current.start(assistantId, {
-          assistantOverrides: getOverrides(lang),
+        await (vapiRef.current as any).start(assistantId, {
+          assistantOverrides: overrides,
         })
       } catch (e) {
         console.error('Failed to start call:', e)
-        setIsConnecting(false)
-        setStatusKey('')
+        /* fallback: try without transcriber override */
+        try {
+          await (vapiRef.current as any).start(assistantId, {
+            assistantOverrides: { firstMessage: overrides.firstMessage },
+          })
+        } catch (e2) {
+          console.error('Fallback also failed:', e2)
+          setIsConnecting(false)
+          setStatusKey('')
+        }
       }
     }
   }, [isCallActive, assistantId, lang, getOverrides])
@@ -148,13 +156,23 @@ export default function ChatWidget() {
       if (!assistantId) return
       setIsConnecting(true)
       setStatusKey('connecting')
-      vapiRef.current.start(assistantId, {
-        assistantOverrides: getOverrides(lang),
+      const overrides = getOverrides(lang)
+      ;(vapiRef.current as any).start(assistantId, {
+        assistantOverrides: overrides,
       }).then(() => {
         setTimeout(() => {
           vapiRef.current?.send({ type: 'add-message', message: { role: 'user', content: text } })
         }, 1500)
-      }).catch(() => { setIsConnecting(false); setStatusKey('') })
+      }).catch(() => {
+        /* fallback without transcriber */
+        ;(vapiRef.current as any).start(assistantId, {
+          assistantOverrides: { firstMessage: overrides.firstMessage },
+        }).then(() => {
+          setTimeout(() => {
+            vapiRef.current?.send({ type: 'add-message', message: { role: 'user', content: text } })
+          }, 1500)
+        }).catch(() => { setIsConnecting(false); setStatusKey('') })
+      })
     }
   }, [inputValue, isCallActive, assistantId, lang, getOverrides])
 
