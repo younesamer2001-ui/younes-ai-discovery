@@ -1,0 +1,19 @@
+# Arxon — AI-automatisering for norske bedrifter
+# https://arxon.no
+
+User-agent: *
+Allow: /
+
+# Disallow admin and internal pages
+Disallow: /admin
+Disallow: /admin/
+Disallow: /login
+Disallow: /login/
+Disallow: /result
+Disallow: /result/
+Disallow: /dashboard
+Disallow: /dashboard/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://arxon.no/sitemap.xml

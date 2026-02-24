@@ -1,6 +1,13 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import ChatWidget from './components/ChatWidget'
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#0a0a0f',
+}
 
 export const metadata: Metadata = {
   title: 'Arxon — AI-telefonsvarer og automatisering for norske bedrifter',
