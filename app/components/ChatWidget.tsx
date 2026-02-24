@@ -109,9 +109,11 @@ export default function ChatWidget() {
       setStatusKey('connecting')
       try {
         await vapiRef.current.start(assistantId, {
-          assistantOverrides: lang === 'en' ? {
-            firstMessage: "Hi, and welcome to Arxon! My name is Finn, and I'm Arxon's AI assistant. How can I help you today?",
-          } : undefined,
+          assistantOverrides: {
+            firstMessage: lang === 'en'
+              ? "Hi, and welcome to Arxon! My name is Finn, and I'm Arxon's AI assistant. How can I help you today?"
+              : "Hei, og velkommen til Arxon! Mitt navn er Finn, og jeg er Arxons AI-assistent. Hvordan kan jeg hjelpe deg i dag?",
+          },
         })
       } catch (e) {
         console.error('Failed to start call:', e)
@@ -134,9 +136,11 @@ export default function ChatWidget() {
       setIsConnecting(true)
       setStatusKey('connecting')
       vapiRef.current.start(assistantId, {
-        assistantOverrides: lang === 'en' ? {
-          firstMessage: "Hi, and welcome to Arxon! My name is Finn, and I'm Arxon's AI assistant. How can I help you today?",
-        } : undefined,
+        assistantOverrides: {
+          firstMessage: lang === 'en'
+            ? "Hi, and welcome to Arxon! My name is Finn, and I'm Arxon's AI assistant. How can I help you today?"
+            : "Hei, og velkommen til Arxon! Mitt navn er Finn, og jeg er Arxons AI-assistent. Hvordan kan jeg hjelpe deg i dag?",
+        },
       }).then(() => {
         setTimeout(() => {
           vapiRef.current?.send({ type: 'add-message', message: { role: 'user', content: text } })
