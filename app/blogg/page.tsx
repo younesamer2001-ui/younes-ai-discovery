@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Clock, ArrowUpRight, BookOpen } from 'lucide-react'
 import Nav from '@/app/components/Nav'
@@ -46,7 +46,6 @@ const articles = [
 
 export default function BlogPage() {
   const [lang, setLang] = useState<'no'|'en'>('no')
-  const router = useRouter()
 
   return (
     <div style={{ minHeight: '100vh', background: `linear-gradient(180deg, ${bg} 0%, #0d0d15 50%, ${bg} 100%)`, color: '#f0f0f0', fontFamily: "'DM Sans', sans-serif" }}>
@@ -71,35 +70,36 @@ export default function BlogPage() {
 
       <section style={{ maxWidth: 750, margin: '0 auto', padding: '0 24px 80px' }}>
         {articles.map((article, i) => (
-          <motion.article key={i} {...fadeUp}
-            onClick={() => router.push(`/blogg/${article.slug}`)}
-            style={{
-              background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)',
-              borderRadius: 18, padding: '32px 28px', marginBottom: 16, cursor: 'pointer',
-              transition: 'all 0.3s', position: 'relative',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = `rgba(${goldRgb},0.2)`; e.currentTarget.style.transform = 'translateY(-2px)' }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.transform = 'translateY(0)' }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-              <span style={{ fontSize: 11, color: gold, background: `rgba(${goldRgb},0.08)`, padding: '3px 10px', borderRadius: 6, fontWeight: 600 }}>
-                {lang === 'no' ? article.tag : article.tagEn}
+          <Link key={i} href={`/blogg/${article.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+            <motion.article {...fadeUp}
+              style={{
+                background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)',
+                borderRadius: 18, padding: '32px 28px', marginBottom: 16, cursor: 'pointer',
+                transition: 'all 0.3s', position: 'relative',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = `rgba(${goldRgb},0.2)`; e.currentTarget.style.transform = 'translateY(-2px)' }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.transform = 'translateY(0)' }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                <span style={{ fontSize: 11, color: gold, background: `rgba(${goldRgb},0.08)`, padding: '3px 10px', borderRadius: 6, fontWeight: 600 }}>
+                  {lang === 'no' ? article.tag : article.tagEn}
+                </span>
+                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <Clock size={11} />{article.readTime}
+                </span>
+                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>{article.date}</span>
+              </div>
+              <h2 style={{ fontSize: 20, fontWeight: 600, fontFamily: "'Playfair Display', serif", marginBottom: 8, lineHeight: 1.3 }}>
+                {lang === 'no' ? article.title : article.titleEn}
+              </h2>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6, marginBottom: 12 }}>
+                {lang === 'no' ? article.excerpt : article.excerptEn}
+              </p>
+              <span style={{ fontSize: 13, color: gold, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
+                {lang === 'no' ? 'Les artikkelen' : 'Read article'} <ArrowUpRight size={14} />
               </span>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                <Clock size={11} />{article.readTime}
-              </span>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>{article.date}</span>
-            </div>
-            <h2 style={{ fontSize: 20, fontWeight: 600, fontFamily: "'Playfair Display', serif", marginBottom: 8, lineHeight: 1.3 }}>
-              {lang === 'no' ? article.title : article.titleEn}
-            </h2>
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6, marginBottom: 12 }}>
-              {lang === 'no' ? article.excerpt : article.excerptEn}
-            </p>
-            <span style={{ fontSize: 13, color: gold, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
-              {lang === 'no' ? 'Les artikkelen' : 'Read article'} <ArrowUpRight size={14} />
-            </span>
-          </motion.article>
+            </motion.article>
+          </Link>
         ))}
       </section>
 

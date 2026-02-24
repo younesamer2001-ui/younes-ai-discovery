@@ -680,9 +680,9 @@ export default function LandingPage() {
           className="hero-title"
           style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(32px, 6vw, 58px)', fontWeight: 700, lineHeight: 1.1, marginBottom: 6, letterSpacing: '-0.02em', position: 'relative' }}>
           {lang === 'no' ? (
-            <>Din bedrift kan nå<br /><span style={{ color: gold }}><Typewriter words={heroWords} /></span></>
+            <>AI-telefonsvarer som kan<br /><span style={{ color: gold }}><Typewriter words={heroWords} /></span></>
           ) : (
-            <>Your business can now<br /><span style={{ color: gold }}><Typewriter words={heroWords} /></span></>
+            <>AI receptionist that can<br /><span style={{ color: gold }}><Typewriter words={heroWords} /></span></>
           )}
         </motion.h1>
 
@@ -1288,10 +1288,10 @@ export default function LandingPage() {
       {/* ── TESTIMONIALS ── */}
       <section id="kundeomtaler" style={{ position: 'relative', zIndex: 1, maxWidth: 1000, margin: '0 auto', padding: '40px 24px 70px', scrollMarginTop: 80 }}>
         <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700, textAlign: 'center', marginBottom: 10 }}>
-          {lang === 'no' ? 'Hva kundene våre sier' : 'What our customers say'}
+          {lang === 'no' ? 'Slik kan Arxon hjelpe din bedrift' : 'How Arxon can help your business'}
         </motion.h2>
         <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 15, marginBottom: 40, maxWidth: 500, margin: '0 auto 40px' }}>
-          {lang === 'no' ? 'Norske bedrifter som allerede sparer tid og penger med Arxon' : 'Norwegian businesses already saving time and money with Arxon'}
+          {lang === 'no' ? 'Illustrative eksempler basert på typiske norske bedrifter' : 'Illustrative examples based on typical Norwegian businesses'}
         </motion.p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
           {(lang === 'no' ? [
@@ -1601,7 +1601,7 @@ export default function LandingPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>{lang === 'no' ? 'Kontakt' : 'Contact'}</span>
               <a href="mailto:kontakt@arxon.no" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>kontakt@arxon.no</a>
-              <a href="tel:+4712345678" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>+47 123 45 678</a>
+              <a href="mailto:kontakt@arxon.no" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>kontakt@arxon.no</a>
               <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Oslo, Norge</span>
             </div>
             {/* Juridisk */}
@@ -1616,7 +1616,7 @@ export default function LandingPage() {
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>&copy; {new Date().getFullYear()} Arxon. {lang === 'no' ? 'Alle rettigheter reservert.' : 'All rights reserved.'}</span>
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.15)' }}>Org.nr: 000 000 000</span>
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.15)' }}>Enkeltpersonforetak under registrering</span>
           </div>
           <div style={{ display: 'flex', gap: 16, fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>
             <span>{lang === 'no' ? 'GDPR-kompatibel' : 'GDPR Compliant'}</span>

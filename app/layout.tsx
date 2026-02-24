@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import ChatWidget from './components/ChatWidget'
+import CookieConsent from './components/CookieConsent'
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -179,6 +180,7 @@ export default function RootLayout({
       <body className="min-h-screen antialiased" style={{ backgroundColor: '#0a0a0f', color: '#e0e0e0' }}>
         {children}
         <ChatWidget />
+        <CookieConsent />
       </body>
     </html>
   )
