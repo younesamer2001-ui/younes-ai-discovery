@@ -40,6 +40,7 @@ export default function ChatWidget() {
 
   const vapiRef = useRef<Vapi | null>(null)
   const pendingMessageRef = useRef<string | null>(null)
+  const pendingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   /* initialise Vapi */
   useEffect(() => {
@@ -49,21 +50,27 @@ export default function ChatWidget() {
 
     vapi.on('call-start', () => {
       setIsCallActive(true); setIsConnecting(false); setStatusKey('connected')
-    })
-    vapi.on('call-end', () => { setIsCallActive(false); setIsSpeaking(false); setIsListening(false); setVolumeLevel(0); setIsConnecting(false); setStatusKey('') })
-    vapi.on('speech-start', () => { setIsSpeaking(true); setIsListening(false); setStatusKey('speaking') })
-    vapi.on('speech-end', () => {
-      setIsSpeaking(false); setStatusKey('listening')
-      /* After Finn finishes his short greeting, inject the pending question as a user message */
+      /* Fallback: if firstMessageMode + model.messages didn't work,
+         send the pending question via add-message after a delay */
       if (pendingMessageRef.current) {
         const msg = pendingMessageRef.current
         pendingMessageRef.current = null
-        vapi.send({
-          type: 'add-message',
-          message: { role: 'user', content: msg },
-        })
+        pendingTimerRef.current = setTimeout(() => {
+          pendingTimerRef.current = null
+          vapi.send({
+            type: 'add-message',
+            message: { role: 'user', content: msg },
+          })
+        }, 3000)
       }
     })
+    vapi.on('call-end', () => {
+      setIsCallActive(false); setIsSpeaking(false); setIsListening(false); setVolumeLevel(0); setIsConnecting(false); setStatusKey('')
+      if (pendingTimerRef.current) { clearTimeout(pendingTimerRef.current); pendingTimerRef.current = null }
+      pendingMessageRef.current = null
+    })
+    vapi.on('speech-start', () => { setIsSpeaking(true); setIsListening(false); setStatusKey('speaking') })
+    vapi.on('speech-end', () => { setIsSpeaking(false); setStatusKey('listening') })
     vapi.on('volume-level', (level: number) => { setVolumeLevel(level) })
     vapi.on('message', (msg: any) => {
       if (msg.type === 'transcript') {
@@ -109,7 +116,12 @@ export default function ChatWidget() {
       setStatusKey('connecting')
       vapiRef.current.start(assistantId, {
         assistantOverrides: {
-          firstMessage: 'Hei!',
+          firstMessageMode: 'assistant-speaks-first-with-model-generated-message' as any,
+          model: {
+            messages: [
+              { role: 'user' as const, content: text },
+            ],
+          },
         },
       }).catch(() => { pendingMessageRef.current = null; setIsConnecting(false); setStatusKey('') })
     }
@@ -323,7 +335,12 @@ export default function ChatWidget() {
                     setStatusKey('connecting')
                     vapiRef.current.start(assistantId, {
                       assistantOverrides: {
-                        firstMessage: 'Hei!',
+                        firstMessageMode: 'assistant-speaks-first-with-model-generated-message' as any,
+                        model: {
+                          messages: [
+                            { role: 'user' as const, content: btn.msg },
+                          ],
+                        },
                       },
                     }).catch(() => {
                       pendingMessageRef.current = null
