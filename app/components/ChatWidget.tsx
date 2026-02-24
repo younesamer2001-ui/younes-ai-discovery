@@ -82,21 +82,11 @@ export default function ChatWidget() {
     return () => { vapi.stop() }
   }, [publicKey])
 
-  /* build overrides based on language selection */
-  const getOverrides = useCallback((selectedLang: Lang) => {
-    const isEn = selectedLang === 'en'
-    return {
-      firstMessage: isEn
-        ? "Hi, and welcome to Arxon! My name is Finn, and I'm Arxon's AI assistant. How can I help you today?"
-        : "Hei, og velkommen til Arxon! Mitt navn er Finn, og jeg er Arxons AI-assistent. Hvordan kan jeg hjelpe deg i dag?",
-      transcriber: {
-        provider: 'deepgram' as const,
-        model: 'nova-2' as const,
-        language: isEn ? 'en' : 'no',
-        keywords: ['Arxon:5', 'AI:3'],
-      },
-    }
-  }, [])
+  /* get firstMessage based on language */
+  const getFirstMessage = (selectedLang: Lang) =>
+    selectedLang === 'en'
+      ? "Hi, and welcome to Arxon! My name is Finn, and I'm Arxon's AI assistant. How can I help you today?"
+      : "Hei, og velkommen til Arxon! Mitt navn er Finn, og jeg er Arxons AI-assistent. Hvordan kan jeg hjelpe deg i dag?"
 
   /* when language changes mid-call, tell the assistant */
   const switchLang = useCallback((newLang: Lang) => {
@@ -123,26 +113,19 @@ export default function ChatWidget() {
     } else {
       setIsConnecting(true)
       setStatusKey('connecting')
-      const overrides = getOverrides(lang)
       try {
-        await (vapiRef.current as any).start(assistantId, {
-          assistantOverrides: overrides,
+        await vapiRef.current.start(assistantId, {
+          assistantOverrides: {
+            firstMessage: getFirstMessage(lang),
+          },
         })
       } catch (e) {
         console.error('Failed to start call:', e)
-        /* fallback: try without transcriber override */
-        try {
-          await (vapiRef.current as any).start(assistantId, {
-            assistantOverrides: { firstMessage: overrides.firstMessage },
-          })
-        } catch (e2) {
-          console.error('Fallback also failed:', e2)
-          setIsConnecting(false)
-          setStatusKey('')
-        }
+        setIsConnecting(false)
+        setStatusKey('')
       }
     }
-  }, [isCallActive, assistantId, lang, getOverrides])
+  }, [isCallActive, assistantId, lang])
 
   /* send text message during call */
   const sendMessage = useCallback(() => {
@@ -156,25 +139,17 @@ export default function ChatWidget() {
       if (!assistantId) return
       setIsConnecting(true)
       setStatusKey('connecting')
-      const overrides = getOverrides(lang)
-      ;(vapiRef.current as any).start(assistantId, {
-        assistantOverrides: overrides,
+      vapiRef.current.start(assistantId, {
+        assistantOverrides: {
+          firstMessage: getFirstMessage(lang),
+        },
       }).then(() => {
         setTimeout(() => {
           vapiRef.current?.send({ type: 'add-message', message: { role: 'user', content: text } })
         }, 1500)
-      }).catch(() => {
-        /* fallback without transcriber */
-        ;(vapiRef.current as any).start(assistantId, {
-          assistantOverrides: { firstMessage: overrides.firstMessage },
-        }).then(() => {
-          setTimeout(() => {
-            vapiRef.current?.send({ type: 'add-message', message: { role: 'user', content: text } })
-          }, 1500)
-        }).catch(() => { setIsConnecting(false); setStatusKey('') })
-      })
+      }).catch(() => { setIsConnecting(false); setStatusKey('') })
     }
-  }, [inputValue, isCallActive, assistantId, lang, getOverrides])
+  }, [inputValue, isCallActive, assistantId, lang])
 
   if (!publicKey || !assistantId || !mounted) return null
 
