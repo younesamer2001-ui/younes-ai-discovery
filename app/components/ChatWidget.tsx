@@ -416,6 +416,69 @@ export default function ChatWidget() {
             </div>
           </div>
 
+          {/* quick-action suggestion buttons — shown when idle */}
+          {!isActive && (
+            <div style={{ padding: '0 14px 10px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', textAlign: 'center', marginBottom: 2 }}>
+                {lang === 'no' ? 'Eller velg et tema:' : 'Or pick a topic:'}
+              </div>
+              {(lang === 'no' ? [
+                { label: 'Hva koster det?', msg: 'Hva koster Arxon sine tjenester?' },
+                { label: 'Hvilken pakke passer meg?', msg: 'Jeg vil finne ut hvilken pakke som passer for min bedrift.' },
+                { label: 'Hvordan fungerer det?', msg: 'Kan du forklare hvordan Arxon fungerer i praksis?' },
+                { label: 'Book en samtale', msg: 'Jeg vil gjerne booke en uforpliktende samtale med dere.' },
+              ] : [
+                { label: 'What does it cost?', msg: 'What are Arxon\'s prices?' },
+                { label: 'Which package fits me?', msg: 'I want to find out which package fits my business.' },
+                { label: 'How does it work?', msg: 'Can you explain how Arxon works in practice?' },
+                { label: 'Book a call', msg: 'I\'d like to book a free consultation call.' },
+              ]).map((btn, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setInputValue(btn.msg)
+                    setTimeout(() => {
+                      if (!vapiRef.current || !assistantId) return
+                      setIsConnecting(true)
+                      setStatusKey('connecting')
+                      vapiRef.current.start(assistantId, {
+                        assistantOverrides: { firstMessage: getFirstMessage(lang) },
+                      }).then(() => {
+                        setTimeout(() => {
+                          vapiRef.current?.send({ type: 'add-message', message: { role: 'user', content: btn.msg } })
+                        }, 1500)
+                        setInputValue('')
+                      }).catch(() => { setIsConnecting(false); setStatusKey(''); setInputValue('') })
+                    }, 100)
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    borderRadius: 10,
+                    color: textPrimary,
+                    fontSize: 12,
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    transition: 'all 0.15s',
+                    fontFamily: 'inherit',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = `rgba(201,169,110,0.08)`
+                    e.currentTarget.style.borderColor = `rgba(201,169,110,0.15)`
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.03)'
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'
+                  }}
+                >
+                  {btn.label}
+                </button>
+              ))}
+            </div>
+          )}
+
           {/* text input */}
           <div style={{ padding: '0 14px 14px' }}>
             <div style={{

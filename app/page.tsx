@@ -1521,6 +1521,77 @@ export default function LandingPage() {
         </div>
       </motion.section>
 
+      {/* ── BOOK A CALL SECTION ── */}
+      <motion.section {...fadeUp} id="book" style={{ position: 'relative', zIndex: 1, maxWidth: 800, margin: '0 auto', padding: '0 24px 60px' }}>
+        <div style={{
+          display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24,
+          background: `linear-gradient(135deg, rgba(${goldRgb},0.04) 0%, rgba(${goldRgb},0.01) 100%)`,
+          border: `1px solid rgba(${goldRgb},0.12)`, borderRadius: 24, padding: '44px 36px',
+          position: 'relative', overflow: 'hidden',
+        }}>
+          <div style={{ position: 'absolute', top: -80, left: -80, width: 250, height: 250, background: `radial-gradient(circle, rgba(${goldRgb},0.06) 0%, transparent 70%)`, pointerEvents: 'none' }} />
+
+          <div style={{ position: 'relative' }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3.5vw, 30px)', fontWeight: 700, marginBottom: 12 }}>
+              {lang === 'no' ? 'Snakk med oss — helt uforpliktende' : 'Talk to us — no obligations'}
+            </h2>
+            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, lineHeight: 1.7, marginBottom: 24 }}>
+              {lang === 'no'
+                ? 'Book en gratis 15-minutters videoprat. Vi ser på hva AI kan gjøre for akkurat din bedrift — ingen salgstrykk, bare konkrete svar.'
+                : 'Book a free 15-minute video call. We\'ll look at what AI can do for your specific business — no sales pressure, just concrete answers.'}
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {(lang === 'no' ? [
+                'Vi analyserer dine behov på forhånd',
+                'Du får konkrete anbefalinger i møtet',
+                'Ingen binding — du bestemmer selv etterpå',
+              ] : [
+                'We analyze your needs beforehand',
+                'You get concrete recommendations in the meeting',
+                'No commitment — you decide afterwards',
+              ]).map((item, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>
+                  <CheckCircle2 size={15} color={gold} style={{ flexShrink: 0 }} />
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, position: 'relative' }}>
+            <div style={{
+              background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
+              borderRadius: 16, padding: '28px 24px', textAlign: 'center', width: '100%',
+            }}>
+              <div style={{ fontSize: 40, marginBottom: 8 }}>📅</div>
+              <div style={{ fontSize: 15, fontWeight: 600, color: '#e8e8ed', marginBottom: 4 }}>
+                {lang === 'no' ? '15 min videoprat' : '15 min video call'}
+              </div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginBottom: 20 }}>
+                {lang === 'no' ? 'Gratis og uforpliktende' : 'Free and no obligations'}
+              </div>
+              <a
+                href="https://cal.com/arxon/15min"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cta-shimmer"
+                style={{
+                  display: 'inline-block', color: bg, border: 'none', borderRadius: 12, padding: '14px 32px',
+                  fontWeight: 700, fontSize: 15, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                  boxShadow: `0 6px 24px rgba(${goldRgb},0.2)`, textDecoration: 'none', transition: 'all 0.2s',
+                }}
+              >
+                {lang === 'no' ? 'Book samtale nå' : 'Book a call now'}
+                <ArrowRight size={16} style={{ display: 'inline', marginLeft: 8, verticalAlign: 'middle' }} />
+              </a>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', marginTop: 12 }}>
+                {lang === 'no' ? 'Eller send e-post til kontakt@arxon.no' : 'Or email kontakt@arxon.no'}
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
       {/* ── FINAL CTA ── */}
       <motion.section {...fadeUp} style={{ position: 'relative', zIndex: 1, maxWidth: 700, margin: '0 auto', padding: '0 24px 80px', textAlign: 'center' }}>
         <div style={{
@@ -1539,14 +1610,23 @@ export default function LandingPage() {
               ? 'For hver dag uten AI mister du potensielle kunder. Finn ut nøyaktig hva det koster deg — det tar kun 2 minutter.'
               : 'Every day without AI means lost customers. Find out exactly what it costs you — takes only 2 minutes.'}
           </p>
-          <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
-            color: bg, border: 'none', borderRadius: 14, padding: '17px 40px',
-            fontWeight: 700, fontSize: 17, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-            boxShadow: `0 8px 32px rgba(${goldRgb},0.25)`, transition: 'all 0.2s',
-          }}>
-            {lang === 'no' ? 'Se hva du taper — gratis' : 'See what you\'re losing — free'}
-            <ArrowRight size={18} style={{ display: 'inline', marginLeft: 8, verticalAlign: 'middle' }} />
-          </button>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 14 }}>
+            <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
+              color: bg, border: 'none', borderRadius: 14, padding: '17px 40px',
+              fontWeight: 700, fontSize: 17, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+              boxShadow: `0 8px 32px rgba(${goldRgb},0.25)`, transition: 'all 0.2s',
+            }}>
+              {lang === 'no' ? 'Se hva du taper — gratis' : 'See what you\'re losing — free'}
+              <ArrowRight size={18} style={{ display: 'inline', marginLeft: 8, verticalAlign: 'middle' }} />
+            </button>
+            <a href="https://cal.com/arxon/15min" target="_blank" rel="noopener noreferrer" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8, color: gold, border: `1px solid rgba(${goldRgb},0.3)`, borderRadius: 14, padding: '17px 32px',
+              fontWeight: 600, fontSize: 15, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+              textDecoration: 'none', transition: 'all 0.2s', background: `rgba(${goldRgb},0.05)`,
+            }}>
+              📅 {lang === 'no' ? 'Book en samtale' : 'Book a call'}
+            </a>
+          </div>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', marginTop: 20 }}>
             {lang === 'no' ? 'Helt gratis og uforpliktende — ingen kredittkort nødvendig.' : 'Completely free with no obligations — no credit card required.'}
           </p>
@@ -1601,7 +1681,7 @@ export default function LandingPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>{lang === 'no' ? 'Kontakt' : 'Contact'}</span>
               <a href="mailto:kontakt@arxon.no" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>kontakt@arxon.no</a>
-              <a href="mailto:kontakt@arxon.no" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>kontakt@arxon.no</a>
+              <a href="https://cal.com/arxon/15min" target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Book en samtale' : 'Book a call'}</a>
               <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Oslo, Norge</span>
             </div>
             {/* Juridisk */}
