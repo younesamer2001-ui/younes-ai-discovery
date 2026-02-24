@@ -49,13 +49,19 @@ export default function ChatWidget() {
 
     vapi.on('call-start', () => {
       setIsCallActive(true); setIsConnecting(false); setStatusKey('connected')
-      /* If a suggestion was clicked, send the question now that the call is live */
+      /* If a suggestion was clicked, inject it as a system message so the LLM answers it */
       if (pendingMessageRef.current) {
         const msg = pendingMessageRef.current
         pendingMessageRef.current = null
         setTimeout(() => {
-          vapi.send({ type: 'add-message', message: { role: 'user', content: msg } })
-        }, 300)
+          vapi.send({
+            type: 'add-message',
+            message: {
+              role: 'system',
+              content: `Kunden har nettopp stilt følgende spørsmål via en knapp på nettsiden: "${msg}". Svar DIREKTE på dette spørsmålet nå. Ikke repeter hilsenen din.`,
+            },
+          })
+        }, 500)
       }
     })
     vapi.on('call-end', () => { setIsCallActive(false); setIsSpeaking(false); setIsListening(false); setVolumeLevel(0); setIsConnecting(false); setStatusKey('') })
@@ -106,7 +112,7 @@ export default function ChatWidget() {
       setStatusKey('connecting')
       vapiRef.current.start(assistantId, {
         assistantOverrides: {
-          firstMessage: '',
+          firstMessage: 'Hei! Bra spørsmål, la meg svare på det.',
         },
       }).catch(() => { pendingMessageRef.current = null; setIsConnecting(false); setStatusKey('') })
     }
@@ -320,7 +326,7 @@ export default function ChatWidget() {
                     setStatusKey('connecting')
                     vapiRef.current.start(assistantId, {
                       assistantOverrides: {
-                        firstMessage: '',
+                        firstMessage: 'Hei! Bra spørsmål, la meg svare på det.',
                       },
                     }).catch(() => {
                       pendingMessageRef.current = null
