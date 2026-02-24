@@ -49,24 +49,21 @@ export default function ChatWidget() {
 
     vapi.on('call-start', () => {
       setIsCallActive(true); setIsConnecting(false); setStatusKey('connected')
-      /* If a suggestion was clicked, inject it as a system message so the LLM answers it */
-      if (pendingMessageRef.current) {
-        const msg = pendingMessageRef.current
-        pendingMessageRef.current = null
-        setTimeout(() => {
-          vapi.send({
-            type: 'add-message',
-            message: {
-              role: 'system',
-              content: `Kunden har nettopp stilt følgende spørsmål via en knapp på nettsiden: "${msg}". Svar DIREKTE på dette spørsmålet nå. Ikke repeter hilsenen din.`,
-            },
-          })
-        }, 500)
-      }
     })
     vapi.on('call-end', () => { setIsCallActive(false); setIsSpeaking(false); setIsListening(false); setVolumeLevel(0); setIsConnecting(false); setStatusKey('') })
     vapi.on('speech-start', () => { setIsSpeaking(true); setIsListening(false); setStatusKey('speaking') })
-    vapi.on('speech-end', () => { setIsSpeaking(false); setStatusKey('listening') })
+    vapi.on('speech-end', () => {
+      setIsSpeaking(false); setStatusKey('listening')
+      /* After Finn finishes his short greeting, inject the pending question as a user message */
+      if (pendingMessageRef.current) {
+        const msg = pendingMessageRef.current
+        pendingMessageRef.current = null
+        vapi.send({
+          type: 'add-message',
+          message: { role: 'user', content: msg },
+        })
+      }
+    })
     vapi.on('volume-level', (level: number) => { setVolumeLevel(level) })
     vapi.on('message', (msg: any) => {
       if (msg.type === 'transcript') {
@@ -112,7 +109,7 @@ export default function ChatWidget() {
       setStatusKey('connecting')
       vapiRef.current.start(assistantId, {
         assistantOverrides: {
-          firstMessage: 'Hei! Bra spørsmål, la meg svare på det.',
+          firstMessage: 'Hei!',
         },
       }).catch(() => { pendingMessageRef.current = null; setIsConnecting(false); setStatusKey('') })
     }
@@ -326,7 +323,7 @@ export default function ChatWidget() {
                     setStatusKey('connecting')
                     vapiRef.current.start(assistantId, {
                       assistantOverrides: {
-                        firstMessage: 'Hei! Bra spørsmål, la meg svare på det.',
+                        firstMessage: 'Hei!',
                       },
                     }).catch(() => {
                       pendingMessageRef.current = null
