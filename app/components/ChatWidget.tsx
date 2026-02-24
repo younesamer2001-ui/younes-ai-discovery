@@ -39,6 +39,7 @@ export default function ChatWidget() {
   const [statusKey, setStatusKey] = useState<StatusKey>('')
 
   const vapiRef = useRef<Vapi | null>(null)
+  const pendingMessageRef = useRef<string | null>(null)
 
   /* initialise Vapi */
   useEffect(() => {
@@ -46,7 +47,17 @@ export default function ChatWidget() {
     const vapi = new Vapi(publicKey)
     vapiRef.current = vapi
 
-    vapi.on('call-start', () => { setIsCallActive(true); setIsConnecting(false); setStatusKey('connected') })
+    vapi.on('call-start', () => {
+      setIsCallActive(true); setIsConnecting(false); setStatusKey('connected')
+      /* If a suggestion was clicked, send the question now that the call is live */
+      if (pendingMessageRef.current) {
+        const msg = pendingMessageRef.current
+        pendingMessageRef.current = null
+        setTimeout(() => {
+          vapi.send({ type: 'add-message', message: { role: 'user', content: msg } })
+        }, 300)
+      }
+    })
     vapi.on('call-end', () => { setIsCallActive(false); setIsSpeaking(false); setIsListening(false); setVolumeLevel(0); setIsConnecting(false); setStatusKey('') })
     vapi.on('speech-start', () => { setIsSpeaking(true); setIsListening(false); setStatusKey('speaking') })
     vapi.on('speech-end', () => { setIsSpeaking(false); setStatusKey('listening') })
@@ -90,13 +101,14 @@ export default function ChatWidget() {
       vapiRef.current.send({ type: 'add-message', message: { role: 'user', content: text } })
     } else {
       if (!assistantId) return
+      pendingMessageRef.current = text
       setIsConnecting(true)
       setStatusKey('connecting')
-      vapiRef.current.start(assistantId).then(() => {
-        setTimeout(() => {
-          vapiRef.current?.send({ type: 'add-message', message: { role: 'user', content: text } })
-        }, 1500)
-      }).catch(() => { setIsConnecting(false); setStatusKey('') })
+      vapiRef.current.start(assistantId, {
+        assistantOverrides: {
+          firstMessage: '',
+        },
+      }).catch(() => { pendingMessageRef.current = null; setIsConnecting(false); setStatusKey('') })
     }
   }, [inputValue, isCallActive, assistantId])
 
@@ -302,18 +314,19 @@ export default function ChatWidget() {
                 <button
                   key={i}
                   onClick={() => {
-                    setInputValue(btn.msg)
-                    setTimeout(() => {
-                      if (!vapiRef.current || !assistantId) return
-                      setIsConnecting(true)
-                      setStatusKey('connecting')
-                      vapiRef.current.start(assistantId).then(() => {
-                        setTimeout(() => {
-                          vapiRef.current?.send({ type: 'add-message', message: { role: 'user', content: btn.msg } })
-                        }, 1500)
-                        setInputValue('')
-                      }).catch(() => { setIsConnecting(false); setStatusKey(''); setInputValue('') })
-                    }, 100)
+                    if (!vapiRef.current || !assistantId) return
+                    pendingMessageRef.current = btn.msg
+                    setIsConnecting(true)
+                    setStatusKey('connecting')
+                    vapiRef.current.start(assistantId, {
+                      assistantOverrides: {
+                        firstMessage: '',
+                      },
+                    }).catch(() => {
+                      pendingMessageRef.current = null
+                      setIsConnecting(false)
+                      setStatusKey('')
+                    })
                   }}
                   style={{
                     width: '100%',
