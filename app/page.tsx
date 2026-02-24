@@ -988,6 +988,10 @@ export default function LandingPage() {
               type="range" min={1} max={30} value={missedCalls}
               onChange={(e) => setMissedCalls(Number(e.target.value))}
               style={{ width: '100%' }}
+              aria-label={lang === 'no' ? `Tapte henvendelser per uke: ${missedCalls}` : `Missed inquiries per week: ${missedCalls}`}
+              aria-valuemin={1}
+              aria-valuemax={30}
+              aria-valuenow={missedCalls}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'rgba(255,255,255,0.25)', marginTop: 4 }}>
               <span>1</span><span>30</span>
@@ -1369,6 +1373,12 @@ export default function LandingPage() {
                 background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 18,
                 padding: '28px 24px', transition: 'all 0.3s ease', display: 'flex', flexDirection: 'column',
               }}>
+              {/* Illustrative example badge */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', padding: '2px 8px', borderRadius: 4, fontWeight: 500, letterSpacing: '0.5px', textTransform: 'uppercase' as const }}>
+                  {lang === 'no' ? 'Illustrativt eksempel' : 'Illustrative example'}
+                </span>
+              </div>
               {/* Stars */}
               <div style={{ display: 'flex', gap: 3, marginBottom: 16 }}>
                 {Array.from({ length: t.stars }).map((_, s) => (

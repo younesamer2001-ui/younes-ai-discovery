@@ -15,7 +15,7 @@ const articles = [
     titleEn: 'How much do missed calls cost Norwegian businesses?',
     excerpt: 'Norske SMB-er taper potensielt hundretusenvis av kroner årlig på telefoner som ingen svarer. Vi ser på tallene.',
     excerptEn: 'Norwegian SMEs potentially lose hundreds of thousands of NOK annually on unanswered phones. We look at the numbers.',
-    date: '2025-02-15',
+    date: '2026-02-21',
     readTime: '5 min',
     tag: 'Innsikt',
     tagEn: 'Insight',
@@ -26,7 +26,7 @@ const articles = [
     titleEn: 'Norway leads the AI revolution in Europe — what does it mean for your business?',
     excerpt: 'Med 46% AI-adopsjon er Norge nummer 1 i Europa. Slik kan du utnytte denne trenden for å få et konkurransefortrinn.',
     excerptEn: 'With 46% AI adoption, Norway is #1 in Europe. Here\'s how you can leverage this trend for a competitive edge.',
-    date: '2025-02-10',
+    date: '2026-02-21',
     readTime: '6 min',
     tag: 'Trender',
     tagEn: 'Trends',
@@ -37,7 +37,7 @@ const articles = [
     titleEn: 'GDPR and AI phone answering: Everything you need to know',
     excerpt: 'Kan du bruke AI til å svare telefonen og samtidig følge GDPR? Ja — her er hvordan vi gjør det trygt og lovlig.',
     excerptEn: 'Can you use AI to answer phones while following GDPR? Yes — here\'s how we do it safely and legally.',
-    date: '2025-02-05',
+    date: '2026-02-21',
     readTime: '7 min',
     tag: 'Juridisk',
     tagEn: 'Legal',
@@ -87,7 +87,9 @@ export default function BlogPage() {
                 <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', gap: 4 }}>
                   <Clock size={11} />{article.readTime}
                 </span>
-                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>{article.date}</span>
+                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>
+                  {new Date(article.date).toLocaleDateString(lang === 'no' ? 'nb-NO' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                </span>
               </div>
               <h2 style={{ fontSize: 20, fontWeight: 600, fontFamily: "'Playfair Display', serif", marginBottom: 8, lineHeight: 1.3 }}>
                 {lang === 'no' ? article.title : article.titleEn}

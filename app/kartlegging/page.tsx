@@ -1031,24 +1031,24 @@ function KartleggingApp() {
                 <h1 style={{ ...headingFont, fontSize: 'clamp(26px, 5vw, 36px)', fontWeight: 700, lineHeight: 1.2, marginBottom: 14 }}>{t('phase1_title', lang)}</h1>
                 <p style={{ color: textSecondary, fontSize: 15, maxWidth: 540, margin: '0 auto', lineHeight: 1.6 }}>{t('phase1_subtitle', lang)}</p>
               </div>
-              <div style={{ ...cardStyle, display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div style={{ ...cardStyle, display: 'flex', flexDirection: 'column', gap: 16 }} role="form" aria-label={lang === 'no' ? 'Kontaktskjema for kartlegging' : 'Contact form for assessment'}>
                 <div>
-                  <label style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>{t('company_name', lang)}</label>
-                  <input style={inputStyle} value={contact.company} onChange={(e) => setContact({ ...contact, company: e.target.value })} />
+                  <label htmlFor="k-company" style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>{t('company_name', lang)}</label>
+                  <input id="k-company" autoComplete="organization" style={inputStyle} value={contact.company} onChange={(e) => setContact({ ...contact, company: e.target.value })} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>{t('contact_name', lang)}</label>
-                  <input style={inputStyle} value={contact.name} onChange={(e) => setContact({ ...contact, name: e.target.value })} />
+                  <label htmlFor="k-name" style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>{t('contact_name', lang)}</label>
+                  <input id="k-name" autoComplete="name" style={inputStyle} value={contact.name} onChange={(e) => setContact({ ...contact, name: e.target.value })} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>{t('email', lang)}</label>
-                  <input type="email" style={{ ...inputStyle, borderColor: emailError ? '#ef4444' : cardBorder }} value={contact.email} onChange={(e) => { setContact({ ...contact, email: e.target.value }); setEmailError('') }} />
-                  {emailError && <span style={{ color: '#ef4444', fontSize: 12, marginTop: 4, display: 'block' }}>{emailError}</span>}
+                  <label htmlFor="k-email" style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>{t('email', lang)}</label>
+                  <input id="k-email" type="email" autoComplete="email" aria-invalid={!!emailError} aria-describedby={emailError ? 'k-email-error' : undefined} style={{ ...inputStyle, borderColor: emailError ? '#ef4444' : cardBorder }} value={contact.email} onChange={(e) => { setContact({ ...contact, email: e.target.value }); setEmailError('') }} />
+                  {emailError && <span id="k-email-error" role="alert" style={{ color: '#ef4444', fontSize: 12, marginTop: 4, display: 'block' }}>{emailError}</span>}
                 </div>
                 <div>
-                  <label style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>{t('phone', lang)} <span style={{ color: gold }}>*</span></label>
-                  <input type="tel" style={{ ...inputStyle, borderColor: phoneError ? '#ef4444' : cardBorder }} value={contact.phone} onChange={(e) => { setContact({ ...contact, phone: e.target.value }); setPhoneError('') }} placeholder={lang === 'no' ? 'F.eks. 412 34 567' : 'E.g. 412 34 567'} />
-                  {phoneError && <span style={{ color: '#ef4444', fontSize: 12, marginTop: 4, display: 'block' }}>{phoneError}</span>}
+                  <label htmlFor="k-phone" style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>{t('phone', lang)} <span style={{ color: gold }}>*</span></label>
+                  <input id="k-phone" type="tel" autoComplete="tel" aria-invalid={!!phoneError} aria-describedby={phoneError ? 'k-phone-error' : undefined} style={{ ...inputStyle, borderColor: phoneError ? '#ef4444' : cardBorder }} value={contact.phone} onChange={(e) => { setContact({ ...contact, phone: e.target.value }); setPhoneError('') }} placeholder={lang === 'no' ? 'F.eks. 412 34 567' : 'E.g. 412 34 567'} />
+                  {phoneError && <span id="k-phone-error" role="alert" style={{ color: '#ef4444', fontSize: 12, marginTop: 4, display: 'block' }}>{phoneError}</span>}
                 </div>
                 <button style={{ ...btnPrimary, marginTop: 8, opacity: (!contact.company || !contact.name || !contact.email || !contact.phone) ? 0.4 : 1 }} onClick={handleContactSubmit} disabled={!contact.company || !contact.name || !contact.email || !contact.phone}>{t('start_btn', lang)}</button>
                 <p style={{ color: textMuted, fontSize: 12, lineHeight: 1.5, textAlign: 'center', marginTop: 4 }}>{t('gdpr_note', lang)}</p>
@@ -1567,15 +1567,48 @@ function KartleggingApp() {
 }
 
 /* ════════════════════════════════════════════
+   LOADING FALLBACK
+   ════════════════════════════════════════════ */
+function KartleggingFallback() {
+  return (
+    <div style={{ minHeight: '100vh', background: '#0a0a0f', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      {/* Animated spinner */}
+      <div style={{ width: 48, height: 48, border: '3px solid rgba(201,169,110,0.15)', borderTopColor: '#c9a96e', borderRadius: '50%', animation: 'spin 0.8s linear infinite', marginBottom: 24 }} />
+      <div style={{ color: '#c9a96e', fontSize: 18, fontFamily: "'DM Sans', sans-serif", marginBottom: 8 }}>Laster kartlegging...</div>
+      <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 13, fontFamily: "'DM Sans', sans-serif", textAlign: 'center', maxWidth: 400, lineHeight: 1.6 }}>
+        Hvis siden ikke laster, kan du kontakte oss direkte på{' '}
+        <a href="mailto:kontakt@arxon.no" style={{ color: '#c9a96e', textDecoration: 'underline' }}>kontakt@arxon.no</a>{' '}
+        eller{' '}
+        <a href="https://cal.com/arxon/15min" target="_blank" rel="noopener noreferrer" style={{ color: '#c9a96e', textDecoration: 'underline' }}>book en samtale</a>.
+      </div>
+      <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+      {/* noscript fallback for users/crawlers without JS */}
+      <noscript>
+        <div style={{ marginTop: 40, padding: 32, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(201,169,110,0.15)', borderRadius: 16, maxWidth: 500, textAlign: 'center' }}>
+          <h2 style={{ color: '#fff', fontSize: 22, marginBottom: 12, fontFamily: "'DM Sans', sans-serif" }}>Gratis AI-kartlegging</h2>
+          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, lineHeight: 1.6, marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>
+            Kartleggingen krever JavaScript. Du kan i stedet kontakte oss direkte:
+          </p>
+          <a href="mailto:kontakt@arxon.no?subject=Gratis%20AI-kartlegging&body=Hei%2C%20jeg%20%C3%B8nsker%20en%20gratis%20kartlegging%20av%20AI-muligheter%20for%20min%20bedrift."
+            style={{ display: 'inline-block', padding: '12px 28px', background: '#c9a96e', color: '#0a0a0f', borderRadius: 10, textDecoration: 'none', fontWeight: 600, fontSize: 14, marginRight: 12 }}>
+            Send e-post
+          </a>
+          <a href="https://cal.com/arxon/15min" target="_blank" rel="noopener noreferrer"
+            style={{ display: 'inline-block', padding: '12px 28px', border: '1px solid rgba(201,169,110,0.3)', color: '#c9a96e', borderRadius: 10, textDecoration: 'none', fontWeight: 600, fontSize: 14 }}>
+            Book samtale
+          </a>
+        </div>
+      </noscript>
+    </div>
+  )
+}
+
+/* ════════════════════════════════════════════
    PAGE EXPORT WITH SUSPENSE
    ════════════════════════════════════════════ */
 export default function KartleggingPage() {
   return (
-    <Suspense fallback={
-      <div style={{ minHeight: '100vh', background: '#0a0a0f', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ color: '#c9a96e', fontSize: 18, fontFamily: "'DM Sans', sans-serif" }}>Laster...</div>
-      </div>
-    }>
+    <Suspense fallback={<KartleggingFallback />}>
       <KartleggingApp />
     </Suspense>
   )

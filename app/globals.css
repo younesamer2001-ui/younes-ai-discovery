@@ -83,3 +83,39 @@ body {
 
 .pulse-dot:nth-child(2) { animation-delay: 0.3s; }
 .pulse-dot:nth-child(3) { animation-delay: 0.6s; }
+
+/* ── WCAG Focus Styles ── */
+*:focus-visible {
+  outline: 2px solid #c9a96e;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Skip-to-content link (screen readers / keyboard nav) */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 16px;
+  background: #c9a96e;
+  color: #0a0a0f;
+  padding: 8px 16px;
+  border-radius: 0 0 8px 8px;
+  font-weight: 600;
+  font-size: 14px;
+  z-index: 99999;
+  text-decoration: none;
+  transition: top 0.2s;
+}
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

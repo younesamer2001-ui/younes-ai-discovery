@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://arxon.no'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://younes-ai-discovery.vercel.app'
   const now = new Date().toISOString()
 
   return [

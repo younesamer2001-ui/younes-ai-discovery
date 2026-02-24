@@ -92,6 +92,9 @@ export default function Footer({ lang, minimal = false }: FooterProps) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <span style={headingStyle}>{tx.contact}</span>
             <a href="mailto:kontakt@arxon.no" style={linkStyle}>kontakt@arxon.no</a>
+            <a href="https://cal.com/arxon/15min" target="_blank" rel="noopener noreferrer" style={linkStyle}>
+              {lang === 'no' ? 'Book en samtale' : 'Book a call'}
+            </a>
             <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Oslo, Norge</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -106,9 +109,14 @@ export default function Footer({ lang, minimal = false }: FooterProps) {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         flexWrap: 'wrap', gap: 12,
       }}>
-        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>
-          &copy; {new Date().getFullYear()} Arxon. {tx.rights}
-        </span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>
+            &copy; {new Date().getFullYear()} Arxon. {tx.rights}
+          </span>
+          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.15)' }}>
+            {lang === 'no' ? 'Enkeltpersonforetak under registrering' : 'Sole proprietorship pending registration'}
+          </span>
+        </div>
         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>{tx.gdpr}</span>
       </div>
     </footer>

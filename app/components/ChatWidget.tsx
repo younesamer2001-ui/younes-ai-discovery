@@ -479,6 +479,14 @@ export default function ChatWidget() {
             </div>
           )}
 
+          {/* privacy note */}
+          <div style={{ padding: '0 14px 6px', textAlign: 'center' }}>
+            <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.18)', lineHeight: 1.4 }}>
+              {lang === 'no'
+                ? 'Finn bruker mikrofon for samtale. Ingen data lagres.'
+                : 'Finn uses your microphone for conversation. No data is stored.'}
+            </span>
+          </div>
           {/* text input */}
           <div style={{ padding: '0 14px 14px' }}>
             <div style={{

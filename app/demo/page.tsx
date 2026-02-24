@@ -174,7 +174,7 @@ export default function DemoPage() {
     ctaTitle: 'Imponert? Tenk hva den kan gjøre for din bedrift.',
     ctaDesc: 'Denne demoen viser bare en brøkdel. Din AI-resepsjonist skreddersys med dine tjenester, priser og åpningstider.',
     ctaBtn: 'Start gratis kartlegging',
-    note: 'Dette er en live demo. AI-en bruker din mikrofon og høyttaler. Ingen data lagres fra denne demoen.',
+    note: 'Dette er en live demo. AI-en bruker din mikrofon og høyttaler for sanntidssamtale. Tale prosesseres via Deepgram (tale-til-tekst) og ElevenLabs (tekst-til-tale) i EØS/EU. Ingen samtaledata lagres etter at demoen avsluttes.',
   } : {
     badge: 'Live AI demo',
     title: 'Talk to our',
@@ -204,7 +204,7 @@ export default function DemoPage() {
     ctaTitle: 'Impressed? Imagine what it can do for your business.',
     ctaDesc: 'This demo shows just a fraction. Your AI receptionist is tailored with your services, prices and hours.',
     ctaBtn: 'Start free assessment',
-    note: 'This is a live demo. The AI uses your microphone and speaker. No data is stored from this demo.',
+    note: 'This is a live demo. The AI uses your microphone and speaker for real-time conversation. Speech is processed via Deepgram (speech-to-text) and ElevenLabs (text-to-speech) within the EEA/EU. No conversation data is stored after the demo ends.',
   }
 
   const statusText = {
