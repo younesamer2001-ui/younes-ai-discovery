@@ -1086,7 +1086,7 @@ export default function LandingPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }} className="grid-2">
           {features.map((f, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.45 }}
-              onClick={() => router.push(i === 0 ? '/mobilsvarer' : '/kartlegging')}
+              onClick={() => router.push(['/mobilsvarer', '/lead-generering', '/kundeservice', '/faktura', '/markedsforing', '/drift'][i] || '/kartlegging')}
               className="gold-hover"
               style={{
                 background: i < 2
