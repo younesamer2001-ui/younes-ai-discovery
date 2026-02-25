@@ -480,7 +480,7 @@ export default function LandingPage() {
       {/* Particles background */}
       <Particles />
 
-      {/* Social proof toasts — removed (no real data yet) */}
+      {/* Social proof toasts — disabled until real customer data is available */}
 
       {/* ── STICKY NAV BAR (appears on scroll) ── */}
       <AnimatePresence>
@@ -673,24 +673,24 @@ export default function LandingPage() {
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0, duration: 0.35 }}
           style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 20px', borderRadius: 30, background: `rgba(${goldRgb},0.06)`, border: `1px solid rgba(${goldRgb},0.15)`, fontSize: 13, color: gold, marginBottom: 28 }}>
           <Sparkles size={14} />
-          {lang === 'no' ? '150+ AI-automatiseringer for norske bedrifter — Gratis kartlegging på 2 min' : '150+ AI automations for Norwegian businesses — Free assessment in 2 min'}
+          {lang === 'no' ? 'Brukt av norske bedrifter innen bygg, salong, jus og mer' : 'Used by Norwegian businesses in construction, beauty, legal and more'}
         </motion.div>
 
         <motion.h1 initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.4 }}
           className="hero-title"
           style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(32px, 6vw, 58px)', fontWeight: 700, lineHeight: 1.1, marginBottom: 6, letterSpacing: '-0.02em', position: 'relative' }}>
           {lang === 'no' ? (
-            <>AI-telefonsvarer som kan<br /><span style={{ color: gold }}><Typewriter words={heroWords} /></span></>
+            <>Spar 1–2 ansatte med<br /><span style={{ color: gold }}>AI-automatisering</span></>
           ) : (
-            <>AI receptionist that can<br /><span style={{ color: gold }}><Typewriter words={heroWords} /></span></>
+            <>Save 1–2 employees with<br /><span style={{ color: gold }}>AI automation</span></>
           )}
         </motion.h1>
 
         <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.35 }}
           style={{ fontSize: 'clamp(15px, 2.3vw, 18px)', color: 'rgba(255,255,255,0.5)', maxWidth: 560, margin: '20px auto 36px', lineHeight: 1.6 }}>
           {lang === 'no'
-            ? 'Med 150+ ferdige automatiseringer erstatter vi telefonsvarer, booking, fakturering, lead-oppfølging og kundeservice — slik at du slipper å betale for ansatte som AI kan gjøre bedre.'
-            : 'With 150+ ready automations we replace phone answering, booking, invoicing, lead follow-up and customer service — so you don\'t pay for staff AI can do better.'}
+            ? 'AI-telefonsvarer, automatisk booking, fakturering og lead-oppfølging — 150+ ferdige automatiseringer som erstatter repetitivt manuelt arbeid.'
+            : 'AI phone answering, automatic booking, invoicing and lead follow-up — 150+ ready automations that replace repetitive manual work.'}
         </motion.p>
 
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.35 }}
@@ -701,9 +701,16 @@ export default function LandingPage() {
             boxShadow: `0 8px 32px rgba(${goldRgb},0.25)`, transition: 'all 0.2s',
             animation: 'pulse-gold 3s ease-in-out infinite, shimmer 3s linear infinite',
           }}>
-            {lang === 'no' ? 'Se hva du taper — gratis' : 'See what you\'re losing — free'}
+            {lang === 'no' ? 'Gratis AI-kartlegging — 2 min' : 'Free AI assessment — 2 min'}
             <ArrowRight size={18} style={{ display: 'inline', marginLeft: 8, verticalAlign: 'middle' }} />
           </button>
+          <a href="https://cal.com/arxon/15min" target="_blank" rel="noopener noreferrer" style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8, color: gold, border: `1px solid rgba(${goldRgb},0.3)`, borderRadius: 14, padding: '17px 32px',
+            fontWeight: 600, fontSize: 15, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+            textDecoration: 'none', transition: 'all 0.2s', background: `rgba(${goldRgb},0.05)`,
+          }}>
+            {lang === 'no' ? 'Book en samtale' : 'Book a call'}
+          </a>
         </motion.div>
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2, duration: 0.35 }}
@@ -1088,6 +1095,10 @@ export default function LandingPage() {
             <motion.div key={i} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.45 }}
               onClick={() => router.push(['/mobilsvarer', '/lead-generering', '/kundeservice', '/faktura', '/markedsforing', '/drift'][i] || '/kartlegging')}
               className="gold-hover"
+              role="link"
+              tabIndex={0}
+              aria-label={`${f.title} — ${f.stat}`}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); router.push(['/mobilsvarer', '/lead-generering', '/kundeservice', '/faktura', '/markedsforing', '/drift'][i] || '/kartlegging') } }}
               style={{
                 background: i < 2
                   ? `linear-gradient(135deg, rgba(${goldRgb},0.04) 0%, rgba(${goldRgb},0.01) 100%)`
@@ -1294,8 +1305,11 @@ export default function LandingPage() {
         <motion.h2 {...fadeUp} style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700, textAlign: 'center', marginBottom: 10 }}>
           {lang === 'no' ? 'Slik kan Arxon hjelpe din bedrift' : 'How Arxon can help your business'}
         </motion.h2>
-        <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 15, marginBottom: 40, maxWidth: 500, margin: '0 auto 40px' }}>
+        <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', fontSize: 15, marginBottom: 12, maxWidth: 500, margin: '0 auto 12px' }}>
           {lang === 'no' ? 'Illustrative eksempler basert på typiske norske bedrifter' : 'Illustrative examples based on typical Norwegian businesses'}
+        </motion.p>
+        <motion.p {...fadeUp} style={{ color: 'rgba(255,255,255,0.25)', textAlign: 'center', fontSize: 12, marginBottom: 40, maxWidth: 500, margin: '0 auto 40px', fontStyle: 'italic' }}>
+          {lang === 'no' ? 'Disse er fiktive eksempler som illustrerer mulig verdi — ikke ekte kundeomtaler.' : 'These are fictional examples illustrating potential value — not real customer testimonials.'}
         </motion.p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
           {(lang === 'no' ? [
@@ -1375,8 +1389,8 @@ export default function LandingPage() {
               }}>
               {/* Illustrative example badge */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
-                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', padding: '2px 8px', borderRadius: 4, fontWeight: 500, letterSpacing: '0.5px', textTransform: 'uppercase' as const }}>
-                  {lang === 'no' ? 'Illustrativt eksempel' : 'Illustrative example'}
+                <span style={{ fontSize: 10, color: '#f59e0b', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)', padding: '3px 10px', borderRadius: 4, fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase' as const }}>
+                  {lang === 'no' ? 'Fiktivt eksempel' : 'Fictional example'}
                 </span>
               </div>
               {/* Stars */}
@@ -1426,10 +1440,13 @@ export default function LandingPage() {
             </div>
             <div>
               <div style={{ fontSize: 22, fontWeight: 700, color: gold, fontFamily: "'Playfair Display', serif" }}>
-                {lang === 'no' ? 'Gjennomsnittlig 1,5 færre ansatte' : 'Average 1.5 fewer employees'}
+                {lang === 'no' ? 'Potensiale: 1–2 færre stillinger' : 'Potential: 1–2 fewer positions'}
               </div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>
-                {lang === 'no' ? 'Kundene våre erstatter repetitivt arbeid med AI — og sparer 30 000–80 000 kr/mnd i lønnskostnader' : 'Our customers replace repetitive work with AI — saving 30,000–80,000 NOK/mo in salary costs'}
+                {lang === 'no' ? 'Bedrifter som automatiserer repetitivt arbeid med AI kan spare 30 000–80 000 kr/mnd i lønnskostnader*' : 'Businesses that automate repetitive work with AI can save 30,000–80,000 NOK/mo in salary costs*'}
+              </div>
+              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', marginTop: 6, fontStyle: 'italic' }}>
+                {lang === 'no' ? '* Estimert basert på norske lønnsnivåer for administrative stillinger. Faktisk besparelse avhenger av bedriftens størrelse og behov.' : '* Estimated based on Norwegian salary levels for administrative positions. Actual savings depend on business size and needs.'}
               </div>
             </div>
           </div>
@@ -1449,12 +1466,12 @@ export default function LandingPage() {
             { icon: Shield, title: 'GDPR-kompatibel', desc: 'Fullt i henhold til EUs personvernforordning. Dine data behandles kun i EU/EØS.' },
             { icon: '🔒', title: 'Ende-til-ende kryptert', desc: 'All kommunikasjon og data er kryptert med AES-256. Ingen uautorisert tilgang.' },
             { icon: '🇳🇴', title: 'Norsk datasenter', desc: 'Data lagres på norske/europeiske servere. Ingen data sendes utenfor EØS.' },
-            { icon: '🛡️', title: 'NorSIS-anbefalt', desc: 'Vi følger NorSIS sine anbefalinger for sikker AI-bruk i norske bedrifter.' },
+            { icon: '🛡️', title: 'Basert på NorSIS-veiledning', desc: 'Vi følger NorSIS sine retningslinjer og anbefalinger for sikker AI-bruk i norske bedrifter.' },
           ] : [
             { icon: Shield, title: 'GDPR Compliant', desc: 'Fully compliant with EU\'s General Data Protection Regulation. Data processed within EU/EEA only.' },
             { icon: '🔒', title: 'End-to-end Encrypted', desc: 'All communication and data encrypted with AES-256. No unauthorized access.' },
             { icon: '🇳🇴', title: 'Norwegian Data Center', desc: 'Data stored on Norwegian/European servers. No data sent outside EEA.' },
-            { icon: '🛡️', title: 'NorSIS Recommended', desc: 'We follow NorSIS recommendations for secure AI use in Norwegian businesses.' },
+            { icon: '🛡️', title: 'Based on NorSIS guidance', desc: 'We follow NorSIS guidelines and recommendations for secure AI use in Norwegian businesses.' },
           ]).map((trust, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.35 }}
               style={{
@@ -1675,8 +1692,11 @@ export default function LandingPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '1.5px', textTransform: 'uppercase' as const }}>{lang === 'no' ? 'Tjenester' : 'Services'}</span>
               <Link href="/mobilsvarer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'AI Mobilsvarer' : 'AI Phone Answering'}</Link>
-              <Link href="/hvordan-det-fungerer" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Hvordan det fungerer' : 'How it works'}</Link>
-              <Link href="/integrasjoner" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Integrasjoner' : 'Integrations'}</Link>
+              <Link href="/lead-generering" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Lead-generering & Salg' : 'Lead Generation & Sales'}</Link>
+              <Link href="/kundeservice" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Kundeservice' : 'Customer Service'}</Link>
+              <Link href="/faktura" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Faktura & Økonomi' : 'Invoicing & Finance'}</Link>
+              <Link href="/markedsforing" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Markedsføring' : 'Marketing'}</Link>
+              <Link href="/drift" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Drift & Rapportering' : 'Ops & Reporting'}</Link>
               <Link href="/priser" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Priser' : 'Pricing'}</Link>
               <Link href="/kartlegging" style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>{lang === 'no' ? 'Gratis kartlegging' : 'Free assessment'}</Link>
             </div>
