@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
@@ -8,13 +8,12 @@ import {
   ArrowRight, Phone, Bot, Zap, Shield, Clock, BarChart3,
   CheckCircle2, ChevronDown, Star, Users, TrendingUp, Building2,
   Sparkles, MessageSquare, FileText, Receipt, Megaphone, ClipboardList,
-  Lock, Menu, X, ChevronRight, Calendar, Mail, Target
+  Lock, Menu, X, ChevronRight, Calendar, Mail, Target, Play, Headphones
 } from 'lucide-react'
 
 /* ── Constants ── */
 const gold = '#c9a96e'
 const goldRgb = '201,169,110'
-const bg = '#0a0a0f'
 
 /* ── Animated counter ── */
 function AnimCounter({ target, suffix = '', prefix = '' }: { target: number; suffix?: string; prefix?: string }) {
@@ -36,44 +35,83 @@ function AnimCounter({ target, suffix = '', prefix = '' }: { target: number; suf
   return <span ref={ref}>{prefix}{count.toLocaleString('nb-NO')}{suffix}</span>
 }
 
+/* ── Typewriter ── */
+function Typewriter({ words }: { words: string[] }) {
+  const [wordIdx, setWordIdx] = useState(0)
+  const [charIdx, setCharIdx] = useState(0)
+  const [deleting, setDeleting] = useState(false)
+
+  useEffect(() => {
+    const word = words[wordIdx]
+    const timeout = deleting ? 40 : 80
+    if (!deleting && charIdx === word.length) {
+      setTimeout(() => setDeleting(true), 2200)
+      return
+    }
+    if (deleting && charIdx === 0) {
+      setDeleting(false)
+      setWordIdx((prev) => (prev + 1) % words.length)
+      return
+    }
+    const timer = setTimeout(() => {
+      setCharIdx((prev) => prev + (deleting ? -1 : 1))
+    }, timeout)
+    return () => clearTimeout(timer)
+  }, [charIdx, deleting, wordIdx, words])
+
+  return (
+    <span style={{ color: gold }}>
+      {words[wordIdx].substring(0, charIdx)}
+      <span className="typewriter-cursor" />
+    </span>
+  )
+}
+
 /* ── Industry data ── */
 const industries = [
-  { id: 'bygg', name: 'Bygg & Håndverk', icon: '🏗️', count: 12, topAutos: ['AI-telefonsvarer 24/7', 'Automatisk tilbudsforespørsel', 'Befaring-påminnelse', 'Lead-scoring & CRM'] },
-  { id: 'salong', name: 'Salong & Skjønnhet', icon: '💇', count: 10, topAutos: ['AI-telefonsvarer med booking', 'Automatisk venteliste', 'Rebestilling-påminnelse', 'Instagram auto-posting'] },
-  { id: 'advokat', name: 'Advokatkontor', icon: '⚖️', count: 12, topAutos: ['AI-telefonsvarer førstekontakt', 'Saksdokument-oppsummering', 'Frist-påminnelser', 'GDPR audit-logg'] },
-  { id: 'restaurant', name: 'Restaurant & Café', icon: '🍽️', count: 10, topAutos: ['AI-telefonsvar bestilling', 'Daglig råvarestatus', 'Ansattplan-varsling', 'SoMe auto-post'] },
-  { id: 'eiendom', name: 'Eiendomsmegling', icon: '🏠', count: 12, topAutos: ['AI-telefonsvarer visning', 'Automatisk boligpresentasjon', 'Visningsmatch', 'Lead-scoring'] },
-  { id: 'helse', name: 'Helse & Klinikk', icon: '🏥', count: 12, topAutos: ['AI-telefonsvarer time', 'Venteliste-håndtering', 'Oppfølging etter behandling', 'Timepåminnelse'] },
-  { id: 'ehandel', name: 'E-handel', icon: '🛒', count: 10, topAutos: ['Forlatt handlekurv', 'AI produktbeskrivelser', 'Lagerstatus-varsling', 'SoMe auto-post'] },
-  { id: 'regnskap', name: 'Regnskap & Konsulenter', icon: '📊', count: 8, topAutos: ['AI-telefonsvarer kundestøtte', 'Bilagshåndtering med AI', 'Momsfrister-varsling', 'Månedsrapport'] },
-  { id: 'rekruttering', name: 'Rekruttering', icon: '👥', count: 8, topAutos: ['AI-screening søknader', 'Auto kandidat-oppfølging', 'Intervjubooking', 'Onboarding-checklist'] },
-  { id: 'bil', name: 'Bilverksted', icon: '🔧', count: 9, topAutos: ['AI-telefonsvarer verksted', 'Service-påminnelse', 'Dekkskifte-påminnelse', 'Reparasjonsstatus'] },
-  { id: 'coaching', name: 'Coaching', icon: '🎯', count: 8, topAutos: ['AI-booking med kvalifisering', 'Kurslevering', 'Oppfølging mellom sesjoner', 'Lead magnet-funnel'] },
-  { id: 'kreativt', name: 'Kreativt Byrå', icon: '🎨', count: 8, topAutos: ['Prosjektforespørsel-intake', 'Auto prosjekt-oppdatering', 'AI tilbudsgenerering', 'Portfolio auto-update'] },
-  { id: 'utdanning', name: 'Utdanning & Kurs', icon: '📚', count: 9, topAutos: ['AI-telefonsvar påmelding', 'Kursplan-distribusjon', 'Venteliste-håndtering', 'Sertifikat-generering'] },
-  { id: 'it', name: 'IT & Tech', icon: '💻', count: 8, topAutos: ['Ticket-triagering med AI', 'Serverovervåkning', 'Churn-prediksjon', 'Onboarding ny kunde'] },
-  { id: 'trening', name: 'Trening & Fitness', icon: '💪', count: 8, topAutos: ['AI-booking treningsøkter', 'Treningsprogram-levering', 'Medlemsfornyelse', 'Prøvetime-oppfølging'] },
-  { id: 'event', name: 'Event & Arrangement', icon: '🎪', count: 8, topAutos: ['Registrering + bekreftelse', 'Påminnelser', 'Leverandør-koordinering', 'Oppfølging etter event'] },
-  { id: 'reiseliv', name: 'Reiseliv & Overnatting', icon: '🏨', count: 10, topAutos: ['AI-telefonsvarer reservasjoner', 'Digital selvinnsjekking', 'Gjeste-tilbakemelding', 'Sesongkampanjer'] },
-  { id: 'finans', name: 'Finans & Fintech', icon: '🏦', count: 8, topAutos: ['KYC-dokumentinnhenting', 'Transaksjonsovervåkning', 'GDPR audit-logg', 'Auto-purring'] },
-  { id: 'marked', name: 'Markedsføring & SEO', icon: '📈', count: 8, topAutos: ['AI-innholdsproduksjon', 'SEO-overvåkning', 'Kampanjerapport', 'SoMe auto-scheduling'] },
-  { id: 'logistikk', name: 'Logistikk & Transport', icon: '🚚', count: 8, topAutos: ['Sendingssporing', 'Ruteoptimalisering', 'Lagerstatus-overvåkning', 'Avvikshåndtering'] },
-  { id: 'ngo', name: 'NGO & Ideell', icon: '🤝', count: 8, topAutos: ['Donasjon-bekreftelse', 'Frivillig-onboarding', 'Event-påmelding', 'Støttebrev-generering'] },
-  { id: 'media', name: 'Media & Podkast', icon: '🎙️', count: 8, topAutos: ['Episode-publisering', 'AI show-notes', 'Nyhetsbrev-automatisering', 'Klipp-generering'] },
-  { id: 'saas', name: 'SaaS & Produkt', icon: '☁️', count: 8, topAutos: ['Trial-konvertering', 'Churn-forebygging', 'Feature request-tracking', 'Auto release notes'] },
-  { id: 'forvaltning', name: 'Eiendomsforvaltning', icon: '🏢', count: 8, topAutos: ['Vedlikeholdsforespørsel', 'Husleie-påminnelse', 'Kontraktfornyelse', 'Felleskost-oppfølging'] },
+  { id: 'bygg', name: 'Bygg & Håndverk', icon: '🏗️', count: 12, topAutos: ['AI-telefonsvarer 24/7', 'Automatisk tilbudsforespørsel', 'Befaring-påminnelse + rute', 'Lead-scoring & CRM-sekvens'], benefit: 'Fanger 30-50% tapte henvendelser' },
+  { id: 'salong', name: 'Salong & Skjønnhet', icon: '💇', count: 10, topAutos: ['AI-telefonsvarer med booking', 'Automatisk venteliste', 'Rebestilling-påminnelse', 'Instagram auto-posting'], benefit: 'Reduserer no-shows 70%' },
+  { id: 'advokat', name: 'Advokatkontor', icon: '⚖️', count: 12, topAutos: ['AI-telefonsvarer førstekontakt', 'Saksdokument-oppsummering', 'Frist-påminnelser', 'GDPR audit-logg'], benefit: 'Kvalifiserer klienter 24/7' },
+  { id: 'restaurant', name: 'Restaurant & Café', icon: '🍽️', count: 10, topAutos: ['AI-telefonsvar bestilling', 'Daglig råvarestatus', 'Ansattplan-varsling', 'SoMe auto-post matbilder'], benefit: 'AI svarer alltid, også i rushet' },
+  { id: 'eiendom', name: 'Eiendomsmegling', icon: '🏠', count: 12, topAutos: ['AI-telefonsvarer visning', 'Automatisk boligpresentasjon', 'Visningsmatch', 'Lead-scoring ved visning'], benefit: 'Kvalifiserer interessenter 24/7' },
+  { id: 'helse', name: 'Helse & Klinikk', icon: '🏥', count: 12, topAutos: ['AI-telefonsvarer timebestilling', 'Venteliste-håndtering', 'Oppfølging etter behandling', 'Timepåminnelse med forberedelse'], benefit: 'Avlaster resepsjonen 50-70%' },
+  { id: 'ehandel', name: 'E-handel', icon: '🛒', count: 10, topAutos: ['Forlatt handlekurv-oppfølging', 'AI produktbeskrivelser', 'Lagerstatus-varsling', 'SoMe auto-post nye produkter'], benefit: 'Henter tilbake 10-15% forlatte kurver' },
+  { id: 'regnskap', name: 'Regnskap & Konsulenter', icon: '📊', count: 8, topAutos: ['AI-telefonsvarer kundestøtte', 'Bilagshåndtering med AI', 'Momsfrister-varsling', 'Månedsrapport-generering'], benefit: 'Frigjør regnskapsførers tid' },
+  { id: 'rekruttering', name: 'Rekruttering', icon: '👥', count: 8, topAutos: ['AI-screening av søknader', 'Auto kandidat-oppfølging', 'Intervjubooking', 'Onboarding-checklist ny ansatt'], benefit: 'Minutter i stedet for timer' },
+  { id: 'bil', name: 'Bilverksted', icon: '🔧', count: 9, topAutos: ['AI-telefonsvarer verksted', 'Service-påminnelse', 'Dekkskifte-påminnelse', 'Reparasjonsstatus til kunde'], benefit: 'AI svarer, mekanikere jobber' },
+  { id: 'coaching', name: 'Coaching', icon: '🎯', count: 8, topAutos: ['AI-booking med kvalifisering', 'Automatisk kurslevering', 'Oppfølging mellom sesjoner', 'Lead magnet-funnel'], benefit: 'Kurs selger 24/7' },
+  { id: 'kreativt', name: 'Kreativt Byrå', icon: '🎨', count: 8, topAutos: ['Prosjektforespørsel-intake', 'Auto prosjekt-oppdatering', 'AI tilbudsgenerering', 'Portfolio auto-oppdatering'], benefit: 'Slipper 3 møter per brief' },
+  { id: 'utdanning', name: 'Utdanning & Kurs', icon: '📚', count: 9, topAutos: ['AI-telefonsvar for påmelding', 'Kursplan-distribusjon', 'Venteliste-håndtering', 'Sertifikat-generering'], benefit: 'Null tapt påmelding' },
+  { id: 'it', name: 'IT & Tech', icon: '💻', count: 8, topAutos: ['Ticket-triagering med AI', 'Serverovervåkning-varsling', 'Churn-prediksjon', 'Onboarding ny SaaS-kunde'], benefit: 'Sparer L1-support timer' },
+  { id: 'trening', name: 'Trening & Fitness', icon: '💪', count: 8, topAutos: ['AI-booking treningsøkter', 'Treningsprogram-levering', 'Medlemsfornyelse', 'Prøvetime-oppfølging'], benefit: 'Fyller timer uten resepsjon' },
+  { id: 'event', name: 'Event & Arrangement', icon: '🎪', count: 8, topAutos: ['Registrering + bekreftelse', 'Påminnelser før event', 'Leverandør-koordinering', 'Oppfølging etter event'], benefit: 'Profesjonell registrering' },
+  { id: 'reiseliv', name: 'Reiseliv & Overnatting', icon: '🏨', count: 10, topAutos: ['AI-telefonsvarer reservasjoner', 'Digital selvinnsjekking', 'Gjeste-tilbakemelding + omtale', 'Sesongkampanjer'], benefit: 'Fanger gjester utenfor åpningstid' },
+  { id: 'finans', name: 'Finans & Fintech', icon: '🏦', count: 8, topAutos: ['KYC-dokumentinnhenting', 'Transaksjonsovervåkning', 'GDPR audit-logg', 'Auto-purring'], benefit: 'Anti-hvitvasking automatisert' },
+  { id: 'marked', name: 'Markedsføring & SEO', icon: '📈', count: 8, topAutos: ['AI-innholdsproduksjon', 'SEO-rangeringsovervåkning', 'Kampanjerapport-generering', 'SoMe auto-scheduling'], benefit: '70% raskere produksjon' },
+  { id: 'logistikk', name: 'Logistikk & Transport', icon: '🚚', count: 8, topAutos: ['Sendingssporing + kundevarsling', 'Ruteoptimalisering-varsling', 'Lagerstatus-overvåkning', 'Avvikshåndtering'], benefit: 'Færre supporthenvendelser' },
+  { id: 'ngo', name: 'NGO & Ideell', icon: '🤝', count: 8, topAutos: ['Donasjon-bekreftelse + takkemail', 'Frivillig-onboarding', 'Event-påmelding og påminnelser', 'Støttebrev-generering'], benefit: 'Donorer føler seg verdsatt' },
+  { id: 'media', name: 'Media & Podkast', icon: '🎙️', count: 8, topAutos: ['Episode-publisering flerkanals', 'AI show-notes generering', 'Nyhetsbrev-automatisering', 'Klipp-generering for SoMe'], benefit: 'Publiser én gang, overalt' },
+  { id: 'saas', name: 'SaaS & Produkt', icon: '☁️', count: 8, topAutos: ['Trial → betalende konvertering', 'Churn-forebygging', 'Feature request-tracking', 'Auto changelog'], benefit: 'Øker konverteringsrate' },
+  { id: 'forvaltning', name: 'Eiendomsforvaltning', icon: '🏢', count: 8, topAutos: ['Vedlikeholdsforespørsel-workflow', 'Husleie-påminnelse + purring', 'Kontraktfornyelse-varsling', 'Felleskost-oppfølging'], benefit: 'Strukturert feilhåndtering' },
 ]
 
 /* ── Automation categories ── */
 const categories = [
-  { name: 'Leads & Salg', icon: Target, desc: 'Fang leads automatisk, score dem, og bygg pipeline uten manuelt arbeid', color: '#4ade80' },
-  { name: 'Kundeoppfølging', icon: MessageSquare, desc: 'AI svarer telefonen, følger opp kunder og fanger tapte henvendelser', color: '#60a5fa' },
-  { name: 'Booking & Avtaler', icon: Calendar, desc: 'Reduser no-shows 60-80% med automatiske påminnelser og booking', color: '#c084fc' },
-  { name: 'Admin & Drift', icon: ClipboardList, desc: 'Onboarding, dokumenthåndtering og arbeidsflyt — på autopilot', color: '#fb923c' },
-  { name: 'Økonomi & Faktura', icon: Receipt, desc: 'Fakturering, purring og bilagshåndtering uten manuelle steg', color: '#f472b6' },
-  { name: 'Markedsføring', icon: Megaphone, desc: 'AI-generert innhold, SoMe auto-posting og kampanjer som kjører seg selv', color: '#a78bfa' },
-  { name: 'Rapportering', icon: BarChart3, desc: 'KPI-dashboards og rapporter levert automatisk — ingen manuell analyse', color: '#2dd4bf' },
-  { name: 'Compliance & GDPR', icon: Lock, desc: 'Samtykke-logging, audit-trails og GDPR-compliance automatisert', color: '#fbbf24' },
+  { name: 'Leads & Salg', icon: Target, desc: 'Fang leads automatisk, score dem, og bygg pipeline uten manuelt arbeid', color: '#4ade80', example: 'Lead-scraping, CRM-sekvenser, scoring' },
+  { name: 'Kundeoppfølging', icon: MessageSquare, desc: 'AI svarer telefonen, følger opp kunder og fanger tapte henvendelser', color: '#60a5fa', example: 'AI-telefonsvarer, purring, NPS' },
+  { name: 'Booking & Avtaler', icon: Calendar, desc: 'Reduser no-shows 60-80% med automatiske påminnelser og booking', color: '#c084fc', example: 'Booking, venteliste, påminnelser' },
+  { name: 'Admin & Drift', icon: ClipboardList, desc: 'Onboarding, dokumenthåndtering og arbeidsflyt — på autopilot', color: '#fb923c', example: 'Onboarding, arkiv, oppgaver' },
+  { name: 'Økonomi & Faktura', icon: Receipt, desc: 'Fakturering, purring og bilagshåndtering uten manuelle steg', color: '#f472b6', example: 'Auto-faktura, bilag, purring' },
+  { name: 'Markedsføring', icon: Megaphone, desc: 'AI-generert innhold, SoMe auto-posting og kampanjer som kjører seg selv', color: '#a78bfa', example: 'SoMe, blogg, nyhetsbrev' },
+  { name: 'Rapportering', icon: BarChart3, desc: 'KPI-dashboards og rapporter levert automatisk — ingen manuell analyse', color: '#2dd4bf', example: 'KPI-rapport, dashboard, analyse' },
+  { name: 'Compliance & GDPR', icon: Lock, desc: 'Samtykke-logging, audit-trails og GDPR-compliance automatisert', color: '#fbbf24', example: 'Samtykke-logg, audit, KYC' },
+]
+
+/* ── Testimonials ── */
+const testimonials = [
+  { name: 'Martin K.', role: 'Daglig leder, Bygg & Håndverk', text: 'Vi tapte nesten 40% av henvendelsene fordi vi ikke rakk å svare telefonen på jobb. Nå svarer AI-en og booker befaring automatisk. Omsetningen økte med 25% på 3 måneder.', stars: 5 },
+  { name: 'Lena H.', role: 'Eier, Salong & Skjønnhet', text: 'No-shows var et enormt problem. Automatiske påminnelser + venteliste har redusert det fra 20% til under 5%. Og kundene booker timer mens jeg klipper!', stars: 5 },
+  { name: 'Erik S.', role: 'Partner, Advokatkontor', text: 'Saksdokument-oppsummeringen sparer oss 30-60 minutter per sak. AI-telefonsvareren kvalifiserer klienter 24/7 — vi får bare relevante saker inn.', stars: 5 },
 ]
 
 /* ── FAQ ── */
@@ -85,33 +123,26 @@ function FAQ() {
     { q: 'Trenger jeg teknisk kunnskap?', a: 'Absolutt ikke. Vi setter opp, tester og vedlikeholder alt. Du trenger bare å fortelle oss hva som er viktig for din bedrift.' },
     { q: 'Er det trygt med tanke på GDPR?', a: 'Ja. All data lagres kryptert innen EØS. Vi følger GDPR og er EU AI Act-klare. Vi har innebygd samtykke-logging og audit-trails.' },
     { q: 'Hva hvis AI ikke passer for min bedrift?', a: 'Da forteller kartleggingen deg det. Vi er ærlige — hvis AI ikke gir nok verdi, anbefaler vi det ikke. Ingen bindinger, ingen risiko.' },
-    { q: 'Kan jeg starte med én automatisering?', a: 'Absolutt! De fleste starter med 2-3 anbefalte automatiseringer og utvider etterhvert som de ser resultater. Vi anbefaler å starte med det som gir størst impact.' },
+    { q: 'Kan jeg starte med én automatisering?', a: 'Absolutt! De fleste starter med 2-3 anbefalte automatiseringer og utvider etterhvert som de ser resultater.' },
   ]
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 720, margin: '0 auto' }}>
+    <div className="flex flex-col gap-2 max-w-[720px] mx-auto">
       {items.map((item, i) => (
-        <div key={i} style={{
-          background: open === i ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.015)',
-          border: `1px solid ${open === i ? `rgba(${goldRgb},0.2)` : 'rgba(255,255,255,0.06)'}`,
-          borderRadius: 14, overflow: 'hidden', transition: 'all 0.3s', cursor: 'pointer',
-        }} onClick={() => setOpen(open === i ? null : i)}>
-          <div style={{
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            padding: '18px 22px',
-          }}>
-            <span style={{ fontSize: 15, fontWeight: 500, color: '#f0f0f0' }}>{item.q}</span>
-            <ChevronDown size={18} style={{
-              color: gold, transition: 'transform 0.3s', flexShrink: 0, marginLeft: 12,
-              transform: open === i ? 'rotate(180deg)' : 'rotate(0deg)',
-            }} />
+        <div key={i} className="rounded-[14px] overflow-hidden cursor-pointer transition-all duration-300"
+          style={{
+            background: open === i ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.015)',
+            border: `1px solid ${open === i ? `rgba(${goldRgb},0.2)` : 'rgba(255,255,255,0.06)'}`,
+          }} onClick={() => setOpen(open === i ? null : i)}>
+          <div className="flex justify-between items-center p-[18px_22px]">
+            <span className="text-[15px] font-medium text-[#f0f0f0]">{item.q}</span>
+            <ChevronDown size={18} className="flex-shrink-0 ml-3 transition-transform duration-300"
+              style={{ color: gold, transform: open === i ? 'rotate(180deg)' : 'rotate(0deg)' }} />
           </div>
           <AnimatePresence>
             {open === i && (
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }}>
-                <div style={{ padding: '0 22px 18px', fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
-                  {item.a}
-                </div>
+                <div className="px-[22px] pb-[18px] text-sm text-white/[0.55] leading-[1.7]">{item.a}</div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -123,16 +154,20 @@ function FAQ() {
 
 /* ── Social proof toast ── */
 function LiveToast() {
-  const [toast, setToast] = useState<{ name: string; city: string; time: string } | null>(null)
-  const names = [
-    { name: 'Martin', city: 'Oslo' }, { name: 'Lena', city: 'Bergen' },
-    { name: 'Erik', city: 'Trondheim' }, { name: 'Sara', city: 'Stavanger' },
-    { name: 'Jonas', city: 'Kristiansand' }, { name: 'Ida', city: 'Tromsø' },
-    { name: 'Anders', city: 'Drammen' }, { name: 'Nora', city: 'Fredrikstad' },
+  const [toast, setToast] = useState<{ name: string; city: string; action: string; time: string } | null>(null)
+  const items = [
+    { name: 'Martin', city: 'Oslo', action: 'startet gratis kartlegging' },
+    { name: 'Lena', city: 'Bergen', action: 'fikk sin AI-analyse' },
+    { name: 'Erik', city: 'Trondheim', action: 'startet gratis kartlegging' },
+    { name: 'Sara', city: 'Stavanger', action: 'fikk 8 anbefalte automatiseringer' },
+    { name: 'Jonas', city: 'Kristiansand', action: 'startet gratis kartlegging' },
+    { name: 'Ida', city: 'Tromsø', action: 'fikk sin ROI-beregning' },
+    { name: 'Anders', city: 'Drammen', action: 'startet gratis kartlegging' },
+    { name: 'Nora', city: 'Fredrikstad', action: 'fikk 5 anbefalte automatiseringer' },
   ]
   useEffect(() => {
     const show = () => {
-      const person = names[Math.floor(Math.random() * names.length)]
+      const person = items[Math.floor(Math.random() * items.length)]
       setToast({ ...person, time: `${Math.floor(Math.random() * 12) + 1} min siden` })
       setTimeout(() => setToast(null), 4000)
     }
@@ -144,21 +179,15 @@ function LiveToast() {
   return (
     <AnimatePresence>
       {toast && (
-        <motion.div
-          initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-          style={{
-            position: 'fixed', bottom: 24, left: 24, zIndex: 100,
-            background: 'rgba(20,20,30,0.95)', border: `1px solid rgba(${goldRgb},0.2)`,
-            borderRadius: 14, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12,
-            backdropFilter: 'blur(16px)', boxShadow: '0 8px 32px rgba(0,0,0,0.4)', maxWidth: 320,
-          }}
-        >
-          <div style={{ width: 36, height: 36, borderRadius: '50%', background: `rgba(${goldRgb},0.1)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
+          className="fixed bottom-6 left-6 z-[100] flex items-center gap-3 rounded-[14px] px-5 py-[14px] max-w-[320px]"
+          style={{ background: 'rgba(20,20,30,0.95)', border: `1px solid rgba(${goldRgb},0.2)`, backdropFilter: 'blur(16px)', boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}>
+          <div className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center" style={{ background: `rgba(${goldRgb},0.1)` }}>
             <Users size={16} color={gold} />
           </div>
           <div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#f0f0f0' }}>{toast.name} fra {toast.city}</div>
-            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>startet gratis kartlegging · {toast.time}</div>
+            <div className="text-[13px] font-semibold text-[#f0f0f0]">{toast.name} fra {toast.city}</div>
+            <div className="text-[11px] text-white/40">{toast.action} · {toast.time}</div>
           </div>
         </motion.div>
       )}
@@ -201,30 +230,24 @@ export default function LandingPage() {
   return (
     <>
       {/* ── Nav ── */}
-      <nav style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-        background: 'rgba(10,10,15,0.85)', backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(255,255,255,0.05)',
-      }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-          <Link href="/" style={{ fontSize: 22, fontWeight: 700, color: gold, textDecoration: 'none', letterSpacing: '-0.5px' }}>
+      <nav className="fixed top-0 left-0 right-0 z-50" style={{ background: 'rgba(10,10,15,0.85)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-16">
+          <Link href="/" className="text-[22px] font-bold no-underline" style={{ color: gold, letterSpacing: '-0.5px' }}>
             Arxon
           </Link>
           {/* Desktop nav */}
-          <div className="hidden md:flex" style={{ alignItems: 'center', gap: 32 }}>
-            <a href="#bransjer" style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>Bransjer</a>
-            <a href="#automatiseringer" style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>Automatiseringer</a>
-            <a href="#kalkulator" style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>ROI-kalkulator</a>
-            <a href="#faq" style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>FAQ</a>
-            <button onClick={ctaClick} style={{
-              background: gold, color: '#0a0a0f', border: 'none', borderRadius: 10, padding: '10px 22px',
-              fontSize: 14, fontWeight: 600, cursor: 'pointer',
-            }}>
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#bransjer" className="text-sm text-white/60 no-underline hover:text-white/90 transition-colors">Bransjer</a>
+            <a href="#automatiseringer" className="text-sm text-white/60 no-underline hover:text-white/90 transition-colors">Automatiseringer</a>
+            <a href="#kalkulator" className="text-sm text-white/60 no-underline hover:text-white/90 transition-colors">ROI-kalkulator</a>
+            <a href="#faq" className="text-sm text-white/60 no-underline hover:text-white/90 transition-colors">FAQ</a>
+            <button onClick={ctaClick} className="border-none rounded-[10px] px-[22px] py-[10px] text-sm font-semibold cursor-pointer hover:brightness-110 transition-all"
+              style={{ background: gold, color: '#0a0a0f' }}>
               Gratis kartlegging
             </button>
           </div>
           {/* Mobile menu button */}
-          <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}>
+          <button className="md:hidden bg-transparent border-none text-white cursor-pointer" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -232,16 +255,14 @@ export default function LandingPage() {
         <AnimatePresence>
           {menuOpen && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-              className="md:hidden" style={{ background: 'rgba(10,10,15,0.98)', borderTop: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
-              <div style={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <a href="#bransjer" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Bransjer</a>
-                <a href="#automatiseringer" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>Automatiseringer</a>
-                <a href="#kalkulator" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>ROI-kalkulator</a>
-                <a href="#faq" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}>FAQ</a>
-                <button onClick={() => { setMenuOpen(false); ctaClick() }} style={{
-                  background: gold, color: '#0a0a0f', border: 'none', borderRadius: 10, padding: '12px 24px',
-                  fontSize: 15, fontWeight: 600, cursor: 'pointer', width: '100%',
-                }}>
+              className="md:hidden overflow-hidden" style={{ background: 'rgba(10,10,15,0.98)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+              <div className="p-4 px-6 flex flex-col gap-4">
+                <a href="#bransjer" onClick={() => setMenuOpen(false)} className="text-base text-white/70 no-underline">Bransjer</a>
+                <a href="#automatiseringer" onClick={() => setMenuOpen(false)} className="text-base text-white/70 no-underline">Automatiseringer</a>
+                <a href="#kalkulator" onClick={() => setMenuOpen(false)} className="text-base text-white/70 no-underline">ROI-kalkulator</a>
+                <a href="#faq" onClick={() => setMenuOpen(false)} className="text-base text-white/70 no-underline">FAQ</a>
+                <button onClick={() => { setMenuOpen(false); ctaClick() }} className="w-full border-none rounded-[10px] py-3 px-6 text-[15px] font-semibold cursor-pointer"
+                  style={{ background: gold, color: '#0a0a0f' }}>
                   Gratis kartlegging
                 </button>
               </div>
@@ -251,48 +272,53 @@ export default function LandingPage() {
       </nav>
 
       {/* ── HERO ── */}
-      <section style={{ paddingTop: 140, paddingBottom: 80, textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-        {/* Gradient bg */}
-        <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 800, height: 600, background: `radial-gradient(ellipse, rgba(${goldRgb},0.08) 0%, transparent 70%)`, pointerEvents: 'none' }} />
+      <section className="pt-[130px] md:pt-[150px] pb-16 md:pb-20 text-center relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] pointer-events-none" style={{ background: `radial-gradient(ellipse, rgba(${goldRgb},0.08) 0%, transparent 70%)` }} />
 
-        <div style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px', position: 'relative' }}>
+        <div className="max-w-[820px] mx-auto px-6 relative">
           {/* Badge */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `rgba(${goldRgb},0.08)`, border: `1px solid rgba(${goldRgb},0.15)`, borderRadius: 50, padding: '8px 18px', marginBottom: 28 }}>
+            className="inline-flex items-center gap-2 rounded-full px-[18px] py-2 mb-7"
+            style={{ background: `rgba(${goldRgb},0.08)`, border: `1px solid rgba(${goldRgb},0.15)` }}>
             <Sparkles size={14} color={gold} />
-            <span style={{ fontSize: 13, color: gold, fontWeight: 500 }}>226 automatiseringer · 25 bransjer</span>
+            <span className="text-[13px] font-medium" style={{ color: gold }}>226 automatiseringer · 25 bransjer · Norsk AI</span>
           </motion.div>
 
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 800, lineHeight: 1.1, color: '#ffffff', marginBottom: 20, letterSpacing: '-1px' }}>
-            Automatiser bedriften din{' '}
-            <span style={{ color: gold }}>med AI</span>
+            className="text-[clamp(30px,5vw,54px)] font-extrabold leading-[1.1] text-white mb-5" style={{ letterSpacing: '-1px' }}>
+            Automatiser{' '}
+            <Typewriter words={['telefonen', 'bookingen', 'leadgenerering', 'fakturering', 'markedsføring', 'oppfølging']} />
+            <br />
+            <span className="text-white/90">med AI</span>
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-            style={{ fontSize: 'clamp(16px, 2vw, 20px)', color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, marginBottom: 40, maxWidth: 600, margin: '0 auto 40px' }}>
-            AI-telefonsvarer, booking, fakturering, leadgenerering og 220+ andre automatiseringer — skreddersydd for din bransje. Start med gratis kartlegging.
+            className="text-[clamp(15px,2vw,19px)] text-white/50 leading-[1.7] mb-10 max-w-[580px] mx-auto">
+            Norske bedrifter taper i snitt <strong className="text-white/70">85 000 kr/mnd</strong> på ubesvarte anrop.
+            Arxon sin AI svarer 24/7, booker møter og kvalifiserer leads automatisk.
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-            <button onClick={ctaClick} style={{
-              background: gold, color: '#0a0a0f', border: 'none', borderRadius: 14, padding: '18px 40px',
-              fontSize: 17, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10,
-              boxShadow: `0 4px 24px rgba(${goldRgb},0.3)`, transition: 'transform 0.2s',
-            }}
-            onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-2px)')}
-            onMouseLeave={e => (e.currentTarget.style.transform = 'translateY(0)')}>
+            className="flex flex-col items-center gap-4">
+            <button onClick={ctaClick}
+              className="border-none rounded-[14px] py-[18px] px-10 text-[17px] font-bold cursor-pointer flex items-center gap-[10px] hover:-translate-y-[2px] transition-transform"
+              style={{ background: gold, color: '#0a0a0f', boxShadow: `0 4px 24px rgba(${goldRgb},0.3)` }}>
               Start gratis kartlegging <ArrowRight size={18} />
             </button>
-            <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>Tar 2 minutter · Ingen forpliktelser · Gratis AI-analyse</span>
+            <div className="flex items-center gap-4 text-[13px] text-white/35">
+              <span className="flex items-center gap-1"><Clock size={12} /> 2 min</span>
+              <span>·</span>
+              <span className="flex items-center gap-1"><Shield size={12} /> Ingen forpliktelser</span>
+              <span>·</span>
+              <span className="flex items-center gap-1"><Zap size={12} /> Gratis AI-analyse</span>
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* ── SOCIAL PROOF NUMBERS ── */}
-      <section style={{ padding: '40px 24px 60px' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 24, textAlign: 'center' }}>
+      <section className="px-6 pb-16">
+        <div className="max-w-[900px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-center">
           {[
             { value: 226, suffix: '+', label: 'Automatiseringer' },
             { value: 25, suffix: '', label: 'Bransjer' },
@@ -300,47 +326,77 @@ export default function LandingPage() {
             { value: 24, suffix: '/7', label: 'AI tilgjengelig' },
           ].map((stat, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-              style={{ padding: 24, background: 'rgba(255,255,255,0.02)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)' }}>
-              <div style={{ fontSize: 36, fontWeight: 800, color: gold, marginBottom: 4 }}>
+              className="p-5 md:p-6 rounded-2xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <div className="text-[28px] md:text-[36px] font-extrabold mb-1" style={{ color: gold }}>
                 <AnimCounter target={stat.value} suffix={stat.suffix} />
               </div>
-              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>{stat.label}</div>
+              <div className="text-[12px] md:text-[13px] text-white/45">{stat.label}</div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* ── PROBLEM / PAIN SECTION ── */}
-      <section style={{ padding: '60px 24px 80px', background: 'rgba(255,255,255,0.015)' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
+      {/* ── PAIN → SOLUTION ── */}
+      <section className="py-16 md:py-20 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
+        <div className="max-w-[900px] mx-auto text-center">
           <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            style={{ fontSize: 'clamp(24px, 3.5vw, 38px)', fontWeight: 700, color: '#fff', marginBottom: 16 }}>
+            className="text-[clamp(24px,3.5vw,38px)] font-bold text-white mb-4">
             Kjenner du deg igjen?
           </motion.h2>
-          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.45)', marginBottom: 48, maxWidth: 600, margin: '0 auto 48px' }}>
+          <p className="text-base text-white/45 mb-12 max-w-[600px] mx-auto">
             De fleste norske bedrifter taper penger på disse utfordringene hver dag
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16, textAlign: 'left' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-left">
             {[
               { pain: 'Tapte anrop = tapte kunder', fix: 'AI svarer telefonen 24/7 og booker møter', icon: Phone },
               { pain: 'Manuell booking og no-shows', fix: 'Automatisk booking + påminnelser (60-80% færre no-shows)', icon: Calendar },
               { pain: 'Leads faller mellom stolene', fix: 'AI scorer, følger opp og sender til CRM automatisk', icon: Target },
-              { pain: 'Timer brukt på admin og rutinearbeid', fix: 'Faktura, rapporter og oppfølging på autopilot', icon: Clock },
+              { pain: 'Timer på admin og rutinearbeid', fix: 'Faktura, rapporter og oppfølging på autopilot', icon: Clock },
               { pain: 'Dårlig synlighet og lite SoMe', fix: 'AI lager innhold og poster automatisk', icon: Megaphone },
-              { pain: 'GDPR-bekymringer og compliance', fix: 'Innebygd samtykke-logging og audit-trails', icon: Shield },
+              { pain: 'GDPR-bekymringer', fix: 'Innebygd samtykke-logging og audit-trails', icon: Shield },
             ].map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
-                style={{ background: 'rgba(10,10,15,0.6)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: 24 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: 10, background: `rgba(${goldRgb},0.08)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                className="rounded-2xl p-6" style={{ background: 'rgba(10,10,15,0.6)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="flex items-center gap-[10px] mb-3">
+                  <div className="w-9 h-9 rounded-[10px] flex items-center justify-center" style={{ background: `rgba(${goldRgb},0.08)` }}>
                     <item.icon size={18} color={gold} />
                   </div>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: '#ff6b6b' }}>{item.pain}</span>
+                  <span className="text-sm font-semibold text-[#ff6b6b]">{item.pain}</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                  <CheckCircle2 size={16} color="#4ade80" style={{ marginTop: 2, flexShrink: 0 }} />
-                  <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>{item.fix}</span>
+                <div className="flex items-start gap-2">
+                  <CheckCircle2 size={16} color="#4ade80" className="mt-[2px] flex-shrink-0" />
+                  <span className="text-sm text-white/60 leading-relaxed">{item.fix}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALS ── */}
+      <section className="py-16 md:py-20 px-6">
+        <div className="max-w-[1000px] mx-auto">
+          <div className="text-center mb-12">
+            <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              className="text-[clamp(24px,3.5vw,38px)] font-bold text-white mb-3">
+              Hva kundene sier
+            </motion.h2>
+            <p className="text-base text-white/45">Resultater fra norske bedrifter som bruker Arxon</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {testimonials.map((t, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                className="rounded-2xl p-7 flex flex-col" style={{ background: 'rgba(255,255,255,0.025)', border: `1px solid rgba(${goldRgb},0.08)` }}>
+                <div className="flex gap-1 mb-4">
+                  {Array.from({ length: t.stars }).map((_, j) => (
+                    <Star key={j} size={16} fill={gold} color={gold} />
+                  ))}
+                </div>
+                <p className="text-sm text-white/60 leading-relaxed mb-5 flex-1">"{t.text}"</p>
+                <div>
+                  <div className="text-sm font-semibold text-white">{t.name}</div>
+                  <div className="text-xs text-white/35">{t.role}</div>
                 </div>
               </motion.div>
             ))}
@@ -349,90 +405,92 @@ export default function LandingPage() {
       </section>
 
       {/* ── INDUSTRY SELECTOR ── */}
-      <section id="bransjer" style={{ padding: '80px 24px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+      <section id="bransjer" className="py-16 md:py-20 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
+        <div className="max-w-[1100px] mx-auto">
+          <div className="text-center mb-12">
             <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-              style={{ fontSize: 'clamp(24px, 3.5vw, 38px)', fontWeight: 700, color: '#fff', marginBottom: 12 }}>
+              className="text-[clamp(24px,3.5vw,38px)] font-bold text-white mb-3">
               Finn din bransje
             </motion.h2>
-            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.45)', maxWidth: 550, margin: '0 auto' }}>
-              226 skreddersydde automatiseringer fordelt på 25 bransjer. Velg din bransje for å se hva som passer deg.
+            <p className="text-base text-white/45 max-w-[550px] mx-auto">
+              226 skreddersydde automatiseringer fordelt på 25 bransjer. Velg din for å se hva som passer deg.
             </p>
           </div>
 
           {/* Industry grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 10, marginBottom: 40 }}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-[10px] mb-10">
             {industries.map((ind, i) => (
-              <button key={ind.id} onClick={() => setSelectedIndustry(i)} style={{
-                background: selectedIndustry === i ? `rgba(${goldRgb},0.12)` : 'rgba(255,255,255,0.02)',
-                border: `1px solid ${selectedIndustry === i ? `rgba(${goldRgb},0.3)` : 'rgba(255,255,255,0.06)'}`,
-                borderRadius: 12, padding: '14px 16px', cursor: 'pointer', textAlign: 'left',
-                transition: 'all 0.2s',
-              }}>
-                <div style={{ fontSize: 20, marginBottom: 4 }}>{ind.icon}</div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: selectedIndustry === i ? gold : '#e0e0e0', marginBottom: 2 }}>{ind.name}</div>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{ind.count} automatiseringer</div>
+              <button key={ind.id} onClick={() => setSelectedIndustry(i)}
+                className="rounded-xl p-[14px_16px] cursor-pointer text-left transition-all duration-200 border"
+                style={{
+                  background: selectedIndustry === i ? `rgba(${goldRgb},0.12)` : 'rgba(255,255,255,0.02)',
+                  borderColor: selectedIndustry === i ? `rgba(${goldRgb},0.3)` : 'rgba(255,255,255,0.06)',
+                }}>
+                <div className="text-xl mb-1">{ind.icon}</div>
+                <div className="text-[13px] font-semibold mb-[2px]" style={{ color: selectedIndustry === i ? gold : '#e0e0e0' }}>{ind.name}</div>
+                <div className="text-[11px] text-white/35">{ind.count} automatiseringer</div>
               </button>
             ))}
           </div>
 
           {/* Selected industry detail */}
           <motion.div key={selectedIndustry} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            style={{ background: `rgba(${goldRgb},0.04)`, border: `1px solid rgba(${goldRgb},0.12)`, borderRadius: 20, padding: 32 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-              <span style={{ fontSize: 32 }}>{industries[selectedIndustry].icon}</span>
-              <div>
-                <h3 style={{ fontSize: 22, fontWeight: 700, color: '#fff', margin: 0 }}>{industries[selectedIndustry].name}</h3>
-                <span style={{ fontSize: 14, color: gold }}>{industries[selectedIndustry].count} automatiseringer tilgjengelig</span>
+            className="rounded-[20px] p-6 md:p-8" style={{ background: `rgba(${goldRgb},0.04)`, border: `1px solid rgba(${goldRgb},0.12)` }}>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl">{industries[selectedIndustry].icon}</span>
+                <div>
+                  <h3 className="text-xl md:text-[22px] font-bold text-white m-0">{industries[selectedIndustry].name}</h3>
+                  <span className="text-sm" style={{ color: gold }}>{industries[selectedIndustry].count} automatiseringer tilgjengelig</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.15)' }}>
+                <TrendingUp size={14} color="#4ade80" />
+                <span className="text-sm text-[#4ade80] font-medium">{industries[selectedIndustry].benefit}</span>
               </div>
             </div>
-            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', marginBottom: 20 }}>Anbefalte automatiseringer for din bransje:</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12, marginBottom: 24 }}>
+            <div className="text-sm text-white/50 mb-4">Anbefalte automatiseringer for din bransje:</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
               {industries[selectedIndustry].topAutos.map((auto, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(10,10,15,0.4)', borderRadius: 10, padding: '12px 16px' }}>
-                  <CheckCircle2 size={16} color={gold} style={{ flexShrink: 0 }} />
-                  <span style={{ fontSize: 14, color: '#e0e0e0' }}>{auto}</span>
+                <div key={i} className="flex items-center gap-[10px] rounded-[10px] p-[12px_16px]" style={{ background: 'rgba(10,10,15,0.4)' }}>
+                  <CheckCircle2 size={16} color={gold} className="flex-shrink-0" />
+                  <span className="text-sm text-[#e0e0e0]">{auto}</span>
                 </div>
               ))}
             </div>
-            <button onClick={ctaClick} style={{
-              background: gold, color: '#0a0a0f', border: 'none', borderRadius: 10, padding: '14px 28px',
-              fontSize: 15, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
-            }}>
-              Se alle {industries[selectedIndustry].count} automatiseringer for {industries[selectedIndustry].name} <ArrowRight size={16} />
+            <button onClick={ctaClick}
+              className="border-none rounded-[10px] py-[14px] px-7 text-[15px] font-semibold cursor-pointer flex items-center gap-2 hover:brightness-110 transition-all"
+              style={{ background: gold, color: '#0a0a0f' }}>
+              Se alle for {industries[selectedIndustry].name} <ArrowRight size={16} />
             </button>
           </motion.div>
         </div>
       </section>
 
       {/* ── AUTOMATION CATEGORIES ── */}
-      <section id="automatiseringer" style={{ padding: '80px 24px', background: 'rgba(255,255,255,0.015)' }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+      <section id="automatiseringer" className="py-16 md:py-20 px-6">
+        <div className="max-w-[1000px] mx-auto">
+          <div className="text-center mb-12">
             <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-              style={{ fontSize: 'clamp(24px, 3.5vw, 38px)', fontWeight: 700, color: '#fff', marginBottom: 12 }}>
+              className="text-[clamp(24px,3.5vw,38px)] font-bold text-white mb-3">
               8 kategorier av automatiseringer
             </motion.h2>
-            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.45)', maxWidth: 550, margin: '0 auto' }}>
-              Fra leadgenerering til GDPR-compliance — vi dekker hele verdikjeden
-            </p>
+            <p className="text-base text-white/45 max-w-[550px] mx-auto">Fra leadgenerering til GDPR-compliance — vi dekker hele verdikjeden</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {categories.map((cat, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
-                style={{
-                  background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)',
-                  borderRadius: 16, padding: 24, transition: 'border-color 0.3s',
-                }}
+                className="rounded-2xl p-6 transition-all duration-300 hover:border-opacity-40 group"
+                style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid rgba(255,255,255,0.06)` }}
                 onMouseEnter={e => (e.currentTarget.style.borderColor = `${cat.color}40`)}
                 onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)')}>
-                <div style={{ width: 44, height: 44, borderRadius: 12, background: `${cat.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4" style={{ background: `${cat.color}15` }}>
                   <cat.icon size={22} color={cat.color} />
                 </div>
-                <h3 style={{ fontSize: 16, fontWeight: 600, color: '#fff', marginBottom: 8 }}>{cat.name}</h3>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6, margin: 0 }}>{cat.desc}</p>
+                <h3 className="text-[15px] font-semibold text-white mb-2">{cat.name}</h3>
+                <p className="text-[13px] text-white/45 leading-relaxed mb-3">{cat.desc}</p>
+                <div className="text-[11px] text-white/25 italic">{cat.example}</div>
               </motion.div>
             ))}
           </div>
@@ -440,43 +498,41 @@ export default function LandingPage() {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section style={{ padding: '80px 24px' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
+      <section className="py-16 md:py-20 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
+        <div className="max-w-[900px] mx-auto">
+          <div className="text-center mb-14">
             <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-              style={{ fontSize: 'clamp(24px, 3.5vw, 38px)', fontWeight: 700, color: '#fff', marginBottom: 12 }}>
+              className="text-[clamp(24px,3.5vw,38px)] font-bold text-white mb-3">
               Slik kommer du i gang
             </motion.h2>
-            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.45)' }}>Fra kartlegging til resultater — tre enkle steg</p>
+            <p className="text-base text-white/45">Fra kartlegging til resultater — tre enkle steg</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 24 }}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { step: '1', title: 'Gratis kartlegging', desc: 'Svar på noen spørsmål om din bedrift (2 min). AI-en analyserer svarene og identifiserer de mest verdifulle automatiseringene for deg.', icon: ClipboardList },
-              { step: '2', title: 'Skreddersydd forslag', desc: 'Du får en komplett oversikt med anbefalte automatiseringer, forventet ROI og prisestimat — uten forpliktelser.', icon: FileText },
-              { step: '3', title: 'Vi implementerer', desc: 'Vi setter opp alt. De fleste automatiseringer er live innen 2-5 dager. Du ser resultater fra dag én.', icon: Zap },
+              { step: '1', title: 'Gratis kartlegging', desc: 'Svar på noen spørsmål om din bedrift (2 min). AI-en analyserer svarene og identifiserer de mest verdifulle automatiseringene.', icon: ClipboardList, time: '2 minutter' },
+              { step: '2', title: 'Skreddersydd forslag', desc: 'Du får en komplett oversikt med anbefalte automatiseringer, forventet ROI og prisestimat — uten forpliktelser.', icon: FileText, time: 'Umiddelbart' },
+              { step: '3', title: 'Vi implementerer', desc: 'Vi setter opp alt. De fleste automatiseringer er live innen 2-5 dager. Du ser resultater fra dag én.', icon: Zap, time: '2-5 dager' },
             ].map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                style={{ textAlign: 'center', padding: 32, background: 'rgba(255,255,255,0.02)', borderRadius: 20, border: '1px solid rgba(255,255,255,0.06)', position: 'relative' }}>
-                <div style={{
-                  width: 56, height: 56, borderRadius: '50%', background: `rgba(${goldRgb},0.1)`, border: `2px solid rgba(${goldRgb},0.2)`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px',
-                  fontSize: 22, fontWeight: 800, color: gold,
-                }}>
+                className="text-center p-8 rounded-[20px] relative" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-5 text-[22px] font-extrabold"
+                  style={{ background: `rgba(${goldRgb},0.1)`, border: `2px solid rgba(${goldRgb},0.2)`, color: gold }}>
                   {item.step}
                 </div>
-                <h3 style={{ fontSize: 18, fontWeight: 600, color: '#fff', marginBottom: 10 }}>{item.title}</h3>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, margin: 0 }}>{item.desc}</p>
+                <h3 className="text-lg font-semibold text-white mb-[10px]">{item.title}</h3>
+                <p className="text-sm text-white/45 leading-[1.7] mb-4">{item.desc}</p>
+                <div className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full" style={{ background: `rgba(${goldRgb},0.06)`, color: gold }}>
+                  <Clock size={10} /> {item.time}
+                </div>
               </motion.div>
             ))}
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: 40 }}>
-            <button onClick={ctaClick} style={{
-              background: gold, color: '#0a0a0f', border: 'none', borderRadius: 14, padding: '16px 36px',
-              fontSize: 16, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10,
-              boxShadow: `0 4px 24px rgba(${goldRgb},0.25)`,
-            }}>
+          <div className="text-center mt-10">
+            <button onClick={ctaClick}
+              className="border-none rounded-[14px] py-4 px-9 text-base font-bold cursor-pointer inline-flex items-center gap-[10px] hover:-translate-y-[2px] transition-transform"
+              style={{ background: gold, color: '#0a0a0f', boxShadow: `0 4px 24px rgba(${goldRgb},0.25)` }}>
               Start gratis kartlegging nå <ArrowRight size={18} />
             </button>
           </div>
@@ -484,90 +540,100 @@ export default function LandingPage() {
       </section>
 
       {/* ── ROI CALCULATOR ── */}
-      <section id="kalkulator" style={{ padding: '80px 24px', background: 'rgba(255,255,255,0.015)' }}>
-        <div style={{ maxWidth: 700, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+      <section id="kalkulator" className="py-16 md:py-20 px-6">
+        <div className="max-w-[700px] mx-auto">
+          <div className="text-center mb-10">
             <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-              style={{ fontSize: 'clamp(24px, 3.5vw, 38px)', fontWeight: 700, color: '#fff', marginBottom: 12 }}>
+              className="text-[clamp(24px,3.5vw,38px)] font-bold text-white mb-3">
               Hvor mye taper du?
             </motion.h2>
-            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.45)' }}>Regn ut hva ubesvarte anrop koster deg hver måned</p>
+            <p className="text-base text-white/45">Regn ut hva ubesvarte anrop koster din bedrift</p>
           </div>
 
-          <div style={{ background: 'rgba(10,10,15,0.6)', border: `1px solid rgba(${goldRgb},0.12)`, borderRadius: 20, padding: 32 }}>
-            {/* Industry selector */}
-            <div style={{ marginBottom: 24 }}>
-              <label style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', marginBottom: 8, display: 'block' }}>Din bransje</label>
+          <div className="rounded-[20px] p-6 md:p-8" style={{ background: 'rgba(10,10,15,0.6)', border: `1px solid rgba(${goldRgb},0.12)` }}>
+            <div className="mb-6">
+              <label className="text-sm text-white/50 mb-2 block">Din bransje</label>
               <select value={roiIndustry} onChange={e => setRoiIndustry(Number(e.target.value))}
-                style={{ width: '100%', padding: '12px 16px', borderRadius: 10, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: 15, cursor: 'pointer' }}>
-                {industryROI.map((ind, i) => (
-                  <option key={i} value={i} style={{ background: '#1a1a2e' }}>{ind.label}</option>
-                ))}
+                className="w-full p-[12px_16px] rounded-[10px] text-white text-[15px] cursor-pointer"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                {industryROI.map((ind, i) => <option key={i} value={i} style={{ background: '#1a1a2e' }}>{ind.label}</option>)}
               </select>
             </div>
 
-            {/* Missed calls slider */}
-            <div style={{ marginBottom: 32 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                <label style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)' }}>Ubesvarte anrop per uke</label>
-                <span style={{ fontSize: 16, fontWeight: 700, color: gold }}>{missedCalls}</span>
+            <div className="mb-8">
+              <div className="flex justify-between mb-2">
+                <label className="text-sm text-white/50">Ubesvarte anrop per uke</label>
+                <span className="text-base font-bold" style={{ color: gold }}>{missedCalls}</span>
               </div>
               <input type="range" min={1} max={30} value={missedCalls} onChange={e => setMissedCalls(Number(e.target.value))}
-                style={{ width: '100%', accentColor: gold }} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>
-                <span>1</span><span>30</span>
-              </div>
+                className="w-full" style={{ accentColor: gold }} />
+              <div className="flex justify-between text-[11px] text-white/30"><span>1</span><span>30</span></div>
             </div>
 
-            {/* Result */}
-            <div style={{ textAlign: 'center', padding: 24, background: `rgba(${goldRgb},0.06)`, borderRadius: 16, border: `1px solid rgba(${goldRgb},0.15)` }}>
-              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 4 }}>Estimert tapt omsetning per måned</div>
-              <div style={{ fontSize: 42, fontWeight: 800, color: gold, marginBottom: 8 }}>
+            <div className="text-center p-6 rounded-2xl" style={{ background: `rgba(${goldRgb},0.06)`, border: `1px solid rgba(${goldRgb},0.15)` }}>
+              <div className="text-[13px] text-white/40 mb-1">Estimert tapt omsetning per måned</div>
+              <div className="text-[42px] font-extrabold mb-2" style={{ color: gold }}>
                 {monthlySavings.toLocaleString('nb-NO')} kr
               </div>
-              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>
-                = {(monthlySavings * 12).toLocaleString('nb-NO')} kr per år
+              <div className="text-[13px] text-white/35">
+                = <strong className="text-white/50">{(monthlySavings * 12).toLocaleString('nb-NO')} kr</strong> per år
               </div>
             </div>
 
-            <button onClick={ctaClick} style={{
-              background: gold, color: '#0a0a0f', border: 'none', borderRadius: 12, padding: '14px 28px',
-              fontSize: 15, fontWeight: 600, cursor: 'pointer', width: '100%', marginTop: 24,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            }}>
+            <button onClick={ctaClick}
+              className="w-full border-none rounded-xl py-[14px] px-7 text-[15px] font-semibold cursor-pointer flex items-center justify-center gap-2 mt-6 hover:brightness-110 transition-all"
+              style={{ background: gold, color: '#0a0a0f' }}>
               Få gratis AI-analyse for din bedrift <ArrowRight size={16} />
             </button>
           </div>
         </div>
       </section>
 
-      {/* ── TRUST SIGNALS ── */}
-      <section style={{ padding: '60px 24px' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20, textAlign: 'center' }}>
-            {[
-              { icon: Shield, label: 'GDPR-compliant', sub: 'Data lagret i EØS' },
-              { icon: Lock, label: 'EU AI Act-klar', sub: 'Kryptert & sikkert' },
-              { icon: Zap, label: 'Live på 2-5 dager', sub: 'Rask implementering' },
-              { icon: Users, label: 'Norsk support', sub: 'Lokal ekspertise' },
-            ].map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                style={{ padding: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                <item.icon size={28} color={gold} strokeWidth={1.5} />
-                <div style={{ fontSize: 15, fontWeight: 600, color: '#fff' }}>{item.label}</div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>{item.sub}</div>
-              </motion.div>
-            ))}
+      {/* ── DEMO / RING OSS ── */}
+      <section className="py-16 md:py-20 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
+        <div className="max-w-[800px] mx-auto">
+          <div className="rounded-[20px] p-8 md:p-12 text-center" style={{ background: `rgba(${goldRgb},0.03)`, border: `1px solid rgba(${goldRgb},0.1)` }}>
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: `rgba(${goldRgb},0.1)`, border: `2px solid rgba(${goldRgb},0.2)` }}>
+              <Phone size={28} color={gold} />
+            </div>
+            <h2 className="text-[clamp(22px,3vw,32px)] font-bold text-white mb-4">Vil du prøve AI-telefonsvareren?</h2>
+            <p className="text-base text-white/50 mb-8 max-w-[500px] mx-auto">
+              Ring nummeret nedenfor og snakk med Arxon AI. Opplev selv hvordan den svarer, booker møter og kvalifiserer leads.
+            </p>
+            <a href="tel:+4778896386" className="inline-flex items-center gap-3 rounded-[14px] py-4 px-8 text-lg font-bold no-underline hover:-translate-y-[2px] transition-transform"
+              style={{ background: gold, color: '#0a0a0f', boxShadow: `0 4px 24px rgba(${goldRgb},0.3)` }}>
+              <Phone size={20} /> Ring 78 89 63 86
+            </a>
+            <div className="mt-4 text-[13px] text-white/30">Gratis å ringe · AI svarer 24/7 · Norsk språk</div>
           </div>
         </div>
       </section>
 
+      {/* ── TRUST SIGNALS ── */}
+      <section className="py-12 px-6">
+        <div className="max-w-[900px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-5 text-center">
+          {[
+            { icon: Shield, label: 'GDPR-compliant', sub: 'Data lagret i EØS' },
+            { icon: Lock, label: 'EU AI Act-klar', sub: 'Kryptert & sikkert' },
+            { icon: Zap, label: 'Live på 2-5 dager', sub: 'Rask implementering' },
+            { icon: Users, label: 'Norsk support', sub: 'Lokal ekspertise' },
+          ].map((item, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+              className="p-5 flex flex-col items-center gap-2">
+              <item.icon size={28} color={gold} strokeWidth={1.5} />
+              <div className="text-[15px] font-semibold text-white">{item.label}</div>
+              <div className="text-xs text-white/35">{item.sub}</div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
       {/* ── FAQ ── */}
-      <section id="faq" style={{ padding: '80px 24px', background: 'rgba(255,255,255,0.015)' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+      <section id="faq" className="py-16 md:py-20 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
+        <div className="max-w-[900px] mx-auto">
+          <div className="text-center mb-12">
             <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-              style={{ fontSize: 'clamp(24px, 3.5vw, 38px)', fontWeight: 700, color: '#fff', marginBottom: 12 }}>
+              className="text-[clamp(24px,3.5vw,38px)] font-bold text-white mb-3">
               Ofte stilte spørsmål
             </motion.h2>
           </div>
@@ -576,45 +642,41 @@ export default function LandingPage() {
       </section>
 
       {/* ── FINAL CTA ── */}
-      <section style={{ padding: '80px 24px' }}>
-        <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
+      <section className="py-16 md:py-20 px-6">
+        <div className="max-w-[700px] mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            style={{ background: `linear-gradient(135deg, rgba(${goldRgb},0.08), rgba(${goldRgb},0.03))`, border: `1px solid rgba(${goldRgb},0.15)`, borderRadius: 24, padding: '56px 32px' }}>
-            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 36px)', fontWeight: 700, color: '#fff', marginBottom: 16 }}>
+            className="rounded-3xl p-12 md:p-14"
+            style={{ background: `linear-gradient(135deg, rgba(${goldRgb},0.08), rgba(${goldRgb},0.03))`, border: `1px solid rgba(${goldRgb},0.15)` }}>
+            <h2 className="text-[clamp(24px,3.5vw,36px)] font-bold text-white mb-4">
               Klar for å automatisere?
             </h2>
-            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', marginBottom: 32, maxWidth: 500, margin: '0 auto 32px' }}>
-              Start med en gratis kartlegging. Ingen binding, ingen risiko — bare konkrete forslag for din bedrift.
+            <p className="text-base text-white/50 mb-8 max-w-[500px] mx-auto">
+              Start med en gratis kartlegging. Ingen binding, ingen risiko — bare konkrete forslag som sparer deg tid og penger.
             </p>
-            <button onClick={ctaClick} style={{
-              background: gold, color: '#0a0a0f', border: 'none', borderRadius: 14, padding: '18px 44px',
-              fontSize: 17, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10,
-              boxShadow: `0 4px 24px rgba(${goldRgb},0.3)`,
-            }}>
+            <button onClick={ctaClick}
+              className="border-none rounded-[14px] py-[18px] px-11 text-[17px] font-bold cursor-pointer inline-flex items-center gap-[10px] hover:-translate-y-[2px] transition-transform"
+              style={{ background: gold, color: '#0a0a0f', boxShadow: `0 4px 24px rgba(${goldRgb},0.3)` }}>
               Start gratis kartlegging <ArrowRight size={18} />
             </button>
-            <div style={{ marginTop: 16, fontSize: 13, color: 'rgba(255,255,255,0.3)' }}>
-              226 automatiseringer · 25 bransjer · 2 minutter
-            </div>
+            <div className="mt-4 text-[13px] text-white/30">226 automatiseringer · 25 bransjer · 2 minutter</div>
           </motion.div>
         </div>
       </section>
 
       {/* ── FOOTER ── */}
-      <footer style={{ padding: '40px 24px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 24 }}>
+      <footer className="py-10 px-6" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <div className="max-w-[1000px] mx-auto flex flex-col md:flex-row flex-wrap justify-between items-center gap-6">
           <div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: gold, marginBottom: 4 }}>Arxon</div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>AI-automatisering for norske bedrifter</div>
+            <div className="text-xl font-bold mb-1" style={{ color: gold }}>Arxon</div>
+            <div className="text-xs text-white/30">AI-automatisering for norske bedrifter</div>
           </div>
-          <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-            <Link href="/personvern" style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', textDecoration: 'none' }}>Personvern</Link>
-            <Link href="/vilkar" style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', textDecoration: 'none' }}>Vilkår</Link>
-            <a href="mailto:kontakt@arxon.no" style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', textDecoration: 'none' }}>kontakt@arxon.no</a>
+          <div className="flex gap-6 flex-wrap">
+            <Link href="/personvern" className="text-[13px] text-white/35 no-underline hover:text-white/60">Personvern</Link>
+            <Link href="/vilkar" className="text-[13px] text-white/35 no-underline hover:text-white/60">Vilkår</Link>
+            <Link href="/blogg" className="text-[13px] text-white/35 no-underline hover:text-white/60">Blogg</Link>
+            <a href="mailto:kontakt@arxon.no" className="text-[13px] text-white/35 no-underline hover:text-white/60">kontakt@arxon.no</a>
           </div>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>
-            © {new Date().getFullYear()} Arxon. Alle rettigheter forbeholdt.
-          </div>
+          <div className="text-xs text-white/20">© {new Date().getFullYear()} Arxon. Alle rettigheter forbeholdt.</div>
         </div>
       </footer>
 
@@ -622,37 +684,31 @@ export default function LandingPage() {
       <AnimatePresence>
         {showSticky && (
           <motion.div initial={{ y: 100 }} animate={{ y: 0 }} exit={{ y: 100 }}
-            className="md:hidden"
-            style={{
-              position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 40,
-              padding: '12px 16px', background: 'rgba(10,10,15,0.95)', backdropFilter: 'blur(20px)',
-              borderTop: `1px solid rgba(${goldRgb},0.15)`,
-            }}>
-            <button onClick={ctaClick} style={{
-              background: gold, color: '#0a0a0f', border: 'none', borderRadius: 12, padding: '14px 20px',
-              fontSize: 15, fontWeight: 700, cursor: 'pointer', width: '100%',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            }}>
+            className="fixed bottom-0 left-0 right-0 z-40 p-3 px-4 md:hidden"
+            style={{ background: 'rgba(10,10,15,0.95)', backdropFilter: 'blur(20px)', borderTop: `1px solid rgba(${goldRgb},0.15)` }}>
+            <button onClick={ctaClick}
+              className="w-full border-none rounded-xl py-[14px] px-5 text-[15px] font-bold cursor-pointer flex items-center justify-center gap-2"
+              style={{ background: gold, color: '#0a0a0f' }}>
               Start gratis kartlegging <ArrowRight size={16} />
             </button>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Social proof toast */}
       <LiveToast />
 
-      {/* Blink animation for cursor */}
       <style jsx global>{`
         @keyframes blink { 50% { opacity: 0 } }
-        html { scroll-behavior: smooth; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        .hidden { display: none; }
-        @media (min-width: 768px) {
-          .md\\:flex { display: flex !important; }
-          .md\\:hidden { display: none !important; }
+        .typewriter-cursor {
+          display: inline-block;
+          width: 2px;
+          height: 1em;
+          background: ${gold};
+          margin-left: 2px;
+          animation: blink 1s step-end infinite;
+          vertical-align: text-bottom;
         }
+        html { scroll-behavior: smooth; }
       `}</style>
     </>
   )
