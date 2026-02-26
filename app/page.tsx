@@ -305,7 +305,7 @@ export default function LandingPage() {
       <Nav />
 
       {/* ── HERO ── */}
-      <section className="pt-[70px] md:pt-[100px] pb-20 md:pb-28 text-center relative overflow-hidden min-h-[90vh] flex flex-col justify-center">
+      <section className="pt-8 md:pt-16 pb-20 md:pb-28 text-center relative overflow-hidden min-h-[90vh] flex flex-col justify-center">
         <FloatingOrbs />
 
         <div className="max-w-[900px] mx-auto px-6 relative z-10">
@@ -825,6 +825,20 @@ export default function LandingPage() {
       <LiveToast />
 
       <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+        /* ── Nav: cta-shimmer ── */
+        .cta-shimmer { background: linear-gradient(110deg, ${gold} 0%, #e0c88a 25%, ${gold} 50%, #a8884d 75%, ${gold} 100%); background-size: 200% 100%; animation: cta-shimmer-anim 3s linear infinite; }
+        .cta-shimmer:hover { transform: translateY(-1px); box-shadow: 0 12px 40px rgba(${goldRgb},0.35) !important; }
+        @keyframes cta-shimmer-anim { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        /* ── Nav: responsive helpers ── */
+        .show-mob { display: none !important; }
+        @media (max-width: 768px) {
+          .hide-mob { display: none !important; }
+          .show-mob { display: flex !important; }
+        }
+
         /* ── Typewriter ── */
         @keyframes blink { 50% { opacity: 0 } }
         .typewriter-cursor {
