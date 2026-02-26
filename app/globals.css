@@ -119,6 +119,12 @@ body {
   top: 0;
 }
 
+/* ── Global font override: ensure consistent Inter font across all pages ── */
+/* This overrides legacy Playfair Display / DM Sans references in sub-pages */
+* {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
