@@ -302,23 +302,23 @@ export default function LandingPage() {
   return (
     <>
       {/* ── Nav ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50" style={{ background: 'rgba(8,8,16,0.8)', backdropFilter: 'blur(24px) saturate(180%)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+      <nav className="fixed top-0 left-0 right-0 z-50" style={{ background: 'rgba(8,8,16,0.85)', backdropFilter: 'blur(24px) saturate(180%)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
         <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-[70px]">
           <Link href="/" className="no-underline">
             <ArxonLogo size="small" />
           </Link>
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#bransjer" className="text-[13px] text-white/50 no-underline hover:text-white transition-colors font-medium tracking-wide uppercase">Bransjer</a>
-            <a href="#automatiseringer" className="text-[13px] text-white/50 no-underline hover:text-white transition-colors font-medium tracking-wide uppercase">Automatiseringer</a>
-            <a href="#kalkulator" className="text-[13px] text-white/50 no-underline hover:text-white transition-colors font-medium tracking-wide uppercase">ROI</a>
-            <a href="#faq" className="text-[13px] text-white/50 no-underline hover:text-white transition-colors font-medium tracking-wide uppercase">FAQ</a>
+          {/* Desktop nav - use inline display to avoid Tailwind hidden class issues */}
+          <div style={{ display: 'none' }} className="md:!flex items-center gap-8">
+            <a href="#bransjer" className="text-[14px] no-underline font-medium tracking-wide" style={{ color: 'rgba(255,255,255,0.7)' }}>Bransjer</a>
+            <a href="#automatiseringer" className="text-[14px] no-underline font-medium tracking-wide" style={{ color: 'rgba(255,255,255,0.7)' }}>Automatiseringer</a>
+            <a href="#kalkulator" className="text-[14px] no-underline font-medium tracking-wide" style={{ color: 'rgba(255,255,255,0.7)' }}>ROI</a>
+            <a href="#faq" className="text-[14px] no-underline font-medium tracking-wide" style={{ color: 'rgba(255,255,255,0.7)' }}>FAQ</a>
             <button onClick={ctaClick} className="gold-btn text-sm font-semibold px-6 py-[10px] rounded-xl">
               Gratis kartlegging
             </button>
           </div>
           {/* Mobile menu button */}
-          <button className="md:hidden bg-transparent border-none text-white cursor-pointer p-2" onClick={() => setMenuOpen(!menuOpen)}>
+          <button className="bg-transparent border-none cursor-pointer p-2 md:!hidden" style={{ color: 'white', display: 'block' }} onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -326,12 +326,12 @@ export default function LandingPage() {
         <AnimatePresence>
           {menuOpen && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-              className="md:hidden overflow-hidden" style={{ background: 'rgba(8,8,16,0.98)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+              className="overflow-hidden md:!hidden" style={{ background: 'rgba(8,8,16,0.98)', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
               <div className="p-5 px-6 flex flex-col gap-5">
-                <a href="#bransjer" onClick={() => setMenuOpen(false)} className="text-base text-white/70 no-underline font-medium">Bransjer</a>
-                <a href="#automatiseringer" onClick={() => setMenuOpen(false)} className="text-base text-white/70 no-underline font-medium">Automatiseringer</a>
-                <a href="#kalkulator" onClick={() => setMenuOpen(false)} className="text-base text-white/70 no-underline font-medium">ROI-kalkulator</a>
-                <a href="#faq" onClick={() => setMenuOpen(false)} className="text-base text-white/70 no-underline font-medium">FAQ</a>
+                <a href="#bransjer" onClick={() => setMenuOpen(false)} className="text-base no-underline font-medium" style={{ color: 'rgba(255,255,255,0.8)' }}>Bransjer</a>
+                <a href="#automatiseringer" onClick={() => setMenuOpen(false)} className="text-base no-underline font-medium" style={{ color: 'rgba(255,255,255,0.8)' }}>Automatiseringer</a>
+                <a href="#kalkulator" onClick={() => setMenuOpen(false)} className="text-base no-underline font-medium" style={{ color: 'rgba(255,255,255,0.8)' }}>ROI-kalkulator</a>
+                <a href="#faq" onClick={() => setMenuOpen(false)} className="text-base no-underline font-medium" style={{ color: 'rgba(255,255,255,0.8)' }}>FAQ</a>
                 <button onClick={() => { setMenuOpen(false); ctaClick() }} className="gold-btn w-full py-3 px-6 text-[15px] font-semibold rounded-xl">
                   Gratis kartlegging
                 </button>

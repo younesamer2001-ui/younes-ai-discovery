@@ -18,11 +18,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth transitions */
+/* Smooth transitions - exclude display property to avoid conflicts with responsive utilities */
 * {
-  transition-property: background-color, border-color, color, fill, stroke;
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
   transition-duration: 150ms;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ensure Tailwind responsive display utilities work with !important */
+@media (min-width: 768px) {
+  .md\:\!flex { display: flex !important; }
+  .md\:\!hidden { display: none !important; }
+  .md\:\!block { display: block !important; }
 }
 
 /* Glass card effect */
