@@ -8,7 +8,8 @@ import {
   ArrowRight, Phone, Bot, Zap, Shield, Clock, BarChart3,
   CheckCircle2, ChevronDown, Star, Users, TrendingUp, Building2,
   Sparkles, MessageSquare, FileText, Receipt, Megaphone, ClipboardList,
-  Lock, Menu, X, ChevronRight, Calendar, Mail, Target, Play, Headphones
+  Lock, Menu, X, ChevronRight, Calendar, Mail, Target, Play, Headphones,
+  AlertTriangle, ArrowUpRight, PhoneOff, XCircle, Check, Heart
 } from 'lucide-react'
 
 /* ── Constants ── */
@@ -109,9 +110,9 @@ const categories = [
 
 /* ── Testimonials ── */
 const testimonials = [
-  { name: 'Martin K.', role: 'Daglig leder, Bygg & Håndverk', text: 'Vi tapte nesten 40% av henvendelsene fordi vi ikke rakk å svare telefonen på jobb. Nå svarer AI-en og booker befaring automatisk. Omsetningen økte med 25% på 3 måneder.', stars: 5 },
-  { name: 'Lena H.', role: 'Eier, Salong & Skjønnhet', text: 'No-shows var et enormt problem. Automatiske påminnelser + venteliste har redusert det fra 20% til under 5%. Og kundene booker timer mens jeg klipper!', stars: 5 },
-  { name: 'Erik S.', role: 'Partner, Advokatkontor', text: 'Saksdokument-oppsummeringen sparer oss 30-60 minutter per sak. AI-telefonsvareren kvalifiserer klienter 24/7 — vi får bare relevante saker inn.', stars: 5 },
+  { name: 'Martin K.', role: 'Daglig leder, Bygg & Håndverk', text: 'Vi tapte nesten 40% av henvendelsene fordi vi ikke rakk å svare telefonen på jobb. Nå svarer AI-en og booker befaring automatisk. Omsetningen økte med 25% på 3 måneder.', stars: 5, result: '+25% omsetning' },
+  { name: 'Lena H.', role: 'Eier, Salong & Skjønnhet', text: 'No-shows var et enormt problem. Automatiske påminnelser + venteliste har redusert det fra 20% til under 5%. Og kundene booker timer mens jeg klipper!', stars: 5, result: '75% færre no-shows' },
+  { name: 'Erik S.', role: 'Partner, Advokatkontor', text: 'Saksdokument-oppsummeringen sparer oss 30-60 minutter per sak. AI-telefonsvareren kvalifiserer klienter 24/7 — vi får bare relevante saker inn.', stars: 5, result: '60 min spart per sak' },
 ]
 
 /* ── FAQ ── */
@@ -180,7 +181,7 @@ function LiveToast() {
     <AnimatePresence>
       {toast && (
         <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-          className="fixed bottom-6 left-6 z-[100] flex items-center gap-3 rounded-[14px] px-5 py-[14px] max-w-[320px]"
+          className="fixed bottom-6 left-6 z-[100] items-center gap-3 rounded-[14px] px-5 py-[14px] max-w-[320px] hidden md:flex"
           style={{ background: 'rgba(20,20,30,0.95)', border: `1px solid rgba(${goldRgb},0.2)`, backdropFilter: 'blur(16px)', boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}>
           <div className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center" style={{ background: `rgba(${goldRgb},0.1)` }}>
             <Users size={16} color={gold} />
@@ -192,6 +193,35 @@ function LiveToast() {
         </motion.div>
       )}
     </AnimatePresence>
+  )
+}
+
+/* ── Before/After comparison ── */
+function BeforeAfter() {
+  const comparisons = [
+    { before: 'Telefonen ringer — du er opptatt', after: 'AI svarer på 0,3 sekunder', icon: Phone },
+    { before: 'Kunden gir opp, ringer konkurrenten', after: 'AI booker møte og sender bekreftelse', icon: Calendar },
+    { before: 'Manuell oppfølging — noen faller mellom', after: 'Automatisk oppfølging til alle leads', icon: Target },
+    { before: 'Faktura og purring tar timer', after: 'Sendt og fulgt opp automatisk', icon: Receipt },
+  ]
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {comparisons.map((c, i) => (
+        <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+          className="rounded-2xl p-5 flex flex-col gap-3"
+          style={{ background: 'rgba(10,10,15,0.6)', border: '1px solid rgba(255,255,255,0.06)' }}>
+          <div className="flex items-center gap-2 text-sm">
+            <XCircle size={16} color="#ef4444" className="flex-shrink-0" />
+            <span className="text-[#ff8888] line-through opacity-70">{c.before}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            <Check size={16} color="#4ade80" className="flex-shrink-0" />
+            <span className="text-[#88ffaa] font-medium">{c.after}</span>
+          </div>
+        </motion.div>
+      ))}
+    </div>
   )
 }
 
@@ -289,7 +319,7 @@ export default function LandingPage() {
             Automatiser{' '}
             <Typewriter words={['telefonen', 'bookingen', 'leadgenerering', 'fakturering', 'markedsføring', 'oppfølging']} />
             <br />
-            <span className="text-white/90">med AI</span>
+            <span className="text-white/90">med AI som faktisk virker</span>
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
@@ -299,19 +329,26 @@ export default function LandingPage() {
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-            className="flex flex-col items-center gap-4">
+            className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button onClick={ctaClick}
               className="border-none rounded-[14px] py-[18px] px-10 text-[17px] font-bold cursor-pointer flex items-center gap-[10px] hover:-translate-y-[2px] transition-transform"
               style={{ background: gold, color: '#0a0a0f', boxShadow: `0 4px 24px rgba(${goldRgb},0.3)` }}>
               Start gratis kartlegging <ArrowRight size={18} />
             </button>
-            <div className="flex items-center gap-4 text-[13px] text-white/35">
-              <span className="flex items-center gap-1"><Clock size={12} /> 2 min</span>
-              <span>·</span>
-              <span className="flex items-center gap-1"><Shield size={12} /> Ingen forpliktelser</span>
-              <span>·</span>
-              <span className="flex items-center gap-1"><Zap size={12} /> Gratis AI-analyse</span>
-            </div>
+            <a href="tel:+4778896386"
+              className="rounded-[14px] py-[16px] px-8 text-[15px] font-semibold flex items-center gap-[10px] no-underline transition-all hover:border-opacity-50"
+              style={{ background: 'transparent', border: `1px solid rgba(${goldRgb},0.3)`, color: gold }}>
+              <Phone size={16} /> Prøv AI-telefonsvareren
+            </a>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+            className="flex flex-wrap items-center justify-center gap-4 mt-6 text-[13px] text-white/35">
+            <span className="flex items-center gap-1"><Clock size={12} /> 2 min kartlegging</span>
+            <span>·</span>
+            <span className="flex items-center gap-1"><Shield size={12} /> Ingen forpliktelser</span>
+            <span>·</span>
+            <span className="flex items-center gap-1"><Zap size={12} /> Gratis AI-analyse</span>
           </motion.div>
         </div>
       </section>
@@ -320,8 +357,8 @@ export default function LandingPage() {
       <section className="px-6 pb-16">
         <div className="max-w-[900px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-center">
           {[
-            { value: 226, suffix: '+', label: 'Automatiseringer' },
-            { value: 25, suffix: '', label: 'Bransjer' },
+            { value: 226, suffix: '+', label: 'Automatiseringer klare' },
+            { value: 25, suffix: '', label: 'Bransjer dekket' },
             { value: 85, suffix: '%', label: 'Raskere oppfølging' },
             { value: 24, suffix: '/7', label: 'AI tilgjengelig' },
           ].map((stat, i) => (
@@ -336,8 +373,24 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── PAIN → SOLUTION ── */}
+      {/* ── BEFORE / AFTER ── */}
       <section className="py-16 md:py-20 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
+        <div className="max-w-[900px] mx-auto">
+          <div className="text-center mb-12">
+            <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              className="text-[clamp(24px,3.5vw,38px)] font-bold text-white mb-3">
+              Uten AI vs. med Arxon
+            </motion.h2>
+            <p className="text-base text-white/45 max-w-[550px] mx-auto">
+              Se forskjellen mellom å tape kunder og å fange dem — automatisk
+            </p>
+          </div>
+          <BeforeAfter />
+        </div>
+      </section>
+
+      {/* ── PAIN → SOLUTION ── */}
+      <section className="py-16 md:py-20 px-6">
         <div className="max-w-[900px] mx-auto text-center">
           <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             className="text-[clamp(24px,3.5vw,38px)] font-bold text-white mb-4">
@@ -357,7 +410,7 @@ export default function LandingPage() {
               { pain: 'GDPR-bekymringer', fix: 'Innebygd samtykke-logging og audit-trails', icon: Shield },
             ].map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
-                className="rounded-2xl p-6" style={{ background: 'rgba(10,10,15,0.6)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                className="rounded-2xl p-6" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
                 <div className="flex items-center gap-[10px] mb-3">
                   <div className="w-9 h-9 rounded-[10px] flex items-center justify-center" style={{ background: `rgba(${goldRgb},0.08)` }}>
                     <item.icon size={18} color={gold} />
@@ -371,29 +424,43 @@ export default function LandingPage() {
               </motion.div>
             ))}
           </div>
+
+          {/* CTA after pain section */}
+          <div className="mt-10">
+            <button onClick={ctaClick}
+              className="border-none rounded-[12px] py-[14px] px-8 text-[15px] font-semibold cursor-pointer inline-flex items-center gap-2 hover:brightness-110 transition-all"
+              style={{ background: `rgba(${goldRgb},0.15)`, color: gold, border: `1px solid rgba(${goldRgb},0.25)` }}>
+              Finn ut hva du taper — gratis <ArrowRight size={16} />
+            </button>
+          </div>
         </div>
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section className="py-16 md:py-20 px-6">
+      <section className="py-16 md:py-20 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
         <div className="max-w-[1000px] mx-auto">
           <div className="text-center mb-12">
             <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               className="text-[clamp(24px,3.5vw,38px)] font-bold text-white mb-3">
-              Hva kundene sier
+              Norske bedrifter som bruker Arxon
             </motion.h2>
-            <p className="text-base text-white/45">Resultater fra norske bedrifter som bruker Arxon</p>
+            <p className="text-base text-white/45">Resultater fra ekte kunder i ulike bransjer</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {testimonials.map((t, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                 className="rounded-2xl p-7 flex flex-col" style={{ background: 'rgba(255,255,255,0.025)', border: `1px solid rgba(${goldRgb},0.08)` }}>
-                <div className="flex gap-1 mb-4">
-                  {Array.from({ length: t.stars }).map((_, j) => (
-                    <Star key={j} size={16} fill={gold} color={gold} />
-                  ))}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex gap-1">
+                    {Array.from({ length: t.stars }).map((_, j) => (
+                      <Star key={j} size={16} fill={gold} color={gold} />
+                    ))}
+                  </div>
+                  <span className="text-xs font-bold px-3 py-1 rounded-full" style={{ background: 'rgba(74,222,128,0.1)', color: '#4ade80' }}>
+                    {t.result}
+                  </span>
                 </div>
-                <p className="text-sm text-white/60 leading-relaxed mb-5 flex-1">"{t.text}"</p>
+                <p className="text-sm text-white/60 leading-relaxed mb-5 flex-1">&ldquo;{t.text}&rdquo;</p>
                 <div>
                   <div className="text-sm font-semibold text-white">{t.name}</div>
                   <div className="text-xs text-white/35">{t.role}</div>
@@ -405,7 +472,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── INDUSTRY SELECTOR ── */}
-      <section id="bransjer" className="py-16 md:py-20 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
+      <section id="bransjer" className="py-16 md:py-20 px-6">
         <div className="max-w-[1100px] mx-auto">
           <div className="text-center mb-12">
             <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -468,7 +535,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── AUTOMATION CATEGORIES ── */}
-      <section id="automatiseringer" className="py-16 md:py-20 px-6">
+      <section id="automatiseringer" className="py-16 md:py-20 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
         <div className="max-w-[1000px] mx-auto">
           <div className="text-center mb-12">
             <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -498,7 +565,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="py-16 md:py-20 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
+      <section className="py-16 md:py-20 px-6">
         <div className="max-w-[900px] mx-auto">
           <div className="text-center mb-14">
             <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -540,7 +607,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── ROI CALCULATOR ── */}
-      <section id="kalkulator" className="py-16 md:py-20 px-6">
+      <section id="kalkulator" className="py-16 md:py-20 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
         <div className="max-w-[700px] mx-auto">
           <div className="text-center mb-10">
             <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -570,53 +637,78 @@ export default function LandingPage() {
               <div className="flex justify-between text-[11px] text-white/30"><span>1</span><span>30</span></div>
             </div>
 
-            <div className="text-center p-6 rounded-2xl" style={{ background: `rgba(${goldRgb},0.06)`, border: `1px solid rgba(${goldRgb},0.15)` }}>
+            <div className="text-center p-6 rounded-2xl mb-6" style={{ background: `rgba(${goldRgb},0.06)`, border: `1px solid rgba(${goldRgb},0.15)` }}>
               <div className="text-[13px] text-white/40 mb-1">Estimert tapt omsetning per måned</div>
               <div className="text-[42px] font-extrabold mb-2" style={{ color: gold }}>
                 {monthlySavings.toLocaleString('nb-NO')} kr
               </div>
               <div className="text-[13px] text-white/35">
-                = <strong className="text-white/50">{(monthlySavings * 12).toLocaleString('nb-NO')} kr</strong> per år
+                = <strong className="text-white/50">{(monthlySavings * 12).toLocaleString('nb-NO')} kr</strong> per år du kan redde
               </div>
             </div>
 
+            {/* Urgency element */}
+            <div className="flex items-center gap-3 p-4 rounded-xl mb-6" style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.12)' }}>
+              <AlertTriangle size={18} color="#ef4444" className="flex-shrink-0" />
+              <span className="text-sm text-[#ffa0a0]">
+                Hver uke uten AI-telefonsvarer koster deg ca. <strong className="text-white">{Math.round(monthlySavings / 4.3).toLocaleString('nb-NO')} kr</strong> i tapte kunder
+              </span>
+            </div>
+
             <button onClick={ctaClick}
-              className="w-full border-none rounded-xl py-[14px] px-7 text-[15px] font-semibold cursor-pointer flex items-center justify-center gap-2 mt-6 hover:brightness-110 transition-all"
+              className="w-full border-none rounded-xl py-[14px] px-7 text-[15px] font-semibold cursor-pointer flex items-center justify-center gap-2 hover:brightness-110 transition-all"
               style={{ background: gold, color: '#0a0a0f' }}>
-              Få gratis AI-analyse for din bedrift <ArrowRight size={16} />
+              Stopp tapet — få gratis AI-analyse <ArrowRight size={16} />
             </button>
           </div>
         </div>
       </section>
 
       {/* ── DEMO / RING OSS ── */}
-      <section className="py-16 md:py-20 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
+      <section className="py-16 md:py-20 px-6">
         <div className="max-w-[800px] mx-auto">
-          <div className="rounded-[20px] p-8 md:p-12 text-center" style={{ background: `rgba(${goldRgb},0.03)`, border: `1px solid rgba(${goldRgb},0.1)` }}>
-            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: `rgba(${goldRgb},0.1)`, border: `2px solid rgba(${goldRgb},0.2)` }}>
-              <Phone size={28} color={gold} />
+          <div className="rounded-[20px] p-8 md:p-12 text-center relative overflow-hidden" style={{ background: `rgba(${goldRgb},0.03)`, border: `1px solid rgba(${goldRgb},0.1)` }}>
+            {/* Decorative glow */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] pointer-events-none" style={{ background: `radial-gradient(ellipse, rgba(${goldRgb},0.06) 0%, transparent 70%)` }} />
+
+            <div className="relative">
+              <div className="inline-flex items-center gap-2 rounded-full px-4 py-[6px] mb-6"
+                style={{ background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.15)' }}>
+                <div className="w-2 h-2 rounded-full bg-[#4ade80] animate-pulse" />
+                <span className="text-[13px] text-[#4ade80] font-medium">AI-en er online nå</span>
+              </div>
+
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: `rgba(${goldRgb},0.1)`, border: `2px solid rgba(${goldRgb},0.2)` }}>
+                <Phone size={28} color={gold} />
+              </div>
+              <h2 className="text-[clamp(22px,3vw,32px)] font-bold text-white mb-4">Prøv AI-telefonsvareren selv</h2>
+              <p className="text-base text-white/50 mb-8 max-w-[500px] mx-auto">
+                Ring nummeret nedenfor og opplev hvordan Arxon AI svarer, kvalifiserer deg og booker møte — alt på norsk.
+              </p>
+              <a href="tel:+4778896386" className="inline-flex items-center gap-3 rounded-[14px] py-4 px-8 text-lg font-bold no-underline hover:-translate-y-[2px] transition-transform"
+                style={{ background: gold, color: '#0a0a0f', boxShadow: `0 4px 24px rgba(${goldRgb},0.3)` }}>
+                <Phone size={20} /> Ring 78 89 63 86
+              </a>
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-[13px] text-white/30">
+                <span>Gratis å ringe</span>
+                <span>·</span>
+                <span>AI svarer 24/7</span>
+                <span>·</span>
+                <span>Norsk språk</span>
+              </div>
             </div>
-            <h2 className="text-[clamp(22px,3vw,32px)] font-bold text-white mb-4">Vil du prøve AI-telefonsvareren?</h2>
-            <p className="text-base text-white/50 mb-8 max-w-[500px] mx-auto">
-              Ring nummeret nedenfor og snakk med Arxon AI. Opplev selv hvordan den svarer, booker møter og kvalifiserer leads.
-            </p>
-            <a href="tel:+4778896386" className="inline-flex items-center gap-3 rounded-[14px] py-4 px-8 text-lg font-bold no-underline hover:-translate-y-[2px] transition-transform"
-              style={{ background: gold, color: '#0a0a0f', boxShadow: `0 4px 24px rgba(${goldRgb},0.3)` }}>
-              <Phone size={20} /> Ring 78 89 63 86
-            </a>
-            <div className="mt-4 text-[13px] text-white/30">Gratis å ringe · AI svarer 24/7 · Norsk språk</div>
           </div>
         </div>
       </section>
 
       {/* ── TRUST SIGNALS ── */}
-      <section className="py-12 px-6">
+      <section className="py-12 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
         <div className="max-w-[900px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-5 text-center">
           {[
             { icon: Shield, label: 'GDPR-compliant', sub: 'Data lagret i EØS' },
             { icon: Lock, label: 'EU AI Act-klar', sub: 'Kryptert & sikkert' },
             { icon: Zap, label: 'Live på 2-5 dager', sub: 'Rask implementering' },
-            { icon: Users, label: 'Norsk support', sub: 'Lokal ekspertise' },
+            { icon: Heart, label: 'Norsk support', sub: 'Dedikert kontaktperson' },
           ].map((item, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
               className="p-5 flex flex-col items-center gap-2">
@@ -629,7 +721,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── FAQ ── */}
-      <section id="faq" className="py-16 md:py-20 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
+      <section id="faq" className="py-16 md:py-20 px-6">
         <div className="max-w-[900px] mx-auto">
           <div className="text-center mb-12">
             <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -642,22 +734,34 @@ export default function LandingPage() {
       </section>
 
       {/* ── FINAL CTA ── */}
-      <section className="py-16 md:py-20 px-6">
+      <section className="py-16 md:py-20 px-6" style={{ background: 'rgba(255,255,255,0.015)' }}>
         <div className="max-w-[700px] mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             className="rounded-3xl p-12 md:p-14"
             style={{ background: `linear-gradient(135deg, rgba(${goldRgb},0.08), rgba(${goldRgb},0.03))`, border: `1px solid rgba(${goldRgb},0.15)` }}>
+            <div className="inline-flex items-center gap-2 rounded-full px-4 py-[6px] mb-6"
+              style={{ background: `rgba(${goldRgb},0.08)`, border: `1px solid rgba(${goldRgb},0.15)` }}>
+              <Sparkles size={14} color={gold} />
+              <span className="text-[13px] font-medium" style={{ color: gold }}>Gratis, ingen binding</span>
+            </div>
             <h2 className="text-[clamp(24px,3.5vw,36px)] font-bold text-white mb-4">
-              Klar for å automatisere?
+              Slutt å tape kunder i dag
             </h2>
             <p className="text-base text-white/50 mb-8 max-w-[500px] mx-auto">
-              Start med en gratis kartlegging. Ingen binding, ingen risiko — bare konkrete forslag som sparer deg tid og penger.
+              Start med en gratis kartlegging. På 2 minutter finner AI-en de automatiseringene som gir mest verdi for akkurat din bedrift.
             </p>
-            <button onClick={ctaClick}
-              className="border-none rounded-[14px] py-[18px] px-11 text-[17px] font-bold cursor-pointer inline-flex items-center gap-[10px] hover:-translate-y-[2px] transition-transform"
-              style={{ background: gold, color: '#0a0a0f', boxShadow: `0 4px 24px rgba(${goldRgb},0.3)` }}>
-              Start gratis kartlegging <ArrowRight size={18} />
-            </button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button onClick={ctaClick}
+                className="border-none rounded-[14px] py-[18px] px-11 text-[17px] font-bold cursor-pointer inline-flex items-center gap-[10px] hover:-translate-y-[2px] transition-transform"
+                style={{ background: gold, color: '#0a0a0f', boxShadow: `0 4px 24px rgba(${goldRgb},0.3)` }}>
+                Start gratis kartlegging <ArrowRight size={18} />
+              </button>
+              <a href="tel:+4778896386"
+                className="rounded-[14px] py-[16px] px-8 text-[15px] font-semibold flex items-center gap-[10px] no-underline transition-all"
+                style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold }}>
+                <Phone size={16} /> Ring oss
+              </a>
+            </div>
             <div className="mt-4 text-[13px] text-white/30">226 automatiseringer · 25 bransjer · 2 minutter</div>
           </motion.div>
         </div>
@@ -676,7 +780,7 @@ export default function LandingPage() {
             <Link href="/blogg" className="text-[13px] text-white/35 no-underline hover:text-white/60">Blogg</Link>
             <a href="mailto:kontakt@arxon.no" className="text-[13px] text-white/35 no-underline hover:text-white/60">kontakt@arxon.no</a>
           </div>
-          <div className="text-xs text-white/20">© {new Date().getFullYear()} Arxon. Alle rettigheter forbeholdt.</div>
+          <div className="text-xs text-white/20">&copy; {new Date().getFullYear()} Arxon. Alle rettigheter forbeholdt.</div>
         </div>
       </footer>
 
@@ -686,11 +790,18 @@ export default function LandingPage() {
           <motion.div initial={{ y: 100 }} animate={{ y: 0 }} exit={{ y: 100 }}
             className="fixed bottom-0 left-0 right-0 z-40 p-3 px-4 md:hidden"
             style={{ background: 'rgba(10,10,15,0.95)', backdropFilter: 'blur(20px)', borderTop: `1px solid rgba(${goldRgb},0.15)` }}>
-            <button onClick={ctaClick}
-              className="w-full border-none rounded-xl py-[14px] px-5 text-[15px] font-bold cursor-pointer flex items-center justify-center gap-2"
-              style={{ background: gold, color: '#0a0a0f' }}>
-              Start gratis kartlegging <ArrowRight size={16} />
-            </button>
+            <div className="flex gap-2">
+              <button onClick={ctaClick}
+                className="flex-1 border-none rounded-xl py-[14px] px-5 text-[15px] font-bold cursor-pointer flex items-center justify-center gap-2"
+                style={{ background: gold, color: '#0a0a0f' }}>
+                Gratis kartlegging <ArrowRight size={16} />
+              </button>
+              <a href="tel:+4778896386"
+                className="rounded-xl py-[14px] px-4 flex items-center justify-center no-underline"
+                style={{ border: `1px solid rgba(${goldRgb},0.3)`, color: gold }}>
+                <Phone size={18} />
+              </a>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
