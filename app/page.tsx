@@ -8,9 +8,10 @@ import {
   ArrowRight, Phone, Bot, Zap, Shield, Clock, BarChart3,
   CheckCircle2, ChevronDown, Star, Users, TrendingUp, Building2,
   Sparkles, MessageSquare, FileText, Receipt, Megaphone, ClipboardList,
-  Lock, Menu, X, ChevronRight, Calendar, Mail, Target, Play, Headphones,
+  Lock, ChevronRight, Calendar, Mail, Target, Play, Headphones,
   AlertTriangle, ArrowUpRight, PhoneOff, XCircle, Check, Heart
 } from 'lucide-react'
+import Nav from '@/app/components/Nav'
 
 /* ── Constants ── */
 const gold = '#c9a96e'
@@ -274,7 +275,6 @@ export default function LandingPage() {
   const router = useRouter()
   const [selectedIndustry, setSelectedIndustry] = useState(0)
   const [showSticky, setShowSticky] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     const handler = () => setShowSticky(window.scrollY > 600)
@@ -301,79 +301,11 @@ export default function LandingPage() {
 
   return (
     <>
-      {/* ── Nav ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50">
-        {/* Nav glass background */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'rgba(8,8,22,0.6)',
-          backdropFilter: 'blur(24px) saturate(180%)',
-          borderBottom: `1px solid rgba(${goldRgb},0.06)`,
-        }} />
-        {/* Subtle gold glow at top edge */}
-        <div style={{
-          position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
-          width: '400px', height: '1px',
-          background: `linear-gradient(90deg, transparent, rgba(${goldRgb},0.3), transparent)`,
-        }} />
-        <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-[70px] relative">
-          <Link href="/" className="no-underline">
-            <ArxonLogo size="small" />
-          </Link>
-          {/* Desktop nav */}
-          <div style={{ display: 'none' }} className="md:!flex items-center gap-1">
-            {[
-              { href: '#bransjer', label: 'Bransjer' },
-              { href: '#automatiseringer', label: 'Automatiseringer' },
-              { href: '#kalkulator', label: 'ROI' },
-              { href: '#faq', label: 'FAQ' },
-            ].map((link) => (
-              <a key={link.href} href={link.href} className="nav-link text-[14px] no-underline font-medium px-4 py-2 rounded-lg">
-                {link.label}
-              </a>
-            ))}
-            <div style={{ width: '1px', height: '24px', background: `rgba(${goldRgb},0.1)`, margin: '0 8px' }} />
-            <button onClick={ctaClick} className="gold-btn text-[13px] font-semibold px-5 py-[9px] rounded-xl">
-              Gratis kartlegging
-            </button>
-          </div>
-          {/* Mobile menu button */}
-          <button className="bg-transparent border-none cursor-pointer p-2 md:!hidden" style={{ color: 'white', display: 'block' }} onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-        {/* Mobile menu */}
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden md:!hidden relative" style={{ background: 'rgba(8,8,22,0.95)', borderTop: `1px solid rgba(${goldRgb},0.06)` }}>
-              <div className="p-5 px-6 flex flex-col gap-1">
-                {[
-                  { href: '#bransjer', label: 'Bransjer' },
-                  { href: '#automatiseringer', label: 'Automatiseringer' },
-                  { href: '#kalkulator', label: 'ROI-kalkulator' },
-                  { href: '#faq', label: 'FAQ' },
-                ].map((link) => (
-                  <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)}
-                    className="text-[15px] no-underline font-medium px-4 py-3 rounded-xl transition-colors"
-                    style={{ color: 'rgba(255,255,255,0.75)' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = `rgba(${goldRgb},0.06)`; e.currentTarget.style.color = gold }}
-                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.75)' }}>
-                    {link.label}
-                  </a>
-                ))}
-                <div style={{ height: '1px', background: `rgba(${goldRgb},0.08)`, margin: '8px 0' }} />
-                <button onClick={() => { setMenuOpen(false); ctaClick() }} className="gold-btn w-full py-3 px-6 text-[15px] font-semibold rounded-xl">
-                  Gratis kartlegging
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
+      {/* ── Nav (shared component) ── */}
+      <Nav />
 
       {/* ── HERO ── */}
-      <section className="pt-[140px] md:pt-[170px] pb-20 md:pb-28 text-center relative overflow-hidden min-h-[90vh] flex flex-col justify-center">
+      <section className="pt-[70px] md:pt-[100px] pb-20 md:pb-28 text-center relative overflow-hidden min-h-[90vh] flex flex-col justify-center">
         <FloatingOrbs />
 
         <div className="max-w-[900px] mx-auto px-6 relative z-10">
@@ -913,31 +845,6 @@ export default function LandingPage() {
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
-        }
-
-        /* ── Nav links ── */
-        .nav-link {
-          color: rgba(255,255,255,0.55);
-          transition: all 0.25s ease;
-          position: relative;
-        }
-        .nav-link:hover {
-          color: ${gold};
-          background: rgba(${goldRgb},0.06);
-        }
-        .nav-link::after {
-          content: '';
-          position: absolute;
-          bottom: 2px;
-          left: 50%;
-          width: 0;
-          height: 1px;
-          background: ${gold};
-          transition: all 0.25s ease;
-          transform: translateX(-50%);
-        }
-        .nav-link:hover::after {
-          width: 60%;
         }
 
         /* ── Gold CTA button ── */
