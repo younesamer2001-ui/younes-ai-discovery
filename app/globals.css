@@ -6,14 +6,16 @@
 
 :root {
   --foreground-rgb: 224, 224, 224;
-  --background-start-rgb: 10, 10, 15;
-  --background-end-rgb: 10, 10, 15;
+  --background-start-rgb: 8, 8, 26;
+  --background-end-rgb: 8, 8, 26;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background-color: #0a0a0f;
-  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  background-color: #08081a;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Smooth transitions */

@@ -1,15 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" width="200" height="48">
   <defs>
-    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#d4b276;stop-opacity:1" />
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" style="stop-color:#e2c47d;stop-opacity:1" />
       <stop offset="50%" style="stop-color:#c9a96e;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#a8884d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b8944a;stop-opacity:1" />
     </linearGradient>
   </defs>
-  <!-- Outer angular A shape -->
-  <path d="M24 4 L6 40 L12 40 L24 16 L36 40 L42 40 Z" fill="url(#goldGrad)" />
-  <!-- Horizontal crossbar cut -->
-  <rect x="13" y="28" width="22" height="3.5" fill="#0a0a0f" />
-  <!-- Inner highlight -->
-  <path d="M24 4 L20 12 L24 10 L28 12 Z" fill="#d4b276" opacity="0.4" />
+  <!-- A mark - triangular with inner cutout -->
+  <path d="M22 2 L2 42 L10 42 L16 30 L22 18 L28 30 L22 30 L18 38 L34 38 L40 42 L42 42 Z" fill="url(#goldGrad)" />
+  <!-- ARXON text -->
+  <text x="54" y="34" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="26" font-weight="600" letter-spacing="4" fill="white">ARXON</text>
 </svg>
