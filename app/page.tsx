@@ -302,18 +302,38 @@ export default function LandingPage() {
   return (
     <>
       {/* ── Nav ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50" style={{ background: 'rgba(8,8,16,0.85)', backdropFilter: 'blur(24px) saturate(180%)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-[70px]">
+      <nav className="fixed top-0 left-0 right-0 z-50">
+        {/* Nav glass background */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'rgba(8,8,22,0.6)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          borderBottom: `1px solid rgba(${goldRgb},0.06)`,
+        }} />
+        {/* Subtle gold glow at top edge */}
+        <div style={{
+          position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
+          width: '400px', height: '1px',
+          background: `linear-gradient(90deg, transparent, rgba(${goldRgb},0.3), transparent)`,
+        }} />
+        <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-[70px] relative">
           <Link href="/" className="no-underline">
             <ArxonLogo size="small" />
           </Link>
-          {/* Desktop nav - use inline display to avoid Tailwind hidden class issues */}
-          <div style={{ display: 'none' }} className="md:!flex items-center gap-8">
-            <a href="#bransjer" className="text-[14px] no-underline font-medium tracking-wide" style={{ color: 'rgba(255,255,255,0.7)' }}>Bransjer</a>
-            <a href="#automatiseringer" className="text-[14px] no-underline font-medium tracking-wide" style={{ color: 'rgba(255,255,255,0.7)' }}>Automatiseringer</a>
-            <a href="#kalkulator" className="text-[14px] no-underline font-medium tracking-wide" style={{ color: 'rgba(255,255,255,0.7)' }}>ROI</a>
-            <a href="#faq" className="text-[14px] no-underline font-medium tracking-wide" style={{ color: 'rgba(255,255,255,0.7)' }}>FAQ</a>
-            <button onClick={ctaClick} className="gold-btn text-sm font-semibold px-6 py-[10px] rounded-xl">
+          {/* Desktop nav */}
+          <div style={{ display: 'none' }} className="md:!flex items-center gap-1">
+            {[
+              { href: '#bransjer', label: 'Bransjer' },
+              { href: '#automatiseringer', label: 'Automatiseringer' },
+              { href: '#kalkulator', label: 'ROI' },
+              { href: '#faq', label: 'FAQ' },
+            ].map((link) => (
+              <a key={link.href} href={link.href} className="nav-link text-[14px] no-underline font-medium px-4 py-2 rounded-lg">
+                {link.label}
+              </a>
+            ))}
+            <div style={{ width: '1px', height: '24px', background: `rgba(${goldRgb},0.1)`, margin: '0 8px' }} />
+            <button onClick={ctaClick} className="gold-btn text-[13px] font-semibold px-5 py-[9px] rounded-xl">
               Gratis kartlegging
             </button>
           </div>
@@ -326,12 +346,23 @@ export default function LandingPage() {
         <AnimatePresence>
           {menuOpen && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden md:!hidden" style={{ background: 'rgba(8,8,16,0.98)', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-              <div className="p-5 px-6 flex flex-col gap-5">
-                <a href="#bransjer" onClick={() => setMenuOpen(false)} className="text-base no-underline font-medium" style={{ color: 'rgba(255,255,255,0.8)' }}>Bransjer</a>
-                <a href="#automatiseringer" onClick={() => setMenuOpen(false)} className="text-base no-underline font-medium" style={{ color: 'rgba(255,255,255,0.8)' }}>Automatiseringer</a>
-                <a href="#kalkulator" onClick={() => setMenuOpen(false)} className="text-base no-underline font-medium" style={{ color: 'rgba(255,255,255,0.8)' }}>ROI-kalkulator</a>
-                <a href="#faq" onClick={() => setMenuOpen(false)} className="text-base no-underline font-medium" style={{ color: 'rgba(255,255,255,0.8)' }}>FAQ</a>
+              className="overflow-hidden md:!hidden relative" style={{ background: 'rgba(8,8,22,0.95)', borderTop: `1px solid rgba(${goldRgb},0.06)` }}>
+              <div className="p-5 px-6 flex flex-col gap-1">
+                {[
+                  { href: '#bransjer', label: 'Bransjer' },
+                  { href: '#automatiseringer', label: 'Automatiseringer' },
+                  { href: '#kalkulator', label: 'ROI-kalkulator' },
+                  { href: '#faq', label: 'FAQ' },
+                ].map((link) => (
+                  <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)}
+                    className="text-[15px] no-underline font-medium px-4 py-3 rounded-xl transition-colors"
+                    style={{ color: 'rgba(255,255,255,0.75)' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = `rgba(${goldRgb},0.06)`; e.currentTarget.style.color = gold }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.75)' }}>
+                    {link.label}
+                  </a>
+                ))}
+                <div style={{ height: '1px', background: `rgba(${goldRgb},0.08)`, margin: '8px 0' }} />
                 <button onClick={() => { setMenuOpen(false); ctaClick() }} className="gold-btn w-full py-3 px-6 text-[15px] font-semibold rounded-xl">
                   Gratis kartlegging
                 </button>
@@ -882,6 +913,31 @@ export default function LandingPage() {
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+        }
+
+        /* ── Nav links ── */
+        .nav-link {
+          color: rgba(255,255,255,0.55);
+          transition: all 0.25s ease;
+          position: relative;
+        }
+        .nav-link:hover {
+          color: ${gold};
+          background: rgba(${goldRgb},0.06);
+        }
+        .nav-link::after {
+          content: '';
+          position: absolute;
+          bottom: 2px;
+          left: 50%;
+          width: 0;
+          height: 1px;
+          background: ${gold};
+          transition: all 0.25s ease;
+          transform: translateX(-50%);
+        }
+        .nav-link:hover::after {
+          width: 60%;
         }
 
         /* ── Gold CTA button ── */
