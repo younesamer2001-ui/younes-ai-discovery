@@ -215,12 +215,24 @@ export default function Home() {
       {/*  1. HERO                                    */}
       {/* ═══════════════════════════════════════════ */}
       <section className="pt-8 md:pt-16 pb-16 md:pb-24 text-center relative overflow-hidden min-h-[85vh] flex flex-col justify-center">
+        {/* Grid overlay */}
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] pointer-events-none" style={{ background: `radial-gradient(ellipse, rgba(${goldRgb},0.04) 0%, transparent 70%)` }} />
+        {/* Aurora glow */}
+        <div className="hero-aurora" />
+        {/* Floating particles */}
+        <div className="particles">
+          {Array.from({ length: 20 }).map((_, i) => (
+            <div key={i} className="particle" style={{
+              left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 8}s`, animationDuration: `${6 + Math.random() * 8}s`,
+              width: `${2 + Math.random() * 3}px`, height: `${2 + Math.random() * 3}px`,
+            }} />
+          ))}
+        </div>
 
         <div className="relative z-10 max-w-3xl mx-auto px-5">
-          <motion.div {...sectionAnim} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
-            style={{ border: `1px solid rgba(${goldRgb},0.15)`, background: `rgba(${goldRgb},0.04)` }}>
+          {/* Animated gradient border badge */}
+          <motion.div {...sectionAnim} className="shimmer-badge inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8">
             <Shield size={13} style={{ color: gold }} />
             <span className="text-[12px] text-white/50 tracking-wide">GDPR &middot; Norsk support &middot; Live på 2–5 dager</span>
           </motion.div>
@@ -256,20 +268,22 @@ export default function Home() {
       {/* ═══════════════════════════════════════════ */}
       {/*  2. STATS BAR                               */}
       {/* ═══════════════════════════════════════════ */}
-      <motion.section {...sectionAnim} className="py-10 border-y" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
-        <div className="max-w-4xl mx-auto px-5 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <motion.section {...sectionAnim} className="py-12 border-y relative" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
+        <div className="absolute inset-0 overflow-hidden"><div className="stats-glow" /></div>
+        <div className="max-w-4xl mx-auto px-5 grid grid-cols-2 md:grid-cols-4 gap-6 text-center relative z-10">
           {[
             { val: 226, suffix: '+', label: 'Automatiseringer' },
             { val: 25, suffix: '', label: 'Bransjer dekket' },
             { val: 85, suffix: '%', label: 'Raskere oppfølging' },
             { val: 24, suffix: '/7', label: 'AI tilgjengelig' },
           ].map((s, i) => (
-            <div key={i}>
-              <div className="text-[28px] md:text-[36px] font-extrabold text-white" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <motion.div key={i} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.1 }}>
+              <div className="text-[28px] md:text-[36px] font-extrabold text-gradient-gold" style={{ fontFamily: "'Playfair Display', serif" }}>
                 <AnimCounter target={s.val} suffix={s.suffix} />
               </div>
               <div className="text-[12px] text-white/35 tracking-wide uppercase mt-1">{s.label}</div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </motion.section>
@@ -277,11 +291,13 @@ export default function Home() {
       {/* ═══════════════════════════════════════════ */}
       {/*  3. TECHNOLOGY PARTNERS                     */}
       {/* ═══════════════════════════════════════════ */}
-      <motion.section {...sectionAnim} className="py-16 md:py-20">
+      <motion.section {...sectionAnim} className="py-16 md:py-20 relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-5 text-center">
           <p className="text-[12px] text-white/25 tracking-[3px] uppercase mb-8">Bygget med teknologi fra verdensledende selskaper</p>
           <TechLogos />
         </div>
+        {/* Gold divider glow */}
+        <div className="gold-divider mt-16" />
       </motion.section>
 
       {/* ═══════════════════════════════════════════ */}
@@ -297,7 +313,9 @@ export default function Home() {
           </motion.div>
 
           <div className="relative">
+            {/* Animated timeline line */}
             <div className="absolute left-6 md:left-8 top-0 bottom-0 w-px" style={{ background: `linear-gradient(to bottom, rgba(${goldRgb},0.3), rgba(${goldRgb},0.05))` }} />
+            <div className="timeline-glow-line" />
 
             {[
               { step: 1, icon: <ClipboardList size={20} />, title: 'Gratis kartlegging', time: '2 minutter', desc: 'Svar på noen enkle spørsmål om din bedrift. Vår AI analyserer dine behov og finner de automatiseringene som gir størst effekt.' },
@@ -309,9 +327,10 @@ export default function Home() {
                 viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.15 }}
                 className="relative pl-16 md:pl-20 pb-12 last:pb-0"
               >
-                <div className="absolute left-0 md:left-2 w-12 h-12 rounded-full flex items-center justify-center z-10"
+                <div className="absolute left-0 md:left-2 w-12 h-12 rounded-full flex items-center justify-center z-10 step-circle"
                   style={{ background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.25)` }}>
-                  <span className="text-sm font-bold" style={{ color: gold }}>{item.step}</span>
+                  <div className="step-pulse-ring" />
+                  <span className="text-sm font-bold relative z-10" style={{ color: gold }}>{item.step}</span>
                 </div>
 
                 <div className="road-card p-6">
@@ -414,9 +433,10 @@ export default function Home() {
                 className="w-full accent-[#c9a96e]" />
             </label>
 
-            <div className="text-center py-6 rounded-xl" style={{ background: `rgba(${goldRgb},0.04)`, border: `1px solid rgba(${goldRgb},0.1)` }}>
-              <div className="text-[11px] text-white/30 uppercase tracking-wide mb-1">Estimert månedlig tap</div>
-              <div className="text-[36px] md:text-[44px] font-extrabold" style={{ color: gold, fontFamily: "'Playfair Display', serif" }}>
+            <div className="text-center py-6 rounded-xl relative overflow-hidden" style={{ background: `rgba(${goldRgb},0.04)`, border: `1px solid rgba(${goldRgb},0.1)` }}>
+              <div className="roi-glow" />
+              <div className="text-[11px] text-white/30 uppercase tracking-wide mb-1 relative z-10">Estimert månedlig tap</div>
+              <div className="text-[36px] md:text-[44px] font-extrabold text-gradient-gold relative z-10" style={{ fontFamily: "'Playfair Display', serif" }}>
                 {monthlySavings.toLocaleString('nb-NO')} kr
               </div>
               <div className="text-[12px] text-white/30 mt-1">
@@ -488,12 +508,12 @@ export default function Home() {
       {/* ═══════════════════════════════════════════ */}
       {/*  9. FINAL CTA                               */}
       {/* ═══════════════════════════════════════════ */}
-      <section className="py-20 md:py-28 relative" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] pointer-events-none" style={{ background: `radial-gradient(ellipse, rgba(${goldRgb},0.04) 0%, transparent 70%)` }} />
+      <section className="py-20 md:py-28 relative overflow-hidden" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+        <div className="cta-aurora" />
         <div className="max-w-2xl mx-auto px-5 text-center relative z-10">
           <motion.div {...sectionAnim}>
             <h2 className="text-[28px] md:text-[44px] font-bold text-white tracking-tight mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Slutt å tape kunder.<br /><span style={{ color: gold }}>Start i dag.</span>
+              Slutt å tape kunder.<br /><span className="text-gradient-gold">Start i dag.</span>
             </h2>
             <p className="text-[14px] text-white/40 mb-8 max-w-md mx-auto">
               Gratis kartlegging. Ingen binding. Implementert på 2–5 dager.
@@ -618,6 +638,181 @@ export default function Home() {
         .faq-card:hover {
           border-color: rgba(255,255,255,0.1);
         }
+
+        /* ── FLAIR: Gold gradient text ── */
+        .text-gradient-gold {
+          background: linear-gradient(135deg, #e2c47d, ${gold}, #b8944a);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        /* ── FLAIR: Hero aurora glow ── */
+        .hero-aurora {
+          position: absolute;
+          top: -20%;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 140%;
+          height: 70%;
+          background: radial-gradient(ellipse at 30% 50%, rgba(${goldRgb},0.06) 0%, transparent 50%),
+                      radial-gradient(ellipse at 70% 50%, rgba(80,100,200,0.04) 0%, transparent 50%),
+                      radial-gradient(ellipse at 50% 80%, rgba(${goldRgb},0.03) 0%, transparent 40%);
+          animation: aurora-shift 12s ease-in-out infinite alternate;
+          pointer-events: none;
+          filter: blur(40px);
+        }
+        @keyframes aurora-shift {
+          0% { transform: translateX(-50%) translateY(0) scale(1); opacity: 0.8; }
+          50% { transform: translateX(-48%) translateY(-5%) scale(1.05); opacity: 1; }
+          100% { transform: translateX(-52%) translateY(3%) scale(0.95); opacity: 0.7; }
+        }
+
+        /* ── FLAIR: Floating particles ── */
+        .particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+        .particle {
+          position: absolute;
+          border-radius: 50%;
+          background: rgba(${goldRgb}, 0.3);
+          animation: particle-float linear infinite;
+        }
+        @keyframes particle-float {
+          0% { transform: translateY(0) translateX(0); opacity: 0; }
+          10% { opacity: 0.6; }
+          90% { opacity: 0.6; }
+          100% { transform: translateY(-120vh) translateX(30px); opacity: 0; }
+        }
+
+        /* ── FLAIR: Shimmer badge (animated gradient border) ── */
+        .shimmer-badge {
+          position: relative;
+          background: rgba(${goldRgb},0.04);
+          border: 1px solid transparent;
+          background-clip: padding-box;
+        }
+        .shimmer-badge::before {
+          content: '';
+          position: absolute;
+          inset: -1px;
+          border-radius: 9999px;
+          background: linear-gradient(90deg, rgba(${goldRgb},0.1), rgba(${goldRgb},0.35), rgba(${goldRgb},0.1));
+          background-size: 200% 100%;
+          animation: shimmer-border 3s linear infinite;
+          z-index: -1;
+        }
+        @keyframes shimmer-border {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+
+        /* ── FLAIR: Stats section glow ── */
+        .stats-glow {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 600px;
+          height: 200px;
+          background: radial-gradient(ellipse, rgba(${goldRgb},0.05) 0%, transparent 70%);
+          pointer-events: none;
+        }
+
+        /* ── FLAIR: Gold divider ── */
+        .gold-divider {
+          width: 100%;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(${goldRgb},0.2), rgba(${goldRgb},0.4), rgba(${goldRgb},0.2), transparent);
+          position: relative;
+        }
+        .gold-divider::after {
+          content: '';
+          position: absolute;
+          top: -4px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 200px;
+          height: 9px;
+          background: radial-gradient(ellipse, rgba(${goldRgb},0.15), transparent);
+          filter: blur(4px);
+        }
+
+        /* ── FLAIR: Timeline glow line (roadmap) ── */
+        .timeline-glow-line {
+          position: absolute;
+          left: calc(1.5rem - 2px);
+          top: 0;
+          bottom: 0;
+          width: 5px;
+          background: linear-gradient(to bottom, rgba(${goldRgb},0.15), rgba(${goldRgb},0.02));
+          filter: blur(3px);
+          pointer-events: none;
+        }
+        @media (min-width: 768px) {
+          .timeline-glow-line { left: calc(2rem - 2px); }
+        }
+
+        /* ── FLAIR: Step circle pulse ── */
+        .step-circle { position: relative; }
+        .step-pulse-ring {
+          position: absolute;
+          inset: -6px;
+          border-radius: 50%;
+          border: 1px solid rgba(${goldRgb},0.15);
+          animation: step-pulse 3s ease-in-out infinite;
+        }
+        @keyframes step-pulse {
+          0%, 100% { transform: scale(1); opacity: 0.5; }
+          50% { transform: scale(1.2); opacity: 0; }
+        }
+
+        /* ── FLAIR: ROI result glow ── */
+        .roi-glow {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 300px;
+          height: 150px;
+          background: radial-gradient(ellipse, rgba(${goldRgb},0.08) 0%, transparent 70%);
+          pointer-events: none;
+          animation: roi-breathe 4s ease-in-out infinite;
+        }
+        @keyframes roi-breathe {
+          0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+          50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        /* ── FLAIR: CTA aurora ── */
+        .cta-aurora {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: radial-gradient(ellipse at 30% 50%, rgba(${goldRgb},0.06) 0%, transparent 60%),
+                      radial-gradient(ellipse at 70% 30%, rgba(100,120,220,0.03) 0%, transparent 50%),
+                      radial-gradient(ellipse at 50% 80%, rgba(${goldRgb},0.04) 0%, transparent 50%);
+          animation: cta-aurora-move 10s ease-in-out infinite alternate;
+          pointer-events: none;
+        }
+        @keyframes cta-aurora-move {
+          0% { opacity: 0.6; filter: blur(30px); }
+          100% { opacity: 1; filter: blur(50px); }
+        }
+
+        /* ── FLAIR: Road card hover glow ── */
+        .road-card::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 12px;
+          opacity: 0;
+          background: radial-gradient(ellipse at 50% 0%, rgba(${goldRgb},0.06) 0%, transparent 70%);
+          transition: opacity 0.4s ease;
+          pointer-events: none;
+        }
+        .road-card { position: relative; overflow: hidden; }
+        .road-card:hover::before { opacity: 1; }
       `}</style>
     </>
   )
