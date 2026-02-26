@@ -4,10 +4,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowRight, Menu, X } from 'lucide-react'
-import { gold, goldRgb, bg } from '@/lib/constants'
+import { ArrowRight, Globe, Menu, X } from 'lucide-react'
+import { gold, goldRgb } from '@/lib/constants'
 
-/* ── Arxon Logo SVG (shared with landing page) ── */
+/* ── Arxon Logo SVG ── */
 function ArxonLogo({ size = 'default' }: { size?: 'default' | 'large' | 'small' }) {
   const h = size === 'large' ? 44 : size === 'small' ? 28 : 34
   return (
@@ -27,7 +27,6 @@ function ArxonLogo({ size = 'default' }: { size?: 'default' | 'large' | 'small' 
         fontWeight: 700,
         letterSpacing: h * 0.08,
         color: 'white',
-        fontFamily: 'Inter, system-ui, sans-serif',
         lineHeight: 1,
       }}>ARXON</span>
     </div>
@@ -40,16 +39,32 @@ interface NavProps {
   sticky?: boolean
 }
 
-export default function Nav({ lang = 'no', setLang, sticky = true }: NavProps) {
+export default function Nav({ lang: langProp, setLang: setLangProp, sticky = true }: NavProps) {
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [internalLang, setInternalLang] = useState<'no' | 'en'>('no')
 
-  const links = [
-    { href: '/mobilsvarer', label: lang === 'no' ? 'Mobilsvarer' : 'AI Receptionist' },
-    { href: '/hvordan-det-fungerer', label: lang === 'no' ? 'Hvordan det fungerer' : 'How it works' },
-    { href: '/priser', label: lang === 'no' ? 'Priser' : 'Pricing' },
-    { href: '/blogg', label: lang === 'no' ? 'Blogg' : 'Blog' },
-  ]
+  // Use prop if provided, otherwise use internal state
+  const lang = langProp ?? internalLang
+  const setLang = setLangProp ?? setInternalLang
+
+  const links = lang === 'no'
+    ? [
+        { href: '/mobilsvarer', label: 'Mobilsvarer' },
+        { href: '/hvordan-det-fungerer', label: 'Hvordan det fungerer' },
+        { href: '/priser', label: 'Priser' },
+        { href: '/demo', label: 'Demo' },
+        { href: '/blogg', label: 'Blogg' },
+        { href: '/om-oss', label: 'Om oss' },
+      ]
+    : [
+        { href: '/mobilsvarer', label: 'AI Receptionist' },
+        { href: '/hvordan-det-fungerer', label: 'How it works' },
+        { href: '/priser', label: 'Pricing' },
+        { href: '/demo', label: 'Demo' },
+        { href: '/blogg', label: 'Blog' },
+        { href: '/om-oss', label: 'About us' },
+      ]
 
   const ctaClick = () => router.push('/kartlegging')
 
@@ -59,7 +74,7 @@ export default function Nav({ lang = 'no', setLang, sticky = true }: NavProps) {
       {/* Glass background */}
       <div style={{
         position: 'absolute', inset: 0,
-        background: `rgba(8,8,22,0.6)`,
+        background: 'rgba(8,8,22,0.6)',
         backdropFilter: 'blur(24px) saturate(180%)',
         borderBottom: `1px solid rgba(${goldRgb},0.06)`,
       }} />
@@ -79,31 +94,71 @@ export default function Nav({ lang = 'no', setLang, sticky = true }: NavProps) {
         <div style={{ display: 'none' }} className="md:!flex items-center gap-1">
           {links.map((link) => (
             <Link key={link.href} href={link.href}
-              className="nav-link text-[14px] no-underline font-medium px-4 py-2 rounded-lg"
+              className="text-[13px] no-underline font-medium px-3 py-2 rounded-lg"
               style={{
-                color: 'rgba(255,255,255,0.55)',
+                color: 'rgba(255,255,255,0.5)',
                 transition: 'all 0.25s ease',
-                fontFamily: 'Inter, system-ui, sans-serif',
               }}
-              onMouseEnter={e => { e.currentTarget.style.color = gold; e.currentTarget.style.background = `rgba(${goldRgb},0.06)` }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.55)'; e.currentTarget.style.background = 'transparent' }}
+              onMouseEnter={e => { e.currentTarget.style.color = gold }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.5)' }}
             >
               {link.label}
             </Link>
           ))}
-          <div style={{ width: '1px', height: '24px', background: `rgba(${goldRgb},0.1)`, margin: '0 8px' }} />
-          <button onClick={ctaClick} className="gold-btn text-[13px] font-semibold px-5 py-[9px] rounded-xl"
-            style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-            {lang === 'no' ? 'Gratis kartlegging' : 'Free assessment'}
+
+          {/* Language toggle */}
+          <button onClick={() => setLang(lang === 'no' ? 'en' : 'no')}
+            className="flex items-center gap-1 text-[12px] font-semibold px-3 py-[5px] rounded-lg ml-2"
+            style={{
+              background: 'transparent',
+              border: `1px solid rgba(${goldRgb},0.2)`,
+              color: gold,
+              cursor: 'pointer',
+              transition: 'all 0.25s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = `rgba(${goldRgb},0.4)` }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = `rgba(${goldRgb},0.2)` }}
+          >
+            <Globe size={12} />
+            {lang === 'no' ? 'EN' : 'NO'}
+          </button>
+
+          {/* CTA */}
+          <button onClick={ctaClick} className="gold-btn text-[13px] font-semibold px-5 py-[9px] rounded-xl ml-2 flex items-center gap-1">
+            {lang === 'no' ? 'Start kartlegging' : 'Start assessment'}
+            <ArrowRight size={13} />
           </button>
         </div>
 
-        {/* Mobile menu button */}
-        <button className="bg-transparent border-none cursor-pointer p-2 md:!hidden"
-          style={{ color: 'white', display: 'block' }}
-          onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        {/* Mobile: language + CTA + hamburger */}
+        <div className="flex items-center gap-2 md:!hidden" style={{ display: 'flex' }}>
+          <button onClick={() => setLang(lang === 'no' ? 'en' : 'no')}
+            className="text-[12px] font-semibold px-2 py-1 rounded-md"
+            style={{
+              background: 'none',
+              border: `1px solid rgba(${goldRgb},0.2)`,
+              color: gold,
+              cursor: 'pointer',
+            }}>
+            {lang === 'no' ? 'EN' : 'NO'}
+          </button>
+          <button onClick={ctaClick} className="gold-btn text-[12px] font-semibold px-4 py-[7px] rounded-lg">
+            Start
+          </button>
+          <button className="bg-transparent border-none cursor-pointer p-1"
+            style={{
+              color: 'rgba(255,255,255,0.7)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '8px',
+              padding: '6px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
@@ -116,10 +171,7 @@ export default function Nav({ lang = 'no', setLang, sticky = true }: NavProps) {
               {links.map((link) => (
                 <Link key={link.href} href={link.href} onClick={() => setMenuOpen(false)}
                   className="text-[15px] no-underline font-medium px-4 py-3 rounded-xl transition-colors"
-                  style={{
-                    color: 'rgba(255,255,255,0.75)',
-                    fontFamily: 'Inter, system-ui, sans-serif',
-                  }}
+                  style={{ color: 'rgba(255,255,255,0.75)' }}
                   onMouseEnter={e => { e.currentTarget.style.background = `rgba(${goldRgb},0.06)`; e.currentTarget.style.color = gold }}
                   onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.75)' }}>
                   {link.label}
@@ -127,9 +179,9 @@ export default function Nav({ lang = 'no', setLang, sticky = true }: NavProps) {
               ))}
               <div style={{ height: '1px', background: `rgba(${goldRgb},0.08)`, margin: '8px 0' }} />
               <button onClick={() => { setMenuOpen(false); ctaClick() }}
-                className="gold-btn w-full py-3 px-6 text-[15px] font-semibold rounded-xl"
-                style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-                {lang === 'no' ? 'Gratis kartlegging' : 'Free assessment'}
+                className="gold-btn w-full py-3 px-6 text-[15px] font-semibold rounded-xl flex items-center justify-center gap-2">
+                {lang === 'no' ? 'Start kartlegging' : 'Start assessment'}
+                <ArrowRight size={15} />
               </button>
             </div>
           </motion.div>
