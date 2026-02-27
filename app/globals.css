@@ -112,6 +112,22 @@ body {
   top: 0;
 }
 
+/* ── CTA shimmer button (global — used across all pages) ── */
+.cta-shimmer {
+  background: linear-gradient(110deg, #efc07b 0%, #f5d49a 25%, #efc07b 50%, #c9a96e 75%, #efc07b 100%);
+  background-size: 200% 100%;
+  animation: cta-shimmer-anim 3s linear infinite;
+  color: #0f1b27;
+}
+.cta-shimmer:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 40px rgba(239,192,123,0.35) !important;
+}
+@keyframes cta-shimmer-anim {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
