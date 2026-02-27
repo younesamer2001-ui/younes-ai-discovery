@@ -202,10 +202,17 @@ export default function Home() {
       {/*  BLOCK 1: HERO                              */}
       {/* ═══════════════════════════════════════════ */}
       <section className="pt-8 md:pt-20 pb-16 md:pb-28 text-center relative overflow-hidden min-h-[85vh] flex flex-col justify-center">
-        {/* Ambient glow orb */}
+        {/* Animated gradient mesh background */}
+        <div className="hero-gradient-mesh" />
+        {/* Secondary ambient orb */}
         <div className="hero-orb" />
-        {/* Subtle grid */}
-        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'linear-gradient(rgba(244,241,235,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(244,241,235,0.1) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
+        {/* Floating accent orbs */}
+        <div className="hero-orb-accent hero-orb-accent-1" />
+        <div className="hero-orb-accent hero-orb-accent-2" />
+        {/* Subtle grid overlay */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(244,241,235,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(244,241,235,0.1) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
+        {/* Top edge glow line */}
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, rgba(${goldRgb},0.15), transparent)` }} />
 
         <div className="relative z-10 max-w-3xl mx-auto px-5">
           {/* Trust badge */}
@@ -232,7 +239,7 @@ export default function Home() {
 
           {/* Single dominant CTA */}
           <motion.div {...sAnim} transition={{ duration: 0.5, delay: 0.3 }}>
-            <button onClick={ctaClick} className="gold-btn rounded-xl py-4 px-10 text-[16px] font-bold inline-flex items-center gap-2"
+            <button onClick={ctaClick} className="gold-btn gold-btn-pulse rounded-xl py-4 px-10 text-[16px] font-bold inline-flex items-center gap-2"
               aria-label="Start gratis kartlegging — ingen binding">
               Start gratis kartlegging <ArrowRight size={18} aria-hidden="true" />
             </button>
@@ -573,7 +580,7 @@ export default function Home() {
             <p className="text-[15px] mb-8 max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>
               Gratis kartlegging. Ingen binding. Implementert på 2–5 dager.
             </p>
-            <button onClick={ctaClick} className="gold-btn rounded-xl py-4 px-12 text-[16px] font-bold inline-flex items-center gap-2">
+            <button onClick={ctaClick} className="gold-btn gold-btn-pulse rounded-xl py-4 px-12 text-[16px] font-bold inline-flex items-center gap-2">
               Start gratis kartlegging <ArrowRight size={18} />
             </button>
             <p className="text-[12px] mt-4" style={{ color: 'rgba(244,241,235,0.7)' }}>
@@ -700,22 +707,41 @@ export default function Home() {
           transition: all 0.3s ease;
         }
         .bento-card:hover {
-          border-color: rgba(${goldRgb}, 0.15);
-          transform: translateY(-2px) scale(1.01);
-          box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+          border-color: rgba(${goldRgb}, 0.2);
+          transform: translateY(-3px) scale(1.01);
+          box-shadow: 0 8px 32px rgba(0,0,0,0.25), 0 0 20px rgba(${goldRgb},0.05);
         }
         .bento-card-glow {
           position: absolute;
           top: 0; left: 0; right: 0;
-          height: 120px;
-          background: radial-gradient(ellipse at 50% 0%, rgba(${goldRgb},0.06) 0%, transparent 70%);
+          height: 150px;
+          background: radial-gradient(ellipse at 50% 0%, rgba(${goldRgb},0.08) 0%, transparent 70%);
           pointer-events: none;
           opacity: 0;
           transition: opacity 0.4s ease;
         }
         .bento-card:hover .bento-card-glow { opacity: 1; }
 
-        /* ── Hero orb ── */
+        /* ── Hero animated gradient mesh ── */
+        .hero-gradient-mesh {
+          position: absolute;
+          inset: -20%;
+          background:
+            radial-gradient(ellipse at 20% 50%, rgba(${goldRgb},0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 20%, rgba(${goldRgb},0.04) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 80%, rgba(${goldRgb},0.05) 0%, transparent 50%);
+          filter: blur(80px);
+          pointer-events: none;
+          animation: mesh-drift 20s ease-in-out infinite alternate;
+        }
+        @keyframes mesh-drift {
+          0% { transform: translate(0, 0) rotate(0deg); }
+          33% { transform: translate(2%, -1%) rotate(1deg); }
+          66% { transform: translate(-1%, 2%) rotate(-0.5deg); }
+          100% { transform: translate(1%, -1%) rotate(0.5deg); }
+        }
+
+        /* ── Hero primary orb ── */
         .hero-orb {
           position: absolute;
           top: -10%;
@@ -723,14 +749,59 @@ export default function Home() {
           transform: translateX(-50%);
           width: 600px;
           height: 600px;
-          background: radial-gradient(circle, rgba(${goldRgb},0.08) 0%, rgba(${goldRgb},0.02) 40%, transparent 70%);
+          background: radial-gradient(circle, rgba(${goldRgb},0.1) 0%, rgba(${goldRgb},0.03) 40%, transparent 70%);
           filter: blur(60px);
           pointer-events: none;
           animation: orb-pulse 8s ease-in-out infinite alternate;
         }
         @keyframes orb-pulse {
-          0% { opacity: 0.6; transform: translateX(-50%) scale(1); }
-          100% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+          0% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+          100% { opacity: 0.9; transform: translateX(-50%) scale(1.15); }
+        }
+
+        /* ── Floating accent orbs ── */
+        .hero-orb-accent {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(100px);
+          pointer-events: none;
+          opacity: 0.4;
+        }
+        .hero-orb-accent-1 {
+          width: 300px;
+          height: 300px;
+          top: 20%;
+          left: -5%;
+          background: radial-gradient(circle, rgba(${goldRgb},0.08) 0%, transparent 70%);
+          animation: float-orb-1 12s ease-in-out infinite alternate;
+        }
+        .hero-orb-accent-2 {
+          width: 250px;
+          height: 250px;
+          bottom: 10%;
+          right: -5%;
+          background: radial-gradient(circle, rgba(${goldRgb},0.06) 0%, transparent 70%);
+          animation: float-orb-2 15s ease-in-out infinite alternate;
+        }
+        @keyframes float-orb-1 {
+          0% { transform: translate(0, 0); opacity: 0.3; }
+          100% { transform: translate(30px, -20px); opacity: 0.6; }
+        }
+        @keyframes float-orb-2 {
+          0% { transform: translate(0, 0); opacity: 0.2; }
+          100% { transform: translate(-25px, 15px); opacity: 0.5; }
+        }
+
+        /* ── Pulsing CTA glow ── */
+        .gold-btn-pulse {
+          animation: btn-glow-pulse 3s ease-in-out infinite;
+        }
+        @keyframes btn-glow-pulse {
+          0%, 100% { box-shadow: 0 4px 24px rgba(${goldRgb}, 0.25), 0 0 0 1px rgba(${goldRgb}, 0.3); }
+          50% { box-shadow: 0 4px 40px rgba(${goldRgb}, 0.45), 0 0 60px rgba(${goldRgb}, 0.15), 0 0 0 1px rgba(${goldRgb}, 0.4); }
+        }
+        .gold-btn-pulse:hover {
+          animation: none;
         }
 
         /* ── Gold divider ── */
@@ -744,15 +815,26 @@ export default function Home() {
         .cta-glow {
           position: absolute;
           top: 0; left: 0; right: 0; bottom: 0;
-          background: radial-gradient(ellipse at 50% 50%, rgba(${goldRgb},0.06) 0%, transparent 60%);
+          background:
+            radial-gradient(ellipse at 50% 50%, rgba(${goldRgb},0.08) 0%, transparent 50%),
+            radial-gradient(ellipse at 30% 70%, rgba(${goldRgb},0.04) 0%, transparent 50%),
+            radial-gradient(ellipse at 70% 30%, rgba(${goldRgb},0.04) 0%, transparent 50%);
           pointer-events: none;
+          animation: cta-glow-breathe 6s ease-in-out infinite alternate;
+        }
+        @keyframes cta-glow-breathe {
+          0% { opacity: 0.7; }
+          100% { opacity: 1; }
         }
 
         /* ── Reduced motion ── */
         @media (prefers-reduced-motion: reduce) {
+          .hero-gradient-mesh { animation: none !important; }
           .hero-orb { animation: none !important; }
+          .hero-orb-accent { animation: none !important; }
           .gold-btn::after { transition: none; }
           .gold-btn:hover { transform: none; }
+          .gold-btn-pulse { animation: none !important; }
           .bento-card:hover { transform: none; }
           .glass-card:hover { transform: none; }
         }
