@@ -15,8 +15,8 @@ export default function Footer({ lang, minimal = false }: FooterProps) {
     services: 'Tjenester',
     contact: 'Kontakt',
     legal: 'Juridisk',
-    mobilsvarer: 'AI Mobilsvarer',
-    howItWorks: 'Hvordan det fungerer',
+    tjenester: 'Alle tjenester',
+    bransjer: 'Finn din bransje',
     kartlegging: 'Gratis kartlegging',
     pricing: 'Priser',
     privacy: 'Personvern',
@@ -28,8 +28,8 @@ export default function Footer({ lang, minimal = false }: FooterProps) {
     services: 'Services',
     contact: 'Contact',
     legal: 'Legal',
-    mobilsvarer: 'AI Receptionist',
-    howItWorks: 'How it works',
+    tjenester: 'All services',
+    bransjer: 'Find your industry',
     kartlegging: 'Free assessment',
     pricing: 'Pricing',
     privacy: 'Privacy policy',
@@ -84,8 +84,8 @@ export default function Footer({ lang, minimal = false }: FooterProps) {
         <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <span style={headingStyle}>{tx.services}</span>
-            <Link href="/mobilsvarer" style={linkStyle}>{tx.mobilsvarer}</Link>
-            <Link href="/hvordan-det-fungerer" style={linkStyle}>{tx.howItWorks}</Link>
+            <Link href="/tjenester" style={linkStyle}>{tx.tjenester}</Link>
+            <Link href="/bransjer" style={linkStyle}>{tx.bransjer}</Link>
             <Link href="/priser" style={linkStyle}>{tx.pricing}</Link>
             <Link href="/kartlegging" style={linkStyle}>{tx.kartlegging}</Link>
           </div>

@@ -23,18 +23,16 @@ export default function Nav({ lang: langProp, setLang: setLangProp, sticky = fal
 
   const links = lang === 'no'
     ? [
-        { href: '/mobilsvarer', label: 'Mobilsvarer' },
-        { href: '/hvordan-det-fungerer', label: 'Hvordan det fungerer' },
+        { href: '/tjenester', label: 'Tjenester' },
+        { href: '/bransjer', label: 'Bransjer' },
         { href: '/priser', label: 'Priser' },
-        { href: '/demo', label: 'Demo' },
         { href: '/blogg', label: 'Blogg' },
         { href: '/om-oss', label: 'Om oss' },
       ]
     : [
-        { href: '/mobilsvarer', label: 'AI Receptionist' },
-        { href: '/hvordan-det-fungerer', label: 'How it works' },
+        { href: '/tjenester', label: 'Services' },
+        { href: '/bransjer', label: 'Industries' },
         { href: '/priser', label: 'Pricing' },
-        { href: '/demo', label: 'Demo' },
         { href: '/blogg', label: 'Blog' },
         { href: '/om-oss', label: 'About us' },
       ]
