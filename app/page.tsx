@@ -49,7 +49,7 @@ function FAQ({ items }: { items: { q: string; a: string }[] }) {
           <div className="flex items-center justify-between">
             <span className="text-[15px] font-semibold" style={{ color: '#f4f1eb' }}>{item.q}</span>
             <ChevronDown size={18} className={`transition-transform duration-200 ${open === i ? 'rotate-180' : ''}`}
-              style={{ color: 'rgba(244,241,235,0.3)' }} />
+              style={{ color: 'rgba(244,241,235,0.55)' }} />
           </div>
           <AnimatePresence>
             {open === i && (
@@ -58,7 +58,7 @@ function FAQ({ items }: { items: { q: string; a: string }[] }) {
                 exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }}
                 className="overflow-hidden"
               >
-                <p className="text-[14px] mt-3 leading-relaxed" style={{ color: 'rgba(244,241,235,0.5)' }}>{item.a}</p>
+                <p className="text-[14px] mt-3 leading-relaxed" style={{ color: 'rgba(244,241,235,0.7)' }}>{item.a}</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -99,7 +99,7 @@ function LiveToast() {
           </div>
           <div>
             <p className="text-xs" style={{ color: 'rgba(244,241,235,0.8)' }}><strong>{toast.name}</strong> fra {toast.city}</p>
-            <p className="text-[11px]" style={{ color: 'rgba(244,241,235,0.4)' }}>{toast.action}</p>
+            <p className="text-[11px]" style={{ color: 'rgba(244,241,235,0.6)' }}>{toast.action}</p>
           </div>
         </motion.div>
       )}
@@ -122,10 +122,10 @@ function TechLogos() {
     <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
       {logos.map((logo) => (
         <div key={logo.name} className="group flex flex-col items-center gap-2 cursor-default">
-          <div className="transition-all duration-300 group-hover:scale-110" style={{ color: 'rgba(244,241,235,0.2)' }}>
+          <div className="transition-all duration-300 group-hover:scale-110" style={{ color: 'rgba(244,241,235,0.4)' }}>
             {logo.svg}
           </div>
-          <span className="text-[10px] tracking-widest uppercase transition-colors" style={{ color: 'rgba(244,241,235,0.15)' }}>{logo.name}</span>
+          <span className="text-[10px] tracking-widest uppercase transition-colors" style={{ color: 'rgba(244,241,235,0.55)' }}>{logo.name}</span>
         </div>
       ))}
     </div>
@@ -195,7 +195,7 @@ export default function Home() {
           {/* Trust badge */}
           <motion.div {...sAnim} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 glass-card">
             <Shield size={13} style={{ color: gold }} />
-            <span className="text-[12px] tracking-wide" style={{ color: 'rgba(244,241,235,0.5)' }}>GDPR-kompatibel &middot; Norsk support &middot; Live på 2–5 dager</span>
+            <span className="text-[12px] tracking-wide" style={{ color: 'rgba(244,241,235,0.7)' }}>GDPR-kompatibel &middot; Norsk support &middot; Live på 2–5 dager</span>
           </motion.div>
 
           {/* Outcome-driven headline */}
@@ -209,7 +209,7 @@ export default function Home() {
           {/* Pain-solving subtext */}
           <motion.p {...sAnim} transition={{ duration: 0.5, delay: 0.2 }}
             className="text-[16px] md:text-[18px] max-w-xl mx-auto mb-10 leading-relaxed"
-            style={{ color: 'rgba(244,241,235,0.5)' }}>
+            style={{ color: 'rgba(244,241,235,0.7)' }}>
             Norske bedrifter taper i snitt 85 000 kr/mnd på ubesvarte anrop og manuelt arbeid.
             Arxon automatiserer telefon, booking og oppfølging — på under en uke.
           </motion.p>
@@ -219,7 +219,7 @@ export default function Home() {
             <button onClick={ctaClick} className="gold-btn rounded-xl py-4 px-10 text-[16px] font-bold inline-flex items-center gap-2">
               Start gratis kartlegging <ArrowRight size={18} />
             </button>
-            <p className="text-[12px] mt-4" style={{ color: 'rgba(244,241,235,0.3)' }}>
+            <p className="text-[12px] mt-4" style={{ color: 'rgba(244,241,235,0.55)' }}>
               Gratis &middot; Ingen binding &middot; Resultat på 2 minutter
             </p>
           </motion.div>
@@ -231,7 +231,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════ */}
       <motion.section {...sAnim} className="py-16 md:py-20 relative overflow-hidden" style={{ borderTop: '1px solid rgba(244,241,235,0.04)' }}>
         <div className="max-w-4xl mx-auto px-5 text-center">
-          <p className="text-[12px] tracking-[3px] uppercase mb-8" style={{ color: 'rgba(244,241,235,0.25)' }}>Bygget med teknologi fra verdensledende selskaper</p>
+          <p className="text-[12px] tracking-[3px] uppercase mb-8" style={{ color: 'rgba(244,241,235,0.7)' }}>Bygget med teknologi fra verdensledende selskaper</p>
           <TechLogos />
         </div>
         <div className="gold-divider mt-16" />
@@ -246,7 +246,7 @@ export default function Home() {
             <h2 className="text-[28px] md:text-[42px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
               Kjenner du deg igjen?
             </h2>
-            <p className="text-[15px] max-w-lg mx-auto" style={{ color: 'rgba(244,241,235,0.4)' }}>
+            <p className="text-[15px] max-w-lg mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>
               De fleste norske bedrifter taper kunder hver eneste dag uten å vite det.
             </p>
           </motion.div>
@@ -282,7 +282,7 @@ export default function Home() {
                   <span style={{ color: '#ef4545' }}>{item.icon}</span>
                 </div>
                 <h3 className="text-[16px] font-bold mb-2" style={{ color: '#f4f1eb' }}>{item.title}</h3>
-                <p className="text-[14px] leading-relaxed mb-2" style={{ color: 'rgba(244,241,235,0.5)' }}>{item.pain}</p>
+                <p className="text-[14px] leading-relaxed mb-2" style={{ color: 'rgba(244,241,235,0.7)' }}>{item.pain}</p>
                 <p className="text-[13px] font-medium" style={{ color: '#ef4545' }}>{item.agitate}</p>
               </motion.div>
             ))}
@@ -306,7 +306,7 @@ export default function Home() {
             <h2 className="text-[28px] md:text-[42px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
               Alt du trenger — <span className="text-gradient-gold">én plattform</span>
             </h2>
-            <p className="text-[15px] max-w-lg mx-auto" style={{ color: 'rgba(244,241,235,0.4)' }}>
+            <p className="text-[15px] max-w-lg mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>
               Arxon erstatter manuelt arbeid med intelligente AI-systemer som jobber 24/7.
             </p>
           </motion.div>
@@ -335,7 +335,7 @@ export default function Home() {
                     <span style={{ color: gold }}>{item.icon}</span>
                   </div>
                   <h3 className="text-[16px] font-bold mb-2" style={{ color: '#f4f1eb' }}>{item.title}</h3>
-                  <p className="text-[14px] leading-relaxed" style={{ color: 'rgba(244,241,235,0.45)' }}>{item.desc}</p>
+                  <p className="text-[14px] leading-relaxed" style={{ color: 'rgba(244,241,235,0.65)' }}>{item.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -352,7 +352,7 @@ export default function Home() {
             <h2 className="text-[28px] md:text-[42px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
               Tre steg til <span className="text-gradient-gold">full automatisering</span>
             </h2>
-            <p className="text-[15px] max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.4)' }}>Enklere enn du tror. Vi gjør alt det tekniske.</p>
+            <p className="text-[15px] max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>Enklere enn du tror. Vi gjør alt det tekniske.</p>
           </motion.div>
 
           <div className="relative">
@@ -383,7 +383,7 @@ export default function Home() {
                       {item.time}
                     </span>
                   </div>
-                  <p className="text-[14px] leading-relaxed" style={{ color: 'rgba(244,241,235,0.45)' }}>{item.desc}</p>
+                  <p className="text-[14px] leading-relaxed" style={{ color: 'rgba(244,241,235,0.65)' }}>{item.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -416,7 +416,7 @@ export default function Home() {
                   <div className="text-[28px] md:text-[36px] font-extrabold text-gradient-gold">
                     <AnimCounter target={s.val} suffix={s.suffix} />
                   </div>
-                  <div className="text-[12px] tracking-wide uppercase mt-1" style={{ color: 'rgba(244,241,235,0.35)' }}>{s.label}</div>
+                  <div className="text-[12px] tracking-wide uppercase mt-1" style={{ color: 'rgba(244,241,235,0.55)' }}>{s.label}</div>
                 </motion.div>
               ))}
             </div>
@@ -443,7 +443,7 @@ export default function Home() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-[14px] font-semibold" style={{ color: '#f4f1eb' }}>{t.name}</div>
-                    <div className="text-[12px]" style={{ color: 'rgba(244,241,235,0.3)' }}>{t.biz}</div>
+                    <div className="text-[12px]" style={{ color: 'rgba(244,241,235,0.55)' }}>{t.biz}</div>
                   </div>
                   <span className="text-[12px] font-semibold px-3 py-1 rounded-full"
                     style={{ background: 'rgba(74,222,128,0.08)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.15)' }}>
@@ -465,12 +465,12 @@ export default function Home() {
             <h2 className="text-[24px] md:text-[36px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
               Hva taper <span className="text-gradient-gold">du</span> per måned?
             </h2>
-            <p className="text-[15px] max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.4)' }}>Beregn ditt potensielle tap — og hva Arxon kan spare deg.</p>
+            <p className="text-[15px] max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>Beregn ditt potensielle tap — og hva Arxon kan spare deg.</p>
           </motion.div>
 
           <motion.div {...sAnim} className="glass-card p-6 md:p-8">
             <label className="block mb-4">
-              <span className="text-[12px] uppercase tracking-wide" style={{ color: 'rgba(244,241,235,0.35)' }}>Bransje</span>
+              <span className="text-[12px] uppercase tracking-wide" style={{ color: 'rgba(244,241,235,0.55)' }}>Bransje</span>
               <select value={roiIndustry} onChange={(e) => setRoiIndustry(e.target.value)}
                 className="mt-2 w-full rounded-lg px-4 py-3 text-[14px] outline-none"
                 style={{ background: 'rgba(244,241,235,0.04)', border: '1px solid rgba(244,241,235,0.08)', color: 'rgba(244,241,235,0.8)' }}>
@@ -480,7 +480,7 @@ export default function Home() {
 
             <label className="block mb-6">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-[12px] uppercase tracking-wide" style={{ color: 'rgba(244,241,235,0.35)' }}>Ubesvarte anrop per uke</span>
+                <span className="text-[12px] uppercase tracking-wide" style={{ color: 'rgba(244,241,235,0.55)' }}>Ubesvarte anrop per uke</span>
                 <span className="text-[14px] font-bold" style={{ color: gold }}>{missedCalls}</span>
               </div>
               <input type="range" min={1} max={30} value={missedCalls} onChange={(e) => setMissedCalls(+e.target.value)}
@@ -488,11 +488,11 @@ export default function Home() {
             </label>
 
             <div className="text-center py-6 rounded-xl relative overflow-hidden" style={{ background: `rgba(${goldRgb},0.04)`, border: `1px solid rgba(${goldRgb},0.1)` }}>
-              <div className="text-[11px] uppercase tracking-wide mb-1" style={{ color: 'rgba(244,241,235,0.3)' }}>Estimert månedlig tap</div>
+              <div className="text-[11px] uppercase tracking-wide mb-1" style={{ color: 'rgba(244,241,235,0.55)' }}>Estimert månedlig tap</div>
               <div className="text-[36px] md:text-[44px] font-extrabold text-gradient-gold">
                 {monthlySavings.toLocaleString('nb-NO')} kr
               </div>
-              <div className="text-[12px] mt-1" style={{ color: 'rgba(244,241,235,0.3)' }}>
+              <div className="text-[12px] mt-1" style={{ color: 'rgba(244,241,235,0.55)' }}>
                 ≈ {Math.round(monthlySavings / 4.3).toLocaleString('nb-NO')} kr per uke
               </div>
             </div>
@@ -532,13 +532,13 @@ export default function Home() {
               <br />
               <span className="text-gradient-gold">Start i dag.</span>
             </h2>
-            <p className="text-[15px] mb-8 max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.4)' }}>
+            <p className="text-[15px] mb-8 max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>
               Gratis kartlegging. Ingen binding. Implementert på 2–5 dager.
             </p>
             <button onClick={ctaClick} className="gold-btn rounded-xl py-4 px-12 text-[16px] font-bold inline-flex items-center gap-2">
               Start gratis kartlegging <ArrowRight size={18} />
             </button>
-            <p className="text-[12px] mt-4" style={{ color: 'rgba(244,241,235,0.25)' }}>
+            <p className="text-[12px] mt-4" style={{ color: 'rgba(244,241,235,0.7)' }}>
               Eller ring oss: <a href="tel:+4778896386" className="no-underline" style={{ color: gold }}>78 89 63 86</a>
             </p>
           </motion.div>
@@ -554,10 +554,10 @@ export default function Home() {
             { label: 'Blogg', href: '/blogg' },
             { label: 'kontakt@arxon.no', href: 'mailto:kontakt@arxon.no' },
           ].map((l) => (
-            <Link key={l.href} href={l.href} className="text-[12px] hover:opacity-70 transition-opacity no-underline" style={{ color: 'rgba(244,241,235,0.25)' }}>{l.label}</Link>
+            <Link key={l.href} href={l.href} className="text-[12px] hover:opacity-70 transition-opacity no-underline" style={{ color: 'rgba(244,241,235,0.7)' }}>{l.label}</Link>
           ))}
         </div>
-        <p className="text-[11px]" style={{ color: 'rgba(244,241,235,0.15)' }}>&copy; {new Date().getFullYear()} Arxon. Alle rettigheter reservert. &middot; GDPR-kompatibel &middot; Norsk datasenter</p>
+        <p className="text-[11px]" style={{ color: 'rgba(244,241,235,0.55)' }}>&copy; {new Date().getFullYear()} Arxon. Alle rettigheter reservert. &middot; GDPR-kompatibel &middot; Norsk datasenter</p>
       </footer>
 
       {/* ── Sticky mobile CTA ── */}
