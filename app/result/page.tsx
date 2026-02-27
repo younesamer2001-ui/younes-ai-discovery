@@ -309,7 +309,7 @@ function ResultPageContent() {
             {tx.ctaDesc}
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button onClick={() => router.push('/priser')} className="cta-shimmer" style={{
+            <button onClick={() => router.push('/pakkebygger')} className="cta-shimmer" style={{
               color: bg, border: 'none', borderRadius: 12, padding: '14px 32px',
               fontWeight: 700, fontSize: 15, cursor: 'pointer',
             }}>

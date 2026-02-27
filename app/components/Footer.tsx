@@ -86,7 +86,7 @@ export default function Footer({ lang, minimal = false }: FooterProps) {
             <span style={headingStyle}>{tx.services}</span>
             <Link href="/tjenester" style={linkStyle}>{tx.tjenester}</Link>
             <Link href="/bransjer" style={linkStyle}>{tx.bransjer}</Link>
-            <Link href="/priser" style={linkStyle}>{tx.pricing}</Link>
+            <Link href="/pakkebygger" style={linkStyle}>{tx.pricing}</Link>
             <Link href="/kartlegging" style={linkStyle}>{tx.kartlegging}</Link>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

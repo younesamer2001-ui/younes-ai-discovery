@@ -214,7 +214,7 @@ export default function PakkebyggerPage() {
           }}
         >
           <CheckCircle2 size={16} />
-          <span>Bedrifter sparer typisk <strong>300 000 – 430 000 kr/år</strong> med Arxon</span>
+          <span>Bedrifter sparer typisk <strong>345 000 – 438 000 kr/år</strong> sammenlignet med å ansette</span>
         </motion.div>
       </section>
 
@@ -528,13 +528,14 @@ export default function PakkebyggerPage() {
         <h2 style={{
           fontSize: 'clamp(20px, 4vw, 26px)', fontWeight: 700, textAlign: 'center', marginBottom: 8,
         }}>
-          Hva koster en ansatt vs. <span style={{ color: gold }}>Arxon?</span>
+          Slipp å ansette — <span style={{ color: gold }}>automatiser i stedet</span>
         </h2>
         <p style={{
           fontSize: 14, color: 'rgba(255,255,255,0.5)', textAlign: 'center',
-          maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.6,
+          maxWidth: 560, margin: '0 auto 28px', lineHeight: 1.6,
         }}>
-          Se hvor mye du sparer ved å automatisere repetitivt arbeid med AI.
+          Mange bedrifter vurderer å ansette for å håndtere telefoner, booking eller oppfølging.
+          Med Arxon løser du det samme — til en brøkdel av prisen.
           Tallene inkluderer lønn, arbeidsgiveravgift og sosiale kostnader.
         </p>
 
@@ -550,18 +551,18 @@ export default function PakkebyggerPage() {
             fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.5)',
             gap: 8,
           }}>
-            <span>Rolle</span>
+            <span>Oppgave</span>
             <span style={{ textAlign: 'right' }}>Ansatt (årlig)</span>
             <span style={{ textAlign: 'right' }}>Arxon (årlig)</span>
             <span style={{ textAlign: 'right', color: '#4ade80' }}>Du sparer</span>
           </div>
 
-          {/* Rows */}
+          {/* Rows — calculated from real pricing: Lav=2000/mnd, Middels=4290/mnd, annual discount 20% */}
           {[
-            { role: 'Resepsjonist / telefonsvarer', annualCost: '420 000', arxonRange: '50 000 – 90 000', savingRange: '330 000 – 370 000' },
-            { role: 'Kundeservice-medarbeider', annualCost: '480 000', arxonRange: '75 000 – 120 000', savingRange: '360 000 – 405 000' },
-            { role: 'Booking-koordinator', annualCost: '440 000', arxonRange: '50 000 – 90 000', savingRange: '350 000 – 390 000' },
-            { role: 'Lead-kvalifiserer (salg)', annualCost: '520 000', arxonRange: '90 000 – 150 000', savingRange: '370 000 – 430 000' },
+            { role: 'Telefon & mottak', detail: 'AI-telefonsvarer + booking', annualCost: '420 000', arxonRange: '60 000 – 75 000', savingRange: '345 000 – 360 000' },
+            { role: 'Kundeservice & support', detail: 'Chatbot + auto-svar + FAQ', annualCost: '460 000', arxonRange: '80 000 – 100 000', savingRange: '360 000 – 380 000' },
+            { role: 'Booking & kalender', detail: 'Auto-booking + påminnelser', annualCost: '430 000', arxonRange: '38 000 – 48 000', savingRange: '382 000 – 392 000' },
+            { role: 'Lead-oppfølging & salg', detail: 'Scoring + CRM + follow-up', annualCost: '520 000', arxonRange: '82 000 – 103 000', savingRange: '417 000 – 438 000' },
           ].map((row, i) => (
             <div key={i} style={{
               display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr',
@@ -569,7 +570,10 @@ export default function PakkebyggerPage() {
               borderBottom: i < 3 ? '1px solid rgba(255,255,255,0.04)' : 'none',
               fontSize: 13,
             }}>
-              <span style={{ color: '#f4f1eb', fontWeight: 500 }}>{row.role}</span>
+              <div>
+                <span style={{ color: '#f4f1eb', fontWeight: 500 }}>{row.role}</span>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>{row.detail}</div>
+              </div>
               <span style={{ textAlign: 'right', color: 'rgba(255,255,255,0.5)' }}>kr {row.annualCost}</span>
               <span style={{ textAlign: 'right', color: gold, fontWeight: 500 }}>kr {row.arxonRange}</span>
               <span style={{ textAlign: 'right', color: '#4ade80', fontWeight: 600 }}>kr {row.savingRange}</span>
@@ -585,14 +589,14 @@ export default function PakkebyggerPage() {
           }}>
             <div>
               <div style={{ fontSize: 13, fontWeight: 600, color: '#f4f1eb' }}>
-                Typisk besparelse per erstattede stilling
+                Typisk besparelse per automatisert område
               </div>
               <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>
-                Inkludert setup-fee og månedlige kostnader
+                Basert på Arxon-priser med årlig betaling vs. ansattkostnader (ink. arb.avg.)
               </div>
             </div>
             <div style={{ fontSize: 18, fontWeight: 700, color: '#4ade80' }}>
-              300 000 – 430 000 kr/år
+              345 000 – 438 000 kr/år
             </div>
           </div>
         </div>

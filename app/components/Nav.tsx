@@ -25,16 +25,14 @@ export default function Nav({ lang: langProp, setLang: setLangProp, sticky = fal
     ? [
         { href: '/tjenester', label: 'Tjenester' },
         { href: '/bransjer', label: 'Bransjer' },
-        { href: '/pakkebygger', label: 'Pakkebygger' },
-        { href: '/priser', label: 'Priser' },
+        { href: '/pakkebygger', label: 'Priser' },
         { href: '/blogg', label: 'Blogg' },
         { href: '/om-oss', label: 'Om oss' },
       ]
     : [
         { href: '/tjenester', label: 'Services' },
         { href: '/bransjer', label: 'Industries' },
-        { href: '/pakkebygger', label: 'Package Builder' },
-        { href: '/priser', label: 'Pricing' },
+        { href: '/pakkebygger', label: 'Pricing' },
         { href: '/blogg', label: 'Blog' },
         { href: '/om-oss', label: 'About us' },
       ]
