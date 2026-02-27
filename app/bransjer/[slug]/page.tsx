@@ -48,7 +48,7 @@ export default function IndustryPage() {
   if (!industry) {
     return (
       <div style={{ background: bgDark, minHeight: '100vh', color: '#f4f1eb' }}>
-        <Nav sticky />
+        <Nav />
         <div style={{ maxWidth: 600, margin: '0 auto', padding: '120px 24px', textAlign: 'center' }}>
           <h1 style={{ fontSize: 28, marginBottom: 16 }}>Bransje ikke funnet</h1>
           <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: 24 }}>Vi fant ikke denne bransjen. Se alle bransjene våre:</p>
@@ -62,7 +62,7 @@ export default function IndustryPage() {
 
   return (
     <div style={{ background: bgDark, minHeight: '100vh', color: '#f4f1eb' }}>
-      <Nav sticky />
+      <Nav />
 
       {/* Breadcrumb */}
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '24px 24px 0' }}>

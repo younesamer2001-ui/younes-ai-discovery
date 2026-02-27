@@ -79,7 +79,7 @@ export default function TjenesterPage() {
 
   return (
     <div style={{ background: bgDark, minHeight: '100vh', color: '#f4f1eb' }}>
-      <Nav sticky />
+      <Nav />
 
       {/* Hero */}
       <section style={{ maxWidth: 800, margin: '0 auto', padding: '80px 24px 48px', textAlign: 'center' }}>

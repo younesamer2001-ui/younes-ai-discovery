@@ -11,6 +11,7 @@ import {
   AlertTriangle, PhoneOff, Cog,
 } from 'lucide-react'
 import Nav from '@/app/components/Nav'
+import Footer from '@/app/components/Footer'
 
 /* ── Design tokens ── */
 const gold = '#efc07b'
@@ -591,20 +592,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Footer ── */}
-      <footer style={{ maxWidth: 800, margin: '0 auto', padding: '36px 24px', borderTop: '1px solid rgba(244,241,235,0.04)', textAlign: 'center' }}>
-        <div className="flex flex-wrap justify-center gap-6 mb-4">
-          {[
-            { label: 'Personvern', href: '/personvern' },
-            { label: 'Vilkår', href: '/vilkar' },
-            { label: 'Blogg', href: '/blogg' },
-            { label: 'kontakt@arxon.no', href: 'mailto:kontakt@arxon.no' },
-          ].map((l) => (
-            <Link key={l.href} href={l.href} className="text-[12px] hover:opacity-70 transition-opacity no-underline" style={{ color: 'rgba(244,241,235,0.7)' }}>{l.label}</Link>
-          ))}
-        </div>
-        <p className="text-[11px]" style={{ color: 'rgba(244,241,235,0.55)' }}>&copy; {new Date().getFullYear()} Arxon. Alle rettigheter reservert. &middot; GDPR-kompatibel &middot; Norsk datasenter</p>
-      </footer>
+      <Footer lang="no" />
 
       {/* ── Sticky mobile CTA ── */}
       <AnimatePresence>

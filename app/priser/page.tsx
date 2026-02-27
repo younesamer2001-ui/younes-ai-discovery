@@ -220,7 +220,7 @@ export default function PricingPage() {
           .comparison-grid span { font-size: inherit !important; }
         }
       `)}</style>
-      <Nav lang={lang} setLang={setLang} sticky />
+      <Nav lang={lang} setLang={setLang} />
 
       {/* Hero */}
       <section style={{ maxWidth: 900, margin: '0 auto', padding: '60px 24px 30px', textAlign: 'center' }}>
