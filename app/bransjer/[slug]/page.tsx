@@ -1,12 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
   ArrowRight, ArrowLeft, CheckCircle2, Clock, Zap, AlertTriangle,
-  ChevronDown, ArrowUpDown, SortAsc,
+  ChevronDown, ArrowUpDown, SortAsc, Star, Phone,
   Hammer, Scissors, Scale, UtensilsCrossed, Home, HeartPulse,
   ShoppingCart, Calculator, UserSearch, Car, Target, Palette,
   GraduationCap, Monitor, Dumbbell, CalendarDays, Plane, Landmark,
@@ -55,8 +55,8 @@ function sortAutomations(items: Automation[], mode: SortMode): Automation[] {
   })
 }
 
-function AutoCard({ auto, index }: { auto: Automation; index: number }) {
-  const [open, setOpen] = useState(false)
+function AutoCard({ auto, index, defaultOpen }: { auto: Automation; index: number; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen || false)
   const CIcon = complexityIcon[auto.complexity] || Zap
   const cColor = complexityColor[auto.complexity] || '#fbbf24'
 
@@ -75,22 +75,13 @@ function AutoCard({ auto, index }: { auto: Automation; index: number }) {
       }}
       className="auto-card"
     >
-      {/* Clickable header */}
       <button
         onClick={() => setOpen(!open)}
         style={{
-          width: '100%',
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          padding: '18px 20px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 12,
-          color: '#f4f1eb',
-          fontFamily: 'inherit',
-          textAlign: 'left',
+          width: '100%', background: 'none', border: 'none', cursor: 'pointer',
+          padding: '16px 20px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          gap: 12, color: '#f4f1eb', fontFamily: 'inherit', textAlign: 'left',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 }}>
@@ -99,7 +90,6 @@ function AutoCard({ auto, index }: { auto: Automation; index: number }) {
             {auto.name}
           </span>
         </div>
-
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           {auto.complexity && (
             <span style={{
@@ -108,41 +98,31 @@ function AutoCard({ auto, index }: { auto: Automation; index: number }) {
               background: `${cColor}15`, borderRadius: 20, padding: '3px 10px',
               whiteSpace: 'nowrap',
             }}>
-              <CIcon size={12} />
-              {auto.complexity}
+              <CIcon size={12} /> {auto.complexity}
             </span>
           )}
           <ChevronDown
-            size={16}
-            color={`rgba(255,255,255,0.4)`}
-            style={{
-              transition: 'transform 0.3s ease',
-              transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-            }}
+            size={16} color="rgba(255,255,255,0.4)"
+            style={{ transition: 'transform 0.3s ease', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
           />
         </div>
       </button>
 
-      {/* Expandable content */}
-      <div style={{
-        maxHeight: open ? 300 : 0,
-        overflow: 'hidden',
-        transition: 'max-height 0.35s ease',
-      }}>
-        <div style={{ padding: '0 20px 18px', borderTop: `1px solid rgba(${goldRgb},0.06)` }}>
+      <div style={{ maxHeight: open ? 300 : 0, overflow: 'hidden', transition: 'max-height 0.35s ease' }}>
+        <div style={{ padding: '0 20px 16px', borderTop: `1px solid rgba(${goldRgb},0.06)` }}>
           {auto.desc && (
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', margin: '14px 0 0', lineHeight: 1.6 }}>
+            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', margin: '12px 0 0', lineHeight: 1.6 }}>
               {auto.desc}
             </p>
           )}
           {auto.benefit && (
             <p style={{
-              fontSize: 13, color: `rgba(${goldRgb},0.8)`, margin: '10px 0 0',
+              fontSize: 13, color: `rgba(${goldRgb},0.85)`, margin: '10px 0 0',
               lineHeight: 1.5, fontStyle: 'italic',
               padding: '10px 14px', borderRadius: 10,
-              background: `rgba(${goldRgb},0.05)`,
+              background: `rgba(${goldRgb},0.06)`,
             }}>
-              💡 {auto.benefit}
+              {auto.benefit}
             </p>
           )}
         </div>
@@ -157,6 +137,15 @@ export default function IndustryPage() {
   const industry = getIndustryBySlug(slug)
   const [lang] = useState<'no' | 'en'>('no')
   const [sortMode, setSortMode] = useState<SortMode>('complexity')
+  const [showSticky, setShowSticky] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowSticky(window.scrollY > 500)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   if (!industry) {
     return (
@@ -164,7 +153,7 @@ export default function IndustryPage() {
         <Nav />
         <div style={{ maxWidth: 600, margin: '0 auto', padding: '120px 24px', textAlign: 'center' }}>
           <h1 style={{ fontSize: 28, marginBottom: 16 }}>Bransje ikke funnet</h1>
-          <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: 24 }}>Vi fant ikke denne bransjen. Se alle bransjene våre:</p>
+          <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: 24 }}>Vi fant ikke denne bransjen.</p>
           <Link href="/bransjer" style={{ color: gold, textDecoration: 'underline' }}>Tilbake til bransjer</Link>
         </div>
       </div>
@@ -173,6 +162,17 @@ export default function IndustryPage() {
 
   const Icon = iconMap[industry.icon] || Briefcase
   const sorted = sortAutomations(industry.automations, sortMode)
+
+  // Quick wins = 3 easiest automations (Lav complexity)
+  const quickWins = industry.automations
+    .filter(a => a.complexity === 'Lav')
+    .slice(0, 3)
+
+  // If less than 3 Lav, fill with Middels
+  if (quickWins.length < 3) {
+    const middels = industry.automations.filter(a => a.complexity === 'Middels')
+    quickWins.push(...middels.slice(0, 3 - quickWins.length))
+  }
 
   return (
     <div style={{ background: bgDark, minHeight: '100vh', color: '#f4f1eb' }}>
@@ -193,7 +193,7 @@ export default function IndustryPage() {
       </div>
 
       {/* Hero */}
-      <section style={{ maxWidth: 800, margin: '0 auto', padding: '40px 24px 32px', textAlign: 'center' }}>
+      <section style={{ maxWidth: 800, margin: '0 auto', padding: '40px 24px 20px', textAlign: 'center' }}>
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
           style={{
@@ -207,81 +207,151 @@ export default function IndustryPage() {
         </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-          style={{ fontSize: 'clamp(28px, 5vw, 40px)', fontWeight: 700, marginBottom: 12, lineHeight: 1.2 }}
+          style={{ fontSize: 'clamp(26px, 5vw, 38px)', fontWeight: 700, marginBottom: 12, lineHeight: 1.2 }}
         >
-          AI-automatisering for <span style={{ color: gold }}>{industry.title}</span>
+          {industry.count} AI-løsninger for <span style={{ color: gold }}>{industry.title}</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, marginBottom: 8 }}
+          style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, marginBottom: 20 }}
         >
           {industry.subtitle}
         </motion.p>
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-          style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)' }}
         >
-          Trykk på en automatisering for å lese mer
-        </motion.p>
+          <Link href="/kartlegging" className="cta-shimmer" style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '13px 28px', borderRadius: 12, fontWeight: 600,
+            fontSize: 14, textDecoration: 'none', color: bgDark,
+          }}>
+            Gratis kartlegging for {industry.title.toLowerCase()} <ArrowRight size={15} />
+          </Link>
+        </motion.div>
       </section>
 
+      {/* Quick Wins */}
+      {quickWins.length > 0 && (
+        <section style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px 8px' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+          >
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
+            }}>
+              <Star size={16} color={gold} />
+              <h2 style={{ fontSize: 18, fontWeight: 600, margin: 0 }}>
+                Raskeste gevinster
+              </h2>
+              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
+                — Enklest å komme i gang med
+              </span>
+            </div>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+              gap: 12,
+            }}>
+              {quickWins.map((auto, i) => (
+                <div key={auto.name} style={{
+                  background: `rgba(${goldRgb},0.04)`,
+                  border: `1px solid rgba(${goldRgb},0.12)`,
+                  borderRadius: 14, padding: '18px 16px',
+                  display: 'flex', flexDirection: 'column', gap: 8,
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Zap size={14} color="#4ade80" />
+                    <span style={{ fontSize: 14, fontWeight: 600 }}>{auto.name}</span>
+                  </div>
+                  {auto.desc && (
+                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', margin: 0, lineHeight: 1.5 }}>
+                      {auto.desc}
+                    </p>
+                  )}
+                  {auto.benefit && (
+                    <p style={{
+                      fontSize: 12, color: `rgba(${goldRgb},0.75)`, margin: 0,
+                      lineHeight: 1.4, fontStyle: 'italic',
+                    }}>
+                      {auto.benefit}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </section>
+      )}
+
+      {/* Divider */}
+      <div style={{ maxWidth: 900, margin: '32px auto 0', padding: '0 24px' }}>
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }} />
+      </div>
+
       {/* Sort + Legend */}
-      <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 20px' }}>
-        {/* Sort buttons */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginRight: 4 }}>Sorter:</span>
-          <button
-            onClick={() => setSortMode('complexity')}
-            style={{
-              background: sortMode === 'complexity' ? `rgba(${goldRgb},0.15)` : `rgba(255,255,255,0.04)`,
-              border: `1px solid ${sortMode === 'complexity' ? `rgba(${goldRgb},0.3)` : 'rgba(255,255,255,0.08)'}`,
-              color: sortMode === 'complexity' ? gold : 'rgba(255,255,255,0.55)',
-              borderRadius: 8, padding: '6px 14px', fontSize: 13, fontWeight: 500,
-              cursor: 'pointer', fontFamily: 'inherit',
-              display: 'flex', alignItems: 'center', gap: 6,
-              transition: 'all 0.2s',
-            }}
-          >
-            <ArrowUpDown size={13} /> Kompleksitet høy → lav
-          </button>
-          <button
-            onClick={() => setSortMode('alpha')}
-            style={{
-              background: sortMode === 'alpha' ? `rgba(${goldRgb},0.15)` : `rgba(255,255,255,0.04)`,
-              border: `1px solid ${sortMode === 'alpha' ? `rgba(${goldRgb},0.3)` : 'rgba(255,255,255,0.08)'}`,
-              color: sortMode === 'alpha' ? gold : 'rgba(255,255,255,0.55)',
-              borderRadius: 8, padding: '6px 14px', fontSize: 13, fontWeight: 500,
-              cursor: 'pointer', fontFamily: 'inherit',
-              display: 'flex', alignItems: 'center', gap: 6,
-              transition: 'all 0.2s',
-            }}
-          >
-            <SortAsc size={13} /> A → Å
-          </button>
+      <section style={{ maxWidth: 900, margin: '0 auto', padding: '24px 24px 16px' }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          flexWrap: 'wrap', gap: 12, marginBottom: 14,
+        }}>
+          <h2 style={{ fontSize: 18, fontWeight: 600, margin: 0 }}>
+            Alle {industry.count} automatiseringer
+          </h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button
+              onClick={() => setSortMode('complexity')}
+              style={{
+                background: sortMode === 'complexity' ? `rgba(${goldRgb},0.15)` : `rgba(255,255,255,0.04)`,
+                border: `1px solid ${sortMode === 'complexity' ? `rgba(${goldRgb},0.3)` : 'rgba(255,255,255,0.08)'}`,
+                color: sortMode === 'complexity' ? gold : 'rgba(255,255,255,0.55)',
+                borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 500,
+                cursor: 'pointer', fontFamily: 'inherit',
+                display: 'flex', alignItems: 'center', gap: 5,
+                transition: 'all 0.2s',
+              }}
+            >
+              <ArrowUpDown size={12} /> Kompleksitet
+            </button>
+            <button
+              onClick={() => setSortMode('alpha')}
+              style={{
+                background: sortMode === 'alpha' ? `rgba(${goldRgb},0.15)` : `rgba(255,255,255,0.04)`,
+                border: `1px solid ${sortMode === 'alpha' ? `rgba(${goldRgb},0.3)` : 'rgba(255,255,255,0.08)'}`,
+                color: sortMode === 'alpha' ? gold : 'rgba(255,255,255,0.55)',
+                borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 500,
+                cursor: 'pointer', fontFamily: 'inherit',
+                display: 'flex', alignItems: 'center', gap: 5,
+                transition: 'all 0.2s',
+              }}
+            >
+              <SortAsc size={12} /> A → Å
+            </button>
+          </div>
         </div>
 
         {/* Complexity legend */}
         <div style={{
-          background: `rgba(255,255,255,0.02)`,
+          background: 'rgba(255,255,255,0.02)',
           border: '1px solid rgba(255,255,255,0.06)',
-          borderRadius: 12, padding: '14px 18px',
-          display: 'flex', gap: 20, flexWrap: 'wrap', alignItems: 'center',
+          borderRadius: 10, padding: '10px 16px',
+          display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center',
         }}>
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>Kompleksitet:</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12 }}>
-            <Zap size={12} color="#4ade80" />
+          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>Kompleksitet:</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11 }}>
+            <Zap size={11} color="#4ade80" />
             <span style={{ color: '#4ade80', fontWeight: 500 }}>Lav</span>
-            <span style={{ color: 'rgba(255,255,255,0.4)' }}>— Raskt oppsett, noen timer</span>
+            <span style={{ color: 'rgba(255,255,255,0.35)' }}>— Noen timer</span>
           </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12 }}>
-            <Clock size={12} color="#fbbf24" />
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11 }}>
+            <Clock size={11} color="#fbbf24" />
             <span style={{ color: '#fbbf24', fontWeight: 500 }}>Middels</span>
-            <span style={{ color: 'rgba(255,255,255,0.4)' }}>— Litt konfig, 1–5 dager</span>
+            <span style={{ color: 'rgba(255,255,255,0.35)' }}>— 1–5 dager</span>
           </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12 }}>
-            <AlertTriangle size={12} color="#f87171" />
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11 }}>
+            <AlertTriangle size={11} color="#f87171" />
             <span style={{ color: '#f87171', fontWeight: 500 }}>Høy</span>
-            <span style={{ color: 'rgba(255,255,255,0.4)' }}>— Avansert, 3–7 dager</span>
+            <span style={{ color: 'rgba(255,255,255,0.35)' }}>— 3–7 dager</span>
           </span>
         </div>
       </section>
@@ -290,19 +360,12 @@ export default function IndustryPage() {
       <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 60px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {sorted.map((auto, i) => (
-            <AutoCard key={auto.name + i} auto={auto} index={i} />
+            <AutoCard key={auto.name + i} auto={auto} index={i} defaultOpen={i === 0} />
           ))}
         </div>
-
-        <p style={{
-          fontSize: 13, color: 'rgba(255,255,255,0.35)', textAlign: 'center',
-          marginTop: 24,
-        }}>
-          {industry.count} automatiseringer totalt for {industry.title}
-        </p>
       </section>
 
-      {/* CTA */}
+      {/* Bottom CTA */}
       <section style={{ maxWidth: 700, margin: '0 auto', padding: '0 24px 80px', textAlign: 'center' }}>
         <div style={{
           background: `linear-gradient(135deg, ${cardBg}, rgba(${goldRgb},0.06))`,
@@ -310,11 +373,11 @@ export default function IndustryPage() {
           border: `1px solid rgba(${goldRgb},0.12)`,
         }}>
           <h2 style={{ fontSize: 24, fontWeight: 600, marginBottom: 12 }}>
-            Klar for å automatisere {industry.title.toLowerCase()}?
+            Klar for å automatisere?
           </h2>
           <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.7)', marginBottom: 24, lineHeight: 1.6 }}>
             Få en gratis kartlegging og se nøyaktig hvilke av disse {industry.count} løsningene
-            som gir mest verdi for din bedrift.
+            som gir mest verdi for din bedrift — det tar under 2 minutter.
           </p>
           <Link href="/kartlegging" className="cta-shimmer" style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -323,8 +386,36 @@ export default function IndustryPage() {
           }}>
             Start gratis kartlegging <ArrowRight size={16} />
           </Link>
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 14 }}>
+            Ingen forpliktelser · Svar innen 24 timer
+          </p>
         </div>
       </section>
+
+      {/* Sticky bottom CTA */}
+      <div style={{
+        position: 'fixed', bottom: 0, left: 0, right: 0,
+        background: `linear-gradient(to top, ${bgDark} 70%, transparent)`,
+        padding: '24px 24px 20px',
+        display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16,
+        transition: 'opacity 0.3s, transform 0.3s',
+        opacity: showSticky ? 1 : 0,
+        transform: showSticky ? 'translateY(0)' : 'translateY(20px)',
+        pointerEvents: showSticky ? 'auto' : 'none',
+        zIndex: 50,
+      }}>
+        <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Phone size={14} color={gold} />
+          Gratis kartlegging
+        </span>
+        <Link href="/kartlegging" className="cta-shimmer" style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          padding: '10px 24px', borderRadius: 10, fontWeight: 600,
+          fontSize: 14, textDecoration: 'none', color: bgDark,
+        }}>
+          Start nå <ArrowRight size={14} />
+        </Link>
+      </div>
 
       <Footer lang={lang} />
 
