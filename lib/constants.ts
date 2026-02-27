@@ -1,18 +1,18 @@
-export const gold = '#c9a96e'
-export const goldLight = '#e2c47d'
-export const goldDark = '#b8944a'
-export const goldRgb = '201,169,110'
-export const bg = '#050510'
+export const gold = '#efc07b'
+export const goldLight = '#f5d49a'
+export const goldDark = '#c9a96e'
+export const goldRgb = '239,192,123'
+export const bg = '#0f1b27'
 
 export const tierColors = {
   starter: '#6ee7b7',
-  professional: '#c9a96e',
+  professional: '#efc07b',
   growth: '#a78bfa',
 }
 
 export const fonts = {
-  body: "'DM Sans', sans-serif",
-  heading: "'Playfair Display', serif",
+  body: "'Inter', system-ui, -apple-system, sans-serif",
+  heading: "'Inter', system-ui, -apple-system, sans-serif",
 }
 
 export const BOOKING_URL = 'https://calendar.google.com/calendar/appointments/schedules/' // TODO: Replace with actual Google Calendar booking link when ENK is registered
@@ -29,7 +29,7 @@ export const fadeUp = {
 }
 
 export const globalStyles = (extraCss = '') => `
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
   ::selection { background: rgba(${goldRgb},0.3); }
   .cta-shimmer { background: linear-gradient(110deg, ${gold} 0%, #e0c88a 25%, ${gold} 50%, #a8884d 75%, ${gold} 100%); background-size: 200% 100%; animation: shimmer 3s linear infinite; }
   .cta-shimmer:hover { transform: translateY(-1px); box-shadow: 0 12px 40px rgba(${goldRgb},0.35) !important; }

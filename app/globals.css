@@ -5,14 +5,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --foreground-rgb: 224, 224, 224;
-  --background-start-rgb: 5, 5, 16;
-  --background-end-rgb: 5, 5, 16;
+  --foreground-rgb: 244, 241, 235;
+  --background-start-rgb: 15, 27, 39;
+  --background-end-rgb: 15, 27, 39;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background-color: #050510;
+  background-color: #0f1b27;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -88,7 +88,7 @@ body {
 
 /* ── WCAG Focus Styles ── */
 *:focus-visible {
-  outline: 2px solid #c9a96e;
+  outline: 2px solid #efc07b;
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -98,8 +98,8 @@ body {
   position: absolute;
   top: -40px;
   left: 16px;
-  background: #c9a96e;
-  color: #0a0a0f;
+  background: #efc07b;
+  color: #0f1b27;
   padding: 8px 16px;
   border-radius: 0 0 8px 8px;
   font-weight: 600;

@@ -6,12 +6,17 @@ import Link from 'next/link'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import {
   ArrowRight, Phone, Zap, Shield, ChevronDown, Star,
-  ClipboardList, FileText, CheckCircle2,
+  ClipboardList, FileText, CheckCircle2, Clock, Users,
+  TrendingUp, Bot, CalendarCheck, BarChart3, Megaphone,
+  AlertTriangle, PhoneOff, Cog,
 } from 'lucide-react'
 import Nav from '@/app/components/Nav'
 
-const gold = '#c9a96e'
-const goldRgb = '201,169,110'
+/* ── Design tokens ── */
+const gold = '#efc07b'
+const goldRgb = '239,192,123'
+const bgDark = '#0f1b27'
+const cardBg = '#16213e'
 
 /* ── Animated counter ── */
 function AnimCounter({ target, suffix = '' }: { target: number; suffix?: string }) {
@@ -33,37 +38,18 @@ function AnimCounter({ target, suffix = '' }: { target: number; suffix?: string 
   return <span ref={ref}>{val}{suffix}</span>
 }
 
-/* ── Typewriter effect ── */
-function Typewriter({ words }: { words: string[] }) {
-  const [wordIdx, setWordIdx] = useState(0)
-  const [text, setText] = useState('')
-  const [deleting, setDeleting] = useState(false)
-  useEffect(() => {
-    const word = words[wordIdx]
-    const timeout = deleting
-      ? setTimeout(() => {
-          setText(word.slice(0, text.length - 1))
-          if (text.length <= 1) { setDeleting(false); setWordIdx((i) => (i + 1) % words.length) }
-        }, 40)
-      : setTimeout(() => {
-          setText(word.slice(0, text.length + 1))
-          if (text.length >= word.length) setTimeout(() => setDeleting(true), 2200)
-        }, 80)
-    return () => clearTimeout(timeout)
-  }, [text, deleting, wordIdx, words])
-  return <>{text}<span className="typewriter-cursor" /></>
-}
-
 /* ── FAQ accordion ── */
 function FAQ({ items }: { items: { q: string; a: string }[] }) {
   const [open, setOpen] = useState<number | null>(null)
   return (
     <div className="space-y-3">
       {items.map((item, i) => (
-        <div key={i} className="faq-card" onClick={() => setOpen(open === i ? null : i)}>
-          <div className="flex items-center justify-between cursor-pointer">
-            <span className="text-[15px] font-semibold text-white/90">{item.q}</span>
-            <ChevronDown size={18} className={`text-white/30 transition-transform ${open === i ? 'rotate-180' : ''}`} />
+        <div key={i} className="glass-card cursor-pointer" onClick={() => setOpen(open === i ? null : i)}
+          style={{ padding: '16px 20px' }}>
+          <div className="flex items-center justify-between">
+            <span className="text-[15px] font-semibold" style={{ color: '#f4f1eb' }}>{item.q}</span>
+            <ChevronDown size={18} className={`transition-transform duration-200 ${open === i ? 'rotate-180' : ''}`}
+              style={{ color: 'rgba(244,241,235,0.3)' }} />
           </div>
           <AnimatePresence>
             {open === i && (
@@ -72,7 +58,7 @@ function FAQ({ items }: { items: { q: string; a: string }[] }) {
                 exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }}
                 className="overflow-hidden"
               >
-                <p className="text-[13px] text-white/50 mt-3 leading-relaxed">{item.a}</p>
+                <p className="text-[14px] mt-3 leading-relaxed" style={{ color: 'rgba(244,241,235,0.5)' }}>{item.a}</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -86,7 +72,7 @@ function FAQ({ items }: { items: { q: string; a: string }[] }) {
 function LiveToast() {
   const names = ['Martin', 'Lena', 'Erik', 'Sara', 'Jonas', 'Ida', 'Anders', 'Nora']
   const cities = ['Oslo', 'Bergen', 'Trondheim', 'Stavanger', 'Kristiansand', 'Tromsø']
-  const actions = ['startet gratis kartlegging', 'fikk sin AI-analyse', 'fikk 8 anbefalte automatiseringer', 'booket implementering']
+  const actions = ['startet gratis kartlegging', 'fikk sin AI-analyse', 'booket implementering']
   const [toast, setToast] = useState<{ name: string; city: string; action: string } | null>(null)
 
   useEffect(() => {
@@ -106,14 +92,14 @@ function LiveToast() {
           initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 10, scale: 0.95 }}
           className="fixed bottom-20 left-4 md:bottom-6 md:left-6 z-50 flex items-center gap-3 px-4 py-3 rounded-xl"
-          style={{ background: 'rgba(5,5,16,0.85)', border: `1px solid rgba(${goldRgb},0.15)`, backdropFilter: 'blur(12px)', maxWidth: 320 }}
+          style={{ background: 'rgba(22,33,62,0.9)', border: `1px solid rgba(${goldRgb},0.15)`, backdropFilter: 'blur(12px)', maxWidth: 320 }}
         >
           <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: `rgba(${goldRgb},0.15)`, color: gold }}>
             {toast.name[0]}
           </div>
           <div>
-            <p className="text-xs text-white/80"><strong>{toast.name}</strong> fra {toast.city}</p>
-            <p className="text-[11px] text-white/40">{toast.action}</p>
+            <p className="text-xs" style={{ color: 'rgba(244,241,235,0.8)' }}><strong>{toast.name}</strong> fra {toast.city}</p>
+            <p className="text-[11px]" style={{ color: 'rgba(244,241,235,0.4)' }}>{toast.action}</p>
           </div>
         </motion.div>
       )}
@@ -136,35 +122,15 @@ function TechLogos() {
     <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
       {logos.map((logo) => (
         <div key={logo.name} className="group flex flex-col items-center gap-2 cursor-default">
-          <div className="text-white/20 group-hover:text-white/50 transition-all duration-300 group-hover:scale-110">
+          <div className="transition-all duration-300 group-hover:scale-110" style={{ color: 'rgba(244,241,235,0.2)' }}>
             {logo.svg}
           </div>
-          <span className="text-[10px] text-white/15 group-hover:text-white/40 tracking-widest uppercase transition-colors">{logo.name}</span>
+          <span className="text-[10px] tracking-widest uppercase transition-colors" style={{ color: 'rgba(244,241,235,0.15)' }}>{logo.name}</span>
         </div>
       ))}
     </div>
   )
 }
-
-/* ── INDUSTRIES DATA ── */
-const industries = [
-  { name: 'Bygg & Håndverk', count: 12, benefit: '+30-50% flere leads' },
-  { name: 'Salong & Skjønnhet', count: 10, benefit: '75% færre no-shows' },
-  { name: 'Advokatkontor', count: 12, benefit: '24/7 klientkvalifisering' },
-  { name: 'Restaurant & Café', count: 10, benefit: 'AI svarer alltid' },
-  { name: 'Eiendomsmegling', count: 12, benefit: '24/7 interessenter' },
-  { name: 'Helse & Klinikk', count: 12, benefit: '50-70% mindre resepsjon' },
-  { name: 'E-handel', count: 10, benefit: '10-15% færre forlatte kurver' },
-  { name: 'Regnskap', count: 8, benefit: 'Frigjør regnskapstimer' },
-  { name: 'Rekruttering', count: 8, benefit: 'Minutter istedenfor timer' },
-  { name: 'Bilverksted', count: 9, benefit: 'AI svarer, mekanikere jobber' },
-  { name: 'Coaching', count: 8, benefit: '24/7 kurssalg' },
-  { name: 'IT & Tech', count: 8, benefit: 'Spar L1-support timer' },
-  { name: 'Trening & Fitness', count: 8, benefit: 'Fyll plasser uten resepsjon' },
-  { name: 'Reiseliv', count: 10, benefit: 'Fang gjester etter stengetid' },
-  { name: 'Logistikk', count: 8, benefit: 'Færre supporthenvendelser' },
-  { name: 'SaaS & Produkt', count: 8, benefit: 'Øk konverteringsrate' },
-]
 
 /* ── ROI DATA ── */
 const roiData: Record<string, { avgDeal: number; conversion: number }> = {
@@ -185,7 +151,6 @@ export default function Home() {
   const router = useRouter()
   const ctaClick = useCallback(() => router.push('/kartlegging'), [router])
 
-  const [selectedIndustry, setSelectedIndustry] = useState(0)
   const [roiIndustry, setRoiIndustry] = useState('Bygg & Håndverk')
   const [missedCalls, setMissedCalls] = useState(8)
   const roiEntry = roiData[roiIndustry] || roiData['Bygg & Håndverk']
@@ -203,139 +168,214 @@ export default function Home() {
     { q: 'Hvor lang tid tar implementeringen?', a: 'Fra signering til live: 2-5 virkedager. Vi tar oss av alt teknisk — du trenger bare å gi oss tilgang til de systemene vi skal integrere med.' },
     { q: 'Er det trygt med tanke på GDPR?', a: 'Absolutt. All data lagres kryptert innen EØS. Vi er GDPR-kompatible og EU AI Act-klare. Ingen data deles med tredjeparter.' },
     { q: 'Kan jeg starte med én automatisering?', a: 'Ja! Mange starter med AI-mobilsvarer og utvider derfra. Du velger selv tempo og omfang.' },
+    { q: 'Trenger jeg teknisk kunnskap?', a: 'Nei. Vi tar oss av alt teknisk. Du trenger ikke å forstå AI — bare fortelle oss om din bedrift og dine utfordringer.' },
   ]
 
-  const sectionAnim = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.5 } }
+  const sAnim = {
+    initial: { opacity: 0, y: 24 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
+    transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
+  }
 
   return (
     <>
       <Nav />
 
       {/* ═══════════════════════════════════════════ */}
-      {/*  1. HERO                                    */}
+      {/*  BLOCK 1: HERO                              */}
       {/* ═══════════════════════════════════════════ */}
-      <section className="pt-8 md:pt-16 pb-16 md:pb-24 text-center relative overflow-hidden min-h-[85vh] flex flex-col justify-center">
-        {/* Grid overlay */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
-        {/* Aurora glow */}
-        <div className="hero-aurora" />
-        {/* Floating particles */}
-        <div className="particles">
-          {Array.from({ length: 20 }).map((_, i) => (
-            <div key={i} className="particle" style={{
-              left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 8}s`, animationDuration: `${6 + Math.random() * 8}s`,
-              width: `${2 + Math.random() * 3}px`, height: `${2 + Math.random() * 3}px`,
-            }} />
-          ))}
-        </div>
+      <section className="pt-8 md:pt-20 pb-16 md:pb-28 text-center relative overflow-hidden min-h-[85vh] flex flex-col justify-center">
+        {/* Ambient glow orb */}
+        <div className="hero-orb" />
+        {/* Subtle grid */}
+        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'linear-gradient(rgba(244,241,235,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(244,241,235,0.1) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
 
         <div className="relative z-10 max-w-3xl mx-auto px-5">
-          {/* Animated gradient border badge */}
-          <motion.div {...sectionAnim} className="shimmer-badge inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8">
+          {/* Trust badge */}
+          <motion.div {...sAnim} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 glass-card">
             <Shield size={13} style={{ color: gold }} />
-            <span className="text-[12px] text-white/50 tracking-wide">GDPR &middot; Norsk support &middot; Live på 2–5 dager</span>
+            <span className="text-[12px] tracking-wide" style={{ color: 'rgba(244,241,235,0.5)' }}>GDPR-kompatibel &middot; Norsk support &middot; Live på 2–5 dager</span>
           </motion.div>
 
-          <motion.h1 {...sectionAnim} transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-[36px] md:text-[56px] font-extrabold leading-[1.1] tracking-tight text-white mb-6"
-            style={{ fontFamily: "'Playfair Display', serif" }}>
-            Automatiser{' '}
-            <span style={{ color: gold }}>
-              <Typewriter words={['telefonen', 'bookingen', 'kundeoppfølging', 'fakturering', 'markedsføring']} />
-            </span>
+          {/* Outcome-driven headline */}
+          <motion.h1 {...sAnim} transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-[36px] md:text-[60px] font-extrabold leading-[1.08] tracking-tight mb-6"
+            style={{ color: '#f4f1eb' }}>
+            Spar 40+ timer i uken med{' '}
+            <span className="text-gradient-gold">AI som jobber for deg</span>
           </motion.h1>
 
-          <motion.p {...sectionAnim} transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-[16px] md:text-[18px] text-white/50 max-w-xl mx-auto mb-10 leading-relaxed"
-            style={{ fontFamily: "'DM Sans', sans-serif" }}>
-            Norske bedrifter taper i snitt 85 000 kr/mnd på ubesvarte anrop og manuelt arbeid.<br className="hidden md:block" />
-            Arxon fikser det med AI — på under en uke.
+          {/* Pain-solving subtext */}
+          <motion.p {...sAnim} transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-[16px] md:text-[18px] max-w-xl mx-auto mb-10 leading-relaxed"
+            style={{ color: 'rgba(244,241,235,0.5)' }}>
+            Norske bedrifter taper i snitt 85 000 kr/mnd på ubesvarte anrop og manuelt arbeid.
+            Arxon automatiserer telefon, booking og oppfølging — på under en uke.
           </motion.p>
 
-          <motion.div {...sectionAnim} transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button onClick={ctaClick} className="gold-btn rounded-xl py-4 px-8 text-[15px] font-bold flex items-center justify-center gap-2">
-              Start gratis kartlegging <ArrowRight size={16} />
+          {/* Single dominant CTA */}
+          <motion.div {...sAnim} transition={{ duration: 0.5, delay: 0.3 }}>
+            <button onClick={ctaClick} className="gold-btn rounded-xl py-4 px-10 text-[16px] font-bold inline-flex items-center gap-2">
+              Start gratis kartlegging <ArrowRight size={18} />
             </button>
-            <a href="tel:+4778896386" className="glass-btn rounded-xl py-4 px-8 text-[15px] font-semibold flex items-center justify-center gap-2 no-underline">
-              <Phone size={15} /> Ring 78 89 63 86
-            </a>
+            <p className="text-[12px] mt-4" style={{ color: 'rgba(244,241,235,0.3)' }}>
+              Gratis &middot; Ingen binding &middot; Resultat på 2 minutter
+            </p>
           </motion.div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════ */}
-      {/*  2. STATS BAR                               */}
+      {/*  BLOCK 2: SOCIAL PROOF / TRUST BAR          */}
       {/* ═══════════════════════════════════════════ */}
-      <motion.section {...sectionAnim} className="py-12 border-y relative" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
-        <div className="absolute inset-0 overflow-hidden"><div className="stats-glow" /></div>
-        <div className="max-w-4xl mx-auto px-5 grid grid-cols-2 md:grid-cols-4 gap-6 text-center relative z-10">
-          {[
-            { val: 226, suffix: '+', label: 'Automatiseringer' },
-            { val: 25, suffix: '', label: 'Bransjer dekket' },
-            { val: 85, suffix: '%', label: 'Raskere oppfølging' },
-            { val: 24, suffix: '/7', label: 'AI tilgjengelig' },
-          ].map((s, i) => (
-            <motion.div key={i} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.1 }}>
-              <div className="text-[28px] md:text-[36px] font-extrabold text-gradient-gold" style={{ fontFamily: "'Playfair Display', serif" }}>
-                <AnimCounter target={s.val} suffix={s.suffix} />
-              </div>
-              <div className="text-[12px] text-white/35 tracking-wide uppercase mt-1">{s.label}</div>
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
-
-      {/* ═══════════════════════════════════════════ */}
-      {/*  3. TECHNOLOGY PARTNERS                     */}
-      {/* ═══════════════════════════════════════════ */}
-      <motion.section {...sectionAnim} className="py-16 md:py-20 relative overflow-hidden">
+      <motion.section {...sAnim} className="py-16 md:py-20 relative overflow-hidden" style={{ borderTop: '1px solid rgba(244,241,235,0.04)' }}>
         <div className="max-w-4xl mx-auto px-5 text-center">
-          <p className="text-[12px] text-white/25 tracking-[3px] uppercase mb-8">Bygget med teknologi fra verdensledende selskaper</p>
+          <p className="text-[12px] tracking-[3px] uppercase mb-8" style={{ color: 'rgba(244,241,235,0.25)' }}>Bygget med teknologi fra verdensledende selskaper</p>
           <TechLogos />
         </div>
-        {/* Gold divider glow */}
         <div className="gold-divider mt-16" />
       </motion.section>
 
       {/* ═══════════════════════════════════════════ */}
-      {/*  4. ROADMAP: HOW IT WORKS                   */}
+      {/*  BLOCK 3: PAIN AGITATION (PAS)              */}
       {/* ═══════════════════════════════════════════ */}
-      <section className="py-20 md:py-28 relative">
-        <div className="max-w-2xl mx-auto px-5">
-          <motion.div {...sectionAnim} className="text-center mb-16">
-            <h2 className="text-[28px] md:text-[40px] font-bold text-white tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Din reise med <span style={{ color: gold }}>Arxon</span>
+      <section className="py-20 md:py-28" style={{ borderTop: '1px solid rgba(244,241,235,0.04)' }}>
+        <div className="max-w-4xl mx-auto px-5">
+          <motion.div {...sAnim} className="text-center mb-14">
+            <h2 className="text-[28px] md:text-[42px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
+              Kjenner du deg igjen?
             </h2>
-            <p className="text-[14px] text-white/40 mt-3">Fra kartlegging til full automatisering — på under en uke.</p>
+            <p className="text-[15px] max-w-lg mx-auto" style={{ color: 'rgba(244,241,235,0.4)' }}>
+              De fleste norske bedrifter taper kunder hver eneste dag uten å vite det.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                icon: <PhoneOff size={24} />,
+                title: 'Ubesvarte anrop',
+                pain: 'Hver gang telefonen ringer uten svar, mister du en potensiell kunde.',
+                agitate: 'Det koster deg i snitt 85 000 kr/mnd i tapte inntekter.',
+              },
+              {
+                icon: <Clock size={24} />,
+                title: 'Timer på manuelt arbeid',
+                pain: 'Booking, oppfølging, fakturering — alt gjøres for hånd.',
+                agitate: '40+ timer i uken forsvinner til oppgaver AI kan gjøre på sekunder.',
+              },
+              {
+                icon: <TrendingUp size={24} />,
+                title: 'Konkurrenter automatiserer',
+                pain: 'Mens du gjør ting manuelt, har konkurrentene allerede AI.',
+                agitate: 'De fanger kundene dine mens du er opptatt med admin.',
+              },
+            ].map((item, i) => (
+              <motion.div key={i}
+                initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.1 }}
+                className="glass-card p-6 md:p-8 group"
+              >
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+                  style={{ background: 'rgba(239,69,69,0.08)', border: '1px solid rgba(239,69,69,0.15)' }}>
+                  <span style={{ color: '#ef4545' }}>{item.icon}</span>
+                </div>
+                <h3 className="text-[16px] font-bold mb-2" style={{ color: '#f4f1eb' }}>{item.title}</h3>
+                <p className="text-[14px] leading-relaxed mb-2" style={{ color: 'rgba(244,241,235,0.5)' }}>{item.pain}</p>
+                <p className="text-[13px] font-medium" style={{ color: '#ef4545' }}>{item.agitate}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Bridge to solution */}
+          <motion.div {...sAnim} className="text-center mt-12">
+            <p className="text-[18px] font-semibold" style={{ color: gold }}>
+              Det finnes en bedre måte.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════ */}
+      {/*  BLOCK 4: SOLUTION — BENTO GRID             */}
+      {/* ═══════════════════════════════════════════ */}
+      <section className="py-20 md:py-28" style={{ borderTop: '1px solid rgba(244,241,235,0.04)' }}>
+        <div className="max-w-5xl mx-auto px-5">
+          <motion.div {...sAnim} className="text-center mb-14">
+            <h2 className="text-[28px] md:text-[42px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
+              Alt du trenger — <span className="text-gradient-gold">én plattform</span>
+            </h2>
+            <p className="text-[15px] max-w-lg mx-auto" style={{ color: 'rgba(244,241,235,0.4)' }}>
+              Arxon erstatter manuelt arbeid med intelligente AI-systemer som jobber 24/7.
+            </p>
+          </motion.div>
+
+          {/* Bento Grid */}
+          <div className="bento-grid">
+            {[
+              { icon: <Bot size={22} />, title: 'AI-Mobilsvarer', desc: 'Svarer telefonen 24/7. Kvalifiserer leads, booker møter og sender sammendrag — alt automatisk.', span: 'wide' },
+              { icon: <CalendarCheck size={22} />, title: 'Automatisk booking', desc: 'Kundene booker direkte i kalenderen din. Ingen frem-og-tilbake på SMS.', span: 'normal' },
+              { icon: <Users size={22} />, title: 'Kundeoppfølging', desc: 'AI følger opp leads med personlige meldinger til riktig tid.', span: 'normal' },
+              { icon: <BarChart3 size={22} />, title: 'Lead-kvalifisering', desc: 'Rangerer og sorterer leads basert på kjøpssannsynlighet. Du ringer bare de varme.', span: 'normal' },
+              { icon: <Cog size={22} />, title: 'Automatisert admin', desc: 'Fakturering, rapporter og oppgaver kjører av seg selv.', span: 'normal' },
+              { icon: <Megaphone size={22} />, title: 'Smart markedsføring', desc: 'AI-drevne kampanjer som treffer riktig kunde til riktig tid.', span: 'wide' },
+            ].map((item, i) => (
+              <motion.div key={i}
+                initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                className={`bento-card group ${item.span === 'wide' ? 'md:col-span-2' : ''}`}
+              >
+                <div className="bento-card-glow" />
+                <div className="relative z-10 p-6 md:p-8">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
+                    style={{ background: `rgba(${goldRgb},0.08)`, border: `1px solid rgba(${goldRgb},0.15)` }}>
+                    <span style={{ color: gold }}>{item.icon}</span>
+                  </div>
+                  <h3 className="text-[16px] font-bold mb-2" style={{ color: '#f4f1eb' }}>{item.title}</h3>
+                  <p className="text-[14px] leading-relaxed" style={{ color: 'rgba(244,241,235,0.45)' }}>{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════ */}
+      {/*  BLOCK 5: PROCESS — HOW IT WORKS            */}
+      {/* ═══════════════════════════════════════════ */}
+      <section className="py-20 md:py-28" style={{ borderTop: '1px solid rgba(244,241,235,0.04)' }}>
+        <div className="max-w-2xl mx-auto px-5">
+          <motion.div {...sAnim} className="text-center mb-16">
+            <h2 className="text-[28px] md:text-[42px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
+              Tre steg til <span className="text-gradient-gold">full automatisering</span>
+            </h2>
+            <p className="text-[15px] max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.4)' }}>Enklere enn du tror. Vi gjør alt det tekniske.</p>
           </motion.div>
 
           <div className="relative">
-            {/* Animated timeline line */}
             <div className="absolute left-6 md:left-8 top-0 bottom-0 w-px" style={{ background: `linear-gradient(to bottom, rgba(${goldRgb},0.3), rgba(${goldRgb},0.05))` }} />
-            <div className="timeline-glow-line" />
 
             {[
-              { step: 1, icon: <ClipboardList size={20} />, title: 'Gratis kartlegging', time: '2 minutter', desc: 'Svar på noen enkle spørsmål om din bedrift. Vår AI analyserer dine behov og finner de automatiseringene som gir størst effekt.' },
-              { step: 2, icon: <FileText size={20} />, title: 'Skreddersydd AI-forslag', time: 'Umiddelbart', desc: 'Du får en komplett oversikt over hvilke prosesser vi kan automatisere, forventet besparelse og en tydelig prioriteringsliste.' },
-              { step: 3, icon: <Zap size={20} />, title: 'Vi implementerer', time: '2–5 dager', desc: 'Vi setter opp alt fra A til Å. Du trenger ikke gjøre noe teknisk — bare gi oss tilgang, så fikser vi resten.' },
+              { step: 1, icon: <ClipboardList size={20} />, title: 'Gratis kartlegging', time: '2 minutter', desc: 'Svar på noen enkle spørsmål. Vår AI analyserer dine behov og finner automatiseringene med størst effekt.' },
+              { step: 2, icon: <FileText size={20} />, title: 'Skreddersydd AI-forslag', time: 'Umiddelbart', desc: 'Du får en komplett oversikt over prosesser vi kan automatisere, forventet besparelse og en tydelig prioriteringsliste.' },
+              { step: 3, icon: <Zap size={20} />, title: 'Vi implementerer alt', time: '2–5 dager', desc: 'Vi setter opp alt fra A til Å. Du trenger ikke gjøre noe teknisk — bare gi oss tilgang, så fikser vi resten.' },
             ].map((item, i) => (
               <motion.div key={i}
                 initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.15 }}
                 className="relative pl-16 md:pl-20 pb-12 last:pb-0"
               >
-                <div className="absolute left-0 md:left-2 w-12 h-12 rounded-full flex items-center justify-center z-10 step-circle"
+                <div className="absolute left-0 md:left-2 w-12 h-12 rounded-full flex items-center justify-center z-10"
                   style={{ background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.25)` }}>
-                  <div className="step-pulse-ring" />
-                  <span className="text-sm font-bold relative z-10" style={{ color: gold }}>{item.step}</span>
+                  <span className="text-sm font-bold" style={{ color: gold }}>{item.step}</span>
                 </div>
 
-                <div className="road-card p-6">
+                <div className="glass-card p-6">
                   <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-                    <h3 className="text-[16px] font-bold text-white flex items-center gap-2">
+                    <h3 className="text-[16px] font-bold flex items-center gap-2" style={{ color: '#f4f1eb' }}>
                       <span style={{ color: gold }}>{item.icon}</span> {item.title}
                     </h3>
                     <span className="text-[11px] px-3 py-1 rounded-full font-medium"
@@ -343,13 +383,13 @@ export default function Home() {
                       {item.time}
                     </span>
                   </div>
-                  <p className="text-[13px] text-white/45 leading-relaxed">{item.desc}</p>
+                  <p className="text-[14px] leading-relaxed" style={{ color: 'rgba(244,241,235,0.45)' }}>{item.desc}</p>
                 </div>
               </motion.div>
             ))}
           </div>
 
-          <motion.div {...sectionAnim} className="text-center mt-12">
+          <motion.div {...sAnim} className="text-center mt-12">
             <button onClick={ctaClick} className="gold-btn rounded-xl py-4 px-8 text-[15px] font-bold inline-flex items-center gap-2">
               Start kartleggingen nå <ArrowRight size={16} />
             </button>
@@ -358,125 +398,52 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════ */}
-      {/*  5. INDUSTRY SELECTOR                       */}
+      {/*  BLOCK 6: AUTHORITY & PROOF                  */}
       {/* ═══════════════════════════════════════════ */}
-      <section className="py-20 md:py-28" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+      <section className="py-20 md:py-28" style={{ borderTop: '1px solid rgba(244,241,235,0.04)' }}>
         <div className="max-w-4xl mx-auto px-5">
-          <motion.div {...sectionAnim} className="text-center mb-10">
-            <h2 className="text-[24px] md:text-[36px] font-bold text-white tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Finn din <span style={{ color: gold }}>bransje</span>
-            </h2>
-            <p className="text-[14px] text-white/40 mt-3">Vi dekker 25 bransjer med skreddersydde automatiseringer.</p>
-          </motion.div>
-
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {industries.map((ind, i) => (
-              <button key={i} onClick={() => setSelectedIndustry(i)}
-                className="px-4 py-2 rounded-lg text-[13px] font-medium transition-all duration-200"
-                style={{
-                  background: selectedIndustry === i ? `rgba(${goldRgb},0.12)` : 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${selectedIndustry === i ? `rgba(${goldRgb},0.3)` : 'rgba(255,255,255,0.06)'}`,
-                  color: selectedIndustry === i ? gold : 'rgba(255,255,255,0.4)',
-                }}>
-                {ind.name}
-              </button>
-            ))}
-          </div>
-
-          <AnimatePresence mode="wait">
-            <motion.div key={selectedIndustry}
-              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-              className="road-card p-6 md:p-8 max-w-lg mx-auto text-center"
-            >
-              <div className="text-[32px] font-extrabold mb-1" style={{ color: gold, fontFamily: "'Playfair Display', serif" }}>
-                {industries[selectedIndustry].count}
-              </div>
-              <div className="text-[12px] text-white/35 uppercase tracking-wide mb-3">automatiseringer for {industries[selectedIndustry].name}</div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.15)' }}>
-                <CheckCircle2 size={13} className="text-green-400" />
-                <span className="text-[12px] text-green-400/80 font-medium">{industries[selectedIndustry].benefit}</span>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════ */}
-      {/*  6. ROI CALCULATOR                          */}
-      {/* ═══════════════════════════════════════════ */}
-      <section className="py-20 md:py-28" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-        <div className="max-w-xl mx-auto px-5">
-          <motion.div {...sectionAnim} className="text-center mb-10">
-            <h2 className="text-[24px] md:text-[36px] font-bold text-white tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Hva taper <span style={{ color: gold }}>du</span> per måned?
-            </h2>
-            <p className="text-[14px] text-white/40 mt-3">Beregn ditt potensielle tap — og hva Arxon kan spare deg.</p>
-          </motion.div>
-
-          <motion.div {...sectionAnim} className="road-card p-6 md:p-8">
-            <label className="block mb-4">
-              <span className="text-[12px] text-white/35 uppercase tracking-wide">Bransje</span>
-              <select value={roiIndustry} onChange={(e) => setRoiIndustry(e.target.value)}
-                className="mt-2 w-full rounded-lg px-4 py-3 text-[14px] text-white/80 outline-none"
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                {Object.keys(roiData).map((k) => <option key={k} value={k} style={{ background: '#050510' }}>{k}</option>)}
-              </select>
-            </label>
-
-            <label className="block mb-6">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-[12px] text-white/35 uppercase tracking-wide">Ubesvarte anrop per uke</span>
-                <span className="text-[14px] font-bold" style={{ color: gold }}>{missedCalls}</span>
-              </div>
-              <input type="range" min={1} max={30} value={missedCalls} onChange={(e) => setMissedCalls(+e.target.value)}
-                className="w-full accent-[#c9a96e]" />
-            </label>
-
-            <div className="text-center py-6 rounded-xl relative overflow-hidden" style={{ background: `rgba(${goldRgb},0.04)`, border: `1px solid rgba(${goldRgb},0.1)` }}>
-              <div className="roi-glow" />
-              <div className="text-[11px] text-white/30 uppercase tracking-wide mb-1 relative z-10">Estimert månedlig tap</div>
-              <div className="text-[36px] md:text-[44px] font-extrabold text-gradient-gold relative z-10" style={{ fontFamily: "'Playfair Display', serif" }}>
-                {monthlySavings.toLocaleString('nb-NO')} kr
-              </div>
-              <div className="text-[12px] text-white/30 mt-1">
-                ≈ {Math.round(monthlySavings / 4.3).toLocaleString('nb-NO')} kr per uke
-              </div>
+          {/* Data anchor */}
+          <motion.div {...sAnim} className="text-center mb-16">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-14">
+              {[
+                { val: 226, suffix: '+', label: 'Automatiseringer levert' },
+                { val: 25, suffix: '', label: 'Bransjer dekket' },
+                { val: 85, suffix: '%', label: 'Raskere oppfølging' },
+                { val: 24, suffix: '/7', label: 'AI tilgjengelig' },
+              ].map((s, i) => (
+                <motion.div key={i} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.1 }}>
+                  <div className="text-[28px] md:text-[36px] font-extrabold text-gradient-gold">
+                    <AnimCounter target={s.val} suffix={s.suffix} />
+                  </div>
+                  <div className="text-[12px] tracking-wide uppercase mt-1" style={{ color: 'rgba(244,241,235,0.35)' }}>{s.label}</div>
+                </motion.div>
+              ))}
             </div>
-
-            <button onClick={ctaClick} className="gold-btn w-full rounded-xl py-4 mt-6 text-[15px] font-bold flex items-center justify-center gap-2">
-              Stopp tapet — få gratis analyse <ArrowRight size={16} />
-            </button>
           </motion.div>
-        </div>
-      </section>
 
-      {/* ═══════════════════════════════════════════ */}
-      {/*  7. TESTIMONIALS                            */}
-      {/* ═══════════════════════════════════════════ */}
-      <section className="py-20 md:py-28" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-        <div className="max-w-3xl mx-auto px-5">
-          <motion.div {...sectionAnim} className="text-center mb-12">
-            <h2 className="text-[24px] md:text-[36px] font-bold text-white tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Det fungerer for <span style={{ color: gold }}>andre</span>
+          {/* Testimonials */}
+          <motion.div {...sAnim} className="text-center mb-12">
+            <h2 className="text-[24px] md:text-[36px] font-bold tracking-tight" style={{ color: '#f4f1eb' }}>
+              Det fungerer for <span className="text-gradient-gold">andre</span>
             </h2>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-6">
             {[
-              { name: 'Martin K.', biz: 'Bygg & Håndverk', quote: 'Vi gikk fra å miste halvparten av innkommende leads til å fange alle. Omsetningen økte 25% på tre måneder — uten å ansette noen.', result: '+25% omsetning', stars: 5 },
+              { name: 'Martin K.', biz: 'Bygg & Håndverk', quote: 'Vi gikk fra å miste halvparten av leads til å fange alle. Omsetningen økte 25% på tre måneder — uten å ansette noen.', result: '+25% omsetning', stars: 5 },
               { name: 'Erik S.', biz: 'Advokatkontor', quote: 'AI-en kvalifiserer klienter og booker konsultasjoner automatisk. Jeg sparer over en time per sak på administrativt arbeid.', result: '60 min spart per sak', stars: 5 },
             ].map((t, i) => (
-              <motion.div key={i} {...sectionAnim} transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="road-card p-6 md:p-8">
+              <motion.div key={i} {...sAnim} transition={{ duration: 0.4, delay: i * 0.1 }}
+                className="glass-card p-6 md:p-8">
                 <div className="flex gap-1 mb-4">
                   {Array.from({ length: t.stars }).map((_, j) => <Star key={j} size={14} fill={gold} color={gold} />)}
                 </div>
-                <p className="text-[14px] text-white/60 leading-relaxed mb-5 italic">&ldquo;{t.quote}&rdquo;</p>
+                <p className="text-[14px] leading-relaxed mb-5 italic" style={{ color: 'rgba(244,241,235,0.6)' }}>&ldquo;{t.quote}&rdquo;</p>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-[14px] font-semibold text-white/80">{t.name}</div>
-                    <div className="text-[12px] text-white/30">{t.biz}</div>
+                    <div className="text-[14px] font-semibold" style={{ color: '#f4f1eb' }}>{t.name}</div>
+                    <div className="text-[12px]" style={{ color: 'rgba(244,241,235,0.3)' }}>{t.biz}</div>
                   </div>
                   <span className="text-[12px] font-semibold px-3 py-1 rounded-full"
                     style={{ background: 'rgba(74,222,128,0.08)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.15)' }}>
@@ -490,48 +457,96 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════ */}
-      {/*  8. FAQ                                     */}
+      {/*  BLOCK 7: VALUE ANCHORING — ROI CALC        */}
       {/* ═══════════════════════════════════════════ */}
-      <section className="py-20 md:py-28" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+      <section className="py-20 md:py-28" style={{ borderTop: '1px solid rgba(244,241,235,0.04)' }}>
         <div className="max-w-xl mx-auto px-5">
-          <motion.div {...sectionAnim} className="text-center mb-10">
-            <h2 className="text-[24px] md:text-[36px] font-bold text-white tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <motion.div {...sAnim} className="text-center mb-10">
+            <h2 className="text-[24px] md:text-[36px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
+              Hva taper <span className="text-gradient-gold">du</span> per måned?
+            </h2>
+            <p className="text-[15px] max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.4)' }}>Beregn ditt potensielle tap — og hva Arxon kan spare deg.</p>
+          </motion.div>
+
+          <motion.div {...sAnim} className="glass-card p-6 md:p-8">
+            <label className="block mb-4">
+              <span className="text-[12px] uppercase tracking-wide" style={{ color: 'rgba(244,241,235,0.35)' }}>Bransje</span>
+              <select value={roiIndustry} onChange={(e) => setRoiIndustry(e.target.value)}
+                className="mt-2 w-full rounded-lg px-4 py-3 text-[14px] outline-none"
+                style={{ background: 'rgba(244,241,235,0.04)', border: '1px solid rgba(244,241,235,0.08)', color: 'rgba(244,241,235,0.8)' }}>
+                {Object.keys(roiData).map((k) => <option key={k} value={k} style={{ background: bgDark }}>{k}</option>)}
+              </select>
+            </label>
+
+            <label className="block mb-6">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-[12px] uppercase tracking-wide" style={{ color: 'rgba(244,241,235,0.35)' }}>Ubesvarte anrop per uke</span>
+                <span className="text-[14px] font-bold" style={{ color: gold }}>{missedCalls}</span>
+              </div>
+              <input type="range" min={1} max={30} value={missedCalls} onChange={(e) => setMissedCalls(+e.target.value)}
+                className="w-full" style={{ accentColor: gold }} />
+            </label>
+
+            <div className="text-center py-6 rounded-xl relative overflow-hidden" style={{ background: `rgba(${goldRgb},0.04)`, border: `1px solid rgba(${goldRgb},0.1)` }}>
+              <div className="text-[11px] uppercase tracking-wide mb-1" style={{ color: 'rgba(244,241,235,0.3)' }}>Estimert månedlig tap</div>
+              <div className="text-[36px] md:text-[44px] font-extrabold text-gradient-gold">
+                {monthlySavings.toLocaleString('nb-NO')} kr
+              </div>
+              <div className="text-[12px] mt-1" style={{ color: 'rgba(244,241,235,0.3)' }}>
+                ≈ {Math.round(monthlySavings / 4.3).toLocaleString('nb-NO')} kr per uke
+              </div>
+            </div>
+
+            <button onClick={ctaClick} className="gold-btn w-full rounded-xl py-4 mt-6 text-[15px] font-bold flex items-center justify-center gap-2">
+              Stopp tapet — få gratis analyse <ArrowRight size={16} />
+            </button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════ */}
+      {/*  BLOCK 8: FAQ                                */}
+      {/* ═══════════════════════════════════════════ */}
+      <section className="py-20 md:py-28" style={{ borderTop: '1px solid rgba(244,241,235,0.04)' }}>
+        <div className="max-w-xl mx-auto px-5">
+          <motion.div {...sAnim} className="text-center mb-10">
+            <h2 className="text-[24px] md:text-[36px] font-bold tracking-tight" style={{ color: '#f4f1eb' }}>
               Vanlige spørsmål
             </h2>
           </motion.div>
-          <motion.div {...sectionAnim}>
+          <motion.div {...sAnim}>
             <FAQ items={faqItems} />
           </motion.div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════ */}
-      {/*  9. FINAL CTA                               */}
+      {/*  BLOCK 9: FINAL DOMINANT CTA                 */}
       {/* ═══════════════════════════════════════════ */}
-      <section className="py-20 md:py-28 relative overflow-hidden" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-        <div className="cta-aurora" />
+      <section className="py-24 md:py-32 relative overflow-hidden" style={{ borderTop: '1px solid rgba(244,241,235,0.04)' }}>
+        <div className="cta-glow" />
         <div className="max-w-2xl mx-auto px-5 text-center relative z-10">
-          <motion.div {...sectionAnim}>
-            <h2 className="text-[28px] md:text-[44px] font-bold text-white tracking-tight mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Slutt å tape kunder.<br /><span className="text-gradient-gold">Start i dag.</span>
+          <motion.div {...sAnim}>
+            <h2 className="text-[28px] md:text-[48px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
+              Slutt å tape kunder.
+              <br />
+              <span className="text-gradient-gold">Start i dag.</span>
             </h2>
-            <p className="text-[14px] text-white/40 mb-8 max-w-md mx-auto">
+            <p className="text-[15px] mb-8 max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.4)' }}>
               Gratis kartlegging. Ingen binding. Implementert på 2–5 dager.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button onClick={ctaClick} className="gold-btn rounded-xl py-4 px-10 text-[15px] font-bold flex items-center justify-center gap-2">
-                Start gratis kartlegging <ArrowRight size={16} />
-              </button>
-              <a href="tel:+4778896386" className="glass-btn rounded-xl py-4 px-8 text-[15px] font-semibold flex items-center justify-center gap-2 no-underline">
-                <Phone size={15} /> 78 89 63 86
-              </a>
-            </div>
+            <button onClick={ctaClick} className="gold-btn rounded-xl py-4 px-12 text-[16px] font-bold inline-flex items-center gap-2">
+              Start gratis kartlegging <ArrowRight size={18} />
+            </button>
+            <p className="text-[12px] mt-4" style={{ color: 'rgba(244,241,235,0.25)' }}>
+              Eller ring oss: <a href="tel:+4778896386" className="no-underline" style={{ color: gold }}>78 89 63 86</a>
+            </p>
           </motion.div>
         </div>
       </section>
 
       {/* ── Footer ── */}
-      <footer style={{ maxWidth: 800, margin: '0 auto', padding: '36px 24px', borderTop: '1px solid rgba(255,255,255,0.04)', textAlign: 'center' }}>
+      <footer style={{ maxWidth: 800, margin: '0 auto', padding: '36px 24px', borderTop: '1px solid rgba(244,241,235,0.04)', textAlign: 'center' }}>
         <div className="flex flex-wrap justify-center gap-6 mb-4">
           {[
             { label: 'Personvern', href: '/personvern' },
@@ -539,10 +554,10 @@ export default function Home() {
             { label: 'Blogg', href: '/blogg' },
             { label: 'kontakt@arxon.no', href: 'mailto:kontakt@arxon.no' },
           ].map((l) => (
-            <Link key={l.href} href={l.href} className="text-[12px] text-white/25 hover:text-white/50 transition-colors no-underline">{l.label}</Link>
+            <Link key={l.href} href={l.href} className="text-[12px] hover:opacity-70 transition-opacity no-underline" style={{ color: 'rgba(244,241,235,0.25)' }}>{l.label}</Link>
           ))}
         </div>
-        <p className="text-[11px] text-white/15">&copy; {new Date().getFullYear()} Arxon. Alle rettigheter reservert. &middot; GDPR-kompatibel &middot; Norsk datasenter</p>
+        <p className="text-[11px]" style={{ color: 'rgba(244,241,235,0.15)' }}>&copy; {new Date().getFullYear()} Arxon. Alle rettigheter reservert. &middot; GDPR-kompatibel &middot; Norsk datasenter</p>
       </footer>
 
       {/* ── Sticky mobile CTA ── */}
@@ -551,7 +566,7 @@ export default function Home() {
           <motion.div
             initial={{ y: 80 }} animate={{ y: 0 }} exit={{ y: 80 }}
             className="fixed bottom-0 left-0 right-0 z-50 p-3 md:hidden"
-            style={{ background: 'rgba(5,5,16,0.9)', borderTop: `1px solid rgba(${goldRgb},0.15)`, backdropFilter: 'blur(12px)' }}>
+            style={{ background: 'rgba(15,27,39,0.9)', borderTop: `1px solid rgba(${goldRgb},0.15)`, backdropFilter: 'blur(12px)' }}>
             <button onClick={ctaClick} className="gold-btn w-full rounded-xl py-3.5 text-[14px] font-bold flex items-center justify-center gap-2">
               Start gratis kartlegging <ArrowRight size={15} />
             </button>
@@ -564,9 +579,10 @@ export default function Home() {
 
       {/* ── Styles ── */}
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-        .cta-shimmer { background: linear-gradient(110deg, ${gold} 0%, #e0c88a 25%, ${gold} 50%, #a8884d 75%, ${gold} 100%); background-size: 200% 100%; animation: cta-shimmer-anim 3s linear infinite; }
+        /* Nav-required classes */
+        .cta-shimmer { background: linear-gradient(110deg, ${gold} 0%, #f5d49a 25%, ${gold} 50%, #c9a96e 75%, ${gold} 100%); background-size: 200% 100%; animation: cta-shimmer-anim 3s linear infinite; }
         .cta-shimmer:hover { transform: translateY(-1px); box-shadow: 0 12px 40px rgba(${goldRgb},0.35) !important; }
         @keyframes cta-shimmer-anim { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
         .show-mob { display: none !important; }
@@ -575,24 +591,26 @@ export default function Home() {
           .show-mob { display: flex !important; }
         }
 
-        @keyframes blink { 50% { opacity: 0 } }
-        .typewriter-cursor {
-          display: inline-block; width: 3px; height: 1em;
-          background: ${gold}; margin-left: 2px;
-          animation: blink 1s step-end infinite;
-          vertical-align: text-bottom; border-radius: 1px;
-        }
         html { scroll-behavior: smooth; }
 
+        /* ── Gold gradient text ── */
+        .text-gradient-gold {
+          background: linear-gradient(135deg, #f5d49a, ${gold}, #c9a96e);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        /* ── Primary CTA button ── */
         .gold-btn {
-          background: linear-gradient(135deg, #e2c47d, ${gold}, #b8944a);
-          color: #050510; border: none; cursor: pointer;
+          background: linear-gradient(135deg, #f5d49a, ${gold}, #c9a96e);
+          color: ${bgDark}; border: none; cursor: pointer;
           position: relative; overflow: hidden;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 24px rgba(${goldRgb}, 0.2), 0 0 0 1px rgba(${goldRgb}, 0.3);
+          box-shadow: 0 4px 24px rgba(${goldRgb}, 0.25), 0 0 0 1px rgba(${goldRgb}, 0.3);
         }
         .gold-btn:hover {
-          box-shadow: 0 8px 40px rgba(${goldRgb}, 0.35), 0 0 0 1px rgba(${goldRgb}, 0.4);
+          box-shadow: 0 8px 40px rgba(${goldRgb}, 0.4), 0 0 0 1px rgba(${goldRgb}, 0.5);
           transform: translateY(-2px);
         }
         .gold-btn::after {
@@ -603,216 +621,99 @@ export default function Home() {
         }
         .gold-btn:hover::after { transform: translateX(100%); }
 
-        .glass-btn {
+        /* ── Glassmorphic card ── */
+        .glass-card {
           background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(${goldRgb}, 0.2);
-          color: ${gold}; cursor: pointer;
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(244,241,235,0.06);
+          border-radius: 16px;
           transition: all 0.3s ease;
-          backdrop-filter: blur(10px);
+          position: relative;
+          overflow: hidden;
         }
-        .glass-btn:hover {
-          background: rgba(${goldRgb}, 0.06);
-          border-color: rgba(${goldRgb}, 0.35);
-          transform: translateY(-2px);
-          box-shadow: 0 4px 20px rgba(${goldRgb}, 0.1);
-        }
-
-        .road-card {
-          background: rgba(255,255,255,0.02);
-          border: 1px solid rgba(255,255,255,0.06);
-          border-radius: 12px;
-          transition: all 0.3s ease;
-        }
-        .road-card:hover {
+        .glass-card:hover {
           border-color: rgba(${goldRgb}, 0.12);
+          background: rgba(255,255,255,0.05);
+        }
+
+        /* ── Bento Grid layout ── */
+        .bento-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        @media (min-width: 768px) {
+          .bento-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+          }
+        }
+
+        /* ── Bento card with glow ── */
+        .bento-card {
           background: rgba(255,255,255,0.03);
+          backdrop-filter: blur(16px);
+          border: 1px solid rgba(244,241,235,0.06);
+          border-radius: 20px;
+          position: relative;
+          overflow: hidden;
+          transition: all 0.3s ease;
         }
-
-        .faq-card {
-          background: rgba(255,255,255,0.02);
-          border: 1px solid rgba(255,255,255,0.06);
-          border-radius: 12px;
-          padding: 16px 20px;
-          transition: all 0.2s ease;
+        .bento-card:hover {
+          border-color: rgba(${goldRgb}, 0.15);
+          transform: translateY(-2px) scale(1.01);
+          box-shadow: 0 8px 32px rgba(0,0,0,0.2);
         }
-        .faq-card:hover {
-          border-color: rgba(255,255,255,0.1);
-        }
-
-        /* ── FLAIR: Gold gradient text ── */
-        .text-gradient-gold {
-          background: linear-gradient(135deg, #e2c47d, ${gold}, #b8944a);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-
-        /* ── FLAIR: Hero aurora glow ── */
-        .hero-aurora {
+        .bento-card-glow {
           position: absolute;
-          top: -20%;
+          top: 0; left: 0; right: 0;
+          height: 120px;
+          background: radial-gradient(ellipse at 50% 0%, rgba(${goldRgb},0.06) 0%, transparent 70%);
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.4s ease;
+        }
+        .bento-card:hover .bento-card-glow { opacity: 1; }
+
+        /* ── Hero orb ── */
+        .hero-orb {
+          position: absolute;
+          top: -10%;
           left: 50%;
           transform: translateX(-50%);
-          width: 140%;
-          height: 70%;
-          background: radial-gradient(ellipse at 30% 50%, rgba(${goldRgb},0.06) 0%, transparent 50%),
-                      radial-gradient(ellipse at 70% 50%, rgba(80,100,200,0.04) 0%, transparent 50%),
-                      radial-gradient(ellipse at 50% 80%, rgba(${goldRgb},0.03) 0%, transparent 40%);
-          animation: aurora-shift 12s ease-in-out infinite alternate;
-          pointer-events: none;
-          filter: blur(40px);
-        }
-        @keyframes aurora-shift {
-          0% { transform: translateX(-50%) translateY(0) scale(1); opacity: 0.8; }
-          50% { transform: translateX(-48%) translateY(-5%) scale(1.05); opacity: 1; }
-          100% { transform: translateX(-52%) translateY(3%) scale(0.95); opacity: 0.7; }
-        }
-
-        /* ── FLAIR: Floating particles ── */
-        .particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-        .particle {
-          position: absolute;
-          border-radius: 50%;
-          background: rgba(${goldRgb}, 0.3);
-          animation: particle-float linear infinite;
-        }
-        @keyframes particle-float {
-          0% { transform: translateY(0) translateX(0); opacity: 0; }
-          10% { opacity: 0.6; }
-          90% { opacity: 0.6; }
-          100% { transform: translateY(-120vh) translateX(30px); opacity: 0; }
-        }
-
-        /* ── FLAIR: Shimmer badge (animated gradient border) ── */
-        .shimmer-badge {
-          position: relative;
-          background: rgba(${goldRgb},0.04);
-          border: 1px solid transparent;
-          background-clip: padding-box;
-        }
-        .shimmer-badge::before {
-          content: '';
-          position: absolute;
-          inset: -1px;
-          border-radius: 9999px;
-          background: linear-gradient(90deg, rgba(${goldRgb},0.1), rgba(${goldRgb},0.35), rgba(${goldRgb},0.1));
-          background-size: 200% 100%;
-          animation: shimmer-border 3s linear infinite;
-          z-index: -1;
-        }
-        @keyframes shimmer-border {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
-        }
-
-        /* ── FLAIR: Stats section glow ── */
-        .stats-glow {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
           width: 600px;
-          height: 200px;
-          background: radial-gradient(ellipse, rgba(${goldRgb},0.05) 0%, transparent 70%);
+          height: 600px;
+          background: radial-gradient(circle, rgba(${goldRgb},0.08) 0%, rgba(${goldRgb},0.02) 40%, transparent 70%);
+          filter: blur(60px);
           pointer-events: none;
+          animation: orb-pulse 8s ease-in-out infinite alternate;
+        }
+        @keyframes orb-pulse {
+          0% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+          100% { opacity: 1; transform: translateX(-50%) scale(1.1); }
         }
 
-        /* ── FLAIR: Gold divider ── */
+        /* ── Gold divider ── */
         .gold-divider {
           width: 100%;
           height: 1px;
           background: linear-gradient(90deg, transparent, rgba(${goldRgb},0.2), rgba(${goldRgb},0.4), rgba(${goldRgb},0.2), transparent);
-          position: relative;
-        }
-        .gold-divider::after {
-          content: '';
-          position: absolute;
-          top: -4px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 200px;
-          height: 9px;
-          background: radial-gradient(ellipse, rgba(${goldRgb},0.15), transparent);
-          filter: blur(4px);
         }
 
-        /* ── FLAIR: Timeline glow line (roadmap) ── */
-        .timeline-glow-line {
+        /* ── CTA section glow ── */
+        .cta-glow {
           position: absolute;
-          left: calc(1.5rem - 2px);
-          top: 0;
-          bottom: 0;
-          width: 5px;
-          background: linear-gradient(to bottom, rgba(${goldRgb},0.15), rgba(${goldRgb},0.02));
-          filter: blur(3px);
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: radial-gradient(ellipse at 50% 50%, rgba(${goldRgb},0.06) 0%, transparent 60%);
           pointer-events: none;
         }
-        @media (min-width: 768px) {
-          .timeline-glow-line { left: calc(2rem - 2px); }
-        }
 
-        /* ── FLAIR: Step circle pulse ── */
-        .step-circle { position: relative; }
-        .step-pulse-ring {
-          position: absolute;
-          inset: -6px;
-          border-radius: 50%;
-          border: 1px solid rgba(${goldRgb},0.15);
-          animation: step-pulse 3s ease-in-out infinite;
+        /* ── Reduced motion ── */
+        @media (prefers-reduced-motion: reduce) {
+          .hero-orb { animation: none !important; }
+          .gold-btn::after { transition: none; }
+          .bento-card:hover { transform: none; }
         }
-        @keyframes step-pulse {
-          0%, 100% { transform: scale(1); opacity: 0.5; }
-          50% { transform: scale(1.2); opacity: 0; }
-        }
-
-        /* ── FLAIR: ROI result glow ── */
-        .roi-glow {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 300px;
-          height: 150px;
-          background: radial-gradient(ellipse, rgba(${goldRgb},0.08) 0%, transparent 70%);
-          pointer-events: none;
-          animation: roi-breathe 4s ease-in-out infinite;
-        }
-        @keyframes roi-breathe {
-          0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-          50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-        }
-
-        /* ── FLAIR: CTA aurora ── */
-        .cta-aurora {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: radial-gradient(ellipse at 30% 50%, rgba(${goldRgb},0.06) 0%, transparent 60%),
-                      radial-gradient(ellipse at 70% 30%, rgba(100,120,220,0.03) 0%, transparent 50%),
-                      radial-gradient(ellipse at 50% 80%, rgba(${goldRgb},0.04) 0%, transparent 50%);
-          animation: cta-aurora-move 10s ease-in-out infinite alternate;
-          pointer-events: none;
-        }
-        @keyframes cta-aurora-move {
-          0% { opacity: 0.6; filter: blur(30px); }
-          100% { opacity: 1; filter: blur(50px); }
-        }
-
-        /* ── FLAIR: Road card hover glow ── */
-        .road-card::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          border-radius: 12px;
-          opacity: 0;
-          background: radial-gradient(ellipse at 50% 0%, rgba(${goldRgb},0.06) 0%, transparent 70%);
-          transition: opacity 0.4s ease;
-          pointer-events: none;
-        }
-        .road-card { position: relative; overflow: hidden; }
-        .road-card:hover::before { opacity: 1; }
       `}</style>
     </>
   )
