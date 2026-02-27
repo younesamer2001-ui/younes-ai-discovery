@@ -1,16 +1,17 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
   ArrowRight, Phone, Users, Target, Megaphone,
   Cog, BarChart3, FileText, ShieldCheck,
   ChevronDown, CheckCircle2, Clock, Zap, AlertTriangle,
+  ArrowUpDown, SortAsc,
 } from 'lucide-react'
 import Nav from '@/app/components/Nav'
 import Footer from '@/app/components/Footer'
-import { serviceCategories } from '@/lib/services'
+import { serviceCategories, type ServiceAutomation } from '@/lib/services'
 
 const gold = '#efc07b'
 const goldRgb = '239,192,123'
@@ -31,23 +32,47 @@ const complexityIcon: Record<string, any> = {
   'Middels': Clock,
   'Høy': AlertTriangle,
 }
+const complexityOrder: Record<string, number> = {
+  'Høy': 3,
+  'Middels': 2,
+  'Lav': 1,
+}
+
+type SortMode = 'complexity' | 'alpha'
+
+function sortAutomations(items: ServiceAutomation[], mode: SortMode): ServiceAutomation[] {
+  return [...items].sort((a, b) => {
+    if (mode === 'complexity') {
+      const diff = (complexityOrder[b.complexity] || 0) - (complexityOrder[a.complexity] || 0)
+      if (diff !== 0) return diff
+      return a.name.localeCompare(b.name, 'nb')
+    }
+    return a.name.localeCompare(b.name, 'nb')
+  })
+}
 
 /* ── Single category accordion ── */
-function CategoryCard({ cat, isOpen, onToggle, index }: {
+function CategoryCard({ cat, isOpen, onToggle, index, sortMode }: {
   cat: typeof serviceCategories[0]
   isOpen: boolean
   onToggle: () => void
   index: number
+  sortMode: SortMode
 }) {
   const Icon = iconMap[cat.icon] || Cog
   const contentRef = useRef<HTMLDivElement>(null)
   const [contentHeight, setContentHeight] = useState(0)
 
+  const sorted = useMemo(
+    () => sortAutomations(cat.automations, sortMode),
+    [cat.automations, sortMode]
+  )
+
   useEffect(() => {
     if (contentRef.current) {
       setContentHeight(contentRef.current.scrollHeight)
     }
-  }, [isOpen])
+  }, [isOpen, sortMode])
 
   return (
     <motion.div
@@ -150,15 +175,15 @@ function CategoryCard({ cat, isOpen, onToggle, index }: {
 
           {/* Automations list */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-            {cat.automations.map((auto, i) => {
+            {sorted.map((auto, i) => {
               const CIcon = complexityIcon[auto.complexity] || Zap
               const cColor = complexityColor[auto.complexity] || '#fbbf24'
               return (
                 <div
-                  key={i}
+                  key={auto.name}
                   style={{
                     padding: '14px 0',
-                    borderBottom: i < cat.automations.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+                    borderBottom: i < sorted.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
                     display: 'flex',
                     alignItems: 'flex-start',
                     gap: 12,
@@ -182,7 +207,7 @@ function CategoryCard({ cat, isOpen, onToggle, index }: {
                       )}
                       {auto.implTime && (
                         <span style={{
-                          fontSize: 10, color: 'rgba(255,255,255,0.35)',
+                          fontSize: 10, color: 'rgba(255,255,255,0.4)',
                           background: 'rgba(255,255,255,0.04)', borderRadius: 12, padding: '2px 8px',
                         }}>
                           {auto.implTime}
@@ -195,7 +220,7 @@ function CategoryCard({ cat, isOpen, onToggle, index }: {
                       </p>
                     )}
                     {auto.benefit && (
-                      <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', margin: '4px 0 0', lineHeight: 1.5, fontStyle: 'italic' }}>
+                      <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', margin: '4px 0 0', lineHeight: 1.5, fontStyle: 'italic' }}>
                         {auto.benefit}
                       </p>
                     )}
@@ -229,6 +254,7 @@ function CategoryCard({ cat, isOpen, onToggle, index }: {
 export default function TjenesterPage() {
   const [lang] = useState<'no' | 'en'>('no')
   const [openId, setOpenId] = useState<string | null>(null)
+  const [sortMode, setSortMode] = useState<SortMode>('complexity')
 
   const toggle = (id: string) => {
     setOpenId(prev => prev === id ? null : id)
@@ -239,7 +265,7 @@ export default function TjenesterPage() {
       <Nav />
 
       {/* Hero */}
-      <section style={{ maxWidth: 800, margin: '0 auto', padding: '60px 24px 48px', textAlign: 'center' }}>
+      <section style={{ maxWidth: 800, margin: '0 auto', padding: '60px 24px 32px', textAlign: 'center' }}>
         <motion.h1
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           style={{ fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: 700, marginBottom: 16, lineHeight: 1.2 }}
@@ -255,6 +281,81 @@ export default function TjenesterPage() {
         </motion.p>
       </section>
 
+      {/* Complexity legend + sort controls */}
+      <section style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px 24px' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+          style={{
+            background: `rgba(${goldRgb},0.04)`,
+            border: `1px solid rgba(${goldRgb},0.1)`,
+            borderRadius: 14, padding: '16px 20px',
+            display: 'flex', flexDirection: 'column', gap: 14,
+          }}
+        >
+          {/* Legend */}
+          <div>
+            <p style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.7)', margin: '0 0 10px' }}>
+              Hva betyr kompleksitet?
+            </p>
+            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+              {[
+                { level: 'Lav', color: '#4ade80', icon: Zap, label: 'Rask å sette opp, få tilpasninger nødvendig. Klar på timer.' },
+                { level: 'Middels', color: '#fbbf24', icon: Clock, label: 'Krever noe konfigurasjon og integrasjon. 1–5 dager.' },
+                { level: 'Høy', color: '#f87171', icon: AlertTriangle, label: 'Avansert oppsett med flere systemer. 3–7 dager.' },
+              ].map(c => (
+                <div key={c.level} style={{ flex: '1 1 200px', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                  <span style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 4,
+                    fontSize: 11, color: c.color, fontWeight: 600,
+                    background: `${c.color}15`, borderRadius: 8, padding: '3px 8px',
+                    whiteSpace: 'nowrap', flexShrink: 0,
+                  }}>
+                    <c.icon size={11} />
+                    {c.level}
+                  </span>
+                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', lineHeight: 1.4 }}>
+                    {c.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Sort toggle */}
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 12,
+          }}>
+            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginRight: 4 }}>Sorter:</span>
+            {[
+              { mode: 'complexity' as SortMode, label: 'Kompleksitet (høy → lav)', icon: ArrowUpDown },
+              { mode: 'alpha' as SortMode, label: 'A → Å', icon: SortAsc },
+            ].map(opt => (
+              <button
+                key={opt.mode}
+                onClick={() => setSortMode(opt.mode)}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  padding: '5px 12px', borderRadius: 8,
+                  fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                  border: sortMode === opt.mode
+                    ? `1px solid rgba(${goldRgb},0.4)`
+                    : '1px solid rgba(255,255,255,0.08)',
+                  background: sortMode === opt.mode
+                    ? `rgba(${goldRgb},0.1)`
+                    : 'rgba(255,255,255,0.03)',
+                  color: sortMode === opt.mode ? gold : 'rgba(255,255,255,0.5)',
+                  transition: 'all 0.2s',
+                }}
+              >
+                <opt.icon size={12} />
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
       {/* Categories accordion */}
       <section style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px 60px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -265,6 +366,7 @@ export default function TjenesterPage() {
               isOpen={openId === cat.id}
               onToggle={() => toggle(cat.id)}
               index={i}
+              sortMode={sortMode}
             />
           ))}
         </div>
