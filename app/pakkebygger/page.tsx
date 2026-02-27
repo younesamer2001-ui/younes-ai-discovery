@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowRight, Check, ChevronDown, Zap, Clock, AlertTriangle, Package,
   CalendarDays, ShoppingCart, Shield, Phone, Sparkles, X, Info,
+  Bot, BarChart3, CheckCircle2, TrendingUp, Users,
 } from 'lucide-react'
 import Nav from '@/app/components/Nav'
 import Footer from '@/app/components/Footer'
@@ -204,6 +205,17 @@ export default function PakkebyggerPage() {
           Velg din bransje, kryss av for det du trenger, og se nøyaktig hva det koster.
           Ingen skjulte kostnader.
         </motion.p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 20,
+            background: 'rgba(74,222,128,0.06)', border: '1px solid rgba(74,222,128,0.15)',
+            borderRadius: 10, padding: '10px 20px', fontSize: 14, color: '#4ade80',
+          }}
+        >
+          <CheckCircle2 size={16} />
+          <span>Bedrifter sparer typisk <strong>300 000 – 430 000 kr/år</strong> med Arxon</span>
+        </motion.div>
       </section>
 
       {/* Main builder area */}
@@ -508,6 +520,166 @@ export default function PakkebyggerPage() {
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>{s.desc}</div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Employee cost comparison */}
+      <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 60px' }}>
+        <h2 style={{
+          fontSize: 'clamp(20px, 4vw, 26px)', fontWeight: 700, textAlign: 'center', marginBottom: 8,
+        }}>
+          Hva koster en ansatt vs. <span style={{ color: gold }}>Arxon?</span>
+        </h2>
+        <p style={{
+          fontSize: 14, color: 'rgba(255,255,255,0.5)', textAlign: 'center',
+          maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.6,
+        }}>
+          Se hvor mye du sparer ved å automatisere repetitivt arbeid med AI.
+          Tallene inkluderer lønn, arbeidsgiveravgift og sosiale kostnader.
+        </p>
+
+        <div style={{
+          background: cardBg, borderRadius: 14, overflow: 'hidden',
+          border: `1px solid rgba(${goldRgb},0.08)`,
+        }}>
+          {/* Table header */}
+          <div style={{
+            display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr',
+            padding: '14px 20px', background: `rgba(${goldRgb},0.04)`,
+            borderBottom: `1px solid rgba(${goldRgb},0.08)`,
+            fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.5)',
+            gap: 8,
+          }}>
+            <span>Rolle</span>
+            <span style={{ textAlign: 'right' }}>Ansatt (årlig)</span>
+            <span style={{ textAlign: 'right' }}>Arxon (årlig)</span>
+            <span style={{ textAlign: 'right', color: '#4ade80' }}>Du sparer</span>
+          </div>
+
+          {/* Rows */}
+          {[
+            { role: 'Resepsjonist / telefonsvarer', annualCost: '420 000', arxonRange: '50 000 – 90 000', savingRange: '330 000 – 370 000' },
+            { role: 'Kundeservice-medarbeider', annualCost: '480 000', arxonRange: '75 000 – 120 000', savingRange: '360 000 – 405 000' },
+            { role: 'Booking-koordinator', annualCost: '440 000', arxonRange: '50 000 – 90 000', savingRange: '350 000 – 390 000' },
+            { role: 'Lead-kvalifiserer (salg)', annualCost: '520 000', arxonRange: '90 000 – 150 000', savingRange: '370 000 – 430 000' },
+          ].map((row, i) => (
+            <div key={i} style={{
+              display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr',
+              padding: '14px 20px', gap: 8,
+              borderBottom: i < 3 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+              fontSize: 13,
+            }}>
+              <span style={{ color: '#f4f1eb', fontWeight: 500 }}>{row.role}</span>
+              <span style={{ textAlign: 'right', color: 'rgba(255,255,255,0.5)' }}>kr {row.annualCost}</span>
+              <span style={{ textAlign: 'right', color: gold, fontWeight: 500 }}>kr {row.arxonRange}</span>
+              <span style={{ textAlign: 'right', color: '#4ade80', fontWeight: 600 }}>kr {row.savingRange}</span>
+            </div>
+          ))}
+
+          {/* Summary row */}
+          <div style={{
+            padding: '16px 20px', background: `rgba(74,222,128,0.04)`,
+            borderTop: `1px solid rgba(74,222,128,0.1)`,
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            flexWrap: 'wrap', gap: 8,
+          }}>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: '#f4f1eb' }}>
+                Typisk besparelse per erstattede stilling
+              </div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>
+                Inkludert setup-fee og månedlige kostnader
+              </div>
+            </div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: '#4ade80' }}>
+              300 000 – 430 000 kr/år
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why setup fee */}
+      <section style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px 60px' }}>
+        <h2 style={{
+          fontSize: 'clamp(20px, 4vw, 26px)', fontWeight: 700, textAlign: 'center', marginBottom: 8,
+        }}>
+          Hvorfor engangs <span style={{ color: gold }}>setup-fee?</span>
+        </h2>
+        <p style={{
+          fontSize: 14, color: 'rgba(255,255,255,0.5)', textAlign: 'center',
+          maxWidth: 520, margin: '0 auto 28px', lineHeight: 1.6,
+        }}>
+          Du investerer i en skreddersydd AI-løsning — ikke et ferdigprodukt fra hylla.
+          Setup-fee dekker alt det arbeidet som gjør at AI-en faktisk leverer resultater.
+        </p>
+
+        <div style={{
+          display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14,
+        }}>
+          {[
+            { Icon: Bot, title: 'Skreddersydd AI-opplæring', desc: 'Vi trener AI-en på din bedrift, dine tjenester, priser og vanlige spørsmål — så den svarer som en av dine egne.' },
+            { Icon: Zap, title: 'Integrasjon med dine systemer', desc: 'Vi kobler AI til kalender, CRM, regnskap og de verktøyene du allerede bruker — alt satt opp for deg.' },
+            { Icon: Shield, title: 'Testing og kvalitetssikring', desc: 'Vi tester alt grundig før lansering og justerer til du er 100% fornøyd med hvordan AI-en representerer bedriften din.' },
+            { Icon: BarChart3, title: 'Lavere løpende kostnader', desc: 'Høyere setup-fee = lavere månedskostnad. Du investerer i en skikkelig løsning, og sparer mer over tid.' },
+          ].map((card, i) => (
+            <div key={i} style={{
+              background: cardBg, borderRadius: 14, padding: '24px 20px',
+              border: `1px solid rgba(${goldRgb},0.06)`,
+            }}>
+              <div style={{
+                width: 40, height: 40, borderRadius: 10,
+                background: `rgba(${goldRgb},0.08)`, display: 'flex',
+                alignItems: 'center', justifyContent: 'center', marginBottom: 14,
+              }}>
+                <card.Icon size={20} color={gold} />
+              </div>
+              <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 6 }}>{card.title}</div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6 }}>{card.desc}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Guarantee */}
+      <section style={{ maxWidth: 700, margin: '0 auto', padding: '0 24px 80px' }}>
+        <div style={{
+          background: `rgba(${goldRgb},0.03)`, borderRadius: 16,
+          border: `1px solid rgba(${goldRgb},0.1)`, padding: '36px 28px',
+          textAlign: 'center',
+        }}>
+          <div style={{
+            width: 52, height: 52, borderRadius: '50%',
+            background: `rgba(${goldRgb},0.08)`, display: 'flex',
+            alignItems: 'center', justifyContent: 'center',
+            margin: '0 auto 16px',
+          }}>
+            <Shield size={26} color={gold} />
+          </div>
+          <h3 style={{ fontSize: 22, fontWeight: 700, marginBottom: 10 }}>
+            Fornøyd-garanti
+          </h3>
+          <p style={{
+            fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7,
+            maxWidth: 520, margin: '0 auto 20px',
+          }}>
+            Vi justerer og optimaliserer til du er 100% fornøyd med løsningen.
+            Ved årsbetaling får du 30 dagers pengene-tilbake-garanti.
+            Månedlig drift har ingen bindingstid — du kan avslutte når som helst.
+          </p>
+          <div style={{
+            display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center',
+          }}>
+            {['30 dagers garanti ved årsbetaling', 'Ingen bindingstid på månedlig', 'GDPR-sikret', 'Norsk datasenter'].map((item, i) => (
+              <span key={i} style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                background: `rgba(${goldRgb},0.06)`, border: `1px solid rgba(${goldRgb},0.1)`,
+                borderRadius: 20, padding: '6px 14px', fontSize: 12,
+                color: gold, fontWeight: 500,
+              }}>
+                <Check size={13} /> {item}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
