@@ -112,6 +112,14 @@ body {
   top: 0;
 }
 
+/* ── Responsive nav helpers ── */
+.hide-mob { display: flex; }
+.show-mob { display: none !important; }
+@media (max-width: 768px) {
+  .hide-mob { display: none !important; }
+  .show-mob { display: flex !important; }
+}
+
 /* ── CTA shimmer button (global — used across all pages) ── */
 .cta-shimmer {
   background: linear-gradient(110deg, #efc07b 0%, #f5d49a 25%, #efc07b 50%, #c9a96e 75%, #efc07b 100%);
