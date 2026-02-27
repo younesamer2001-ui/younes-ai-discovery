@@ -91,7 +91,7 @@ export default function TjenesterPage() {
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          style={{ fontSize: 17, color: 'rgba(255,255,255,0.5)', maxWidth: 560, margin: '0 auto', lineHeight: 1.6 }}
+          style={{ fontSize: 17, color: 'rgba(255,255,255,0.7)', maxWidth: 560, margin: '0 auto', lineHeight: 1.6 }}
         >
           226 ferdige automatiseringer fordelt på 8 kategorier.
           Alt skreddersys til din bransje og dine systemer.
@@ -146,7 +146,7 @@ export default function TjenesterPage() {
                   <h3 style={{ fontSize: 19, fontWeight: 600, margin: '0 0 8px', color: '#f4f1eb' }}>
                     {cat.title}
                   </h3>
-                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', margin: 0, lineHeight: 1.6 }}>
+                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)', margin: 0, lineHeight: 1.6 }}>
                     {cat.desc}
                   </p>
                 </div>
@@ -154,7 +154,7 @@ export default function TjenesterPage() {
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 'auto' }}>
                   {cat.examples.map(ex => (
                     <span key={ex} style={{
-                      fontSize: 11, color: 'rgba(255,255,255,0.35)',
+                      fontSize: 11, color: 'rgba(255,255,255,0.55)',
                       background: 'rgba(255,255,255,0.04)',
                       borderRadius: 6, padding: '4px 10px',
                     }}>
@@ -198,7 +198,7 @@ export default function TjenesterPage() {
               </div>
               <div>
                 <h4 style={{ fontSize: 16, fontWeight: 600, margin: '0 0 4px' }}>{s.title}</h4>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', margin: 0, lineHeight: 1.5 }}>{s.desc}</p>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)', margin: 0, lineHeight: 1.5 }}>{s.desc}</p>
               </div>
             </div>
           ))}
@@ -215,7 +215,7 @@ export default function TjenesterPage() {
           <h2 style={{ fontSize: 24, fontWeight: 600, marginBottom: 12 }}>
             Usikker på hva du trenger?
           </h2>
-          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.5)', marginBottom: 24, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.7)', marginBottom: 24, lineHeight: 1.6 }}>
             Start med en gratis kartlegging. Vi finner de automatiseringene som gir størst effekt for akkurat din bedrift.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>

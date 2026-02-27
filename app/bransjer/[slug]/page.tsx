@@ -51,7 +51,7 @@ export default function IndustryPage() {
         <Nav sticky />
         <div style={{ maxWidth: 600, margin: '0 auto', padding: '120px 24px', textAlign: 'center' }}>
           <h1 style={{ fontSize: 28, marginBottom: 16 }}>Bransje ikke funnet</h1>
-          <p style={{ color: 'rgba(255,255,255,0.5)', marginBottom: 24 }}>Vi fant ikke denne bransjen. Se alle bransjene våre:</p>
+          <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: 24 }}>Vi fant ikke denne bransjen. Se alle bransjene våre:</p>
           <Link href="/bransjer" style={{ color: gold, textDecoration: 'underline' }}>Tilbake til bransjer</Link>
         </div>
       </div>
@@ -68,7 +68,7 @@ export default function IndustryPage() {
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '24px 24px 0' }}>
         <Link href="/bransjer" style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
-          color: 'rgba(255,255,255,0.4)', fontSize: 13, textDecoration: 'none',
+          color: 'rgba(255,255,255,0.65)', fontSize: 13, textDecoration: 'none',
           transition: 'color 0.2s',
         }}
         onMouseEnter={e => e.currentTarget.style.color = gold}
@@ -99,13 +99,13 @@ export default function IndustryPage() {
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          style={{ fontSize: 16, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, marginBottom: 8 }}
+          style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, marginBottom: 8 }}
         >
           {industry.subtitle}
         </motion.p>
         <motion.p
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-          style={{ fontSize: 14, color: 'rgba(255,255,255,0.3)' }}
+          style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)' }}
         >
           {industry.count} skreddersydde automatiseringer
         </motion.p>
@@ -141,12 +141,12 @@ export default function IndustryPage() {
                       </h3>
                     </div>
                     {auto.desc && (
-                      <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', margin: '0 0 6px', lineHeight: 1.5 }}>
+                      <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)', margin: '0 0 6px', lineHeight: 1.5 }}>
                         {auto.desc}
                       </p>
                     )}
                     {auto.benefit && (
-                      <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', margin: 0, lineHeight: 1.5, fontStyle: 'italic' }}>
+                      <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', margin: 0, lineHeight: 1.5, fontStyle: 'italic' }}>
                         {auto.benefit}
                       </p>
                     )}
@@ -179,7 +179,7 @@ export default function IndustryPage() {
           <h2 style={{ fontSize: 24, fontWeight: 600, marginBottom: 12 }}>
             Klar for å automatisere {industry.title.toLowerCase()}?
           </h2>
-          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.5)', marginBottom: 24, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.7)', marginBottom: 24, lineHeight: 1.6 }}>
             Få en gratis kartlegging og se nøyaktig hvilke av disse {industry.count} løsningene
             som gir mest verdi for din bedrift.
           </p>

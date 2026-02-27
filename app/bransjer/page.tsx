@@ -49,7 +49,7 @@ export default function BransjerPage() {
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          style={{ fontSize: 17, color: 'rgba(255,255,255,0.5)', maxWidth: 560, margin: '0 auto 32px', lineHeight: 1.6 }}
+          style={{ fontSize: 17, color: 'rgba(255,255,255,0.7)', maxWidth: 560, margin: '0 auto 32px', lineHeight: 1.6 }}
         >
           Vi tilbyr skreddersydde AI-automatiseringer for {industries.length} bransjer.
           Velg din for å se hvilke løsninger som passer best.
@@ -117,7 +117,7 @@ export default function BransjerPage() {
                         <Icon size={22} color={gold} />
                       </div>
                       <span style={{
-                        fontSize: 12, color: 'rgba(255,255,255,0.3)',
+                        fontSize: 12, color: 'rgba(255,255,255,0.5)',
                         background: 'rgba(255,255,255,0.04)', borderRadius: 20,
                         padding: '4px 10px',
                       }}>
@@ -127,7 +127,7 @@ export default function BransjerPage() {
                     <h3 style={{ fontSize: 16, fontWeight: 600, color: '#f4f1eb', margin: 0 }}>
                       {ind.title}
                     </h3>
-                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', margin: 0, lineHeight: 1.5 }}>
+                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', margin: 0, lineHeight: 1.5 }}>
                       {ind.subtitle}
                     </p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: gold, fontSize: 13, fontWeight: 500, marginTop: 4 }}>
@@ -142,7 +142,7 @@ export default function BransjerPage() {
 
         {filtered.length === 0 && (
           <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.4)' }}>
+            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.65)' }}>
               Ingen bransjer matcher «{search}». Prøv et annet søkeord.
             </p>
           </div>
@@ -160,7 +160,7 @@ export default function BransjerPage() {
           <h2 style={{ fontSize: 24, fontWeight: 600, marginBottom: 12 }}>
             Finner du ikke din bransje?
           </h2>
-          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.5)', marginBottom: 24, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.7)', marginBottom: 24, lineHeight: 1.6 }}>
             Vi tilpasser løsningene til din bedrift uansett bransje.
             Start en gratis kartlegging så finner vi ut hva som passer.
           </p>
