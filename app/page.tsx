@@ -18,6 +18,13 @@ const goldRgb = '239,192,123'
 const bgDark = '#0f1b27'
 const cardBg = '#16213e'
 
+/* ── GA4 event helper (fires when GA is configured) ── */
+function trackEvent(eventName: string, params?: Record<string, string | number>) {
+  if (typeof window !== 'undefined' && (window as any).gtag) {
+    (window as any).gtag('event', eventName, { page_location: window.location.href, ...params })
+  }
+}
+
 /* ── Animated counter ── */
 function AnimCounter({ target, suffix = '' }: { target: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
@@ -155,7 +162,10 @@ const roiData: Record<string, { avgDeal: number; conversion: number }> = {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 export default function Home() {
   const router = useRouter()
-  const ctaClick = useCallback(() => router.push('/kartlegging'), [router])
+  const ctaClick = useCallback(() => {
+    trackEvent('CTA_Click', { button_text: 'Start gratis kartlegging', section: 'page' })
+    router.push('/kartlegging')
+  }, [router])
 
   const [roiIndustry, setRoiIndustry] = useState('Bygg & Håndverk')
   const [missedCalls, setMissedCalls] = useState(8)
@@ -567,7 +577,8 @@ export default function Home() {
               Start gratis kartlegging <ArrowRight size={18} />
             </button>
             <p className="text-[12px] mt-4" style={{ color: 'rgba(244,241,235,0.7)' }}>
-              Eller ring oss: <a href="tel:+4778896386" className="no-underline" style={{ color: gold }}>78 89 63 86</a>
+              Eller ring oss: <a href="tel:+4778896386" className="no-underline" style={{ color: gold }}
+                onClick={() => trackEvent('Phone_Click', { section: 'final_cta' })}>78 89 63 86</a>
             </p>
           </motion.div>
         </div>
