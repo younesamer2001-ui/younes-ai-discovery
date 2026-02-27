@@ -42,14 +42,19 @@ function AnimCounter({ target, suffix = '' }: { target: number; suffix?: string 
 function FAQ({ items }: { items: { q: string; a: string }[] }) {
   const [open, setOpen] = useState<number | null>(null)
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" role="list" aria-label="Vanlige spørsmål">
       {items.map((item, i) => (
-        <div key={i} className="glass-card cursor-pointer" onClick={() => setOpen(open === i ? null : i)}
+        <div key={i} role="listitem"
+          className="glass-card cursor-pointer"
+          onClick={() => setOpen(open === i ? null : i)}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(open === i ? null : i) } }}
+          tabIndex={0}
+          aria-expanded={open === i}
           style={{ padding: '16px 20px' }}>
           <div className="flex items-center justify-between">
             <span className="text-[15px] font-semibold" style={{ color: '#f4f1eb' }}>{item.q}</span>
             <ChevronDown size={18} className={`transition-transform duration-200 ${open === i ? 'rotate-180' : ''}`}
-              style={{ color: 'rgba(244,241,235,0.55)' }} />
+              style={{ color: 'rgba(244,241,235,0.55)' }} aria-hidden="true" />
           </div>
           <AnimatePresence>
             {open === i && (
@@ -57,6 +62,7 @@ function FAQ({ items }: { items: { q: string; a: string }[] }) {
                 initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }}
                 className="overflow-hidden"
+                role="region"
               >
                 <p className="text-[14px] mt-3 leading-relaxed" style={{ color: 'rgba(244,241,235,0.7)' }}>{item.a}</p>
               </motion.div>
@@ -216,12 +222,30 @@ export default function Home() {
 
           {/* Single dominant CTA */}
           <motion.div {...sAnim} transition={{ duration: 0.5, delay: 0.3 }}>
-            <button onClick={ctaClick} className="gold-btn rounded-xl py-4 px-10 text-[16px] font-bold inline-flex items-center gap-2">
-              Start gratis kartlegging <ArrowRight size={18} />
+            <button onClick={ctaClick} className="gold-btn rounded-xl py-4 px-10 text-[16px] font-bold inline-flex items-center gap-2"
+              aria-label="Start gratis kartlegging — ingen binding">
+              Start gratis kartlegging <ArrowRight size={18} aria-hidden="true" />
             </button>
             <p className="text-[12px] mt-4" style={{ color: 'rgba(244,241,235,0.55)' }}>
               Gratis &middot; Ingen binding &middot; Resultat på 2 minutter
             </p>
+          </motion.div>
+
+          {/* Scroll-down hint */}
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
+            className="mt-12 flex flex-col items-center gap-1 cursor-pointer"
+            onClick={() => document.getElementById('trust-bar')?.scrollIntoView({ behavior: 'smooth' })}
+            aria-label="Scroll ned for mer informasjon"
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('trust-bar')?.scrollIntoView({ behavior: 'smooth' }) }}
+          >
+            <span className="text-[11px] tracking-widest uppercase" style={{ color: 'rgba(244,241,235,0.4)' }}>Scroll ned</span>
+            <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}>
+              <ChevronDown size={20} style={{ color: 'rgba(244,241,235,0.35)' }} />
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -229,7 +253,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════ */}
       {/*  BLOCK 2: SOCIAL PROOF / TRUST BAR          */}
       {/* ═══════════════════════════════════════════ */}
-      <motion.section {...sAnim} className="py-16 md:py-20 relative overflow-hidden" style={{ borderTop: '1px solid rgba(244,241,235,0.04)' }}>
+      <motion.section id="trust-bar" {...sAnim} className="py-16 md:py-20 relative overflow-hidden" style={{ borderTop: '1px solid rgba(244,241,235,0.04)' }}>
         <div className="max-w-4xl mx-auto px-5 text-center">
           <p className="text-[12px] tracking-[3px] uppercase mb-8" style={{ color: 'rgba(244,241,235,0.7)' }}>Bygget med teknologi fra verdensledende selskaper</p>
           <TechLogos />
@@ -468,26 +492,30 @@ export default function Home() {
             <p className="text-[15px] max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>Beregn ditt potensielle tap — og hva Arxon kan spare deg.</p>
           </motion.div>
 
-          <motion.div {...sAnim} className="glass-card p-6 md:p-8">
-            <label className="block mb-4">
+          <motion.div {...sAnim} className="glass-card p-6 md:p-8" role="form" aria-label="ROI-kalkulator">
+            <label className="block mb-4" htmlFor="roi-industry">
               <span className="text-[12px] uppercase tracking-wide" style={{ color: 'rgba(244,241,235,0.55)' }}>Bransje</span>
-              <select value={roiIndustry} onChange={(e) => setRoiIndustry(e.target.value)}
+              <select id="roi-industry" value={roiIndustry} onChange={(e) => setRoiIndustry(e.target.value)}
                 className="mt-2 w-full rounded-lg px-4 py-3 text-[14px] outline-none"
+                aria-label="Velg din bransje"
                 style={{ background: 'rgba(244,241,235,0.04)', border: '1px solid rgba(244,241,235,0.08)', color: 'rgba(244,241,235,0.8)' }}>
                 {Object.keys(roiData).map((k) => <option key={k} value={k} style={{ background: bgDark }}>{k}</option>)}
               </select>
             </label>
 
-            <label className="block mb-6">
+            <label className="block mb-6" htmlFor="roi-calls">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-[12px] uppercase tracking-wide" style={{ color: 'rgba(244,241,235,0.55)' }}>Ubesvarte anrop per uke</span>
-                <span className="text-[14px] font-bold" style={{ color: gold }}>{missedCalls}</span>
+                <span className="text-[14px] font-bold" style={{ color: gold }} aria-live="polite">{missedCalls}</span>
               </div>
-              <input type="range" min={1} max={30} value={missedCalls} onChange={(e) => setMissedCalls(+e.target.value)}
-                className="w-full" style={{ accentColor: gold }} />
+              <input id="roi-calls" type="range" min={1} max={30} value={missedCalls} onChange={(e) => setMissedCalls(+e.target.value)}
+                className="w-full" style={{ accentColor: gold }}
+                aria-label={`Ubesvarte anrop per uke: ${missedCalls}`}
+                aria-valuemin={1} aria-valuemax={30} aria-valuenow={missedCalls} />
             </label>
 
-            <div className="text-center py-6 rounded-xl relative overflow-hidden" style={{ background: `rgba(${goldRgb},0.04)`, border: `1px solid rgba(${goldRgb},0.1)` }}>
+            <div className="text-center py-6 rounded-xl relative overflow-hidden" style={{ background: `rgba(${goldRgb},0.04)`, border: `1px solid rgba(${goldRgb},0.1)` }}
+              aria-live="polite" aria-atomic="true">
               <div className="text-[11px] uppercase tracking-wide mb-1" style={{ color: 'rgba(244,241,235,0.55)' }}>Estimert månedlig tap</div>
               <div className="text-[36px] md:text-[44px] font-extrabold text-gradient-gold">
                 {monthlySavings.toLocaleString('nb-NO')} kr
@@ -611,7 +639,7 @@ export default function Home() {
         }
         .gold-btn:hover {
           box-shadow: 0 8px 40px rgba(${goldRgb}, 0.4), 0 0 0 1px rgba(${goldRgb}, 0.5);
-          transform: translateY(-2px);
+          transform: translateY(-2px) scale(1.03);
         }
         .gold-btn::after {
           content: ''; position: absolute; top: -50%; left: -50%;
@@ -634,6 +662,7 @@ export default function Home() {
         .glass-card:hover {
           border-color: rgba(${goldRgb}, 0.12);
           background: rgba(255,255,255,0.05);
+          transform: translateY(-1px);
         }
 
         /* ── Bento Grid layout ── */
@@ -712,7 +741,9 @@ export default function Home() {
         @media (prefers-reduced-motion: reduce) {
           .hero-orb { animation: none !important; }
           .gold-btn::after { transition: none; }
+          .gold-btn:hover { transform: none; }
           .bento-card:hover { transform: none; }
+          .glass-card:hover { transform: none; }
         }
       `}</style>
     </>
