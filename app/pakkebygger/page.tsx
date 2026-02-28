@@ -214,7 +214,7 @@ export default function PakkebyggerPage() {
           }}
         >
           <CheckCircle2 size={16} />
-          <span>Bedrifter sparer typisk <strong>345 000 – 438 000 kr/år</strong> sammenlignet med å ansette</span>
+          <span>Bedrifter sparer typisk <strong>555 000 – 618 000 kr/år</strong> sammenlignet med å ansette</span>
         </motion.div>
       </section>
 
@@ -536,7 +536,7 @@ export default function PakkebyggerPage() {
         }}>
           Mange bedrifter vurderer å ansette for å håndtere telefoner, booking eller oppfølging.
           Med Arxon løser du det samme — til en brøkdel av prisen.
-          Tallene inkluderer lønn, arbeidsgiveravgift og sosiale kostnader.
+          Alle tall er verifisert mot SSB og Altinn, og inkluderer lønn, 14.1% arbeidsgiveravgift, 12% feriepenger og 2% OTP.
         </p>
 
         <div style={{
@@ -559,10 +559,10 @@ export default function PakkebyggerPage() {
 
           {/* Rows — calculated from real pricing: Lav=2000/mnd, Middels=4290/mnd, annual discount 20% */}
           {[
-            { role: 'Telefon & mottak', detail: 'AI-telefonsvarer + booking', annualCost: '420 000', arxonRange: '60 000 – 75 000', savingRange: '345 000 – 360 000' },
-            { role: 'Kundeservice & support', detail: 'Chatbot + auto-svar + FAQ', annualCost: '460 000', arxonRange: '80 000 – 100 000', savingRange: '360 000 – 380 000' },
-            { role: 'Booking & kalender', detail: 'Auto-booking + påminnelser', annualCost: '430 000', arxonRange: '38 000 – 48 000', savingRange: '382 000 – 392 000' },
-            { role: 'Lead-oppfølging & salg', detail: 'Scoring + CRM + follow-up', annualCost: '520 000', arxonRange: '82 000 – 103 000', savingRange: '417 000 – 438 000' },
+            { role: 'Telefon & mottak', detail: 'AI-telefonsvarer + booking', annualCost: '630 000', arxonRange: '60 000 – 75 000', savingRange: '555 000 – 570 000' },
+            { role: 'Kundeservice & support', detail: 'Chatbot + auto-svar + FAQ', annualCost: '675 000', arxonRange: '80 000 – 100 000', savingRange: '575 000 – 595 000' },
+            { role: 'Booking & kalender', detail: 'Auto-booking + påminnelser', annualCost: '643 000', arxonRange: '38 000 – 48 000', savingRange: '595 000 – 605 000' },
+            { role: 'Lead-oppfølging & salg', detail: 'Scoring + CRM + follow-up', annualCost: '700 000', arxonRange: '82 000 – 103 000', savingRange: '597 000 – 618 000' },
           ].map((row, i) => (
             <div key={i} style={{
               display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr',
@@ -592,11 +592,11 @@ export default function PakkebyggerPage() {
                 Typisk besparelse per automatisert område
               </div>
               <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>
-                Basert på Arxon-priser med årlig betaling vs. ansattkostnader (ink. arb.avg.)
+                Kilde: SSB & Altinn 2024/25. Inkl. lønn, 14.1% AGA, 12% feriepenger, 2% OTP.
               </div>
             </div>
             <div style={{ fontSize: 18, fontWeight: 700, color: '#4ade80' }}>
-              345 000 – 438 000 kr/år
+              555 000 – 618 000 kr/år
             </div>
           </div>
         </div>
