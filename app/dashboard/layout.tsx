@@ -1,0 +1,238 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
+import { signOut } from '@/lib/auth'
+import { gold, goldRgb, bg, fonts } from '@/lib/constants'
+import {
+  LayoutDashboard, Phone, Users, CalendarCheck, Settings,
+  LogOut, Menu, X, ChevronRight, Loader2
+} from 'lucide-react'
+
+const sidebarLinks = [
+  { href: '/dashboard', label: 'Oversikt', icon: LayoutDashboard },
+  { href: '/dashboard/anrop', label: 'Anrop', icon: Phone },
+  { href: '/dashboard/leads', label: 'Leads', icon: Users },
+  { href: '/dashboard/bookinger', label: 'Bookinger', icon: CalendarCheck },
+  { href: '/dashboard/innstillinger', label: 'Innstillinger', icon: Settings },
+]
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const [user, setUser] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        router.push('/login')
+        return
+      }
+      setUser(session.user)
+      setLoading(false)
+    }
+    checkAuth()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
+        router.push('/login')
+      } else {
+        setUser(session.user)
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [router])
+
+  const handleSignOut = async () => {
+    await signOut()
+    router.push('/login')
+  }
+
+  if (loading) {
+    return (
+      <div style={{
+        minHeight: '100vh', background: bg, display: 'flex',
+        alignItems: 'center', justifyContent: 'center',
+        fontFamily: fonts.body,
+      }}>
+        <Loader2 size={32} color={gold} style={{ animation: 'spin 1s linear infinite' }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    )
+  }
+
+  const isActive = (href: string) => {
+    if (href === '/dashboard') return pathname === '/dashboard'
+    return pathname.startsWith(href)
+  }
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: '#080c14',
+      fontFamily: fonts.body,
+      display: 'flex',
+    }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        ::selection { background: rgba(${goldRgb},0.3); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .dash-link { transition: all 0.15s ease; }
+        .dash-link:hover { background: rgba(255,255,255,0.05) !important; }
+        @media (max-width: 768px) {
+          .dash-sidebar { display: none !important; }
+          .dash-sidebar.open { display: flex !important; position: fixed !important; top: 0; left: 0; bottom: 0; z-index: 100; }
+          .dash-overlay { display: block !important; }
+        }
+      `}</style>
+
+      {/* Sidebar */}
+      <aside className={`dash-sidebar ${mobileMenuOpen ? 'open' : ''}`} style={{
+        width: 240,
+        background: '#0a0f1a',
+        borderRight: '1px solid rgba(255,255,255,0.06)',
+        display: 'flex',
+        flexDirection: 'column',
+        flexShrink: 0,
+      }}>
+        {/* Logo */}
+        <div style={{
+          padding: '20px 20px 16px',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+            <img src="/arxon-icon.png" alt="Arxon" style={{ width: 28, height: 28 }} />
+            <span style={{
+              color: '#f0f0f0', fontSize: 15, fontWeight: 700,
+              letterSpacing: '2px', textTransform: 'uppercase',
+            }}>Arxon</span>
+          </Link>
+          {mobileMenuOpen && (
+            <button onClick={() => setMobileMenuOpen(false)} style={{
+              background: 'none', border: 'none', cursor: 'pointer', padding: 4,
+            }}>
+              <X size={20} color="rgba(255,255,255,0.5)" />
+            </button>
+          )}
+        </div>
+
+        {/* Nav links */}
+        <nav style={{ flex: 1, padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {sidebarLinks.map(link => {
+            const active = isActive(link.href)
+            const Icon = link.icon
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="dash-link"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 12,
+                  padding: '10px 14px',
+                  borderRadius: 8,
+                  textDecoration: 'none',
+                  fontSize: 14,
+                  fontWeight: active ? 600 : 400,
+                  color: active ? gold : 'rgba(255,255,255,0.5)',
+                  background: active ? `rgba(${goldRgb},0.08)` : 'transparent',
+                }}
+              >
+                <Icon size={18} />
+                {link.label}
+                {active && <ChevronRight size={14} style={{ marginLeft: 'auto', opacity: 0.5 }} />}
+              </Link>
+            )
+          })}
+        </nav>
+
+        {/* User + Logout */}
+        <div style={{
+          padding: '16px 14px',
+          borderTop: '1px solid rgba(255,255,255,0.06)',
+        }}>
+          <div style={{
+            fontSize: 12, color: 'rgba(255,255,255,0.35)',
+            marginBottom: 12, overflow: 'hidden', textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}>
+            {user?.email}
+          </div>
+          <button onClick={handleSignOut} className="dash-link" style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)',
+            cursor: 'pointer', fontSize: 13, fontFamily: fonts.body,
+            padding: '8px 10px', borderRadius: 6, width: '100%',
+          }}>
+            <LogOut size={16} />
+            Logg ut
+          </button>
+        </div>
+      </aside>
+
+      {/* Mobile overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="dash-overlay"
+          onClick={() => setMobileMenuOpen(false)}
+          style={{
+            display: 'none',
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(0,0,0,0.6)', zIndex: 99,
+          }}
+        />
+      )}
+
+      {/* Main content area */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        {/* Top bar */}
+        <header style={{
+          height: 56,
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 24px',
+          gap: 16,
+          flexShrink: 0,
+        }}>
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            style={{
+              background: 'none', border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: 8, padding: 6, cursor: 'pointer',
+              display: 'none',
+            }}
+            className="show-mob-btn"
+          >
+            <Menu size={20} color="rgba(255,255,255,0.6)" />
+          </button>
+          <style>{`@media (max-width: 768px) { .show-mob-btn { display: flex !important; } }`}</style>
+
+          <h2 style={{ color: '#f0f0f0', fontSize: 16, fontWeight: 600, margin: 0 }}>
+            {sidebarLinks.find(l => isActive(l.href))?.label || 'Dashboard'}
+          </h2>
+        </header>
+
+        {/* Page content */}
+        <main style={{
+          flex: 1,
+          padding: '24px',
+          overflowY: 'auto',
+        }}>
+          {children}
+        </main>
+      </div>
+    </div>
+  )
+}

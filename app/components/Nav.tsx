@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowRight, Globe, Menu, X } from 'lucide-react'
+import { ArrowRight, Globe, Menu, X, LogIn } from 'lucide-react'
 import { gold, goldRgb, bg, fonts } from '@/lib/constants'
 
 interface NavProps {
@@ -101,6 +101,27 @@ export default function Nav({ lang: langProp, setLang: setLangProp, sticky = fal
               <Globe size={12} />
               {lang === 'no' ? 'EN' : 'NO'}
             </button>
+            <button onClick={() => router.push('/login')} style={{
+              background: 'transparent',
+              border: `1px solid rgba(${goldRgb},0.2)`,
+              color: 'rgba(255,255,255,0.5)',
+              borderRadius: sticky ? 6 : 8,
+              padding: sticky ? '4px 10px' : '6px 12px',
+              fontSize: 12,
+              fontWeight: 500,
+              cursor: 'pointer',
+              fontFamily: fonts.body,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+              transition: 'color 0.2s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.color = gold}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}
+            >
+              <LogIn size={12} />
+              {lang === 'no' ? 'Logg inn' : 'Log in'}
+            </button>
             <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
               color: bg, border: 'none', borderRadius: 10, padding: '8px 20px',
               fontWeight: 600, fontSize: sticky ? 13 : 14, cursor: 'pointer', fontFamily: fonts.body,
@@ -151,6 +172,15 @@ export default function Nav({ lang: langProp, setLang: setLangProp, sticky = fal
               textAlign: 'left', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
             }}>{l.label}</button>
           ))}
+          <button onClick={() => { setMenuOpen(false); router.push('/login') }} style={{
+            background: 'none', border: 'none', color: gold,
+            fontSize: 18, fontWeight: 500, cursor: 'pointer', fontFamily: fonts.body,
+            textAlign: 'left', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
+            display: 'flex', alignItems: 'center', gap: 8,
+          }}>
+            <LogIn size={18} />
+            {lang === 'no' ? 'Logg inn' : 'Log in'}
+          </button>
         </div>
       )}
     </>

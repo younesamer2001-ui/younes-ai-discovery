@@ -1,115 +1,201 @@
 'use client'
 
-import { useState, Suspense } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
-import { Language, t } from '@/lib/translations'
-import { Mail, ArrowLeft, Sparkles, CheckCircle2, Loader2 } from 'lucide-react'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { signIn, signUp } from '@/lib/auth'
+import { gold, goldRgb, bg, fonts } from '@/lib/constants'
+import { Mail, Lock, ArrowLeft, ArrowRight, Eye, EyeOff } from 'lucide-react'
 
-function LoginPageContent() {
-  const searchParams = useSearchParams()
-  const lang = (searchParams.get('lang') || 'no') as Language
+export default function LoginPage() {
   const router = useRouter()
-
   const [email, setEmail] = useState('')
-  const [sent, setSent] = useState(false)
+  const [password, setPassword] = useState('')
+  const [isSignUp, setIsSignUp] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
 
     try {
-      const { error: authError } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/api/auth/callback?lang=${lang}`,
-        },
-      })
-
-      if (authError) throw authError
-      setSent(true)
+      if (isSignUp) {
+        if (password.length < 6) {
+          setError('Passord må være minst 6 tegn')
+          setLoading(false)
+          return
+        }
+        const { error: authError } = await signUp(email, password)
+        if (authError) throw authError
+        // After signup, sign in immediately
+        const { error: signInError } = await signIn(email, password)
+        if (signInError) throw signInError
+      } else {
+        const { error: authError } = await signIn(email, password)
+        if (authError) {
+          if (authError.message.includes('Invalid login')) {
+            throw new Error('Feil e-post eller passord')
+          }
+          throw authError
+        }
+      }
+      router.push('/dashboard')
     } catch (err: any) {
-      setError(err.message || 'Something went wrong')
+      setError(err.message || 'Noe gikk galt')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6">
-      <div className="w-full max-w-md">
-        <button
-          onClick={() => router.push('/')}
-          className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 mb-8 transition"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          {t('back', lang)}
-        </button>
+    <div style={{
+      minHeight: '100vh',
+      background: bg,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: fonts.body,
+      padding: '24px',
+    }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        ::selection { background: rgba(${goldRgb},0.3); }
+        input::placeholder { color: rgba(255,255,255,0.25); }
+        input:-webkit-autofill {
+          -webkit-box-shadow: 0 0 0 30px ${bg} inset !important;
+          -webkit-text-fill-color: #f0f0f0 !important;
+        }
+      `}</style>
 
-        <div className="glass rounded-2xl p-8 shadow-xl">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-brand-600" />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              {t('login_title', lang)}
-            </h1>
+      <div style={{ width: '100%', maxWidth: 420 }}>
+        <Link href="/" style={{
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontSize: 14,
+          marginBottom: 32, transition: 'color 0.2s',
+        }}>
+          <ArrowLeft size={16} />
+          Tilbake til forsiden
+        </Link>
+
+        <div style={{
+          background: 'rgba(255,255,255,0.03)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: 16,
+          padding: '40px 32px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+            <img src="/arxon-icon.png" alt="Arxon" style={{ width: 32, height: 32 }} />
+            <span style={{ color: '#f0f0f0', fontSize: 18, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' }}>
+              Arxon
+            </span>
           </div>
 
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            {t('login_subtitle', lang)}
+          <h1 style={{ color: '#f0f0f0', fontSize: 24, fontWeight: 700, margin: '24px 0 8px' }}>
+            {isSignUp ? 'Opprett konto' : 'Logg inn'}
+          </h1>
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14, marginBottom: 28 }}>
+            {isSignUp
+              ? 'Lag en konto for å se dashboardet ditt'
+              : 'Logg inn for å se dashboardet ditt'}
           </p>
 
-          {sent ? (
-            <div className="text-center py-8 animate-fade-in">
-              <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <p className="text-lg font-medium text-gray-900 dark:text-white">
-                {t('login_check_email', lang)}
-              </p>
-              <p className="text-sm text-gray-500 mt-2">{email}</p>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ position: 'relative' }}>
+              <Mail size={18} style={{
+                position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
+                color: 'rgba(255,255,255,0.25)',
+              }} />
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="din@epost.no"
+                required
+                style={{
+                  width: '100%', padding: '14px 16px 14px 44px',
+                  borderRadius: 10, border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'rgba(255,255,255,0.04)', color: '#f0f0f0',
+                  fontSize: 15, outline: 'none', fontFamily: fonts.body,
+                  boxSizing: 'border-box',
+                }}
+              />
             </div>
-          ) : (
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder={t('login_email_placeholder', lang)}
-                    required
-                    className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
 
-              {error && (
-                <p className="text-sm text-red-500">{error}</p>
-              )}
-
-              <button
-                type="submit"
-                disabled={loading || !email}
-                className="w-full py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-              >
-                {loading ? t('loading', lang) : t('login_button', lang)}
+            <div style={{ position: 'relative' }}>
+              <Lock size={18} style={{
+                position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
+                color: 'rgba(255,255,255,0.25)',
+              }} />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="Passord"
+                required
+                minLength={6}
+                style={{
+                  width: '100%', padding: '14px 48px 14px 44px',
+                  borderRadius: 10, border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'rgba(255,255,255,0.04)', color: '#f0f0f0',
+                  fontSize: 15, outline: 'none', fontFamily: fonts.body,
+                  boxSizing: 'border-box',
+                }}
+              />
+              <button type="button" onClick={() => setShowPassword(!showPassword)} style={{
+                position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
+                background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                color: 'rgba(255,255,255,0.3)',
+              }}>
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
-            </form>
-          )}
+            </div>
+
+            {error && (
+              <p style={{ color: '#ef4444', fontSize: 13, margin: 0 }}>{error}</p>
+            )}
+
+            <button type="submit" disabled={loading || !email || !password} style={{
+              padding: '14px',
+              borderRadius: 10,
+              border: 'none',
+              background: loading ? 'rgba(239,192,123,0.5)' : `linear-gradient(135deg, ${gold}, #d4a85a)`,
+              color: bg,
+              fontWeight: 700,
+              fontSize: 15,
+              cursor: loading ? 'not-allowed' : 'pointer',
+              fontFamily: fonts.body,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              transition: 'all 0.2s',
+            }}>
+              {loading ? 'Vennligst vent...' : (isSignUp ? 'Opprett konto' : 'Logg inn')}
+              {!loading && <ArrowRight size={16} />}
+            </button>
+          </form>
+
+          <div style={{
+            marginTop: 24, paddingTop: 20,
+            borderTop: '1px solid rgba(255,255,255,0.06)',
+            textAlign: 'center',
+          }}>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>
+              {isSignUp ? 'Har du allerede en konto?' : 'Har du ikke en konto?'}{' '}
+              <button onClick={() => { setIsSignUp(!isSignUp); setError('') }} style={{
+                background: 'none', border: 'none', color: gold,
+                cursor: 'pointer', fontWeight: 600, fontSize: 14,
+                fontFamily: fonts.body,
+              }}>
+                {isSignUp ? 'Logg inn' : 'Opprett konto'}
+              </button>
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  )
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-brand-500" /></div>}>
-      <LoginPageContent />
-    </Suspense>
   )
 }
