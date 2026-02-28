@@ -223,7 +223,7 @@ export default function Home() {
           <motion.h1 {...sAnim} transition={{ duration: 0.5, delay: 0.1 }}
             className="text-[36px] md:text-[60px] font-extrabold leading-[1.08] tracking-tight mb-6"
             style={{ color: '#f4f1eb' }}>
-            Spar 40+ timer i uken med{' '}
+            Spar 15–20 timer i uken med{' '}
             <span className="text-gradient-gold">AI som jobber for deg</span>
           </motion.h1>
 
@@ -231,8 +231,8 @@ export default function Home() {
           <motion.p {...sAnim} transition={{ duration: 0.5, delay: 0.2 }}
             className="text-[16px] md:text-[18px] max-w-xl mx-auto mb-10 leading-relaxed"
             style={{ color: 'rgba(244,241,235,0.7)' }}>
-            Norske bedrifter taper i snitt 85 000 kr/mnd på ubesvarte anrop og manuelt arbeid.
-            Arxon automatiserer telefon, booking og oppfølging — på under en uke.
+            Små bedrifter taper 15 000–25 000 kr/mnd på ubesvarte anrop og manuelt arbeid.
+            Arxon automatiserer telefon, booking og oppfølging — slik at du kan fokusere på kundene.
           </motion.p>
 
           {/* Single dominant CTA */}
@@ -296,13 +296,13 @@ export default function Home() {
                 icon: <PhoneOff size={24} />,
                 title: 'Ubesvarte anrop',
                 pain: 'Hver gang telefonen ringer uten svar, mister du en potensiell kunde.',
-                agitate: 'Det koster deg i snitt 85 000 kr/mnd i tapte inntekter.',
+                agitate: 'Det koster deg 15 000–25 000 kr/mnd i tapte inntekter.',
               },
               {
                 icon: <Clock size={24} />,
                 title: 'Timer på manuelt arbeid',
                 pain: 'Booking, oppfølging, fakturering — alt gjøres for hånd.',
-                agitate: '40+ timer i uken forsvinner til oppgaver AI kan gjøre på sekunder.',
+                agitate: '15–20 timer i uken forsvinner til oppgaver AI kan gjøre på sekunder.',
               },
               {
                 icon: <TrendingUp size={24} />,

@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     url: 'https://arxon.no',
     siteName: 'Arxon',
     title: 'Arxon — AI som svarer telefonen og booker kunder for deg',
-    description: 'Norske bedrifter taper i snitt 85 000 kr/mnd på ubesvarte anrop. Arxon sin AI svarer 24/7, booker møter og kvalifiserer leads automatisk. Start gratis kartlegging.',
+    description: 'Små bedrifter taper 15 000–25 000 kr/mnd på ubesvarte anrop. Arxon sin AI svarer 24/7, booker møter og kvalifiserer leads automatisk. Start gratis kartlegging.',
     images: [
       {
         url: '/arxon-og.png',

@@ -214,7 +214,7 @@ export default function PakkebyggerPage() {
           }}
         >
           <CheckCircle2 size={16} />
-          <span>Bedrifter sparer typisk <strong>626 000 – 691 000 kr/år</strong> sammenlignet med å ansette</span>
+          <span>Bedrifter sparer typisk <strong>150 000 – 250 000 kr/år</strong> i tid og økt omsetning</span>
         </motion.div>
       </section>
 
@@ -552,17 +552,17 @@ export default function PakkebyggerPage() {
             gap: 8,
           }}>
             <span>Oppgave</span>
-            <span style={{ textAlign: 'right' }}>Ansatt (årlig)</span>
+            <span style={{ textAlign: 'right' }}>Verdi (timer/mnd)</span>
             <span style={{ textAlign: 'right' }}>Arxon (årlig)</span>
-            <span style={{ textAlign: 'right', color: '#4ade80' }}>Du sparer</span>
+            <span style={{ textAlign: 'right', color: '#4ade80' }}>Estimert gevinst</span>
           </div>
 
-          {/* Rows — calculated from real pricing: Lav=2000/mnd, Middels=4290/mnd, annual discount 20% */}
+          {/* Rows — realistic estimates for small businesses */}
           {[
-            { role: 'Telefon & mottak', detail: 'AI-telefonsvarer + booking', annualCost: '751 000', arxonRange: '60 000 – 75 000', savingRange: '676 000 – 691 000' },
-            { role: 'Kundeservice & support', detail: 'Chatbot + auto-svar + FAQ', annualCost: '726 000', arxonRange: '80 000 – 100 000', savingRange: '626 000 – 646 000' },
-            { role: 'Booking & kalender', detail: 'Auto-booking + påminnelser', annualCost: '697 000', arxonRange: '38 000 – 48 000', savingRange: '649 000 – 659 000' },
-            { role: 'Lead-oppfølging & salg', detail: 'Scoring + CRM + follow-up', annualCost: '761 000', arxonRange: '82 000 – 103 000', savingRange: '658 000 – 679 000' },
+            { role: 'Telefon & mottak', detail: 'AI-telefonsvarer + booking', timeSaved: '20–30 t/mnd', arxonRange: '24 000 – 36 000', savingRange: '60 000 – 90 000' },
+            { role: 'Kundeservice & support', detail: 'Chatbot + auto-svar + FAQ', timeSaved: '15–25 t/mnd', arxonRange: '36 000 – 51 000', savingRange: '40 000 – 60 000' },
+            { role: 'Booking & kalender', detail: 'Auto-booking + påminnelser', timeSaved: '10–15 t/mnd', arxonRange: '24 000 – 36 000', savingRange: '30 000 – 50 000' },
+            { role: 'Lead-oppfølging & salg', detail: 'Scoring + CRM + follow-up', timeSaved: '15–20 t/mnd', arxonRange: '36 000 – 51 000', savingRange: '50 000 – 80 000' },
           ].map((row, i) => (
             <div key={i} style={{
               display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr',
@@ -574,7 +574,7 @@ export default function PakkebyggerPage() {
                 <span style={{ color: '#f4f1eb', fontWeight: 500 }}>{row.role}</span>
                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>{row.detail}</div>
               </div>
-              <span style={{ textAlign: 'right', color: 'rgba(255,255,255,0.5)' }}>kr {row.annualCost}</span>
+              <span style={{ textAlign: 'right', color: 'rgba(255,255,255,0.5)' }}>{row.timeSaved}</span>
               <span style={{ textAlign: 'right', color: gold, fontWeight: 500 }}>kr {row.arxonRange}</span>
               <span style={{ textAlign: 'right', color: '#4ade80', fontWeight: 600 }}>kr {row.savingRange}</span>
             </div>
@@ -589,14 +589,14 @@ export default function PakkebyggerPage() {
           }}>
             <div>
               <div style={{ fontSize: 13, fontWeight: 600, color: '#f4f1eb' }}>
-                Typisk besparelse per automatisert område
+                Typisk totalverdi for en liten bedrift
               </div>
               <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>
-                Kilde: SSB & Altinn 2024/25. Inkl. lønn, 14.1% AGA, 12% feriepenger, 2% OTP.
+                Spart tid + økt omsetning fra færre tapte kunder. Varierer etter bransje og volum.
               </div>
             </div>
             <div style={{ fontSize: 18, fontWeight: 700, color: '#4ade80' }}>
-              626 000 – 691 000 kr/år
+              150 000 – 250 000 kr/år
             </div>
           </div>
         </div>
