@@ -148,13 +148,16 @@ function TechLogos() {
 
 /* ── ROI DATA ── */
 const roiData: Record<string, { avgDeal: number; conversion: number }> = {
+  // ⭐ Topp 5 fokus-bransjer
   'Bygg & Håndverk': { avgDeal: 85000, conversion: 0.18 },
-  'Frisør / Salong': { avgDeal: 950, conversion: 0.65 },
+  'Eiendomsmegling': { avgDeal: 65000, conversion: 0.12 },
+  'Salong & Skjønnhet': { avgDeal: 950, conversion: 0.65 },
+  'Bilverksted & Bilforhandler': { avgDeal: 8500, conversion: 0.40 },
+  'Reiseliv & Overnatting': { avgDeal: 4200, conversion: 0.50 },
+  // Øvrige bransjer
   'Restaurant / Café': { avgDeal: 1200, conversion: 0.70 },
   'Advokat / Juridisk': { avgDeal: 25000, conversion: 0.25 },
-  'Regnskap': { avgDeal: 12000, conversion: 0.30 },
   'Helse / Klinikk': { avgDeal: 2500, conversion: 0.55 },
-  'Eiendom': { avgDeal: 65000, conversion: 0.12 },
   'IT / Konsulent': { avgDeal: 35000, conversion: 0.20 },
 }
 

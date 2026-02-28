@@ -254,23 +254,28 @@ export default function PakkebyggerPage() {
                   borderRadius: 10, marginTop: 4, maxHeight: 300, overflowY: 'auto',
                   boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
                 }}>
-                  {pricingIndustries.map(ind => (
+                  {pricingIndustries.map((ind, idx) => {
+                    const isTop5 = idx < 5
+                    return (
                     <button key={ind} onClick={() => selectIndustry(ind)} style={{
                       width: '100%', background: ind === selectedIndustry ? `rgba(${goldRgb},0.1)` : 'transparent',
-                      border: 'none', borderBottom: '1px solid rgba(255,255,255,0.04)',
+                      border: 'none', borderBottom: idx === 4 ? `2px solid rgba(${goldRgb},0.2)` : '1px solid rgba(255,255,255,0.04)',
                       padding: '12px 16px', textAlign: 'left', cursor: 'pointer',
                       color: '#f4f1eb', fontSize: 14, fontFamily: 'inherit',
+                      fontWeight: isTop5 ? 600 : 400,
                       transition: 'background 0.15s',
                     }}
                     onMouseEnter={e => e.currentTarget.style.background = `rgba(${goldRgb},0.08)`}
                     onMouseLeave={e => e.currentTarget.style.background = ind === selectedIndustry ? `rgba(${goldRgb},0.1)` : 'transparent'}
                     >
+                      {isTop5 && <span style={{ color: gold, marginRight: 6 }}>⭐</span>}
                       {ind}
                       <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginLeft: 8 }}>
                         {pricingAutomations.filter(a => a.industry === ind).length} løsninger
                       </span>
                     </button>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </div>

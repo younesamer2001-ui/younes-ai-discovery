@@ -2751,4 +2751,32 @@ export const pricingAutomations: PricingAutomation[] = [
   }
 ]
 
-export const pricingIndustries = ["Advokatkontor & Juridisk", "Bilverksted & Bilforhandler", "Bygg & Håndverk", "Coaching & Personlig Utvikling", "E-handel & Nettbutikk", "Eiendomsforvaltning", "Eiendomsmegling", "Event & Arrangement", "Finans & Fintech", "Helse & Klinikk", "Helseforsikring & Privat Helse", "IT & Tech-selskaper", "Kreativt Byrå & Freelancere", "Logistikk & Transport", "Markedsføring & SEO-byrå", "Media & Podkast", "NGO & Ideell sektor", "Regnskap & Konsulenter", "Reiseliv & Overnatting", "Rekruttering & Bemanning", "Restaurant & Café", "SaaS & Produktselskaper", "Salong & Skjønnhet", "Trening & Fitness", "Utdanning & Kurs"]
+export const pricingIndustries = [
+  // ⭐ Topp 5 fokus-bransjer
+  "Bygg & Håndverk",
+  "Eiendomsmegling",
+  "Salong & Skjønnhet",
+  "Bilverksted & Bilforhandler",
+  "Reiseliv & Overnatting",
+  // Øvrige bransjer (alfabetisk)
+  "Advokatkontor & Juridisk",
+  "Coaching & Personlig Utvikling",
+  "E-handel & Nettbutikk",
+  "Eiendomsforvaltning",
+  "Event & Arrangement",
+  "Finans & Fintech",
+  "Helse & Klinikk",
+  "Helseforsikring & Privat Helse",
+  "IT & Tech-selskaper",
+  "Kreativt Byrå & Freelancere",
+  "Logistikk & Transport",
+  "Markedsføring & SEO-byrå",
+  "Media & Podkast",
+  "NGO & Ideell sektor",
+  "Regnskap & Konsulenter",
+  "Rekruttering & Bemanning",
+  "Restaurant & Café",
+  "SaaS & Produktselskaper",
+  "Trening & Fitness",
+  "Utdanning & Kurs",
+]

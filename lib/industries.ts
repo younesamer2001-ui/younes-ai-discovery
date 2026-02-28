@@ -95,226 +95,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 12
-  },
-  {
-    "title": "Salong & Skjønnhet",
-    "subtitle": "Frisører, hudpleie, negledesign, barbershop, spa",
-    "slug": "salong-og-skjonnhet",
-    "icon": "Scissors",
-    "automations": [
-      {
-        "name": "AI-telefonsvarer med booking",
-        "desc": "Finn svarer, sjekker ledig tid, booker time, sender bekreftelse",
-        "benefit": "Salonger mister kunder mens de klipper. AI fanger opp alle henvendelser.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Automatisk venteliste",
-        "desc": "Fullbooket? Kunden legges på venteliste → varsles automatisk ved avbestilling",
-        "benefit": "Fyller kansellerte timer automatisk. Null tapte inntekter.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Booking-påminnelse",
-        "desc": "SMS 24t og 2t før timen med avbestillingslenke",
-        "benefit": "Reduserer no-shows med 70%. Gir tid til å fylle kansellerte timer.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Produktanbefaling etter besøk",
-        "desc": "AI sender personlig produkttips basert på behandlingen kunden fikk",
-        "benefit": "Øker produktsalg med 15-25%. Kunden føler seg ivaretatt.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Instagram auto-posting",
-        "desc": "Tar bilde av nytt resultat → AI lager caption → poster automatisk",
-        "benefit": "Holder sosiale medier aktive uten ekstra arbeid.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Bursdagshilsen + tilbud",
-        "desc": "Automatisk hilsen på kundens bursdag med 15% rabattkode",
-        "benefit": "Personlig touch som driver repeatkjøp.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Rebestilling-påminnelse",
-        "desc": "6 uker etter siste klipp → 'Tid for ny time?'-melding med bookinglenke",
-        "benefit": "Automatisk retention. Kunden glemmer ikke å booke.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Ukentlig inntektsrapport",
-        "desc": "Automatisk sammendrag: omsetning, antall kunder, mest populære tjenester",
-        "benefit": "Full oversikt uten å telle manuelt.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Leadskjema → CRM → sekvens + intern varsling",
-        "desc": "Nytt lead fra nettskjema pushes til CRM og starter e-postsekvens med intern varsling.",
-        "benefit": "Raskere respons, bedre pipeline-kvalitet.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "NPS/tilbakemelding → omtaleforespørsel",
-        "desc": "Etter behandling sendes kort survey; ved høy score sendes automatisk forespørsel om Google/Facebook-omtale.",
-        "benefit": "Øker synlighet og sosialt bevis med minimal manuell innsats.",
-        "complexity": "Lav"
-      }
-    ],
-    "count": 10
-  },
-  {
-    "title": "Advokatkontor & Juridisk",
-    "subtitle": "Advokater, advokatfirmaer, juridisk rådgivning, regnskap, inkasso",
-    "slug": "advokatkontor-og-juridisk",
-    "icon": "Scale",
-    "automations": [
-      {
-        "name": "AI-telefonsvarer for førstekontakt",
-        "desc": "Finn tar imot nye henvendelser, samler saksinfo, booker konsultasjon",
-        "benefit": "Advokater er opptatt i møter/retten. AI kvalifiserer klienter 24/7.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Saksdokument-oppsummering",
-        "desc": "Last opp dokument → AI lager sammendrag med nøkkelpunkter og frister",
-        "benefit": "Sparer 30-60 min per sak på dokumentgjennomgang.",
-        "complexity": "Høy"
-      },
-      {
-        "name": "Frist- og frempåminnelser",
-        "desc": "Automatisk varsling X dager før frister (tilsvar, ankefrister, foreldelse)",
-        "benefit": "Null glemte frister. Reduserer malpractice-risiko.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Klientoppdatering via e-post",
-        "desc": "Ukentlig statusmail til klient: 'Saken din er i fase X, neste steg er Y'",
-        "benefit": "Klienter klager ofte over manglende info. Automatiserer dette.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Avtale-/kontraktsgenerering",
-        "desc": "AI fyller ut standardavtaler basert på klientdata og sakstype",
-        "benefit": "Sparer timer på rutinekontrakter. Reduserer feil.",
-        "complexity": "Høy"
-      },
-      {
-        "name": "Timeregistrering-påminnelse",
-        "desc": "Daglig påminnelse om å registrere timer + auto-oppsummering til faktura",
-        "benefit": "Sikrer at alle timer faktureres. Øker omsetning 10-20%.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Ny klient onboarding",
-        "desc": "Automatisk velkomstmail, fullmaktsskjema, informasjonsskjema, kalenderlenke",
-        "benefit": "Profesjonelt førsteinntrykk. Samler all info før første møte.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Konfliktsøk",
-        "desc": "Sjekker automatisk nye klientnavn mot eksisterende saker for interessekonflikter",
-        "benefit": "Lovpålagt sjekk gjort på sekunder i stedet for manuelt.",
-        "complexity": "Høy"
-      },
-      {
-        "name": "Leadskjema → CRM → sekvens + intern varsling",
-        "desc": "Nytt lead fra nettskjema pushes til CRM, starter e-postsekvens, intern varsling til Slack/Teams.",
-        "benefit": "Raskere respons, færre leads faller mellom stoler.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Dokumentinnhenting → strukturert arkiv + oppgave",
-        "desc": "Dokumenter mottas via e-post/skjema, navngis standardisert, lagres i Drive/SharePoint og oppgave opprettes.",
-        "benefit": "Raskere saksbehandling, mindre rot og bedre sporbarhet.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Samtykke- og audit-logg (GDPR)",
-        "desc": "Loggfører markedsføringssamtykke/avmelding og viktige hendelser i audit-spor.",
-        "benefit": "Reduserer compliance-risiko og gjør det enklere å dokumentere samtykke.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Automatisk purring og betalingsoppfølging",
-        "desc": "Henter åpne fakturaer og sender purring etter definert løp; eskalerer ved manglende betaling.",
-        "benefit": "Bedre likviditet, mindre manuelt arbeid.",
-        "complexity": "Middels"
-      }
-    ],
-    "count": 12
-  },
-  {
-    "title": "Restaurant & Café",
-    "subtitle": "Restauranter, kafeer, bakeri, matlevering, catering",
-    "slug": "restaurant-og-caf",
-    "icon": "UtensilsCrossed",
-    "automations": [
-      {
-        "name": "AI-telefonsvar for bestilling/reservasjon",
-        "desc": "Tar imot bordbestillinger og takeaway-bestillinger via telefon",
-        "benefit": "Travle restauranter mister bestillinger i rushet. AI svarer alltid.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Daglig råvarestatus",
-        "desc": "Sjekker lagerstatus → genererer bestillingsliste → sender til leverandør",
-        "benefit": "Aldri tom for varer. Reduserer matsvinn og hastebestillinger.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Meny-oppdatering på nett",
-        "desc": "Oppdater meny i ett system → pusher automatisk til nettside, sosiale medier",
-        "benefit": "Slipper å oppdatere 5 steder manuelt.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Ansattplan-varsling",
-        "desc": "Vaktplan publiseres → alle ansatte får SMS med sine vakter",
-        "benefit": "Null misforståelser om vakter.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Kundeundersøkelse etter besøk",
-        "desc": "Automatisk SMS med kort spørreundersøkelse 2t etter besøk",
-        "benefit": "Fanger misnøye tidlig. Hindrer dårlige anmeldelser.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Catering-kalkulator",
-        "desc": "Kunden fyller inn antall gjester + type event → AI foreslår meny + pris",
-        "benefit": "Automatiserer tilbudsgivning. Kunden får svar på minutter.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Sosiale medier matbilder",
-        "desc": "Last opp bilde → AI lager caption + hashtags → poster til Instagram/Facebook",
-        "benefit": "Holder SoMe aktiv uten ekstra arbeid.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Ukentlig salgsrapport",
-        "desc": "Automatisk oppsummering: mest solgte retter, inntekt per dag, sammenligning forrige uke",
-        "benefit": "Innsikt uten manuell analyse.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Leadskjema → CRM → sekvens + intern varsling",
-        "desc": "Nytt lead/forespørsel fra nettskjema pushes til CRM, starter e-postsekvens, varsling til ansatte.",
-        "benefit": "Raskere respons på bestillinger og catering-forespørsler.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "NPS/tilbakemelding → omtaleforespørsel",
-        "desc": "Etter besøk sendes kort survey; ved høy score sendes automatisk forespørsel om Google-omtale.",
-        "benefit": "Øker synlighet og sosialt bevis automatisk.",
-        "complexity": "Lav"
-      }
-    ],
-    "count": 10
-  },
+  },,
   {
     "title": "Eiendomsmegling",
     "subtitle": "Meglere, eiendomsutvikling, boligutleie, eiendomsforvaltning",
@@ -395,7 +176,358 @@ export const industries: Industry[] = [
       }
     ],
     "count": 12
-  },
+  },,
+  {
+    "title": "Salong & Skjønnhet",
+    "subtitle": "Frisører, hudpleie, negledesign, barbershop, spa",
+    "slug": "salong-og-skjonnhet",
+    "icon": "Scissors",
+    "automations": [
+      {
+        "name": "AI-telefonsvarer med booking",
+        "desc": "Finn svarer, sjekker ledig tid, booker time, sender bekreftelse",
+        "benefit": "Salonger mister kunder mens de klipper. AI fanger opp alle henvendelser.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Automatisk venteliste",
+        "desc": "Fullbooket? Kunden legges på venteliste → varsles automatisk ved avbestilling",
+        "benefit": "Fyller kansellerte timer automatisk. Null tapte inntekter.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Booking-påminnelse",
+        "desc": "SMS 24t og 2t før timen med avbestillingslenke",
+        "benefit": "Reduserer no-shows med 70%. Gir tid til å fylle kansellerte timer.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Produktanbefaling etter besøk",
+        "desc": "AI sender personlig produkttips basert på behandlingen kunden fikk",
+        "benefit": "Øker produktsalg med 15-25%. Kunden føler seg ivaretatt.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Instagram auto-posting",
+        "desc": "Tar bilde av nytt resultat → AI lager caption → poster automatisk",
+        "benefit": "Holder sosiale medier aktive uten ekstra arbeid.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Bursdagshilsen + tilbud",
+        "desc": "Automatisk hilsen på kundens bursdag med 15% rabattkode",
+        "benefit": "Personlig touch som driver repeatkjøp.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Rebestilling-påminnelse",
+        "desc": "6 uker etter siste klipp → 'Tid for ny time?'-melding med bookinglenke",
+        "benefit": "Automatisk retention. Kunden glemmer ikke å booke.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Ukentlig inntektsrapport",
+        "desc": "Automatisk sammendrag: omsetning, antall kunder, mest populære tjenester",
+        "benefit": "Full oversikt uten å telle manuelt.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Leadskjema → CRM → sekvens + intern varsling",
+        "desc": "Nytt lead fra nettskjema pushes til CRM og starter e-postsekvens med intern varsling.",
+        "benefit": "Raskere respons, bedre pipeline-kvalitet.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "NPS/tilbakemelding → omtaleforespørsel",
+        "desc": "Etter behandling sendes kort survey; ved høy score sendes automatisk forespørsel om Google/Facebook-omtale.",
+        "benefit": "Øker synlighet og sosialt bevis med minimal manuell innsats.",
+        "complexity": "Lav"
+      }
+    ],
+    "count": 10
+  },,
+  {
+    "title": "Bilverksted & Bilforhandler",
+    "subtitle": "Verksted, bilpleie, bilforhandler, dekkhotell",
+    "slug": "bilverksted-og-bilforhandler",
+    "icon": "Car",
+    "automations": [
+      {
+        "name": "AI-telefonsvarer verksted",
+        "desc": "Tar imot henvendelser, registrerer bilmerke/problem, booker verkstedtime",
+        "benefit": "Mekanikere kan ikke ta telefonen. AI fanger opp alle henvendelser.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Service-påminnelse",
+        "desc": "Automatisk varsel basert på km-stand/tid siden siste service",
+        "benefit": "Kunden glemmer aldri service. Jevn inntektsstrøm.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Dekkskifte-påminnelse",
+        "desc": "Oktober/april: 'Tid for dekkskifte!' → bookinglenke",
+        "benefit": "Sesongbasert omsetning sikret automatisk.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Reparasjonsstatus til kunde",
+        "desc": "Bil sjekket inn → automatisk oppdatering: 'Diagnostikk ferdig', 'Deler bestilt', 'Klar for henting'",
+        "benefit": "Kunden slipper å ringe og spørre. Profesjonelt.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Verksted-kalkyle",
+        "desc": "Kunde beskriver problem → AI estimerer pris og tid → sender tilbud",
+        "benefit": "Raskere tilbud. Kunden bestemmer seg fortere.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "EU-kontroll påminnelse",
+        "desc": "Automatisk varsling 2 mnd, 1 mnd, 2 uker før EU-kontroll utløper",
+        "benefit": "Verdifullt for kunden. Fyller EU-kontroll-timer.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Google-anmeldelse etter service",
+        "desc": "Fornøyd kunde → automatisk SMS med anmeldelseslenke",
+        "benefit": "Bygger omdømme uten innsats.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Lagerbestilling deler",
+        "desc": "Del brukt → automatisk bestilling eller varsel når lagerstatus er lav",
+        "benefit": "Aldri tom for vanlige deler.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Leadskjema → CRM → sekvens + intern varsling",
+        "desc": "Nytt lead fra nettskjema pushes til CRM med e-postsekvens og intern varsling.",
+        "benefit": "Raskere respons, bedre pipeline.",
+        "complexity": "Lav"
+      }
+    ],
+    "count": 9
+  },,
+  {
+    "title": "Reiseliv & Overnatting",
+    "subtitle": "Hotell, hytter, B&B, campingplass, turoperatører",
+    "slug": "reiseliv-og-overnatting",
+    "icon": "Plane",
+    "automations": [
+      {
+        "name": "AI-telefonsvarer for reservasjoner",
+        "desc": "Svarer gjester 24/7, sjekker tilgjengelighet, booker rom/hytte.",
+        "benefit": "Gjester ringer ofte utenfor åpningstider. AI fanger opp ALT.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Leadskjema → CRM → sekvens + intern varsling",
+        "desc": "Nytt lead fra nettskjema pushes til CRM og starter e-postsekvens.",
+        "benefit": "Raskere respons, bedre pipeline-kvalitet.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Booking-bekreftelse + påminnelse",
+        "desc": "Automatisk bekreftelsesmail + SMS-påminnelse 24t før ankomst med praktisk info.",
+        "benefit": "Reduserer no-shows, profesjonelt inntrykk.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Check-in/ut automatisering",
+        "desc": "Digital selvinnsjekking via lenke → nøkkelkode/info sendes automatisk.",
+        "benefit": "Slipper manuell innsjekking. Skalerbar drift.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Gjeste-tilbakemelding etter opphold",
+        "desc": "Automatisk SMS med survey 24t etter utsjekking → omtaleforespørsel ved høy score.",
+        "benefit": "Øker anmeldelser, fanger opp misnøye tidlig.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Sesongbaserte kampanjer",
+        "desc": "AI genererer tilpassede kampanjer basert på sesong, belegg og historikk.",
+        "benefit": "Fyller ledig kapasitet automatisk i lavsesong.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Vedlikeholdslogg + varsling",
+        "desc": "Logger vedlikeholdsbehov for rom/enheter → varsler ansatte → sporer fullføring.",
+        "benefit": "Ingenting glemmes. Bedre gjesteopplevelse.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Daglig beleggrapport",
+        "desc": "Automatisk oppsummering: belegg, inntekt, ankomster, avganger.",
+        "benefit": "Oversikt uten manuell sjekk.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Gjenkjøps-kampanje",
+        "desc": "Gjester som besøkte i fjor → automatisk invitasjon med rabatt.",
+        "benefit": "Retention uten manuell oppfølging.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Lokal opplevelsesguide",
+        "desc": "AI-generert guide med lokale tips, restauranter og aktiviteter sendt til gjester.",
+        "benefit": "Merverdi for gjesten. Differensierer fra konkurrentene.",
+        "complexity": "Middels"
+      }
+    ],
+    "count": 10
+  },,
+  {
+    "title": "Advokatkontor & Juridisk",
+    "subtitle": "Advokater, advokatfirmaer, juridisk rådgivning, regnskap, inkasso",
+    "slug": "advokatkontor-og-juridisk",
+    "icon": "Scale",
+    "automations": [
+      {
+        "name": "AI-telefonsvarer for førstekontakt",
+        "desc": "Finn tar imot nye henvendelser, samler saksinfo, booker konsultasjon",
+        "benefit": "Advokater er opptatt i møter/retten. AI kvalifiserer klienter 24/7.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Saksdokument-oppsummering",
+        "desc": "Last opp dokument → AI lager sammendrag med nøkkelpunkter og frister",
+        "benefit": "Sparer 30-60 min per sak på dokumentgjennomgang.",
+        "complexity": "Høy"
+      },
+      {
+        "name": "Frist- og frempåminnelser",
+        "desc": "Automatisk varsling X dager før frister (tilsvar, ankefrister, foreldelse)",
+        "benefit": "Null glemte frister. Reduserer malpractice-risiko.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Klientoppdatering via e-post",
+        "desc": "Ukentlig statusmail til klient: 'Saken din er i fase X, neste steg er Y'",
+        "benefit": "Klienter klager ofte over manglende info. Automatiserer dette.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Avtale-/kontraktsgenerering",
+        "desc": "AI fyller ut standardavtaler basert på klientdata og sakstype",
+        "benefit": "Sparer timer på rutinekontrakter. Reduserer feil.",
+        "complexity": "Høy"
+      },
+      {
+        "name": "Timeregistrering-påminnelse",
+        "desc": "Daglig påminnelse om å registrere timer + auto-oppsummering til faktura",
+        "benefit": "Sikrer at alle timer faktureres. Øker omsetning 10-20%.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Ny klient onboarding",
+        "desc": "Automatisk velkomstmail, fullmaktsskjema, informasjonsskjema, kalenderlenke",
+        "benefit": "Profesjonelt førsteinntrykk. Samler all info før første møte.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Konfliktsøk",
+        "desc": "Sjekker automatisk nye klientnavn mot eksisterende saker for interessekonflikter",
+        "benefit": "Lovpålagt sjekk gjort på sekunder i stedet for manuelt.",
+        "complexity": "Høy"
+      },
+      {
+        "name": "Leadskjema → CRM → sekvens + intern varsling",
+        "desc": "Nytt lead fra nettskjema pushes til CRM, starter e-postsekvens, intern varsling til Slack/Teams.",
+        "benefit": "Raskere respons, færre leads faller mellom stoler.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Dokumentinnhenting → strukturert arkiv + oppgave",
+        "desc": "Dokumenter mottas via e-post/skjema, navngis standardisert, lagres i Drive/SharePoint og oppgave opprettes.",
+        "benefit": "Raskere saksbehandling, mindre rot og bedre sporbarhet.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Samtykke- og audit-logg (GDPR)",
+        "desc": "Loggfører markedsføringssamtykke/avmelding og viktige hendelser i audit-spor.",
+        "benefit": "Reduserer compliance-risiko og gjør det enklere å dokumentere samtykke.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Automatisk purring og betalingsoppfølging",
+        "desc": "Henter åpne fakturaer og sender purring etter definert løp; eskalerer ved manglende betaling.",
+        "benefit": "Bedre likviditet, mindre manuelt arbeid.",
+        "complexity": "Middels"
+      }
+    ],
+    "count": 12
+  },,
+  {
+    "title": "Restaurant & Café",
+    "subtitle": "Restauranter, kafeer, bakeri, matlevering, catering",
+    "slug": "restaurant-og-caf",
+    "icon": "UtensilsCrossed",
+    "automations": [
+      {
+        "name": "AI-telefonsvar for bestilling/reservasjon",
+        "desc": "Tar imot bordbestillinger og takeaway-bestillinger via telefon",
+        "benefit": "Travle restauranter mister bestillinger i rushet. AI svarer alltid.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Daglig råvarestatus",
+        "desc": "Sjekker lagerstatus → genererer bestillingsliste → sender til leverandør",
+        "benefit": "Aldri tom for varer. Reduserer matsvinn og hastebestillinger.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Meny-oppdatering på nett",
+        "desc": "Oppdater meny i ett system → pusher automatisk til nettside, sosiale medier",
+        "benefit": "Slipper å oppdatere 5 steder manuelt.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Ansattplan-varsling",
+        "desc": "Vaktplan publiseres → alle ansatte får SMS med sine vakter",
+        "benefit": "Null misforståelser om vakter.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Kundeundersøkelse etter besøk",
+        "desc": "Automatisk SMS med kort spørreundersøkelse 2t etter besøk",
+        "benefit": "Fanger misnøye tidlig. Hindrer dårlige anmeldelser.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "Catering-kalkulator",
+        "desc": "Kunden fyller inn antall gjester + type event → AI foreslår meny + pris",
+        "benefit": "Automatiserer tilbudsgivning. Kunden får svar på minutter.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Sosiale medier matbilder",
+        "desc": "Last opp bilde → AI lager caption + hashtags → poster til Instagram/Facebook",
+        "benefit": "Holder SoMe aktiv uten ekstra arbeid.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Ukentlig salgsrapport",
+        "desc": "Automatisk oppsummering: mest solgte retter, inntekt per dag, sammenligning forrige uke",
+        "benefit": "Innsikt uten manuell analyse.",
+        "complexity": "Middels"
+      },
+      {
+        "name": "Leadskjema → CRM → sekvens + intern varsling",
+        "desc": "Nytt lead/forespørsel fra nettskjema pushes til CRM, starter e-postsekvens, varsling til ansatte.",
+        "benefit": "Raskere respons på bestillinger og catering-forespørsler.",
+        "complexity": "Lav"
+      },
+      {
+        "name": "NPS/tilbakemelding → omtaleforespørsel",
+        "desc": "Etter besøk sendes kort survey; ved høy score sendes automatisk forespørsel om Google-omtale.",
+        "benefit": "Øker synlighet og sosialt bevis automatisk.",
+        "complexity": "Lav"
+      }
+    ],
+    "count": 10
+  },,
   {
     "title": "Helse & Klinikk",
     "subtitle": "Tannlege, fysioterapeut, psykolog, kiropraktor, legekontorer",
@@ -476,7 +608,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 12
-  },
+  },,
   {
     "title": "E-handel & Nettbutikk",
     "subtitle": "Shopify, WooCommerce, nettbutikker, dropshipping, detaljhandel",
@@ -545,7 +677,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 10
-  },
+  },,
   {
     "title": "Regnskap & Konsulenter",
     "subtitle": "Regnskapsførere, revisorer, konsulentfirmaer, rådgivere",
@@ -602,7 +734,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 8
-  },
+  },,
   {
     "title": "Rekruttering & Bemanning",
     "subtitle": "Rekrutteringsbyrå, bemanning, HR-avdelinger",
@@ -659,70 +791,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 8
-  },
-  {
-    "title": "Bilverksted & Bilforhandler",
-    "subtitle": "Verksted, bilpleie, bilforhandler, dekkhotell",
-    "slug": "bilverksted-og-bilforhandler",
-    "icon": "Car",
-    "automations": [
-      {
-        "name": "AI-telefonsvarer verksted",
-        "desc": "Tar imot henvendelser, registrerer bilmerke/problem, booker verkstedtime",
-        "benefit": "Mekanikere kan ikke ta telefonen. AI fanger opp alle henvendelser.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Service-påminnelse",
-        "desc": "Automatisk varsel basert på km-stand/tid siden siste service",
-        "benefit": "Kunden glemmer aldri service. Jevn inntektsstrøm.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Dekkskifte-påminnelse",
-        "desc": "Oktober/april: 'Tid for dekkskifte!' → bookinglenke",
-        "benefit": "Sesongbasert omsetning sikret automatisk.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Reparasjonsstatus til kunde",
-        "desc": "Bil sjekket inn → automatisk oppdatering: 'Diagnostikk ferdig', 'Deler bestilt', 'Klar for henting'",
-        "benefit": "Kunden slipper å ringe og spørre. Profesjonelt.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Verksted-kalkyle",
-        "desc": "Kunde beskriver problem → AI estimerer pris og tid → sender tilbud",
-        "benefit": "Raskere tilbud. Kunden bestemmer seg fortere.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "EU-kontroll påminnelse",
-        "desc": "Automatisk varsling 2 mnd, 1 mnd, 2 uker før EU-kontroll utløper",
-        "benefit": "Verdifullt for kunden. Fyller EU-kontroll-timer.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Google-anmeldelse etter service",
-        "desc": "Fornøyd kunde → automatisk SMS med anmeldelseslenke",
-        "benefit": "Bygger omdømme uten innsats.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Lagerbestilling deler",
-        "desc": "Del brukt → automatisk bestilling eller varsel når lagerstatus er lav",
-        "benefit": "Aldri tom for vanlige deler.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Leadskjema → CRM → sekvens + intern varsling",
-        "desc": "Nytt lead fra nettskjema pushes til CRM med e-postsekvens og intern varsling.",
-        "benefit": "Raskere respons, bedre pipeline.",
-        "complexity": "Lav"
-      }
-    ],
-    "count": 9
-  },
+  },,
   {
     "title": "Coaching & Personlig Utvikling",
     "subtitle": "Livscoach, businesscoach, mentorer, kursarrangører",
@@ -779,7 +848,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 8
-  },
+  },,
   {
     "title": "Kreativt Byrå & Freelancere",
     "subtitle": "Designere, videografer, fotografer, tekstforfattere, webdesignere",
@@ -836,7 +905,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 8
-  },
+  },,
   {
     "title": "Utdanning & Kurs",
     "subtitle": "Privatskole, kjøreskole, musikkskole, kodekurs, online-kurs",
@@ -899,7 +968,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 9
-  },
+  },,
   {
     "title": "IT & Tech-selskaper",
     "subtitle": "SaaS, utvikling, IT-support, MSP, tech-startup",
@@ -956,7 +1025,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 8
-  },
+  },,
   {
     "title": "Trening & Fitness",
     "subtitle": "PT, treningssenter, yogastudio, kampsport, dansestudio",
@@ -1013,7 +1082,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 8
-  },
+  },,
   {
     "title": "Event & Arrangement",
     "subtitle": "Eventbyrå, bryllup, konferanser, festivaler, messer",
@@ -1070,76 +1139,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 8
-  },
-  {
-    "title": "Reiseliv & Overnatting",
-    "subtitle": "Hotell, hytter, B&B, campingplass, turoperatører",
-    "slug": "reiseliv-og-overnatting",
-    "icon": "Plane",
-    "automations": [
-      {
-        "name": "AI-telefonsvarer for reservasjoner",
-        "desc": "Svarer gjester 24/7, sjekker tilgjengelighet, booker rom/hytte.",
-        "benefit": "Gjester ringer ofte utenfor åpningstider. AI fanger opp ALT.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Leadskjema → CRM → sekvens + intern varsling",
-        "desc": "Nytt lead fra nettskjema pushes til CRM og starter e-postsekvens.",
-        "benefit": "Raskere respons, bedre pipeline-kvalitet.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Booking-bekreftelse + påminnelse",
-        "desc": "Automatisk bekreftelsesmail + SMS-påminnelse 24t før ankomst med praktisk info.",
-        "benefit": "Reduserer no-shows, profesjonelt inntrykk.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Check-in/ut automatisering",
-        "desc": "Digital selvinnsjekking via lenke → nøkkelkode/info sendes automatisk.",
-        "benefit": "Slipper manuell innsjekking. Skalerbar drift.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Gjeste-tilbakemelding etter opphold",
-        "desc": "Automatisk SMS med survey 24t etter utsjekking → omtaleforespørsel ved høy score.",
-        "benefit": "Øker anmeldelser, fanger opp misnøye tidlig.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Sesongbaserte kampanjer",
-        "desc": "AI genererer tilpassede kampanjer basert på sesong, belegg og historikk.",
-        "benefit": "Fyller ledig kapasitet automatisk i lavsesong.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Vedlikeholdslogg + varsling",
-        "desc": "Logger vedlikeholdsbehov for rom/enheter → varsler ansatte → sporer fullføring.",
-        "benefit": "Ingenting glemmes. Bedre gjesteopplevelse.",
-        "complexity": "Middels"
-      },
-      {
-        "name": "Daglig beleggrapport",
-        "desc": "Automatisk oppsummering: belegg, inntekt, ankomster, avganger.",
-        "benefit": "Oversikt uten manuell sjekk.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Gjenkjøps-kampanje",
-        "desc": "Gjester som besøkte i fjor → automatisk invitasjon med rabatt.",
-        "benefit": "Retention uten manuell oppfølging.",
-        "complexity": "Lav"
-      },
-      {
-        "name": "Lokal opplevelsesguide",
-        "desc": "AI-generert guide med lokale tips, restauranter og aktiviteter sendt til gjester.",
-        "benefit": "Merverdi for gjesten. Differensierer fra konkurrentene.",
-        "complexity": "Middels"
-      }
-    ],
-    "count": 10
-  },
+  },,
   {
     "title": "Finans & Fintech",
     "subtitle": "Fintech, forsikring, rådgivning, regnskapsbyrå, inkasso",
@@ -1196,7 +1196,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 8
-  },
+  },,
   {
     "title": "Markedsføring & SEO-byrå",
     "subtitle": "Digital markedsføring, SEO, innholdsbyrå, SoMe-byrå",
@@ -1253,7 +1253,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 8
-  },
+  },,
   {
     "title": "Logistikk & Transport",
     "subtitle": "Transportselskap, budbil, lager, shipping, last mile",
@@ -1310,7 +1310,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 8
-  },
+  },,
   {
     "title": "NGO & Ideell sektor",
     "subtitle": "Frivillige organisasjoner, veldedighet, stiftelser, foreninger",
@@ -1367,7 +1367,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 8
-  },
+  },,
   {
     "title": "Media & Podkast",
     "subtitle": "Podcast, YouTube, innholdsproduksjon, mediehus, bloggere",
@@ -1424,7 +1424,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 8
-  },
+  },,
   {
     "title": "SaaS & Produktselskaper",
     "subtitle": "SaaS-startups, produktselskaper, plattformer, apper",
@@ -1481,7 +1481,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 8
-  },
+  },,
   {
     "title": "Eiendomsforvaltning",
     "subtitle": "Borettslag, sameie, forvaltningsselskap, utleieforvaltning",
@@ -1538,7 +1538,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 8
-  },
+  },,
   {
     "title": "Helseforsikring & Privat Helse",
     "subtitle": "Forsikringsselskap, privatklinikk, helseforsikring, tannhelseforsikring",
@@ -1597,7 +1597,3 @@ export const industries: Industry[] = [
     "count": 8
   }
 ]
-
-export function getIndustryBySlug(slug: string): Industry | undefined {
-  return industries.find(i => i.slug === slug)
-}
