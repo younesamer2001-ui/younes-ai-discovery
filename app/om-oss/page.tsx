@@ -28,23 +28,23 @@ export default function AboutPage() {
   ]
 
   const stats = lang === 'no' ? [
-    { value: '25', label: 'Bransjer med skreddersydde automatiseringer' },
-    { value: '226', label: 'Ferdige AI-automatiseringer klar til bruk' },
+    { value: '5', label: 'Fokus-bransjer med skreddersydde automatiseringer' },
+    { value: '53', label: 'Ferdige AI-automatiseringer klar til bruk' },
     { value: '#1', label: 'Norge er nr. 1 i Europa på AI-adopsjon' },
   ] : [
-    { value: '25', label: 'Industries with tailored automations' },
-    { value: '226', label: 'Ready-made AI automations ready to use' },
+    { value: '5', label: 'Focus industries with tailored automations' },
+    { value: '53', label: 'Ready-made AI automations ready to use' },
     { value: '#1', label: 'Norway is #1 in Europe for AI adoption' },
   ]
 
   const timeline = lang === 'no' ? [
     { icon: Phone, title: 'Det startet med en telefon', desc: 'Vi så at norske bedrifter mistet tusenvis av kroner hver måned på telefoner som ingen svarte. Kunder forsvant til konkurrenter — bare fordi eieren var opptatt.' },
     { icon: Zap, title: 'Fra telefonsvarer til full automatisering', desc: 'AI-mobilsvareren ble starten. Men vi oppdaget raskt at bedrifter trenger mye mer — booking, oppfølging, fakturering, lead-generering, kundeservice. Så vi bygde det.' },
-    { icon: BarChart3, title: 'Arxon i dag', desc: '226 AI-automatiseringer fordelt på 25 bransjer. Fra frisøren som trenger booking-påminnelser til advokatkontoret som trenger automatisk klientoppfølging. Alt skreddersydd, alt ferdig på 1-2 uker.' },
+    { icon: BarChart3, title: 'Arxon i dag', desc: '53 AI-automatiseringer fordelt på 5 fokus-bransjer: bygg, eiendom, salong, bilverksted og reiseliv. Alt skreddersydd, alt ferdig på 1-2 uker.' },
   ] : [
     { icon: Phone, title: 'It started with a phone call', desc: 'We saw that Norwegian businesses lost thousands of kroner every month on phones nobody answered. Customers disappeared to competitors — just because the owner was busy.' },
     { icon: Zap, title: 'From answering service to full automation', desc: 'The AI phone answering was the start. But we quickly discovered businesses need much more — booking, follow-up, invoicing, lead generation, customer service. So we built it.' },
-    { icon: BarChart3, title: 'Arxon today', desc: '226 AI automations across 25 industries. From the hairdresser who needs booking reminders to the law firm that needs automatic client follow-up. All custom-built, all ready in 1-2 weeks.' },
+    { icon: BarChart3, title: 'Arxon today', desc: '53 AI automations across 5 focus industries: construction, real estate, beauty, auto workshops and hospitality. All custom-built, all ready in 1-2 weeks.' },
   ]
 
   return (

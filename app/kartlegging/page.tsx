@@ -644,7 +644,7 @@ function KartleggingApp() {
                   background: `rgba(${goldRgb},0.08)`, border: `1px solid rgba(${goldRgb},0.15)`,
                   borderRadius: 24, padding: '6px 16px', fontSize: 13, color: gold, marginBottom: 16, fontWeight: 500,
                 }}>
-                  <Sparkles size={14} /> 226+ automatiseringer tilgjengelig
+                  <Sparkles size={14} /> 53+ automatiseringer tilgjengelig
                 </motion.div>
                 <h1 style={{ fontSize: 'clamp(26px, 5vw, 38px)', fontWeight: 700, lineHeight: 1.2, marginBottom: 14 }}>
                   {t('phase1_title', lang)}

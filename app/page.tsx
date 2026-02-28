@@ -445,8 +445,8 @@ export default function Home() {
           <motion.div {...sAnim} className="text-center mb-16">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-14">
               {[
-                { val: 226, suffix: '+', label: 'Automatiseringer levert' },
-                { val: 25, suffix: '', label: 'Bransjer dekket' },
+                { val: 53, suffix: '+', label: 'Automatiseringer levert' },
+                { val: 5, suffix: '', label: 'Bransjer dekket' },
                 { val: 85, suffix: '%', label: 'Raskere oppfølging' },
                 { val: 24, suffix: '/7', label: 'AI tilgjengelig' },
               ].map((s, i) => (
@@ -471,7 +471,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-6">
             {[
               { name: 'Martin K.', biz: 'Bygg & Håndverk', quote: 'Vi gikk fra å miste halvparten av leads til å fange alle. Omsetningen økte 25% på tre måneder — uten å ansette noen.', result: '+25% omsetning', stars: 5 },
-              { name: 'Erik S.', biz: 'Advokatkontor', quote: 'AI-en kvalifiserer klienter og booker konsultasjoner automatisk. Jeg sparer over en time per sak på administrativt arbeid.', result: '60 min spart per sak', stars: 5 },
+              { name: 'Camilla H.', biz: 'Salong & Skjønnhet', quote: 'Kundene booker selv døgnet rundt, og vi får påminnelser automatisk. No-shows gikk ned 70% på første måned.', result: '–70% no-shows', stars: 5 },
             ].map((t, i) => (
               <motion.div key={i} {...sAnim} transition={{ duration: 0.4, delay: i * 0.1 }}
                 className="glass-card p-6 md:p-8">
