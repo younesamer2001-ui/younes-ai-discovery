@@ -679,7 +679,7 @@ function KartleggingApp() {
 
                 {/* Trust badges */}
                 <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginTop: 8, flexWrap: 'wrap' }}>
-                  {['Gratis kartlegging', 'Resultater på 1-2 uker', 'Norsk support'].map(txt => (
+                  {['Gratis kartlegging', 'Ferdig på ca. 14 dager', 'Norsk support'].map(txt => (
                     <span key={txt} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: textMuted }}>
                       <Check size={12} color="#4ade80" /> {txt}
                     </span>

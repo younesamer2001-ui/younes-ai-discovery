@@ -501,7 +501,7 @@ export default function PakkebyggerPage() {
           {[
             { step: '1', title: 'Velg', desc: 'Velg bransje og kryss av for automatiseringene du trenger' },
             { step: '2', title: 'Bestill eller book', desc: 'Bestill pakken direkte eller book et gratis rådgivningsmøte' },
-            { step: '3', title: 'Vi setter opp', desc: 'Arxon bygger og tester alt — ferdig på 1-2 uker' },
+            { step: '3', title: 'Vi setter opp', desc: 'Arxon bygger og tester alt — ferdig på ca. 14 dager' },
             { step: '4', title: 'Alt fungerer', desc: '30 dager med full støtte og oppfølging etter lansering' },
           ].map(s => (
             <div key={s.step} style={{

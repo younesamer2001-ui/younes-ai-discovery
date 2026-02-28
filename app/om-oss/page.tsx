@@ -40,11 +40,11 @@ export default function AboutPage() {
   const timeline = lang === 'no' ? [
     { icon: Phone, title: 'Det startet med en telefon', desc: 'Vi så at norske bedrifter mistet tusenvis av kroner hver måned på telefoner som ingen svarte. Kunder forsvant til konkurrenter — bare fordi eieren var opptatt.' },
     { icon: Zap, title: 'Fra telefonsvarer til full automatisering', desc: 'AI-mobilsvareren ble starten. Men vi oppdaget raskt at bedrifter trenger mye mer — booking, oppfølging, fakturering, lead-generering, kundeservice. Så vi bygde det.' },
-    { icon: BarChart3, title: 'Arxon i dag', desc: '53 AI-automatiseringer fordelt på 5 fokus-bransjer: bygg, eiendom, salong, bilverksted og reiseliv. Alt skreddersydd, alt ferdig på 1-2 uker.' },
+    { icon: BarChart3, title: 'Arxon i dag', desc: '53 AI-automatiseringer fordelt på 5 fokus-bransjer: bygg, eiendom, salong, bilverksted og reiseliv. Alt skreddersydd, alt ferdig på ca. 14 dager.' },
   ] : [
     { icon: Phone, title: 'It started with a phone call', desc: 'We saw that Norwegian businesses lost thousands of kroner every month on phones nobody answered. Customers disappeared to competitors — just because the owner was busy.' },
     { icon: Zap, title: 'From answering service to full automation', desc: 'The AI phone answering was the start. But we quickly discovered businesses need much more — booking, follow-up, invoicing, lead generation, customer service. So we built it.' },
-    { icon: BarChart3, title: 'Arxon today', desc: '53 AI automations across 5 focus industries: construction, real estate, beauty, auto workshops and hospitality. All custom-built, all ready in 1-2 weeks.' },
+    { icon: BarChart3, title: 'Arxon today', desc: '53 AI automations across 5 focus industries: construction, real estate, beauty, auto workshops and hospitality. All custom-built, all ready in approx. 14 days.' },
   ]
 
   return (

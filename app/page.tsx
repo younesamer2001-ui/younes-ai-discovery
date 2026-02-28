@@ -179,7 +179,7 @@ export default function Home() {
 
   const faqItems = [
     { q: 'Hva koster det å komme i gang?', a: 'Kartleggingen er 100% gratis. Etter analysen får du et skreddersydd pristilbud basert på hvilke automatiseringer du trenger. De fleste starter fra 2 990 kr/mnd.' },
-    { q: 'Hvor lang tid tar implementeringen?', a: 'Fra signering til live: 2-5 virkedager. Vi tar oss av alt teknisk — du trenger bare å gi oss tilgang til de systemene vi skal integrere med.' },
+    { q: 'Hvor lang tid tar implementeringen?', a: 'Fra signering til live: ca. 14 virkedager. Vi tar oss av alt teknisk — du trenger bare å gi oss tilgang til de systemene vi skal integrere med.' },
     { q: 'Er det trygt med tanke på GDPR?', a: 'Absolutt. All data lagres kryptert innen EØS. Vi er GDPR-kompatible og EU AI Act-klare. Ingen data deles med tredjeparter.' },
     { q: 'Kan jeg starte med én automatisering?', a: 'Ja! Mange starter med AI-mobilsvarer og utvider derfra. Du velger selv tempo og omfang.' },
     { q: 'Trenger jeg teknisk kunnskap?', a: 'Nei. Vi tar oss av alt teknisk. Du trenger ikke å forstå AI — bare fortelle oss om din bedrift og dine utfordringer.' },
@@ -216,7 +216,7 @@ export default function Home() {
           {/* Trust badge */}
           <motion.div {...sAnim} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 glass-card">
             <Shield size={13} style={{ color: gold }} />
-            <span className="text-[12px] tracking-wide" style={{ color: 'rgba(244,241,235,0.7)' }}>GDPR-kompatibel &middot; Norsk support &middot; Live på 2–5 dager</span>
+            <span className="text-[12px] tracking-wide" style={{ color: 'rgba(244,241,235,0.7)' }}>GDPR-kompatibel &middot; Norsk support &middot; Live på ca. 14 dager</span>
           </motion.div>
 
           {/* Outcome-driven headline */}
@@ -400,7 +400,7 @@ export default function Home() {
             {[
               { step: 1, icon: <ClipboardList size={20} />, title: 'Gratis kartlegging', time: '2 minutter', desc: 'Svar på noen enkle spørsmål. Vår AI analyserer dine behov og finner automatiseringene med størst effekt.' },
               { step: 2, icon: <FileText size={20} />, title: 'Skreddersydd AI-forslag', time: 'Umiddelbart', desc: 'Du får en komplett oversikt over prosesser vi kan automatisere, forventet besparelse og en tydelig prioriteringsliste.' },
-              { step: 3, icon: <Zap size={20} />, title: 'Vi implementerer alt', time: '2–5 dager', desc: 'Vi setter opp alt fra A til Å. Du trenger ikke gjøre noe teknisk — bare gi oss tilgang, så fikser vi resten.' },
+              { step: 3, icon: <Zap size={20} />, title: 'Vi implementerer alt', time: 'Ca. 14 dager', desc: 'Vi setter opp alt fra A til Å. Du trenger ikke gjøre noe teknisk — bare gi oss tilgang, så fikser vi resten.' },
             ].map((item, i) => (
               <motion.div key={i}
                 initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
@@ -576,7 +576,7 @@ export default function Home() {
               <span className="text-gradient-gold">Start i dag.</span>
             </h2>
             <p className="text-[15px] mb-8 max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>
-              Gratis kartlegging. Ingen binding. Implementert på 2–5 dager.
+              Gratis kartlegging. Ingen binding. Implementert på ca. 14 dager.
             </p>
             <button onClick={ctaClick} className="gold-btn gold-btn-pulse rounded-xl py-4 px-12 text-[16px] font-bold inline-flex items-center gap-2">
               Start gratis kartlegging <ArrowRight size={18} />
