@@ -102,7 +102,7 @@ export default function BransjerPage() {
             <Shield size={13} color="rgba(255,255,255,0.35)" /> Gratis kartlegging
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <Clock size={13} color="rgba(255,255,255,0.35)" /> Resultater på 1–2 uker
+            <Clock size={13} color="rgba(255,255,255,0.35)" /> Ferdig på ca. 14 dager
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <Phone size={13} color="rgba(255,255,255,0.35)" /> Norsk support

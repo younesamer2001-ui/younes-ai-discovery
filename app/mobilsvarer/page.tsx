@@ -173,7 +173,7 @@ export default function MobilsvarerPage() {
     { q: 'Hva hvis kunden vil snakke med et menneske?', a: 'AI-en informerer alltid at den er en AI-assistent. Hvis kunden ber om å snakke med et menneske, setter den over samtalen til deg eller kollegaene dine umiddelbart. Dette er også et lovkrav vi selvfølgelig følger (GDPR Art. 22).' },
     { q: 'Er det trygt med tanke på personvern?', a: 'Absolutt. Vi følger GDPR, norsk Personopplysningslov, og Datatilsynets retningslinjer. All data lagres kryptert i EØS, vi inngår databehandleravtale med alle kunder, og innringere informeres alltid om databehandlingen. Vi tar personvern like alvorlig som du gjør.' },
     { q: 'Hva koster det?', a: 'Prisen avhenger av volum og kompleksitet. Start en gratis kartlegging for å få et tilpasset prisestimat for din bedrift — det tar bare 2 minutter og er helt uforpliktende.' },
-    { q: 'Hvor lang tid tar oppsettet?', a: 'Typisk er vi oppe og kjører innen 3–5 virkedager fra signering. Enklere oppsett kan være klar på 1–2 dager. Vi tester alltid grundig sammen med deg før vi går live.' },
+    { q: 'Hvor lang tid tar oppsettet?', a: 'Typisk er mobilsvareren oppe og kjører innen ca. 14 virkedager fra signering. Vi bruker tiden på å programmere AI-en med din bedriftsinformasjon og teste grundig sammen med deg før vi går live.' },
   ] : [
     { q: 'What exactly is an AI phone answering service?', a: 'It\'s an intelligent phone assistant that answers calls for your business 24/7 in Norwegian and English. Think of it as a highly skilled receptionist who never calls in sick, never takes breaks, and can handle multiple calls simultaneously.' },
     { q: 'Do I need new equipment or a new phone system?', a: 'No. We connect to your existing phone number via secure cloud forwarding. You don\'t need to install anything, and your current number remains unchanged.' },
@@ -181,7 +181,7 @@ export default function MobilsvarerPage() {
     { q: 'What if the customer wants to speak to a human?', a: 'The AI always identifies itself as an AI assistant. If the customer requests a human, it transfers the call immediately. This is also a legal requirement we follow (GDPR Art. 22).' },
     { q: 'Is it safe regarding privacy?', a: 'Absolutely. We follow GDPR, Norwegian data protection law, and Datatilsynet\'s guidelines. All data is encrypted and stored in the EEA, we sign a DPA with all clients, and callers are always informed about data processing.' },
     { q: 'What does it cost?', a: 'Pricing depends on volume and complexity. Start a free discovery to get a tailored estimate for your business — it only takes 2 minutes.' },
-    { q: 'How long does setup take?', a: 'Typically 3–5 business days from signing. Simpler setups can be ready in 1–2 days. We always test thoroughly with you before going live.' },
+    { q: 'How long does setup take?', a: 'Typically about 14 business days from signing. We use this time to program the AI with your business information and test thoroughly with you before going live.' },
   ]
 
   return (

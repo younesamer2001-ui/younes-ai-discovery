@@ -178,11 +178,12 @@ export default function Home() {
   }, [])
 
   const faqItems = [
-    { q: 'Hva koster det å komme i gang?', a: 'Kartleggingen er 100% gratis. Etter analysen får du et skreddersydd pristilbud basert på hvilke automatiseringer du trenger. De fleste starter fra 2 990 kr/mnd.' },
-    { q: 'Hvor lang tid tar implementeringen?', a: 'Fra signering til live: ca. 14 virkedager. Vi tar oss av alt teknisk — du trenger bare å gi oss tilgang til de systemene vi skal integrere med.' },
-    { q: 'Er det trygt med tanke på GDPR?', a: 'Absolutt. All data lagres kryptert innen EØS. Vi er GDPR-kompatible og EU AI Act-klare. Ingen data deles med tredjeparter.' },
-    { q: 'Kan jeg starte med én automatisering?', a: 'Ja! Mange starter med AI-mobilsvarer og utvider derfra. Du velger selv tempo og omfang.' },
-    { q: 'Trenger jeg teknisk kunnskap?', a: 'Nei. Vi tar oss av alt teknisk. Du trenger ikke å forstå AI — bare fortelle oss om din bedrift og dine utfordringer.' },
+    { q: 'Hva koster det å komme i gang?', a: 'Kartleggingen er 100% gratis og uforpliktende. Etter analysen får du et skreddersydd pristilbud. De fleste starter fra 2 990 kr/mnd — ingen skjulte kostnader.' },
+    { q: 'Hvor lang tid tar implementeringen?', a: 'Fra signering til live tar det ca. 14 virkedager. Vi jobber grundig med oppsett, testing og tilpasning slik at alt fungerer skikkelig fra dag én.' },
+    { q: 'Er det trygt med tanke på GDPR?', a: 'Absolutt. All data lagres kryptert innen EØS. Vi er GDPR-kompatible og EU AI Act-klare. Vi inngår databehandleravtale med alle kunder.' },
+    { q: 'Kan jeg starte med én automatisering?', a: 'Ja! De fleste starter med AI-mobilsvarer eller auto-booking og bygger videre derfra. Du velger selv tempo og omfang.' },
+    { q: 'Trenger jeg teknisk kunnskap?', a: 'Nei. Vi tar oss av alt teknisk. Du trenger bare å fortelle oss om bedriften din — så fikser vi resten.' },
+    { q: 'Hva skjer etter implementering?', a: 'Du får 30 dager med full oppfølging og support. Vi finjusterer sammen basert på reelle resultater, slik at automatiseringene treffer best mulig.' },
   ]
 
   const sAnim = {
