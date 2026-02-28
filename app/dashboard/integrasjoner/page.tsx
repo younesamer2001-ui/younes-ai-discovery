@@ -393,6 +393,225 @@ const allIntegrations: IntegrationDef[] = [
     helpLabel: 'Hvordan får jeg API-tilgang?',
     usedFor: ['Anmeldelser', 'Oppføringssynkronisering', 'Omdømmehåndtering'],
   },
+
+  /* ===== KOMMUNIKASJON & PROSJEKT ===== */
+  {
+    service: 'slack',
+    name: 'Slack',
+    description: 'Varsler, rapporter og teamkommunikasjon i sanntid.',
+    icon: '💬',
+    color: '#4a154b',
+    category: 'Kommunikasjon & Prosjekt',
+    fields: [
+      { key: 'webhook_url', label: 'Webhook URL', placeholder: 'https://hooks.slack.com/services/...', type: 'password', helpText: 'Opprett en Incoming Webhook i Slack under Apps → Manage' },
+    ],
+    helpUrl: 'https://api.slack.com/messaging/webhooks',
+    helpLabel: 'Hvordan oppretter jeg en webhook?',
+    usedFor: ['KPI-rapporter', 'Varsler', 'Teamkommunikasjon'],
+  },
+  {
+    service: 'trello',
+    name: 'Trello',
+    description: 'Oppgavestyring og prosjekttavler for team.',
+    icon: '📌',
+    color: '#0052cc',
+    category: 'Kommunikasjon & Prosjekt',
+    fields: [
+      { key: 'api_key', label: 'API Key', placeholder: 'Lim inn din Trello API key', type: 'password' },
+      { key: 'token', label: 'Token', placeholder: 'Lim inn din Trello token', type: 'password', helpText: 'Generer på trello.com/app-key' },
+    ],
+    helpUrl: 'https://developer.atlassian.com/cloud/trello/guides/rest-api/api-introduction/',
+    helpLabel: 'Hvordan finner jeg API-nøkkel og token?',
+    usedFor: ['Oppgavestyring', 'Prosjekttavler', 'Saksbehandling'],
+  },
+  {
+    service: 'asana',
+    name: 'Asana',
+    description: 'Prosjektstyring, oppgaver og teamsamarbeid.',
+    icon: '🎯',
+    color: '#f06a6a',
+    category: 'Kommunikasjon & Prosjekt',
+    fields: [
+      { key: 'access_token', label: 'Personal Access Token', placeholder: 'Lim inn din Asana access token', type: 'password', helpText: 'Opprett under My Settings → Apps → Personal Access Tokens' },
+    ],
+    helpUrl: 'https://developers.asana.com/docs/personal-access-token',
+    helpLabel: 'Hvordan oppretter jeg en access token?',
+    usedFor: ['Oppgavestyring', 'Prosjektstyring', 'Workflow-automatisering'],
+  },
+  {
+    service: 'jira',
+    name: 'Jira',
+    description: 'Issue-tracking, bug-rapporter og utviklingsprosjekter.',
+    icon: '🔷',
+    color: '#0052cc',
+    category: 'Kommunikasjon & Prosjekt',
+    fields: [
+      { key: 'domain', label: 'Jira Domain', placeholder: 'ditt-firma.atlassian.net', type: 'text' },
+      { key: 'email', label: 'E-post', placeholder: 'din@epost.com', type: 'text' },
+      { key: 'api_token', label: 'API Token', placeholder: 'Lim inn din Jira API token', type: 'password', helpText: 'Opprett på id.atlassian.com → Security → API tokens' },
+    ],
+    helpUrl: 'https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/',
+    helpLabel: 'Hvordan oppretter jeg en API token?',
+    usedFor: ['Bug-rapporter', 'Issue-tracking', 'Sprint-planlegging'],
+  },
+
+  /* ===== SOSIALE MEDIER ===== */
+  {
+    service: 'meta',
+    name: 'Meta (Instagram & Facebook)',
+    description: 'Auto-posting, innholdsplanlegging og annonser på Instagram og Facebook.',
+    icon: '📸',
+    color: '#1877f2',
+    category: 'Sosiale Medier',
+    fields: [
+      { key: 'access_token', label: 'Page Access Token', placeholder: 'Lim inn din Meta access token', type: 'password', helpText: 'Opprett via Meta Business Suite → Settings → Integrations' },
+      { key: 'page_id', label: 'Page ID', placeholder: 'Din Facebook Page ID', type: 'text' },
+      { key: 'instagram_id', label: 'Instagram Business Account ID', placeholder: 'Din Instagram business account ID', type: 'text' },
+    ],
+    helpUrl: 'https://developers.facebook.com/docs/pages-api/getting-started',
+    helpLabel: 'Hvordan setter jeg opp Meta API?',
+    usedFor: ['Auto-posting', 'Innholdsplanlegging', 'SoMe-kampanjer'],
+  },
+  {
+    service: 'linkedin',
+    name: 'LinkedIn',
+    description: 'Publiser innhold, stillingsannonser og lead-generering.',
+    icon: '💼',
+    color: '#0a66c2',
+    category: 'Sosiale Medier',
+    fields: [
+      { key: 'access_token', label: 'Access Token', placeholder: 'Lim inn din LinkedIn access token', type: 'password', helpText: 'Opprett en app på linkedin.com/developers' },
+      { key: 'organization_id', label: 'Organization ID', placeholder: 'Din LinkedIn organization ID', type: 'text' },
+    ],
+    helpUrl: 'https://learn.microsoft.com/en-us/linkedin/shared/authentication/',
+    helpLabel: 'Hvordan setter jeg opp LinkedIn API?',
+    usedFor: ['Stillingspublisering', 'Innhold-posting', 'Lead-sourcing'],
+  },
+  {
+    service: 'youtube',
+    name: 'YouTube',
+    description: 'Last opp videoer, administrer kanal og publiser automatisk.',
+    icon: '▶️',
+    color: '#ff0000',
+    category: 'Sosiale Medier',
+    fields: [
+      { key: 'api_key', label: 'API Key', placeholder: 'Lim inn din YouTube Data API key', type: 'password', helpText: 'Opprett i Google Cloud Console → APIs & Services' },
+      { key: 'channel_id', label: 'Channel ID', placeholder: 'Din YouTube kanal-ID', type: 'text' },
+    ],
+    helpUrl: 'https://developers.google.com/youtube/v3/getting-started',
+    helpLabel: 'Hvordan setter jeg opp YouTube API?',
+    usedFor: ['Video-publisering', 'Episode-distribusjon', 'Klipp-generering'],
+  },
+  {
+    service: 'spotify',
+    name: 'Spotify for Podcasters',
+    description: 'Publiser og distribuer podcastepisoder automatisk.',
+    icon: '🎧',
+    color: '#1db954',
+    category: 'Sosiale Medier',
+    fields: [
+      { key: 'client_id', label: 'Client ID', placeholder: 'Lim inn din Spotify Client ID', type: 'text' },
+      { key: 'client_secret', label: 'Client Secret', placeholder: 'Lim inn din client secret', type: 'password', helpText: 'Opprett en app på developer.spotify.com' },
+    ],
+    helpUrl: 'https://developer.spotify.com/documentation/web-api',
+    helpLabel: 'Hvordan setter jeg opp Spotify API?',
+    usedFor: ['Podcast-publisering', 'Episode-distribusjon', 'Lytterstatistikk'],
+  },
+
+  /* ===== BETALING & FINANS ===== */
+  {
+    service: 'stripe',
+    name: 'Stripe',
+    description: 'Internasjonal betalingsløsning for nettbutikker og abonnementer.',
+    icon: '💰',
+    color: '#635bff',
+    category: 'Betaling & Finans',
+    fields: [
+      { key: 'secret_key', label: 'Secret Key', placeholder: 'sk_live_...', type: 'password', helpText: 'Finner du i Stripe Dashboard → Developers → API keys' },
+      { key: 'publishable_key', label: 'Publishable Key', placeholder: 'pk_live_...', type: 'text' },
+    ],
+    helpUrl: 'https://docs.stripe.com/keys',
+    helpLabel: 'Hvor finner jeg mine API-nøkler?',
+    usedFor: ['Nettbetaling', 'Abonnementer', 'Fakturering'],
+  },
+  {
+    service: 'klarna',
+    name: 'Klarna',
+    description: 'Delbetaling og faktura for netthandel.',
+    icon: '🛒',
+    color: '#ffb3c7',
+    category: 'Betaling & Finans',
+    fields: [
+      { key: 'username', label: 'API Username (UID)', placeholder: 'Lim inn din Klarna API username', type: 'text' },
+      { key: 'password', label: 'API Password', placeholder: 'Lim inn ditt API password', type: 'password', helpText: 'Finner du i Klarna Merchant Portal → Settings → API credentials' },
+    ],
+    helpUrl: 'https://docs.klarna.com/api/authentication/',
+    helpLabel: 'Hvordan finner jeg API-tilgang?',
+    usedFor: ['Delbetaling', 'Checkout', 'Faktura via Klarna'],
+  },
+
+  /* ===== MARKEDSFØRING & E-POST ===== */
+  {
+    service: 'mailchimp',
+    name: 'Mailchimp',
+    description: 'Nyhetsbrev, e-postkampanjer og kundesegmentering.',
+    icon: '🐵',
+    color: '#ffe01b',
+    category: 'Markedsføring & E-post',
+    fields: [
+      { key: 'api_key', label: 'API Key', placeholder: 'Lim inn din Mailchimp API key', type: 'password', helpText: 'Finner du under Account → Extras → API keys' },
+      { key: 'server_prefix', label: 'Server Prefix', placeholder: 'F.eks. us21', type: 'text', helpText: 'De siste tegnene i API-nøkkelen etter bindestrek' },
+    ],
+    helpUrl: 'https://mailchimp.com/developer/marketing/guides/quick-start/',
+    helpLabel: 'Hvordan finner jeg API-nøkkel og server?',
+    usedFor: ['Nyhetsbrev', 'E-postkampanjer', 'Kundesegmentering'],
+  },
+
+  /* ===== DATA & KART ===== */
+  {
+    service: 'google_maps',
+    name: 'Google Maps',
+    description: 'Ruteplaner, stedssøk og kartintegrasjon.',
+    icon: '🗺️',
+    color: '#34a853',
+    category: 'Data & Kart',
+    fields: [
+      { key: 'api_key', label: 'API Key', placeholder: 'Lim inn din Google Maps API key', type: 'password', helpText: 'Opprett i Google Cloud Console → APIs → Maps Platform' },
+    ],
+    helpUrl: 'https://developers.google.com/maps/documentation/javascript/get-api-key',
+    helpLabel: 'Hvordan oppretter jeg en API-nøkkel?',
+    usedFor: ['Ruteplaner', 'Lead-scraping', 'Befaring-ruter'],
+  },
+  {
+    service: 'google_business',
+    name: 'Google My Business',
+    description: 'Administrer bedriftsprofil, anmeldelser og synlighet på Google.',
+    icon: '🏪',
+    color: '#4285f4',
+    category: 'Data & Kart',
+    fields: [
+      { key: 'account_id', label: 'Account ID', placeholder: 'Din Google Business account ID', type: 'text' },
+      { key: 'api_key', label: 'API Key', placeholder: 'Lim inn din API key', type: 'password', helpText: 'Opprett via Google Cloud Console → Business Profile API' },
+    ],
+    helpUrl: 'https://developers.google.com/my-business/reference/rest',
+    helpLabel: 'Hvordan setter jeg opp Google Business API?',
+    usedFor: ['Anmeldelsesforespørsler', 'Bedriftsprofil', 'Synlighet'],
+  },
+  {
+    service: 'finn_generell',
+    name: 'Finn.no',
+    description: 'Generell Finn.no-integrasjon for annonser og lead-scraping.',
+    icon: '🔎',
+    color: '#0063fb',
+    category: 'Data & Kart',
+    fields: [
+      { key: 'client_id', label: 'Client ID', placeholder: 'Lim inn din Finn Client ID', type: 'text' },
+      { key: 'client_secret', label: 'Client Secret', placeholder: 'Lim inn din client secret', type: 'password' },
+    ],
+    helpUrl: 'https://github.com/finn-no/api-docs',
+    helpLabel: 'Hvordan får jeg Finn API-tilgang?',
+    usedFor: ['Annonsering', 'Lead-scraping', 'Stillingsutlysninger'],
+  },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -400,16 +619,41 @@ const allIntegrations: IntegrationDef[] = [
 /* ------------------------------------------------------------------ */
 
 const automationToIntegrations: Record<string, string[]> = {
-  // Felles
-  'fakturering':            ['vipps', 'tripletex', 'fiken'],
-  'betalingspåminnelser':   ['vipps'],
+  // Felles — Økonomi & Betaling
+  'fakturering':            ['vipps', 'tripletex', 'fiken', 'stripe', 'klarna'],
+  'betalingspåminnelser':   ['vipps', 'stripe', 'klarna'],
   'regnskap':               ['tripletex', 'fiken'],
+  'nettbetaling':           ['stripe', 'klarna', 'vipps'],
+  // Felles — Kalender & Booking
   'booking':                ['google_calendar', 'outlook'],
   'møtepåminnelser':        ['google_calendar', 'outlook'],
+  // Felles — Kommunikasjon
   'kundesynkronisering':    ['tripletex', 'fiken', 'hubspot'],
   'sms-varsler':            ['twilio'],
-  'e-post-automatisering':  ['sendgrid'],
+  'e-post-automatisering':  ['sendgrid', 'mailchimp'],
+  'nyhetsbrev':             ['mailchimp', 'sendgrid'],
   'crm':                    ['hubspot'],
+  // Felles — Varsler & Rapportering
+  'kpi-rapporter':          ['slack'],
+  'teamvarsler':            ['slack'],
+  'a-b-test-rapporter':     ['slack'],
+  // Felles — Oppgavestyring
+  'oppgavestyring':         ['trello', 'asana'],
+  'saksbehandling':         ['trello', 'asana', 'jira'],
+  'bug-rapporter':          ['jira'],
+  'issue-tracking':         ['jira'],
+  // Felles — Sosiale Medier
+  'some-posting':           ['meta', 'linkedin'],
+  'instagram-posting':      ['meta'],
+  'innholdsplanlegging':    ['meta', 'linkedin'],
+  'stillingspublisering':   ['linkedin', 'finn_generell'],
+  'podcast-publisering':    ['spotify', 'youtube'],
+  'video-publisering':      ['youtube'],
+  'klipp-generering':       ['youtube', 'meta'],
+  // Felles — Data & Kart
+  'lead-scraping':          ['finn_generell', 'google_maps'],
+  'google-anmeldelser':     ['google_business'],
+  'ruteplanlegging':        ['google_maps'],
   // Bygg & Håndverk
   'prosjektstyring':        ['bygglet', 'fonn'],
   'kvalitetssikring':       ['fonn'],
@@ -429,7 +673,7 @@ const automationToIntegrations: Record<string, string[]> = {
   // Reiseliv & Overnatting
   'channel-manager':        ['booking_com', 'airbnb', 'visbook'],
   'gjestehåndtering':       ['visbook', 'booking_com'],
-  'anmeldelser':            ['tripadvisor'],
+  'anmeldelser':            ['tripadvisor', 'google_business'],
   'overnattingsbooking':    ['booking_com', 'airbnb', 'visbook'],
 }
 
@@ -439,6 +683,11 @@ const automationToIntegrations: Record<string, string[]> = {
 
 const categories = [
   'Felles',
+  'Kommunikasjon & Prosjekt',
+  'Sosiale Medier',
+  'Betaling & Finans',
+  'Markedsføring & E-post',
+  'Data & Kart',
   'Bygg & Håndverk',
   'Eiendomsmegling',
   'Salong & Skjønnhet',
@@ -448,6 +697,11 @@ const categories = [
 
 const categoryIcons: Record<string, string> = {
   'Felles': '⚡',
+  'Kommunikasjon & Prosjekt': '💬',
+  'Sosiale Medier': '📱',
+  'Betaling & Finans': '💰',
+  'Markedsføring & E-post': '📧',
+  'Data & Kart': '🗺️',
   'Bygg & Håndverk': '🏗️',
   'Eiendomsmegling': '🏠',
   'Salong & Skjønnhet': '💇',
