@@ -119,8 +119,6 @@ export default function BransjerPage() {
         }}>
           {filtered.map((ind, i) => {
             const Icon = iconMap[ind.icon] || Briefcase
-            const top5Slugs = ['bygg-og-handverk', 'eiendomsmegling', 'salong-og-skjonnhet', 'bilverksted-og-bilforhandler', 'reiseliv-og-overnatting']
-            const isTop5 = top5Slugs.includes(ind.slug)
             return (
               <motion.div
                 key={ind.slug}
@@ -135,7 +133,7 @@ export default function BransjerPage() {
                       background: cardBg,
                       borderRadius: 14,
                       padding: '22px 20px',
-                      border: `1px solid ${isTop5 ? `rgba(${goldRgb},0.25)` : `rgba(${goldRgb},0.08)`}`,
+                      border: `1px solid rgba(${goldRgb},0.12)`,
                       transition: 'all 0.3s ease',
                       cursor: 'pointer',
                       display: 'flex',
@@ -152,24 +150,13 @@ export default function BransjerPage() {
                       }}>
                         <Icon size={22} color={gold} />
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                        {isTop5 && (
-                          <span style={{
-                            fontSize: 11, color: gold,
-                            background: `rgba(${goldRgb},0.12)`, borderRadius: 20,
-                            padding: '3px 8px', fontWeight: 600,
-                          }}>
-                            Populær
-                          </span>
-                        )}
-                        <span style={{
-                          fontSize: 12, color: gold,
-                          background: `rgba(${goldRgb},0.08)`, borderRadius: 20,
-                          padding: '4px 10px', fontWeight: 500,
-                        }}>
-                          {ind.count} løsninger
-                        </span>
-                      </div>
+                      <span style={{
+                        fontSize: 12, color: gold,
+                        background: `rgba(${goldRgb},0.08)`, borderRadius: 20,
+                        padding: '4px 10px', fontWeight: 500,
+                      }}>
+                        {ind.count} løsninger
+                      </span>
                     </div>
                     <h3 style={{ fontSize: 16, fontWeight: 600, color: '#f4f1eb', margin: 0 }}>
                       {ind.title}
