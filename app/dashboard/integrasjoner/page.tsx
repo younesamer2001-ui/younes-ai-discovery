@@ -1,14 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { gold, goldRgb, fonts } from '@/lib/constants'
 import {
   Link2, CheckCircle2, AlertCircle, Clock, Eye, EyeOff,
-  Copy, Check, ExternalLink, Shield, Zap, ArrowRight
+  ExternalLink, Shield, Zap, Check, ShoppingCart, Package, Lock
 } from 'lucide-react'
 
 /* ------------------------------------------------------------------ */
-/*  Integration definitions                                            */
+/*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
 interface IntegrationField {
@@ -23,15 +23,19 @@ interface IntegrationDef {
   service: string
   name: string
   description: string
-  icon: string         // emoji for now, can be replaced with SVG later
+  icon: string
   color: string
   fields: IntegrationField[]
   helpUrl: string
   helpLabel: string
-  usedFor: string[]    // what automations this enables
+  usedFor: string[]
 }
 
-const integrations: IntegrationDef[] = [
+/* ------------------------------------------------------------------ */
+/*  All available integrations (full catalog)                          */
+/* ------------------------------------------------------------------ */
+
+const allIntegrations: IntegrationDef[] = [
   {
     service: 'vipps',
     name: 'Vipps MobilePay',
@@ -78,28 +82,74 @@ const integrations: IntegrationDef[] = [
 ]
 
 /* ------------------------------------------------------------------ */
+/*  Map automation names → required integrations                       */
+/* ------------------------------------------------------------------ */
+
+const automationToIntegrations: Record<string, string[]> = {
+  'fakturering':         ['vipps', 'tripletex'],
+  'betalingspåminnelser': ['vipps'],
+  'regnskap':            ['tripletex'],
+  'booking':             ['google_calendar'],
+  'møtepåminnelser':     ['google_calendar'],
+  'kundesynkronisering': ['tripletex'],
+}
+
+/* ------------------------------------------------------------------ */
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
 export default function IntegrationsPage() {
-  // State: one object per integration holding field values and UI state
+  // In production: fetch from Supabase `automations` table where customer_id = current user
+  // For now: demo data simulating purchased automations
+  const [purchasedAutomations, setPurchasedAutomations] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Simulate fetching purchased automations from Supabase
+    // Replace this with: const { data } = await supabase.from('automations').select('name').eq('customer_id', userId)
+    setTimeout(() => {
+      setPurchasedAutomations([
+        // DEMO: uncomment lines below to simulate purchased automations
+        // 'fakturering',
+        // 'booking',
+        // 'regnskap',
+      ])
+      setLoading(false)
+    }, 500)
+  }, [])
+
+  // Determine which integrations to show based on purchases
+  const requiredServices = new Set<string>()
+  purchasedAutomations.forEach(auto => {
+    const services = automationToIntegrations[auto] || []
+    services.forEach(s => requiredServices.add(s))
+  })
+  const activeIntegrations = allIntegrations.filter(i => requiredServices.has(i.service))
+
+  // State per integration
   const [integrationState, setIntegrationState] = useState<Record<string, {
     fields: Record<string, string>
     status: 'pending' | 'connected' | 'error'
     showSecrets: Record<string, boolean>
     saving: boolean
     saved: boolean
-  }>>(
-    Object.fromEntries(integrations.map(i => [i.service, {
-      fields: Object.fromEntries(i.fields.map(f => [f.key, ''])),
-      status: 'pending' as const,
-      showSecrets: {},
-      saving: false,
-      saved: false,
-    }]))
-  )
+  }>>({})
 
-  const [copiedField, setCopiedField] = useState<string | null>(null)
+  // Initialize state when active integrations change
+  useEffect(() => {
+    const newState: typeof integrationState = {}
+    activeIntegrations.forEach(i => {
+      newState[i.service] = integrationState[i.service] || {
+        fields: Object.fromEntries(i.fields.map(f => [f.key, ''])),
+        status: 'pending' as const,
+        showSecrets: {},
+        saving: false,
+        saved: false,
+      }
+    })
+    setIntegrationState(newState)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [purchasedAutomations])
 
   const updateField = (service: string, key: string, value: string) => {
     setIntegrationState(prev => ({
@@ -124,18 +174,15 @@ export default function IntegrationsPage() {
 
   const handleSave = (service: string) => {
     const state = integrationState[service]
-    const def = integrations.find(i => i.service === service)!
+    const def = allIntegrations.find(i => i.service === service)!
     const allFilled = def.fields.every(f => state.fields[f.key]?.trim())
 
     setIntegrationState(prev => ({
       ...prev,
-      [service]: {
-        ...prev[service],
-        saving: true,
-      },
+      [service]: { ...prev[service], saving: true },
     }))
 
-    // Simulate save (in production: save to Supabase integrations table)
+    // Simulate save (production: save to Supabase integrations table)
     setTimeout(() => {
       setIntegrationState(prev => ({
         ...prev,
@@ -150,7 +197,7 @@ export default function IntegrationsPage() {
   }
 
   const handleDisconnect = (service: string) => {
-    const def = integrations.find(i => i.service === service)!
+    const def = allIntegrations.find(i => i.service === service)!
     setIntegrationState(prev => ({
       ...prev,
       [service]: {
@@ -171,27 +218,132 @@ export default function IntegrationsPage() {
 
   const connectedCount = Object.values(integrationState).filter(s => s.status === 'connected').length
 
+  /* ---- Loading state ---- */
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 300, fontFamily: fonts.body }}>
+        <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: 14 }}>Laster integrasjoner...</div>
+      </div>
+    )
+  }
+
+  /* ---- Empty state: no purchased automations ---- */
+  if (activeIntegrations.length === 0) {
+    return (
+      <div style={{ maxWidth: 600, margin: '0 auto', fontFamily: fonts.body, textAlign: 'center', paddingTop: 60 }}>
+        <div style={{
+          width: 80, height: 80, borderRadius: '50%', margin: '0 auto 24px',
+          background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <Lock size={32} color="rgba(255,255,255,0.15)" />
+        </div>
+
+        <h2 style={{ color: '#f0f0f0', fontSize: 22, fontWeight: 700, marginBottom: 10, fontFamily: fonts.body }}>
+          Ingen integrasjoner ennå
+        </h2>
+        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14, lineHeight: 1.6, maxWidth: 440, margin: '0 auto 32px' }}>
+          Integrasjoner blir tilgjengelige etter at du har kjøpt en automatiseringspakke.
+          Velg en automatisering — som fakturering, booking eller regnskap — og det
+          relevante oppsettet vil dukke opp her automatisk.
+        </p>
+
+        {/* Show what's available */}
+        <div style={{
+          background: 'rgba(255,255,255,0.02)',
+          border: '1px solid rgba(255,255,255,0.06)',
+          borderRadius: 14, padding: '24px 20px',
+          textAlign: 'left',
+        }}>
+          <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16 }}>
+            Tilgjengelige integrasjoner ved kjøp
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {allIntegrations.map(integ => (
+              <div key={integ.service} style={{
+                display: 'flex', alignItems: 'center', gap: 12,
+                padding: '12px 16px', borderRadius: 10,
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid rgba(255,255,255,0.04)',
+                opacity: 0.6,
+              }}>
+                <div style={{
+                  width: 36, height: 36, borderRadius: 8,
+                  background: `${integ.color}10`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 18, flexShrink: 0,
+                }}>
+                  {integ.icon}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, fontWeight: 600 }}>{integ.name}</div>
+                  <div style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12 }}>{integ.description}</div>
+                </div>
+                <Lock size={14} color="rgba(255,255,255,0.15)" />
+              </div>
+            ))}
+          </div>
+
+          <div style={{
+            marginTop: 20, paddingTop: 16,
+            borderTop: '1px solid rgba(255,255,255,0.04)',
+            display: 'flex', alignItems: 'center', gap: 8,
+          }}>
+            <ShoppingCart size={14} color="rgba(255,255,255,0.3)" />
+            <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12 }}>
+              Kjøp en automatisering for å låse opp integrasjoner
+            </span>
+          </div>
+        </div>
+
+        {/* Contact support */}
+        <div style={{
+          marginTop: 24, padding: '14px 20px',
+          background: `rgba(${goldRgb},0.04)`,
+          borderRadius: 10, border: `1px solid rgba(${goldRgb},0.08)`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+        }}>
+          <Package size={14} color={gold} />
+          <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>
+            Usikker på hva du trenger?{' '}
+            <a href="mailto:support@arxon.no" style={{ color: gold, textDecoration: 'none', fontWeight: 600 }}>
+              Kontakt oss
+            </a>
+            {' '}for en gratis kartlegging.
+          </span>
+        </div>
+      </div>
+    )
+  }
+
+  /* ---- Active integrations (post-purchase) ---- */
   return (
     <div style={{ maxWidth: 800, fontFamily: fonts.body }}>
       {/* Header stats */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
         <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14, margin: 0 }}>
-          Koble til tjenestene dine for å aktivere automatiseringer
+          Fullfør oppsettet for å aktivere dine kjøpte automatiseringer
         </p>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 8,
           padding: '6px 14px', borderRadius: 20,
-          background: connectedCount > 0 ? 'rgba(74,222,128,0.08)' : 'rgba(255,255,255,0.04)',
-          border: '1px solid ' + (connectedCount > 0 ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.06)'),
+          background: connectedCount === activeIntegrations.length && connectedCount > 0
+            ? 'rgba(74,222,128,0.08)' : 'rgba(255,255,255,0.04)',
+          border: '1px solid ' + (connectedCount === activeIntegrations.length && connectedCount > 0
+            ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.06)'),
         }}>
-          <Link2 size={14} color={connectedCount > 0 ? '#4ade80' : 'rgba(255,255,255,0.3)'} />
-          <span style={{ fontSize: 13, color: connectedCount > 0 ? '#4ade80' : 'rgba(255,255,255,0.4)', fontWeight: 600 }}>
-            {connectedCount}/{integrations.length} tilkoblet
+          <Link2 size={14} color={connectedCount === activeIntegrations.length && connectedCount > 0 ? '#4ade80' : 'rgba(255,255,255,0.3)'} />
+          <span style={{
+            fontSize: 13, fontWeight: 600,
+            color: connectedCount === activeIntegrations.length && connectedCount > 0 ? '#4ade80' : 'rgba(255,255,255,0.4)',
+          }}>
+            {connectedCount}/{activeIntegrations.length} tilkoblet
           </span>
         </div>
       </div>
 
-      {/* How it works */}
+      {/* Security note */}
       <div style={{
         background: `rgba(${goldRgb},0.04)`,
         border: `1px solid rgba(${goldRgb},0.1)`,
@@ -211,11 +363,17 @@ export default function IntegrationsPage() {
 
       {/* Integration cards */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        {integrations.map(integ => {
+        {activeIntegrations.map(integ => {
           const state = integrationState[integ.service]
+          if (!state) return null
           const badge = statusBadge(state.status)
           const BadgeIcon = badge.icon
           const allFilled = integ.fields.every(f => state.fields[f.key]?.trim())
+
+          // Which purchased automations need this integration
+          const relatedAutomations = purchasedAutomations.filter(auto =>
+            (automationToIntegrations[auto] || []).includes(integ.service)
+          )
 
           return (
             <div key={integ.service} style={{
@@ -254,17 +412,24 @@ export default function IntegrationsPage() {
                 </div>
               </div>
 
-              {/* Card body — fields */}
+              {/* Card body */}
               <div style={{ padding: '18px 20px' }}>
-                {/* What this enables */}
+                {/* Related purchased automations */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
-                  {integ.usedFor.map((use, i) => (
+                  <span style={{
+                    color: 'rgba(255,255,255,0.3)', fontSize: 11, fontWeight: 500,
+                    display: 'flex', alignItems: 'center', marginRight: 4,
+                  }}>
+                    Kreves for:
+                  </span>
+                  {relatedAutomations.map((auto, i) => (
                     <span key={i} style={{
                       display: 'flex', alignItems: 'center', gap: 4,
                       padding: '3px 10px', borderRadius: 12, fontSize: 11,
                       background: `rgba(${goldRgb},0.06)`, color: gold,
+                      textTransform: 'capitalize',
                     }}>
-                      <Zap size={10} /> {use}
+                      <Zap size={10} /> {auto}
                     </span>
                   ))}
                 </div>
@@ -376,7 +541,7 @@ export default function IntegrationsPage() {
         })}
       </div>
 
-      {/* Bottom note */}
+      {/* Bottom help note */}
       <div style={{
         marginTop: 24, padding: '16px 20px',
         background: 'rgba(255,255,255,0.02)',
@@ -385,7 +550,9 @@ export default function IntegrationsPage() {
       }}>
         <Zap size={16} color="rgba(255,255,255,0.3)" />
         <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 13 }}>
-          Trenger du hjelp med oppsett? <a href="mailto:support@arxon.no" style={{ color: gold, textDecoration: 'none' }}>Kontakt oss</a> — vi hjelper deg med å finne riktige API-nøkler.
+          Trenger du hjelp med oppsett?{' '}
+          <a href="mailto:support@arxon.no" style={{ color: gold, textDecoration: 'none' }}>Kontakt oss</a>
+          {' '}— vi hjelper deg med å finne riktige API-nøkler.
         </div>
       </div>
     </div>
