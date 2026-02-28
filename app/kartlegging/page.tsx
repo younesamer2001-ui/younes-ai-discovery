@@ -96,12 +96,11 @@ const buildQuestions = (lang: string): Question[] => [
     id: 'size', type: 'single',
     q: lang === 'no' ? 'Hvor stort er teamet ditt?' : 'How big is your team?',
     options: [
-      { value: 'solo', label: lang === 'no' ? 'Bare meg' : 'Just me' },
-      { value: '2-5', label: lang === 'no' ? '2–5 personer' : '2–5 people' },
-      { value: '6-15', label: lang === 'no' ? '6–15 personer' : '6–15 people' },
-      { value: '16-50', label: lang === 'no' ? '16–50 personer' : '16–50 people' },
-      { value: '51-200', label: lang === 'no' ? '51–200 personer' : '51–200 people' },
-      { value: '200+', label: lang === 'no' ? 'Over 200' : 'Over 200' },
+      { value: 'solo', label: lang === 'no' ? 'Bare meg (enkeltpersonforetak)' : 'Just me (sole proprietor)' },
+      { value: '2-5', label: lang === 'no' ? '2–5 ansatte' : '2–5 employees' },
+      { value: '6-15', label: lang === 'no' ? '6–15 ansatte' : '6–15 employees' },
+      { value: '16-50', label: lang === 'no' ? '16–50 ansatte' : '16–50 employees' },
+      { value: '50+', label: lang === 'no' ? 'Over 50 ansatte' : 'Over 50 employees' },
     ],
   },
   {
@@ -170,7 +169,7 @@ const buildQuestions = (lang: string): Question[] => [
   },
   {
     id: 'investment', type: 'single',
-    q: lang === 'no' ? 'Hvor mye er det verdt å investere for å spare 20+ timer i måneden?' : 'How much would it be worth investing to save 20+ hours per month?',
+    q: lang === 'no' ? 'Hvor mye er det verdt å investere for å spare 15–20 timer i uken?' : 'How much would it be worth investing to save 15–20 hours per week?',
     options: [
       { value: 'low', label: lang === 'no' ? 'Ønsker å starte lite og skalere' : 'Start small and scale' },
       { value: 'medium', label: lang === 'no' ? 'Klar for en skikkelig løsning' : 'Ready for a proper solution' },
