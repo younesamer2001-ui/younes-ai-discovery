@@ -88,6 +88,22 @@ create table if not exists automations (
   created_at timestamptz default now()
 );
 
+-- 6. Integrations (API-nøkler kunden har koblet til)
+create table if not exists integrations (
+  id uuid primary key default gen_random_uuid(),
+  customer_id uuid references customers(id) on delete cascade,
+  service text not null,                            -- 'vipps', 'tripletex', 'google_calendar'
+  display_name text not null,                       -- 'Vipps', 'Tripletex', 'Google Calendar'
+  api_key text,                                     -- kryptert API-nøkkel
+  api_secret text,                                  -- evt. secret
+  config jsonb default '{}',                        -- ekstra config (merchant ID, org nr, osv.)
+  status text default 'pending',                    -- pending / connected / error / disconnected
+  connected_at timestamptz,
+  last_synced_at timestamptz,
+  error_message text,
+  created_at timestamptz default now()
+);
+
 -- =============================================
 -- Indexes for performance
 -- =============================================
@@ -98,6 +114,8 @@ create index if not exists idx_leads_status on leads(status);
 create index if not exists idx_bookings_customer on bookings(customer_id);
 create index if not exists idx_bookings_date on bookings(meeting_date);
 create index if not exists idx_automations_customer on automations(customer_id);
+create index if not exists idx_integrations_customer on integrations(customer_id);
+create index if not exists idx_integrations_service on integrations(service);
 
 -- =============================================
 -- Row Level Security (RLS)
@@ -108,6 +126,7 @@ alter table calls enable row level security;
 alter table leads enable row level security;
 alter table bookings enable row level security;
 alter table automations enable row level security;
+alter table integrations enable row level security;
 
 -- Customers: users can only see their own record
 create policy "Users can view own customer record"
@@ -140,6 +159,15 @@ create policy "Users can view own bookings"
 -- Automations: users can only see their own automations
 create policy "Users can view own automations"
   on automations for select
+  using (customer_id in (select id from customers where user_id = auth.uid()));
+
+-- Integrations: users can view and update their own integrations
+create policy "Users can view own integrations"
+  on integrations for select
+  using (customer_id in (select id from customers where user_id = auth.uid()));
+
+create policy "Users can update own integrations"
+  on integrations for update
   using (customer_id in (select id from customers where user_id = auth.uid()));
 
 -- =============================================

@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { gold, goldRgb, bg, fonts } from '@/lib/constants'
 import {
   LayoutDashboard, Phone, Users, CalendarCheck, Settings,
-  Menu, X, ChevronRight
+  Link2, Menu, X, ChevronRight
 } from 'lucide-react'
 
 const sidebarLinks = [
@@ -14,6 +14,7 @@ const sidebarLinks = [
   { href: '/dashboard/anrop', label: 'Anrop', icon: Phone },
   { href: '/dashboard/leads', label: 'Leads', icon: Users },
   { href: '/dashboard/bookinger', label: 'Bookinger', icon: CalendarCheck },
+  { href: '/dashboard/integrasjoner', label: 'Integrasjoner', icon: Link2 },
   { href: '/dashboard/innstillinger', label: 'Innstillinger', icon: Settings },
 ]
 
