@@ -214,7 +214,7 @@ export default function PakkebyggerPage() {
           }}
         >
           <CheckCircle2 size={16} />
-          <span>Bedrifter sparer typisk <strong>555 000 – 618 000 kr/år</strong> sammenlignet med å ansette</span>
+          <span>Bedrifter sparer typisk <strong>626 000 – 691 000 kr/år</strong> sammenlignet med å ansette</span>
         </motion.div>
       </section>
 
@@ -559,10 +559,10 @@ export default function PakkebyggerPage() {
 
           {/* Rows — calculated from real pricing: Lav=2000/mnd, Middels=4290/mnd, annual discount 20% */}
           {[
-            { role: 'Telefon & mottak', detail: 'AI-telefonsvarer + booking', annualCost: '630 000', arxonRange: '60 000 – 75 000', savingRange: '555 000 – 570 000' },
-            { role: 'Kundeservice & support', detail: 'Chatbot + auto-svar + FAQ', annualCost: '675 000', arxonRange: '80 000 – 100 000', savingRange: '575 000 – 595 000' },
-            { role: 'Booking & kalender', detail: 'Auto-booking + påminnelser', annualCost: '643 000', arxonRange: '38 000 – 48 000', savingRange: '595 000 – 605 000' },
-            { role: 'Lead-oppfølging & salg', detail: 'Scoring + CRM + follow-up', annualCost: '700 000', arxonRange: '82 000 – 103 000', savingRange: '597 000 – 618 000' },
+            { role: 'Telefon & mottak', detail: 'AI-telefonsvarer + booking', annualCost: '751 000', arxonRange: '60 000 – 75 000', savingRange: '676 000 – 691 000' },
+            { role: 'Kundeservice & support', detail: 'Chatbot + auto-svar + FAQ', annualCost: '726 000', arxonRange: '80 000 – 100 000', savingRange: '626 000 – 646 000' },
+            { role: 'Booking & kalender', detail: 'Auto-booking + påminnelser', annualCost: '697 000', arxonRange: '38 000 – 48 000', savingRange: '649 000 – 659 000' },
+            { role: 'Lead-oppfølging & salg', detail: 'Scoring + CRM + follow-up', annualCost: '761 000', arxonRange: '82 000 – 103 000', savingRange: '658 000 – 679 000' },
           ].map((row, i) => (
             <div key={i} style={{
               display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr',
@@ -596,7 +596,7 @@ export default function PakkebyggerPage() {
               </div>
             </div>
             <div style={{ fontSize: 18, fontWeight: 700, color: '#4ade80' }}>
-              555 000 – 618 000 kr/år
+              626 000 – 691 000 kr/år
             </div>
           </div>
         </div>
