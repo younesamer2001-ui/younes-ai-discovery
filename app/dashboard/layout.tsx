@@ -3,12 +3,10 @@
 import { useState, useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { supabase } from '@/lib/supabase'
-import { signOut } from '@/lib/auth'
 import { gold, goldRgb, bg, fonts } from '@/lib/constants'
 import {
   LayoutDashboard, Phone, Users, CalendarCheck, Settings,
-  LogOut, Menu, X, ChevronRight, Loader2
+  Menu, X, ChevronRight
 } from 'lucide-react'
 
 const sidebarLinks = [
@@ -27,45 +25,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        router.push('/login')
-        return
-      }
-      setUser(session.user)
-      setLoading(false)
-    }
-    checkAuth()
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT' || !session) {
-        router.push('/login')
-      } else {
-        setUser(session.user)
-      }
-    })
-
-    return () => subscription.unsubscribe()
-  }, [router])
-
-  const handleSignOut = async () => {
-    await signOut()
-    router.push('/login')
-  }
-
-  if (loading) {
-    return (
-      <div style={{
-        minHeight: '100vh', background: bg, display: 'flex',
-        alignItems: 'center', justifyContent: 'center',
-        fontFamily: fonts.body,
-      }}>
-        <Loader2 size={32} color={gold} style={{ animation: 'spin 1s linear infinite' }} />
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
-    )
-  }
+    // Auth disabled for development — enable later
+    setLoading(false)
+  }, [])
 
   const isActive = (href: string) => {
     if (href === '/dashboard') return pathname === '/dashboard'
@@ -157,27 +119,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           })}
         </nav>
 
-        {/* User + Logout */}
+        {/* User info */}
         <div style={{
           padding: '16px 14px',
           borderTop: '1px solid rgba(255,255,255,0.06)',
         }}>
           <div style={{
             fontSize: 12, color: 'rgba(255,255,255,0.35)',
-            marginBottom: 12, overflow: 'hidden', textOverflow: 'ellipsis',
+            overflow: 'hidden', textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
           }}>
-            {user?.email}
+            {user?.email || 'Demo-modus'}
           </div>
-          <button onClick={handleSignOut} className="dash-link" style={{
-            display: 'flex', alignItems: 'center', gap: 8,
-            background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)',
-            cursor: 'pointer', fontSize: 13, fontFamily: fonts.body,
-            padding: '8px 10px', borderRadius: 6, width: '100%',
-          }}>
-            <LogOut size={16} />
-            Logg ut
-          </button>
         </div>
       </aside>
 
