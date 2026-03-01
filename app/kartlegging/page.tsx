@@ -15,6 +15,7 @@ import {
   PRICING, getDiscountRate, formatKr,
 } from '@/lib/pricing'
 import { gold, goldRgb, bg as bgConst, fonts, BOOKING_URL } from '@/lib/constants'
+import { useLanguage } from '@/lib/language-context'
 
 /* ────────────────────────────────────────────
    DESIGN TOKENS (Midnight Opulence)
@@ -358,6 +359,7 @@ function AutoRow({ auto, selected, onToggle }: { auto: PricingAutomation; select
 type BillingMode = 'monthly' | 'annual'
 
 function KartleggingApp() {
+  const { lang } = useLanguage()
   const searchParams = useSearchParams()
   const [phase, setPhase] = useState(1)
   const [contact, setContact] = useState({ company: '', name: '', email: '', phone: '' })
