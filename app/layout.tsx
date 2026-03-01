@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import dynamic from 'next/dynamic'
+import { LanguageProvider } from '@/lib/language-context'
 import './globals.css'
 
 const ChatWidget = dynamic(() => import('./components/ChatWidget'), { ssr: false })
@@ -181,9 +182,11 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen antialiased" style={{ backgroundColor: '#0f1b27', color: '#f4f1eb' }}>
         <a href="#main-content" className="skip-to-content">Hopp til hovedinnhold</a>
-        <div id="main-content">
-          {children}
-        </div>
+        <LanguageProvider>
+          <div id="main-content">
+            {children}
+          </div>
+        </LanguageProvider>
         <ChatWidget />
         <CookieConsent />
       </body>

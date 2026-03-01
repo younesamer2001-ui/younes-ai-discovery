@@ -359,7 +359,6 @@ type BillingMode = 'monthly' | 'annual'
 
 function KartleggingApp() {
   const searchParams = useSearchParams()
-  const [lang, setLang] = useState('no')
   const [phase, setPhase] = useState(1)
   const [contact, setContact] = useState({ company: '', name: '', email: '', phone: '' })
   const [emailError, setEmailError] = useState('')
@@ -1113,7 +1112,7 @@ function KartleggingApp() {
         </AnimatePresence>
       </div>
 
-      <Footer lang="no" />
+      <Footer />
 
       <style jsx global>{`
         @media (max-width: 768px) {

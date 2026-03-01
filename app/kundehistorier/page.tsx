@@ -1,4 +1,5 @@
 'use client'
+import { useLanguage } from '@/lib/language-context'
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -13,7 +14,7 @@ import Footer from '@/app/components/Footer'
 import { gold, goldRgb, bg, globalStyles } from '@/lib/constants'
 
 export default function KundehistorierPage() {
-  const [lang, setLang] = useState<'no' | 'en'>('no')
+  const { lang } = useLanguage()
   const router = useRouter()
 
   const fadeUp = {
@@ -133,7 +134,7 @@ export default function KundehistorierPage() {
     <div style={{ minHeight: '100vh', background: `linear-gradient(180deg, ${bg} 0%, #0d0d15 50%, ${bg} 100%)`, color: '#f0f0f0', fontFamily: "'DM Sans', sans-serif" }}>
       <style>{globalStyles() + `@media(max-width:768px){.story-grid{grid-template-columns:1fr!important}}`}</style>
 
-      <Nav lang={lang} setLang={setLang} />
+      <Nav />
 
       {/* ── HERO ── */}
       <motion.section {...fadeUp} style={{ maxWidth: 800, margin: '0 auto', padding: '50px 24px 30px', textAlign: 'center' }}>
@@ -302,7 +303,7 @@ export default function KundehistorierPage() {
         </div>
       </motion.section>
 
-      <Footer lang={lang} />
+      <Footer />
     </div>
   )
 }

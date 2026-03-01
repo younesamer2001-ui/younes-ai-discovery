@@ -17,7 +17,6 @@ function ResultPageContent() {
   const router = useRouter()
   const sessionId = searchParams.get('session')
   const langParam = (searchParams.get('lang') || 'no') as 'no' | 'en'
-  const [lang, setLang] = useState<'no' | 'en'>(langParam)
 
   const [recommendation, setRecommendation] = useState<any>(null)
   const [loading, setLoading] = useState(true)
@@ -111,7 +110,7 @@ function ResultPageContent() {
     return (
       <div style={{ minHeight: '100vh', background: `linear-gradient(180deg, ${bg} 0%, #0d0d15 50%, ${bg} 100%)`, color: '#f0f0f0', fontFamily: "'DM Sans', sans-serif" }}>
         <style>{globalStyles()}</style>
-        <Nav lang={lang} setLang={setLang} />
+        <Nav />
         <section style={{ maxWidth: 600, margin: '0 auto', padding: '120px 24px', textAlign: 'center' }}>
           <Sparkles size={40} color={gold} style={{ marginBottom: 20 }} />
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, marginBottom: 12 }}>{tx.noResult}</h1>
@@ -122,7 +121,7 @@ function ResultPageContent() {
             {tx.startNew} <ArrowRight size={14} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
           </button>
         </section>
-        <Footer lang={lang} />
+        <Footer />
       </div>
     )
   }
@@ -130,7 +129,7 @@ function ResultPageContent() {
   return (
     <div style={{ minHeight: '100vh', background: `linear-gradient(180deg, ${bg} 0%, #0d0d15 50%, ${bg} 100%)`, color: '#f0f0f0', fontFamily: "'DM Sans', sans-serif" }}>
       <style>{globalStyles()}</style>
-      <Nav lang={lang} setLang={setLang} />
+      <Nav />
 
       {/* Success banner */}
       <section style={{ maxWidth: 800, margin: '0 auto', padding: '60px 24px 20px', textAlign: 'center' }}>
@@ -331,7 +330,7 @@ function ResultPageContent() {
         </motion.div>
       </section>
 
-      <Footer lang={lang} />
+      <Footer />
     </div>
   )
 }

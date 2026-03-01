@@ -12,7 +12,6 @@ const DESIGN = {
 };
 
 export default function AINorge2025() {
-  const [lang, setLang] = useState('no');
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
 

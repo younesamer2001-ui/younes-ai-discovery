@@ -1,4 +1,5 @@
 'use client'
+import { useLanguage } from '@/lib/language-context'
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -141,7 +142,7 @@ function ChatMessages({ messages }: { messages: { role: string; text: string; ti
 
 /* ── Main Page ────────────────────────────────────────── */
 export default function DemoPage() {
-  const [lang, setLang] = useState<'no' | 'en'>('no')
+  const { lang } = useLanguage()
   const { status, isMuted, volume, messages, start, stop, toggleMute } = useVapi()
   const [showChat, setShowChat] = useState(false)
 
@@ -224,7 +225,7 @@ export default function DemoPage() {
       <style>{globalStyles(`
         @keyframes pulse-gold { 0%, 100% { box-shadow: 0 0 20px rgba(${goldRgb},0.15); } 50% { box-shadow: 0 0 40px rgba(${goldRgb},0.3); } }
       `)}</style>
-      <Nav lang={lang} setLang={setLang} />
+      <Nav />
 
       {/* Hero */}
       <section style={{ maxWidth: 700, margin: '0 auto', padding: '50px 24px 24px', textAlign: 'center' }}>
@@ -407,7 +408,7 @@ export default function DemoPage() {
         </p>
       </section>
 
-      <Footer lang={lang} minimal />
+      <Footer minimal />
     </div>
   )
 }

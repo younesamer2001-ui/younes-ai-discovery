@@ -8,7 +8,6 @@ import { gold, bg, globalStyles } from '@/lib/constants'
 
 export default function VilkarPage() {
   const router = useRouter()
-  const [lang, setLang] = useState<'no'|'en'>('no')
 
   const sectionStyle: React.CSSProperties = { marginBottom: 32 }
   const h2Style: React.CSSProperties = { fontSize: 20, fontWeight: 600, color: '#fff', marginBottom: 12, fontFamily: "'DM Sans', sans-serif" }
@@ -17,7 +16,7 @@ export default function VilkarPage() {
   return (
     <div style={{ background: bg, minHeight: '100vh', color: '#fff' }}>
       <style>{globalStyles()}</style>
-      <Nav lang={lang} setLang={setLang} />
+      <Nav />
 
       <main style={{ maxWidth: 800, margin: '0 auto', padding: '40px 24px 80px' }}>
         <h1 style={{ fontSize: 32, fontWeight: 700, color: '#fff', marginBottom: 8, fontFamily: "'DM Sans', sans-serif" }}>
@@ -96,7 +95,7 @@ export default function VilkarPage() {
         </div>
 
       </main>
-      <Footer lang={lang} minimal />
+      <Footer minimal />
     </div>
   )
 }

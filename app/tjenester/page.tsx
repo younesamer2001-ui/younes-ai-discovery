@@ -803,7 +803,7 @@ export default function TjenesterPage() {
         </motion.div>
       </section>
 
-      <Footer lang={lang} />
+      <Footer />
 
       <style jsx global>{`
         .tjeneste-card:hover {

@@ -710,7 +710,7 @@ export default function PakkebyggerPage() {
         </div>
       )}
 
-      <Footer lang="no" />
+      <Footer />
 
       <style jsx global>{`
         @media (max-width: 768px) {

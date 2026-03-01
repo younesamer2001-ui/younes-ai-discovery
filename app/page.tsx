@@ -15,6 +15,7 @@ import {
 import Nav from '@/app/components/Nav'
 import Footer from '@/app/components/Footer'
 import { gold, goldRgb, bg } from '@/lib/constants'
+import { useLanguage } from '@/lib/language-context'
 
 /* ── Design tokens ── */
 const cardBg = '#0d1a2d'
@@ -355,6 +356,9 @@ const roiData: Record<string, { avgDeal: number; conversion: number }> = {
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 export default function Home() {
   const router = useRouter()
+  const { lang } = useLanguage()
+  const no = lang === 'no'
+
   const ctaClick = useCallback(() => {
     trackEvent('CTA_Click', { button_text: 'Start gratis kartlegging', section: 'page' })
     router.push('/kartlegging')
@@ -372,13 +376,20 @@ export default function Home() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const faqItems = [
+  const faqItems = no ? [
     { q: 'Hva koster det å komme i gang?', a: 'Kartleggingen er 100% gratis og uforpliktende. Etter analysen får du et skreddersydd pristilbud basert på dine behov — ingen skjulte kostnader.' },
     { q: 'Hvor lang tid tar implementeringen?', a: 'Fra signering til live tar det ca. 14 virkedager. Vi jobber grundig med oppsett, testing og tilpasning slik at alt fungerer skikkelig fra dag én.' },
     { q: 'Er det trygt med tanke på GDPR?', a: 'Absolutt. All data lagres kryptert innen EØS. Vi er GDPR-kompatible og EU AI Act-klare. Vi inngår databehandleravtale med alle kunder.' },
     { q: 'Kan jeg starte med én automatisering?', a: 'Ja! De fleste starter med AI-mobilsvarer eller auto-booking og bygger videre derfra. Du velger selv tempo og omfang.' },
     { q: 'Trenger jeg teknisk kunnskap?', a: 'Nei. Vi tar oss av alt teknisk. Du trenger bare å fortelle oss om bedriften din — så fikser vi resten.' },
     { q: 'Hva skjer etter implementering?', a: 'Du får 30 dager med full oppfølging og support. Vi finjusterer sammen basert på reelle resultater, slik at automatiseringene treffer best mulig.' },
+  ] : [
+    { q: 'What does it cost to get started?', a: 'The assessment is 100% free with no obligations. After the analysis you get a tailored quote based on your needs — no hidden costs.' },
+    { q: 'How long does implementation take?', a: 'From signing to live takes about 14 business days. We handle setup, testing, and customization so everything works perfectly from day one.' },
+    { q: 'Is it safe with regard to GDPR?', a: 'Absolutely. All data is stored encrypted within the EEA. We are GDPR-compliant and EU AI Act-ready. We sign a data processing agreement with all customers.' },
+    { q: 'Can I start with just one automation?', a: 'Yes! Most customers start with the AI phone answering or auto-booking and build from there. You choose the pace and scope.' },
+    { q: 'Do I need technical knowledge?', a: 'No. We handle all the technical work. You just tell us about your business — and we take care of the rest.' },
+    { q: 'What happens after implementation?', a: 'You get 30 days of full support and follow-up. We fine-tune together based on real results, so the automations deliver maximum impact.' },
   ]
 
   const sAnim = {
@@ -442,7 +453,7 @@ export default function Home() {
             transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 glass-card">
             <Shield size={13} style={{ color: gold }} className="anim-spin-slow" />
-            <span className="text-[12px] tracking-wide" style={{ color: 'rgba(244,241,235,0.7)' }}>GDPR-kompatibel &middot; Norsk support &middot; Live på ca. 14 dager</span>
+            <span className="text-[12px] tracking-wide" style={{ color: 'rgba(244,241,235,0.7)' }}>{no ? 'GDPR-kompatibel · Norsk support · Live på ca. 14 dager' : 'GDPR compliant · Norwegian support · Live in ~14 days'}</span>
           </motion.div>
 
           <motion.h1
@@ -451,8 +462,8 @@ export default function Home() {
             transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="text-[36px] md:text-[60px] font-extrabold leading-[1.08] tracking-tight mb-6"
             style={{ color: '#f4f1eb' }}>
-            Spar 15–20 timer i uken med{' '}
-            <span className="text-gradient-gold anim-gradient-shift">AI som jobber for deg</span>
+            {no ? 'Spar 15–20 timer i uken med' : 'Save 15–20 hours a week with'}{' '}
+            <span className="text-gradient-gold anim-gradient-shift">{no ? 'AI som jobber for deg' : 'AI that works for you'}</span>
           </motion.h1>
 
           <motion.p
@@ -461,8 +472,9 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="text-[16px] md:text-[18px] max-w-xl mx-auto mb-10 leading-relaxed"
             style={{ color: 'rgba(244,241,235,0.7)' }}>
-            Små bedrifter taper 15 000–25 000 kr/mnd på ubesvarte anrop og manuelt arbeid.
-            Arxon automatiserer telefon, booking og oppfølging — slik at du kan fokusere på kundene.
+            {no
+              ? 'Små bedrifter taper 15 000–25 000 kr/mnd på ubesvarte anrop og manuelt arbeid. Arxon automatiserer telefon, booking og oppfølging — slik at du kan fokusere på kundene.'
+              : 'Small businesses lose 15,000–25,000 NOK/month on missed calls and manual work. Arxon automates phone, booking, and follow-up — so you can focus on your customers.'}
           </motion.p>
 
           <motion.div
@@ -472,10 +484,10 @@ export default function Home() {
           >
             <button onClick={ctaClick} className="gold-btn gold-btn-pulse rounded-xl py-4 px-10 text-[16px] font-bold inline-flex items-center gap-2 group"
               aria-label="Start gratis kartlegging — ingen binding">
-              Start gratis kartlegging <ArrowRight size={18} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1" />
+              {no ? 'Start gratis kartlegging' : 'Start free assessment'} <ArrowRight size={18} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1" />
             </button>
             <p className="text-[12px] mt-4" style={{ color: 'rgba(244,241,235,0.55)' }}>
-              Gratis &middot; Ingen binding &middot; Resultat på 2 minutter
+              {no ? 'Gratis · Ingen binding · Resultat på 2 minutter' : 'Free · No commitment · Results in 2 minutes'}
             </p>
           </motion.div>
 
@@ -485,14 +497,20 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="mt-10 flex flex-wrap items-center justify-center gap-2">
-            <span className="text-[11px] uppercase tracking-wide mr-2" style={{ color: 'rgba(244,241,235,0.4)' }}>Populært i:</span>
-            {[
+            <span className="text-[11px] uppercase tracking-wide mr-2" style={{ color: 'rgba(244,241,235,0.4)' }}>{no ? 'Populært i:' : 'Popular in:'}</span>
+            {(no ? [
               { icon: Hammer, label: 'Bygg' },
               { icon: HomeIcon, label: 'Eiendom' },
               { icon: Scissors, label: 'Salong' },
               { icon: Car, label: 'Bil' },
               { icon: Plane, label: 'Reiseliv' },
-            ].map((ind) => (
+            ] : [
+              { icon: Hammer, label: 'Construction' },
+              { icon: HomeIcon, label: 'Real Estate' },
+              { icon: Scissors, label: 'Salon' },
+              { icon: Car, label: 'Automotive' },
+              { icon: Plane, label: 'Travel' },
+            ]).map((ind) => (
               <Link key={ind.label} href="/bransjer" className="industry-pill inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium"
                 style={{
                   background: 'rgba(255,255,255,0.03)',
@@ -517,7 +535,7 @@ export default function Home() {
             role="button" tabIndex={0}
             onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('trust-bar')?.scrollIntoView({ behavior: 'smooth' }) }}
           >
-            <span className="text-[11px] tracking-widest uppercase" style={{ color: 'rgba(244,241,235,0.4)' }}>Scroll ned</span>
+            <span className="text-[11px] tracking-widest uppercase" style={{ color: 'rgba(244,241,235,0.4)' }}>{no ? 'Scroll ned' : 'Scroll down'}</span>
             <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}>
               <ChevronDown size={20} style={{ color: 'rgba(244,241,235,0.35)' }} />
             </motion.div>
@@ -530,7 +548,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════ */}
       <motion.section id="trust-bar" {...sAnim} className="py-16 md:py-20 relative overflow-hidden" style={{ borderTop: '1px solid rgba(244,241,235,0.04)' }}>
         <div className="max-w-4xl mx-auto px-5 text-center">
-          <p className="text-[12px] tracking-[3px] uppercase mb-8" style={{ color: 'rgba(244,241,235,0.7)' }}>Bygget med teknologi fra verdensledende selskaper</p>
+          <p className="text-[12px] tracking-[3px] uppercase mb-8" style={{ color: 'rgba(244,241,235,0.7)' }}>{no ? 'Bygget med teknologi fra verdensledende selskaper' : 'Built with technology from world-leading companies'}</p>
           <TechLogos />
         </div>
         <div className="gold-divider mt-16" />
@@ -543,19 +561,23 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-5">
           <motion.div {...sAnim} className="text-center mb-14">
             <h2 className="text-[28px] md:text-[42px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
-              Kjenner du deg igjen?
+              {no ? 'Kjenner du deg igjen?' : 'Sound familiar?'}
             </h2>
             <p className="text-[15px] max-w-lg mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>
-              De fleste norske bedrifter taper kunder hver eneste dag uten å vite det.
+              {no ? 'De fleste norske bedrifter taper kunder hver eneste dag uten å vite det.' : 'Most businesses lose customers every single day without knowing it.'}
             </p>
           </motion.div>
 
           <motion.div className="grid md:grid-cols-3 gap-6" {...staggerContainer}>
-            {[
+            {(no ? [
               { icon: <PhoneOff size={24} />, title: 'Ubesvarte anrop', pain: 'Hver gang telefonen ringer uten svar, mister du en potensiell kunde.', agitate: 'Det koster deg 15 000–25 000 kr/mnd i tapte inntekter.' },
               { icon: <Clock size={24} />, title: 'Timer på manuelt arbeid', pain: 'Booking, oppfølging, fakturering — alt gjøres for hånd.', agitate: '15–20 timer i uken forsvinner til oppgaver AI kan gjøre på sekunder.' },
               { icon: <TrendingUp size={24} />, title: 'Konkurrenter automatiserer', pain: 'Mens du gjør ting manuelt, har konkurrentene allerede AI.', agitate: 'De fanger kundene dine mens du er opptatt med admin.' },
-            ].map((item, i) => (
+            ] : [
+              { icon: <PhoneOff size={24} />, title: 'Missed calls', pain: 'Every time the phone rings without an answer, you lose a potential customer.', agitate: 'It costs you 15,000–25,000 NOK/month in lost revenue.' },
+              { icon: <Clock size={24} />, title: 'Hours on manual work', pain: 'Booking, follow-up, invoicing — all done by hand.', agitate: '15–20 hours per week disappear on tasks AI can do in seconds.' },
+              { icon: <TrendingUp size={24} />, title: 'Competitors are automating', pain: 'While you do things manually, your competitors already have AI.', agitate: 'They capture your customers while you\'re busy with admin.' },
+            ]).map((item, i) => (
               <motion.div key={i}
                 variants={staggerChild}
                 className="glass-card p-6 md:p-8 group hover-lift"
@@ -573,7 +595,7 @@ export default function Home() {
 
           <motion.div {...sAnim} className="text-center mt-12">
             <p className="text-[18px] font-semibold" style={{ color: gold }}>
-              Det finnes en bedre måte.
+              {no ? 'Det finnes en bedre måte.' : 'There\'s a better way.'}
             </p>
           </motion.div>
         </div>
@@ -586,7 +608,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-5">
           <motion.div {...sAnim} className="text-center mb-14">
             <h2 className="text-[28px] md:text-[42px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
-              Før og etter <span className="text-gradient-gold">Arxon</span>
+              {no ? 'Før og etter' : 'Before and after'} <span className="text-gradient-gold">Arxon</span>
             </h2>
           </motion.div>
 
@@ -595,17 +617,24 @@ export default function Home() {
             <motion.div variants={staggerChild} className="glass-card p-6 md:p-8 hover-lift" style={{ borderColor: 'rgba(239,69,69,0.15)' }}>
               <div className="flex items-center gap-2 mb-6">
                 <X size={18} style={{ color: '#ef4545' }} />
-                <span className="text-[14px] font-bold uppercase tracking-wide" style={{ color: '#ef4545' }}>Uten Arxon</span>
+                <span className="text-[14px] font-bold uppercase tracking-wide" style={{ color: '#ef4545' }}>{no ? 'Uten Arxon' : 'Without Arxon'}</span>
               </div>
               <div className="space-y-4">
-                {[
+                {(no ? [
                   'Mister 30–50% av innkommende anrop',
                   '15–20 timer/uke på manuelt arbeid',
                   'Kunder venter dager på svar',
                   'Glemmer oppfølging av leads',
                   'Fakturering tar timer hver uke',
                   'Ingen oversikt over tapte muligheter',
-                ].map((item, i) => (
+                ] : [
+                  'Lose 30–50% of incoming calls',
+                  '15–20 hours/week on manual work',
+                  'Customers wait days for a response',
+                  'Forget to follow up on leads',
+                  'Invoicing takes hours every week',
+                  'No overview of lost opportunities',
+                ]).map((item, i) => (
                   <div key={i} className="flex items-start gap-3">
                     <X size={14} className="mt-0.5 flex-shrink-0" style={{ color: 'rgba(239,69,69,0.6)' }} />
                     <span className="text-[13px] leading-relaxed" style={{ color: 'rgba(244,241,235,0.6)' }}>{item}</span>
@@ -618,17 +647,24 @@ export default function Home() {
             <motion.div variants={staggerChild} className="glass-card p-6 md:p-8 hover-lift" style={{ borderColor: `rgba(${goldRgb},0.2)`, background: `rgba(${goldRgb},0.02)` }}>
               <div className="flex items-center gap-2 mb-6">
                 <CheckCircle2 size={18} style={{ color: '#4ade80' }} />
-                <span className="text-[14px] font-bold uppercase tracking-wide" style={{ color: '#4ade80' }}>Med Arxon</span>
+                <span className="text-[14px] font-bold uppercase tracking-wide" style={{ color: '#4ade80' }}>{no ? 'Med Arxon' : 'With Arxon'}</span>
               </div>
               <div className="space-y-4">
-                {[
+                {(no ? [
                   'AI svarer alle anrop 24/7 — 0% tapte',
                   'Spar 15+ timer/uke med automatisering',
                   'Kundene får svar på sekunder',
                   'Automatisk oppfølging av hver lead',
                   'Fakturering sendes automatisk',
                   'Full oversikt over ROI og resultater',
-                ].map((item, i) => (
+                ] : [
+                  'AI answers all calls 24/7 — 0% missed',
+                  'Save 15+ hours/week with automation',
+                  'Customers get answers in seconds',
+                  'Automatic follow-up on every lead',
+                  'Invoicing sent automatically',
+                  'Full overview of ROI and results',
+                ]).map((item, i) => (
                   <div key={i} className="flex items-start gap-3">
                     <Check size={14} className="mt-0.5 flex-shrink-0" style={{ color: '#4ade80' }} />
                     <span className="text-[13px] leading-relaxed" style={{ color: 'rgba(244,241,235,0.75)' }}>{item}</span>
@@ -647,22 +683,29 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-5">
           <motion.div {...sAnim} className="text-center mb-14">
             <h2 className="text-[28px] md:text-[42px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
-              Alt du trenger — <span className="text-gradient-gold">én plattform</span>
+              {no ? 'Alt du trenger —' : 'Everything you need —'} <span className="text-gradient-gold">{no ? 'én plattform' : 'one platform'}</span>
             </h2>
             <p className="text-[15px] max-w-lg mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>
-              Arxon erstatter manuelt arbeid med intelligente AI-systemer som jobber 24/7.
+              {no ? 'Arxon erstatter manuelt arbeid med intelligente AI-systemer som jobber 24/7.' : 'Arxon replaces manual work with intelligent AI systems that work 24/7.'}
             </p>
           </motion.div>
 
           <div className="bento-grid">
-            {[
+            {(no ? [
               { icon: <Bot size={22} />, title: 'AI-Mobilsvarer', desc: 'Svarer telefonen 24/7. Kvalifiserer leads, booker møter og sender sammendrag — alt automatisk.', span: 'wide' },
               { icon: <CalendarCheck size={22} />, title: 'Automatisk booking', desc: 'Kundene booker direkte i kalenderen din. Ingen frem-og-tilbake på SMS.', span: 'normal' },
               { icon: <Users size={22} />, title: 'Kundeoppfølging', desc: 'AI følger opp leads med personlige meldinger til riktig tid.', span: 'normal' },
               { icon: <BarChart3 size={22} />, title: 'Lead-kvalifisering', desc: 'Rangerer og sorterer leads basert på kjøpssannsynlighet. Du ringer bare de varme.', span: 'normal' },
               { icon: <Cog size={22} />, title: 'Automatisert admin', desc: 'Fakturering, rapporter og oppgaver kjører av seg selv.', span: 'normal' },
               { icon: <Megaphone size={22} />, title: 'Smart markedsføring', desc: 'AI-drevne kampanjer som treffer riktig kunde til riktig tid.', span: 'wide' },
-            ].map((item, i) => (
+            ] : [
+              { icon: <Bot size={22} />, title: 'AI Phone Answering', desc: 'Answers the phone 24/7. Qualifies leads, books meetings, and sends summaries — all automatically.', span: 'wide' },
+              { icon: <CalendarCheck size={22} />, title: 'Automatic booking', desc: 'Customers book directly in your calendar. No back-and-forth via SMS.', span: 'normal' },
+              { icon: <Users size={22} />, title: 'Customer follow-up', desc: 'AI follows up leads with personalized messages at the right time.', span: 'normal' },
+              { icon: <BarChart3 size={22} />, title: 'Lead qualification', desc: 'Ranks and sorts leads by purchase likelihood. You only call the warm ones.', span: 'normal' },
+              { icon: <Cog size={22} />, title: 'Automated admin', desc: 'Invoicing, reports, and tasks run by themselves.', span: 'normal' },
+              { icon: <Megaphone size={22} />, title: 'Smart marketing', desc: 'AI-driven campaigns that reach the right customer at the right time.', span: 'wide' },
+            ]).map((item, i) => (
               <motion.div key={i}
                 initial={{ opacity: 0, y: 20, scale: 0.98 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -687,7 +730,7 @@ export default function Home() {
           {/* Link to all services */}
           <motion.div {...sAnim} className="text-center mt-10">
             <Link href="/tjenester" className="inline-flex items-center gap-2 text-[14px] font-medium" style={{ color: gold, textDecoration: 'none' }}>
-              Se alle 200+ automatiseringer <ArrowUpRight size={15} />
+              {no ? 'Se alle 200+ automatiseringer' : 'See all 200+ automations'} <ArrowUpRight size={15} />
             </Link>
           </motion.div>
         </div>
@@ -700,10 +743,10 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-5">
           <motion.div {...sAnim} className="text-center mb-14">
             <h2 className="text-[28px] md:text-[42px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
-              Se det i <span className="text-gradient-gold">aksjon</span>
+              {no ? 'Se det i' : 'See it in'} <span className="text-gradient-gold">{no ? 'aksjon' : 'action'}</span>
             </h2>
             <p className="text-[15px] max-w-lg mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>
-              Fra innkommende anrop til ferdig booking — helt uten manuelt arbeid.
+              {no ? 'Fra innkommende anrop til ferdig booking — helt uten manuelt arbeid.' : 'From incoming call to confirmed booking — without any manual work.'}
             </p>
           </motion.div>
 
@@ -712,7 +755,7 @@ export default function Home() {
               <div className="text-center mb-4">
                 <span className="inline-flex items-center gap-1.5 text-[12px] font-medium px-3 py-1 rounded-full"
                   style={{ background: `rgba(${goldRgb},0.08)`, color: gold, border: `1px solid rgba(${goldRgb},0.15)` }}>
-                  <MessageSquare size={12} /> AI-samtale — live demo
+                  <MessageSquare size={12} /> {no ? 'AI-samtale — live demo' : 'AI conversation — live demo'}
                 </span>
               </div>
               <PhoneDemo />
@@ -722,7 +765,7 @@ export default function Home() {
               <div className="text-center mb-4">
                 <span className="inline-flex items-center gap-1.5 text-[12px] font-medium px-3 py-1 rounded-full"
                   style={{ background: `rgba(${goldRgb},0.08)`, color: gold, border: `1px solid rgba(${goldRgb},0.15)` }}>
-                  <Zap size={12} /> Automatisk arbeidsflyt
+                  <Zap size={12} /> {no ? 'Automatisk arbeidsflyt' : 'Automated workflow'}
                 </span>
               </div>
               <WorkflowDemo />
@@ -738,21 +781,27 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-5">
           <motion.div {...sAnim} className="text-center mb-14">
             <h2 className="text-[28px] md:text-[42px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
-              Skreddersydd for <span className="text-gradient-gold">din bransje</span>
+              {no ? 'Skreddersydd for' : 'Tailored for'} <span className="text-gradient-gold">{no ? 'din bransje' : 'your industry'}</span>
             </h2>
             <p className="text-[15px] max-w-lg mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>
-              Vi har spesialiserte løsninger for 5 bransjer — med automatiseringer tilpasset akkurat dine behov.
+              {no ? 'Vi har spesialiserte løsninger for 5 bransjer — med automatiseringer tilpasset akkurat dine behov.' : 'We have specialized solutions for 5 industries — with automations tailored to your exact needs.'}
             </p>
           </motion.div>
 
           <motion.div className="grid grid-cols-2 md:grid-cols-5 gap-4" {...staggerContainer}>
-            {[
+            {(no ? [
               { icon: Hammer, label: 'Bygg & Håndverk', count: 12, slug: 'bygg-og-handverk' },
               { icon: HomeIcon, label: 'Eiendom', count: 12, slug: 'eiendomsmegling' },
               { icon: Scissors, label: 'Salong & Skjønnhet', count: 10, slug: 'salong-og-skjonnhet' },
               { icon: Car, label: 'Bilverksted', count: 9, slug: 'bilverksted-og-bilforhandler' },
               { icon: Plane, label: 'Reiseliv', count: 10, slug: 'reiseliv-og-overnatting' },
-            ].map((ind, i) => (
+            ] : [
+              { icon: Hammer, label: 'Construction', count: 12, slug: 'bygg-og-handverk' },
+              { icon: HomeIcon, label: 'Real Estate', count: 12, slug: 'eiendomsmegling' },
+              { icon: Scissors, label: 'Salon & Beauty', count: 10, slug: 'salong-og-skjonnhet' },
+              { icon: Car, label: 'Automotive', count: 9, slug: 'bilverksted-og-bilforhandler' },
+              { icon: Plane, label: 'Travel & Hospitality', count: 10, slug: 'reiseliv-og-overnatting' },
+            ]).map((ind, i) => (
               <motion.div key={ind.slug} variants={staggerChild}>
                 <Link href={`/bransjer#${ind.slug}`} style={{ textDecoration: 'none' }}>
                   <div className="glass-card p-5 text-center group cursor-pointer hover-lift" style={{ transition: 'all 0.3s' }}>
@@ -761,7 +810,7 @@ export default function Home() {
                       <ind.icon size={22} style={{ color: gold }} />
                     </div>
                     <h3 className="text-[13px] font-semibold mb-1" style={{ color: '#f4f1eb' }}>{ind.label}</h3>
-                    <span className="text-[11px]" style={{ color: 'rgba(244,241,235,0.45)' }}>{ind.count} løsninger</span>
+                    <span className="text-[11px]" style={{ color: 'rgba(244,241,235,0.45)' }}>{ind.count} {no ? 'løsninger' : 'solutions'}</span>
                   </div>
                 </Link>
               </motion.div>
@@ -770,7 +819,7 @@ export default function Home() {
 
           <motion.div {...sAnim} className="text-center mt-8">
             <Link href="/bransjer" className="inline-flex items-center gap-2 text-[13px] font-medium group" style={{ color: gold, textDecoration: 'none' }}>
-              Se alle bransjer i detalj <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+              {no ? 'Se alle bransjer i detalj' : 'See all industries in detail'} <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </motion.div>
         </div>
@@ -783,19 +832,23 @@ export default function Home() {
         <div className="max-w-2xl mx-auto px-5">
           <motion.div {...sAnim} className="text-center mb-16">
             <h2 className="text-[28px] md:text-[42px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
-              Tre steg til <span className="text-gradient-gold">full automatisering</span>
+              {no ? 'Tre steg til' : 'Three steps to'} <span className="text-gradient-gold">{no ? 'full automatisering' : 'full automation'}</span>
             </h2>
-            <p className="text-[15px] max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>Enklere enn du tror. Vi gjør alt det tekniske.</p>
+            <p className="text-[15px] max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>{no ? 'Enklere enn du tror. Vi gjør alt det tekniske.' : 'Easier than you think. We handle all the technical work.'}</p>
           </motion.div>
 
           <div className="relative">
             <div className="absolute left-6 md:left-8 top-0 bottom-0 w-px" style={{ background: `linear-gradient(to bottom, rgba(${goldRgb},0.3), rgba(${goldRgb},0.05))` }} />
 
-            {[
+            {(no ? [
               { step: 1, icon: <ClipboardList size={20} />, title: 'Gratis kartlegging', time: '2 minutter', desc: 'Svar på noen enkle spørsmål. Vår AI analyserer dine behov og finner automatiseringene med størst effekt.' },
               { step: 2, icon: <FileText size={20} />, title: 'Skreddersydd AI-forslag', time: 'Umiddelbart', desc: 'Du får en komplett oversikt over prosesser vi kan automatisere, forventet besparelse og en tydelig prioriteringsliste.' },
               { step: 3, icon: <Zap size={20} />, title: 'Vi implementerer alt', time: 'Ca. 14 dager', desc: 'Vi setter opp alt fra A til Å. Du trenger ikke gjøre noe teknisk — bare gi oss tilgang, så fikser vi resten.' },
-            ].map((item, i) => (
+            ] : [
+              { step: 1, icon: <ClipboardList size={20} />, title: 'Free assessment', time: '2 minutes', desc: 'Answer a few simple questions. Our AI analyzes your needs and finds the automations with the biggest impact.' },
+              { step: 2, icon: <FileText size={20} />, title: 'Tailored AI proposal', time: 'Instant', desc: 'You get a complete overview of processes we can automate, expected savings, and a clear priority list.' },
+              { step: 3, icon: <Zap size={20} />, title: 'We implement everything', time: '~14 days', desc: 'We set up everything from A to Z. You don\'t need to do anything technical — just give us access and we handle the rest.' },
+            ]).map((item, i) => (
               <motion.div key={i}
                 initial={{ opacity: 0, x: -30, scale: 0.97 }}
                 whileInView={{ opacity: 1, x: 0, scale: 1 }}
@@ -830,7 +883,7 @@ export default function Home() {
 
           <motion.div {...sAnim} className="text-center mt-12">
             <button onClick={ctaClick} className="gold-btn rounded-xl py-4 px-8 text-[15px] font-bold inline-flex items-center gap-2">
-              Start kartleggingen nå <ArrowRight size={16} />
+              {no ? 'Start kartleggingen nå' : 'Start the assessment now'} <ArrowRight size={16} />
             </button>
           </motion.div>
         </div>
@@ -843,12 +896,17 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-5">
           <motion.div {...sAnim} className="text-center mb-16">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-14">
-              {[
+              {(no ? [
                 { val: 200, suffix: '+', label: 'Automatiseringer' },
                 { val: 5, suffix: '', label: 'Bransjer dekket' },
                 { val: 85, suffix: '%', label: 'Raskere oppfølging' },
                 { val: 24, suffix: '/7', label: 'AI tilgjengelig' },
-              ].map((s, i) => (
+              ] : [
+                { val: 200, suffix: '+', label: 'Automations' },
+                { val: 5, suffix: '', label: 'Industries covered' },
+                { val: 85, suffix: '%', label: 'Faster follow-up' },
+                { val: 24, suffix: '/7', label: 'AI available' },
+              ]).map((s, i) => (
                 <motion.div key={i} initial={{ opacity: 0, scale: 0.6, y: 10 }} whileInView={{ opacity: 1, scale: 1, y: 0 }}
                   viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1, type: 'spring', stiffness: 150, damping: 15 }}>
                   <div className="text-[28px] md:text-[36px] font-extrabold text-gradient-gold">
@@ -863,17 +921,22 @@ export default function Home() {
           {/* Testimonials */}
           <motion.div {...sAnim} className="text-center mb-12">
             <h2 className="text-[24px] md:text-[36px] font-bold tracking-tight" style={{ color: '#f4f1eb' }}>
-              Det fungerer for <span className="text-gradient-gold">andre</span>
+              {no ? 'Det fungerer for' : 'It works for'} <span className="text-gradient-gold">{no ? 'andre' : 'others'}</span>
             </h2>
           </motion.div>
 
           <motion.div className="grid md:grid-cols-2 gap-6" {...staggerContainer}>
-            {[
+            {(no ? [
               { name: 'Martin K.', biz: 'Bygg & Håndverk', quote: 'Vi gikk fra å miste halvparten av leads til å fange alle. Omsetningen økte 25% på tre måneder — uten å ansette noen.', result: '+25% omsetning', stars: 5 },
               { name: 'Camilla H.', biz: 'Salong & Skjønnhet', quote: 'Kundene booker selv døgnet rundt, og vi får påminnelser automatisk. No-shows gikk ned 70% på første måned.', result: '–70% no-shows', stars: 5 },
               { name: 'Lars T.', biz: 'Eiendomsmegling', quote: 'Arxon sin AI-telefonsvarer fanger opp alle interessenter — selv de som ringer kl. 22 på søndag. Vi har aldri booket så mange visninger.', result: '+40% visninger', stars: 5 },
               { name: 'Kristine M.', biz: 'Bilverksted', quote: 'Automatisk påminnelse om EU-kontroll og service har gitt oss en jevn strøm av bookinger. Kundene elsker det.', result: '+35% gjenkjøp', stars: 5 },
-            ].map((t, i) => (
+            ] : [
+              { name: 'Martin K.', biz: 'Construction', quote: 'We went from losing half our leads to capturing all of them. Revenue increased 25% in three months — without hiring anyone.', result: '+25% revenue', stars: 5 },
+              { name: 'Camilla H.', biz: 'Salon & Beauty', quote: 'Customers book around the clock, and we get automatic reminders. No-shows dropped 70% in the first month.', result: '–70% no-shows', stars: 5 },
+              { name: 'Lars T.', biz: 'Real Estate', quote: 'Arxon\'s AI phone answering captures all interested parties — even those who call at 10 PM on Sunday. We\'ve never booked so many viewings.', result: '+40% viewings', stars: 5 },
+              { name: 'Kristine M.', biz: 'Auto Workshop', quote: 'Automatic reminders for inspections and service have given us a steady stream of bookings. Customers love it.', result: '+35% repeat', stars: 5 },
+            ]).map((t, i) => (
               <motion.div key={i}
                 variants={staggerChild}
                 whileHover={{ y: -3, transition: { duration: 0.2 } }}
@@ -905,14 +968,14 @@ export default function Home() {
         <div className="max-w-xl mx-auto px-5">
           <motion.div {...sAnim} className="text-center mb-10">
             <h2 className="text-[24px] md:text-[36px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
-              Hva taper <span className="text-gradient-gold">du</span> per måned?
+              {no ? 'Hva taper' : 'What are'} <span className="text-gradient-gold">{no ? 'du' : 'you'}</span> {no ? 'per måned?' : 'losing per month?'}
             </h2>
-            <p className="text-[15px] max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>Beregn ditt potensielle tap — og hva Arxon kan spare deg.</p>
+            <p className="text-[15px] max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>{no ? 'Beregn ditt potensielle tap — og hva Arxon kan spare deg.' : 'Calculate your potential loss — and what Arxon can save you.'}</p>
           </motion.div>
 
           <motion.div {...scaleIn} className="glass-card p-6 md:p-8" role="form" aria-label="ROI-kalkulator">
             <label className="block mb-4" htmlFor="roi-industry">
-              <span className="text-[12px] uppercase tracking-wide" style={{ color: 'rgba(244,241,235,0.55)' }}>Bransje</span>
+              <span className="text-[12px] uppercase tracking-wide" style={{ color: 'rgba(244,241,235,0.55)' }}>{no ? 'Bransje' : 'Industry'}</span>
               <select id="roi-industry" value={roiIndustry} onChange={(e) => setRoiIndustry(e.target.value)}
                 className="mt-2 w-full rounded-lg px-4 py-3 text-[14px] outline-none"
                 aria-label="Velg din bransje"
@@ -923,7 +986,7 @@ export default function Home() {
 
             <label className="block mb-6" htmlFor="roi-calls">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-[12px] uppercase tracking-wide" style={{ color: 'rgba(244,241,235,0.55)' }}>Ubesvarte anrop per uke</span>
+                <span className="text-[12px] uppercase tracking-wide" style={{ color: 'rgba(244,241,235,0.55)' }}>{no ? 'Ubesvarte anrop per uke' : 'Missed calls per week'}</span>
                 <span className="text-[14px] font-bold" style={{ color: gold }} aria-live="polite">{missedCalls}</span>
               </div>
               <input id="roi-calls" type="range" min={1} max={30} value={missedCalls} onChange={(e) => setMissedCalls(+e.target.value)}
@@ -934,17 +997,17 @@ export default function Home() {
 
             <div className="text-center py-6 rounded-xl relative overflow-hidden" style={{ background: `rgba(${goldRgb},0.04)`, border: `1px solid rgba(${goldRgb},0.1)` }}
               aria-live="polite" aria-atomic="true">
-              <div className="text-[11px] uppercase tracking-wide mb-1" style={{ color: 'rgba(244,241,235,0.55)' }}>Estimert månedlig tap</div>
+              <div className="text-[11px] uppercase tracking-wide mb-1" style={{ color: 'rgba(244,241,235,0.55)' }}>{no ? 'Estimert månedlig tap' : 'Estimated monthly loss'}</div>
               <div className="text-[36px] md:text-[44px] font-extrabold text-gradient-gold">
                 {monthlySavings.toLocaleString('nb-NO')} kr
               </div>
               <div className="text-[12px] mt-1" style={{ color: 'rgba(244,241,235,0.55)' }}>
-                ≈ {Math.round(monthlySavings / 4.3).toLocaleString('nb-NO')} kr per uke
+                ≈ {Math.round(monthlySavings / 4.3).toLocaleString('nb-NO')} kr {no ? 'per uke' : 'per week'}
               </div>
             </div>
 
             <button onClick={ctaClick} className="gold-btn w-full rounded-xl py-4 mt-6 text-[15px] font-bold flex items-center justify-center gap-2">
-              Stopp tapet — få gratis analyse <ArrowRight size={16} />
+              {no ? 'Stopp tapet — få gratis analyse' : 'Stop the loss — get free analysis'} <ArrowRight size={16} />
             </button>
           </motion.div>
         </div>
@@ -957,7 +1020,7 @@ export default function Home() {
         <div className="max-w-xl mx-auto px-5">
           <motion.div {...sAnim} className="text-center mb-10">
             <h2 className="text-[24px] md:text-[36px] font-bold tracking-tight" style={{ color: '#f4f1eb' }}>
-              Vanlige spørsmål
+              {no ? 'Vanlige spørsmål' : 'Frequently asked questions'}
             </h2>
           </motion.div>
           <motion.div {...sAnim}>
@@ -979,25 +1042,25 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
               className="text-[28px] md:text-[48px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
-              Slutt å tape kunder.
+              {no ? 'Slutt å tape kunder.' : 'Stop losing customers.'}
               <br />
-              <span className="text-gradient-gold anim-gradient-shift">Start i dag.</span>
+              <span className="text-gradient-gold anim-gradient-shift">{no ? 'Start i dag.' : 'Start today.'}</span>
             </motion.h2>
             <p className="text-[15px] mb-8 max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>
-              Gratis kartlegging. Ingen binding. Implementert på ca. 14 dager.
+              {no ? 'Gratis kartlegging. Ingen binding. Implementert på ca. 14 dager.' : 'Free assessment. No commitment. Implemented in ~14 days.'}
             </p>
             <button onClick={ctaClick} className="gold-btn gold-btn-pulse rounded-xl py-4 px-12 text-[16px] font-bold inline-flex items-center gap-2 group">
-              Start gratis kartlegging <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1" />
+              {no ? 'Start gratis kartlegging' : 'Start free assessment'} <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1" />
             </button>
             <p className="text-[12px] mt-4" style={{ color: 'rgba(244,241,235,0.7)' }}>
-              Eller ring oss: <a href="tel:+4778896386" className="no-underline" style={{ color: gold }}
+              {no ? 'Eller ring oss:' : 'Or call us:'} <a href="tel:+4778896386" className="no-underline" style={{ color: gold }}
                 onClick={() => trackEvent('Phone_Click', { section: 'final_cta' })}>78 89 63 86</a>
             </p>
           </motion.div>
         </div>
       </section>
 
-      <Footer lang="no" />
+      <Footer />
 
       {/* ── Sticky mobile CTA ── */}
       <AnimatePresence>
@@ -1007,7 +1070,7 @@ export default function Home() {
             className="fixed bottom-0 left-0 right-0 z-50 p-3 md:hidden"
             style={{ background: `rgba(8,12,20,0.9)`, borderTop: `1px solid rgba(${goldRgb},0.15)`, backdropFilter: 'blur(12px)' }}>
             <button onClick={ctaClick} className="gold-btn w-full rounded-xl py-3.5 text-[14px] font-bold flex items-center justify-center gap-2">
-              Start gratis kartlegging <ArrowRight size={15} />
+              {no ? 'Start gratis kartlegging' : 'Start free assessment'} <ArrowRight size={15} />
             </button>
           </motion.div>
         )}

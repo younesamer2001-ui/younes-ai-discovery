@@ -2,14 +2,15 @@
 
 import Link from 'next/link'
 import { gold, goldRgb, fonts } from '@/lib/constants'
+import { useLanguage } from '@/lib/language-context'
 
 interface FooterProps {
-  lang: 'no' | 'en'
   /** Minimal footer (just copyright). Default: false (full footer) */
   minimal?: boolean
 }
 
-export default function Footer({ lang, minimal = false }: FooterProps) {
+export default function Footer({ minimal = false }: FooterProps) {
+  const { lang } = useLanguage()
   const tx = lang === 'no' ? {
     tagline: 'Intelligent AI-automatisering for norske bedrifter.',
     services: 'Tjenester',

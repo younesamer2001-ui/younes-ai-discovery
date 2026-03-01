@@ -5,21 +5,17 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowRight, Globe, Menu, X } from 'lucide-react'
 import { gold, goldRgb, bg, fonts } from '@/lib/constants'
+import { useLanguage } from '@/lib/language-context'
 
 interface NavProps {
-  lang?: 'no' | 'en'
-  setLang?: (l: 'no' | 'en') => void
   /** Use sticky nav with blur backdrop (like landing/pricing). Default: false (relative) */
   sticky?: boolean
 }
 
-export default function Nav({ lang: langProp, setLang: setLangProp, sticky = false }: NavProps) {
+export default function Nav({ sticky = false }: NavProps) {
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
-  const [internalLang, setInternalLang] = useState<'no' | 'en'>('no')
-
-  const lang = langProp ?? internalLang
-  const setLang = setLangProp ?? setInternalLang
+  const { lang, setLang } = useLanguage()
 
   const links = lang === 'no'
     ? [

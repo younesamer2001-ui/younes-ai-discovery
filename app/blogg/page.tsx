@@ -1,4 +1,5 @@
 'use client'
+import { useLanguage } from '@/lib/language-context'
 
 import { useState } from 'react'
 import Link from 'next/link'
@@ -45,12 +46,12 @@ const articles = [
 ]
 
 export default function BlogPage() {
-  const [lang, setLang] = useState<'no'|'en'>('no')
+  const { lang } = useLanguage()
 
   return (
     <div style={{ minHeight: '100vh', background: `linear-gradient(180deg, ${bg} 0%, #0d0d15 50%, ${bg} 100%)`, color: '#f0f0f0', fontFamily: "'DM Sans', sans-serif" }}>
       <style>{globalStyles()}</style>
-      <Nav lang={lang} setLang={setLang} />
+      <Nav />
 
       <section style={{ maxWidth: 800, margin: '0 auto', padding: '60px 24px 40px', textAlign: 'center' }}>
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.35 }}
@@ -105,7 +106,7 @@ export default function BlogPage() {
         ))}
       </section>
 
-      <Footer lang={lang} minimal />
+      <Footer minimal />
     </div>
   )
 }

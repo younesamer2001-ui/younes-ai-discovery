@@ -417,7 +417,7 @@ export default function IndustryPage() {
         </Link>
       </div>
 
-      <Footer lang={lang} />
+      <Footer />
 
       <style jsx global>{`
         .auto-card:hover {

@@ -1,4 +1,5 @@
 'use client'
+import { useLanguage } from '@/lib/language-context'
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -13,7 +14,7 @@ import Footer from '@/app/components/Footer'
 import { gold, goldRgb, bg, fadeUp, globalStyles } from '@/lib/constants'
 
 export default function IntegrationsPage() {
-  const [lang, setLang] = useState<'no'|'en'>('no')
+  const { lang } = useLanguage()
   const router = useRouter()
 
   const categories = lang === 'no' ? [
@@ -175,7 +176,7 @@ export default function IntegrationsPage() {
   return (
     <div style={{ minHeight: '100vh', background: `linear-gradient(180deg, ${bg} 0%, #0d0d15 50%, ${bg} 100%)`, color: '#f0f0f0', fontFamily: "'DM Sans', sans-serif" }}>
       <style>{globalStyles()}</style>
-      <Nav lang={lang} setLang={setLang} />
+      <Nav />
 
       {/* Hero */}
       <section style={{ maxWidth: 800, margin: '0 auto', padding: '60px 24px 40px', textAlign: 'center' }}>
@@ -272,7 +273,7 @@ export default function IntegrationsPage() {
         </motion.div>
       </section>
 
-      <Footer lang={lang} minimal />
+      <Footer minimal />
     </div>
   )
 }

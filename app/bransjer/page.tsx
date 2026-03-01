@@ -213,7 +213,7 @@ export default function BransjerPage() {
         </div>
       </section>
 
-      <Footer lang={lang} />
+      <Footer />
 
       <style jsx global>{`
         .bransje-card:hover {

@@ -1,6 +1,7 @@
 'use client'
-
 import { useState } from 'react'
+import { useLanguage } from '@/lib/language-context'
+
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -49,7 +50,7 @@ function FAQ({ items }: { items: { q: string; a: string }[] }) {
    MOBILSVARER PAGE
    ══════════════════════════════════════════════════ */
 export default function MobilsvarerPage() {
-  const [lang, setLang] = useState<'no' | 'en'>('no')
+  const { lang } = useLanguage()
   const router = useRouter()
 
   const fadeUp = {
@@ -188,7 +189,7 @@ export default function MobilsvarerPage() {
     <div style={{ minHeight: '100vh', background: `linear-gradient(180deg, ${bg} 0%, #0d0d15 50%, ${bg} 100%)`, color: '#f0f0f0', fontFamily: "'DM Sans', sans-serif" }}>
       <style>{globalStyles()}</style>
 
-      <Nav lang={lang} setLang={setLang} />
+      <Nav />
 
       {/* ── HERO ── */}
       <motion.section {...fadeUp} style={{ maxWidth: 800, margin: '0 auto', padding: '50px 24px 40px', textAlign: 'center' }}>
@@ -343,7 +344,7 @@ export default function MobilsvarerPage() {
         </div>
       </motion.section>
 
-      <Footer lang={lang} />
+      <Footer />
     </div>
   )
 }
