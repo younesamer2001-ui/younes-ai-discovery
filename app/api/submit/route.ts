@@ -5,6 +5,28 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { recommendation, session, answers, userEmail } = body
 
+    // Validate required fields
+    if (!recommendation || typeof recommendation !== 'object') {
+      return NextResponse.json(
+        { error: 'Recommendation is required' },
+        { status: 400 }
+      )
+    }
+
+    if (!session || typeof session !== 'object') {
+      return NextResponse.json(
+        { error: 'Session is required' },
+        { status: 400 }
+      )
+    }
+
+    if (!Array.isArray(answers)) {
+      return NextResponse.json(
+        { error: 'Answers must be an array' },
+        { status: 400 }
+      )
+    }
+
     const adminEmail = process.env.ADMIN_EMAIL || 'amer.younes.2001@gmail.com'
 
     // If RESEND_API_KEY is configured, send email
@@ -58,13 +80,15 @@ export async function POST(request: NextRequest) {
       }
     } else {
       console.log('RESEND_API_KEY not configured — skipping email')
-      console.log('Submission from:', userEmail)
       console.log('Priority:', recommendation.priority_score)
     }
 
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error('Submit error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(
+      { error: 'An error occurred processing your request' },
+      { status: 500 }
+    )
   }
 }

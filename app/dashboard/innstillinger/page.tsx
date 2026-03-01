@@ -5,10 +5,22 @@ import { supabase } from '@/lib/supabase'
 import { gold, goldRgb, fonts } from '@/lib/constants'
 import { User, Building2, Phone, Mail, Globe, Bell, Shield, Save, Check } from 'lucide-react'
 
+interface SettingsForm {
+  companyName: string
+  contactName: string
+  phone: string
+  website: string
+  notifyEmail: boolean
+  notifySms: boolean
+  notifyNewLead: boolean
+  notifyMissedCall: boolean
+  notifyBooking: boolean
+}
+
 export default function SettingsPage() {
   const [user, setUser] = useState<any>(null)
   const [saved, setSaved] = useState(false)
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<SettingsForm>({
     companyName: '',
     contactName: '',
     phone: '',
@@ -126,9 +138,9 @@ export default function SettingsPage() {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {[
-            { key: 'notifyNewLead', label: 'Nye leads', desc: 'Få varsel når en ny lead er kvalifisert' },
-            { key: 'notifyMissedCall', label: 'Tapte anrop', desc: 'Bli varslet om anrop som ikke ble besvart' },
-            { key: 'notifyBooking', label: 'Nye bookinger', desc: 'Varsel når et møte er booket automatisk' },
+            { key: 'notifyNewLead' as const, label: 'Nye leads', desc: 'Få varsel når en ny lead er kvalifisert' },
+            { key: 'notifyMissedCall' as const, label: 'Tapte anrop', desc: 'Bli varslet om anrop som ikke ble besvart' },
+            { key: 'notifyBooking' as const, label: 'Nye bookinger', desc: 'Varsel når et møte er booket automatisk' },
           ].map(n => (
             <div key={n.key} style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -140,10 +152,10 @@ export default function SettingsPage() {
                 <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12 }}>{n.desc}</div>
               </div>
               <button
-                onClick={() => setForm({ ...form, [n.key]: !(form as any)[n.key] })}
+                onClick={() => setForm({ ...form, [n.key]: !form[n.key] })}
                 style={{
                   width: 44, height: 24, borderRadius: 12, border: 'none',
-                  background: (form as any)[n.key] ? gold : 'rgba(255,255,255,0.1)',
+                  background: form[n.key] ? gold : 'rgba(255,255,255,0.1)',
                   cursor: 'pointer', position: 'relative', transition: 'background 0.2s',
                   flexShrink: 0,
                 }}
@@ -152,7 +164,7 @@ export default function SettingsPage() {
                   width: 18, height: 18, borderRadius: '50%',
                   background: '#fff',
                   position: 'absolute', top: 3,
-                  left: (form as any)[n.key] ? 23 : 3,
+                  left: form[n.key] ? 23 : 3,
                   transition: 'left 0.2s',
                 }} />
               </button>

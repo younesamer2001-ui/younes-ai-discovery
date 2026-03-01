@@ -8,14 +8,58 @@ function getSupabaseAdmin() {
   )
 }
 
+// Simple email validation
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { action } = body
 
+    // Validate action
+    if (!action || typeof action !== 'string' || !['submit', 'analyze'].includes(action)) {
+      return NextResponse.json(
+        { error: 'Invalid action parameter' },
+        { status: 400 }
+      )
+    }
+
     // ── ACTION: SUBMIT LEAD ──
     if (action === 'submit') {
       const { contact, answers, aiSummary, roiData, recommendedTier, language } = body
+
+      // Validate required fields
+      if (!contact || typeof contact !== 'object') {
+        return NextResponse.json(
+          { error: 'Invalid contact object' },
+          { status: 400 }
+        )
+      }
+
+      if (!contact.email || typeof contact.email !== 'string' || !isValidEmail(contact.email)) {
+        return NextResponse.json(
+          { error: 'Invalid email address' },
+          { status: 400 }
+        )
+      }
+
+      if (!contact.name || typeof contact.name !== 'string') {
+        return NextResponse.json(
+          { error: 'Contact name is required' },
+          { status: 400 }
+        )
+      }
+
+      if (!answers || typeof answers !== 'object') {
+        return NextResponse.json(
+          { error: 'Answers are required' },
+          { status: 400 }
+        )
+      }
+
       const refNumber = 'YAI-' + Math.random().toString(36).substr(2, 8).toUpperCase()
 
       // Save to Supabase
@@ -45,8 +89,13 @@ export async function POST(request: NextRequest) {
         status: 'new',
       })
 
+      // Return error response if database insert fails
       if (dbError) {
         console.error('Supabase insert error:', dbError)
+        return NextResponse.json(
+          { error: 'Failed to save submission' },
+          { status: 500 }
+        )
       }
 
       // Send email notification
@@ -97,11 +146,22 @@ export async function POST(request: NextRequest) {
 
     // ── ACTION: GENERATE AI ANALYSIS ──
     if (action === 'analyze') {
+      // Validate prompt
+      if (!body.prompt || typeof body.prompt !== 'string') {
+        return NextResponse.json(
+          { error: 'Prompt is required and must be a string' },
+          { status: 400 }
+        )
+      }
+
       const { prompt } = body
       const anthropicKey = process.env.ANTHROPIC_API_KEY
 
       if (!anthropicKey) {
-        return NextResponse.json({ error: 'API key not configured' }, { status: 500 })
+        return NextResponse.json(
+          { error: 'Service temporarily unavailable' },
+          { status: 500 }
+        )
       }
 
       const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -121,7 +181,10 @@ export async function POST(request: NextRequest) {
       if (!res.ok) {
         const errText = await res.text()
         console.error('Anthropic API error:', errText)
-        return NextResponse.json({ error: 'AI generation failed' }, { status: 500 })
+        return NextResponse.json(
+          { error: 'AI analysis failed' },
+          { status: 500 }
+        )
       }
 
       const data = await res.json()
@@ -132,6 +195,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
   } catch (error: any) {
     console.error('Kartlegging API error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(
+      { error: 'An error occurred processing your request' },
+      { status: 500 }
+    )
   }
 }

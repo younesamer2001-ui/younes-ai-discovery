@@ -95,7 +95,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 12
-  },,,
+  },
   {
     "title": "Eiendomsmegling",
     "subtitle": "Meglere, eiendomsutvikling, boligutleie, eiendomsforvaltning",
@@ -176,7 +176,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 12
-  },,,
+  },
   {
     "title": "Salong & Skjønnhet",
     "subtitle": "Frisører, hudpleie, negledesign, barbershop, spa",
@@ -245,7 +245,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 10
-  },,,
+  },
   {
     "title": "Bilverksted & Bilforhandler",
     "subtitle": "Verksted, bilpleie, bilforhandler, dekkhotell",
@@ -308,7 +308,7 @@ export const industries: Industry[] = [
       }
     ],
     "count": 9
-  },,,
+  },
   {
     "title": "Reiseliv & Overnatting",
     "subtitle": "Hotell, hytter, B&B, campingplass, turoperatører",
@@ -377,5 +377,9 @@ export const industries: Industry[] = [
       }
     ],
     "count": 10
-  },,
+  },
 ]
+
+export function getIndustryBySlug(slug: string): Industry | undefined {
+  return industries.find(industry => industry.slug === slug)
+}

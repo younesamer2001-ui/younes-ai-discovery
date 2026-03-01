@@ -3,6 +3,12 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void
+  }
+}
+
 const gold = '#c9a96e'
 const goldRgb = '201,169,110'
 
@@ -32,8 +38,8 @@ export default function CookieConsent() {
     localStorage.setItem('arxon-cookie-consent', JSON.stringify(state))
     setVisible(false)
     // If analytics is accepted and GA is configured, enable it here
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('consent', 'update', {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('consent', 'update', {
         analytics_storage: state.analytics ? 'granted' : 'denied',
         ad_storage: state.marketing ? 'granted' : 'denied',
       })

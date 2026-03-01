@@ -123,7 +123,7 @@ export default function ChatWidget() {
             ],
           },
         },
-      }).catch(() => { pendingMessageRef.current = null; setIsConnecting(false); setStatusKey('') })
+      } as any).catch(() => { pendingMessageRef.current = null; setIsConnecting(false); setStatusKey('') })
     }
   }, [inputValue, isCallActive, assistantId])
 
@@ -342,7 +342,7 @@ export default function ChatWidget() {
                           ],
                         },
                       },
-                    }).catch(() => {
+                    } as any).catch(() => {
                       pendingMessageRef.current = null
                       setIsConnecting(false)
                       setStatusKey('')

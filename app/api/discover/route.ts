@@ -10,6 +10,30 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { session, previousAnswers, action, language } = body
 
+    // Validate action
+    if (!action || typeof action !== 'string' || !['next_question', 'generate_summary', 'final_recommendation'].includes(action)) {
+      return NextResponse.json(
+        { error: 'Invalid action parameter' },
+        { status: 400 }
+      )
+    }
+
+    // Validate session object exists
+    if (!session || typeof session !== 'object') {
+      return NextResponse.json(
+        { error: 'Session object is required' },
+        { status: 400 }
+      )
+    }
+
+    // Validate previousAnswers is array
+    if (!Array.isArray(previousAnswers)) {
+      return NextResponse.json(
+        { error: 'Previous answers must be an array' },
+        { status: 400 }
+      )
+    }
+
     const lang = language === 'en' ? 'English' : 'Norwegian'
 
     if (action === 'next_question') {
@@ -73,7 +97,13 @@ Respond in this exact JSON format:
         throw new Error('Failed to parse AI response')
       }
 
-      const questionData = JSON.parse(jsonMatch[0])
+      let questionData
+      try {
+        questionData = JSON.parse(jsonMatch[0])
+      } catch (parseError) {
+        console.error('Failed to parse JSON from AI response:', parseError)
+        throw new Error('Invalid JSON format in AI response')
+      }
       return NextResponse.json(questionData)
     }
 
@@ -109,7 +139,14 @@ Respond in this exact JSON format:
       const jsonMatch = text.match(/\{[\s\S]*\}/)
       if (!jsonMatch) throw new Error('Failed to parse summary')
 
-      return NextResponse.json(JSON.parse(jsonMatch[0]))
+      let summaryData
+      try {
+        summaryData = JSON.parse(jsonMatch[0])
+      } catch (parseError) {
+        console.error('Failed to parse summary JSON:', parseError)
+        throw new Error('Invalid JSON format in summary response')
+      }
+      return NextResponse.json(summaryData)
     }
 
     if (action === 'final_recommendation') {
@@ -168,12 +205,22 @@ Respond in this exact JSON format:
       const jsonMatch = text.match(/\{[\s\S]*\}/)
       if (!jsonMatch) throw new Error('Failed to parse recommendation')
 
-      return NextResponse.json(JSON.parse(jsonMatch[0]))
+      let recommendationData
+      try {
+        recommendationData = JSON.parse(jsonMatch[0])
+      } catch (parseError) {
+        console.error('Failed to parse recommendation JSON:', parseError)
+        throw new Error('Invalid JSON format in recommendation response')
+      }
+      return NextResponse.json(recommendationData)
     }
 
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
   } catch (error: any) {
     console.error('Discovery API error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(
+      { error: 'An error occurred processing your request' },
+      { status: 500 }
+    )
   }
 }

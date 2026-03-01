@@ -55,7 +55,7 @@ export default function DriftPage() {
     initial: { opacity: 0, y: 28 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true },
-    transition: { duration: 0.55, ease: 'easeOut' },
+    transition: { duration: 0.55 },
   }
 
   /* ── Content ── */

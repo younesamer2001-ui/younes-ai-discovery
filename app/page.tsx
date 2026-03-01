@@ -17,13 +17,19 @@ import Footer from '@/app/components/Footer'
 import { gold, goldRgb, bg } from '@/lib/constants'
 import { useLanguage } from '@/lib/language-context'
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void
+  }
+}
+
 /* ── Design tokens ── */
 const cardBg = '#0d1a2d'
 
 /* ── GA4 event helper ── */
 function trackEvent(eventName: string, params?: Record<string, string | number>) {
-  if (typeof window !== 'undefined' && (window as any).gtag) {
-    (window as any).gtag('event', eventName, { page_location: window.location.href, ...params })
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', eventName, { page_location: window.location.href, ...params })
   }
 }
 
@@ -206,7 +212,7 @@ function PhoneDemo() {
               key={i}
               initial={{ opacity: 0, y: 12, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.3 }}
               className={`demo-msg ${msg.from === 'customer' ? 'demo-msg-customer' : msg.from === 'ai' ? 'demo-msg-ai' : 'demo-msg-system'}`}
             >
               {msg.from === 'system' && <Phone size={11} className="inline mr-1.5" style={{ color: '#4ade80' }} />}
@@ -280,7 +286,7 @@ function WorkflowDemo() {
                   className="demo-workflow-connector-fill"
                   initial={{ height: 0 }}
                   animate={{ height: activeStep >= i ? '100%' : '0%' }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                  transition={{ duration: 0.4 }}
                   style={{ background: `rgba(${goldRgb},0.3)` }}
                 />
               </div>
@@ -396,7 +402,7 @@ export default function Home() {
     initial: { opacity: 0, y: 24 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true },
-    transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
+    transition: { duration: 0.5 },
   }
 
   /* Stagger container for children */
@@ -408,7 +414,7 @@ export default function Home() {
 
   const staggerChild = {
     initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } },
+    whileInView: { opacity: 1, y: 0, transition: { duration: 0.4 } },
   }
 
   /* Scale-in variant */
@@ -416,7 +422,7 @@ export default function Home() {
     initial: { opacity: 0, scale: 0.92 },
     whileInView: { opacity: 1, scale: 1 },
     viewport: { once: true },
-    transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
+    transition: { duration: 0.5 },
   }
 
   /* Parallax for hero */
@@ -450,7 +456,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 16, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: 0.6 }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 glass-card">
             <Shield size={13} style={{ color: gold }} className="anim-spin-slow" />
             <span className="text-[12px] tracking-wide" style={{ color: 'rgba(244,241,235,0.7)' }}>{no ? 'GDPR-kompatibel · Norsk support · Live på ca. 14 dager' : 'GDPR compliant · Norwegian support · Live in ~14 days'}</span>
@@ -459,7 +465,7 @@ export default function Home() {
           <motion.h1
             initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: 0.7, delay: 0.15 }}
             className="text-[36px] md:text-[60px] font-extrabold leading-[1.08] tracking-tight mb-6"
             style={{ color: '#f4f1eb' }}>
             {no ? 'Spar 15–20 timer i uken med' : 'Save 15–20 hours a week with'}{' '}
@@ -469,7 +475,7 @@ export default function Home() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: 0.6, delay: 0.3 }}
             className="text-[16px] md:text-[18px] max-w-xl mx-auto mb-10 leading-relaxed"
             style={{ color: 'rgba(244,241,235,0.7)' }}>
             {no
@@ -480,7 +486,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: 0.5, delay: 0.4 }}
           >
             <button onClick={ctaClick} className="gold-btn gold-btn-pulse rounded-xl py-4 px-10 text-[16px] font-bold inline-flex items-center gap-2 group"
               aria-label="Start gratis kartlegging — ingen binding">
@@ -495,7 +501,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: 0.5, delay: 0.55 }}
             className="mt-10 flex flex-wrap items-center justify-center gap-2">
             <span className="text-[11px] uppercase tracking-wide mr-2" style={{ color: 'rgba(244,241,235,0.4)' }}>{no ? 'Populært i:' : 'Popular in:'}</span>
             {(no ? [
@@ -536,7 +542,7 @@ export default function Home() {
             onKeyDown={(e) => { if (e.key === 'Enter') document.getElementById('trust-bar')?.scrollIntoView({ behavior: 'smooth' }) }}
           >
             <span className="text-[11px] tracking-widest uppercase" style={{ color: 'rgba(244,241,235,0.4)' }}>{no ? 'Scroll ned' : 'Scroll down'}</span>
-            <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}>
+            <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.8, repeat: Infinity }}>
               <ChevronDown size={20} style={{ color: 'rgba(244,241,235,0.35)' }} />
             </motion.div>
           </motion.div>
@@ -852,7 +858,7 @@ export default function Home() {
               <motion.div key={i}
                 initial={{ opacity: 0, x: -30, scale: 0.97 }}
                 whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.2 }}
                 className="relative pl-16 md:pl-20 pb-12 last:pb-0"
               >
                 <motion.div
@@ -1040,7 +1046,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 30, scale: 0.97 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.6 }}
               className="text-[28px] md:text-[48px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
               {no ? 'Slutt å tape kunder.' : 'Stop losing customers.'}
               <br />

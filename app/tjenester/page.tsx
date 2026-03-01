@@ -253,8 +253,8 @@ function CategoryCard({ cat, isOpen, onToggle, index, searchQuery, industryFilte
             <p style={{
               fontSize: 13, color: 'rgba(255,255,255,0.5)', margin: '4px 0 0',
               lineHeight: 1.5, overflow: 'hidden', textOverflow: 'ellipsis',
-              display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical' as any,
-            }}>
+              display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical',
+            } as React.CSSProperties}>
               {cat.desc}
             </p>
           )}
@@ -445,7 +445,7 @@ export default function TjenesterPage() {
             <motion.div key={i}
               initial={{ opacity: 0, y: 16, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: 0.15 + i * 0.08, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ delay: 0.15 + i * 0.08, duration: 0.4 }}
               whileHover={{ y: -3, borderColor: `rgba(${goldRgb},0.2)`, transition: { duration: 0.2 } }}
               style={{
                 background: cardBg,

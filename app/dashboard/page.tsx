@@ -20,7 +20,14 @@ const demoStats = {
   bookingsChange: -3,
 }
 
-const weeklyData = [
+interface ChartData {
+  day: string
+  calls: number
+  leads: number
+  bookings: number
+}
+
+const weeklyData: ChartData[] = [
   { day: 'Man', calls: 52, leads: 14, bookings: 7 },
   { day: 'Tir', calls: 48, leads: 12, bookings: 6 },
   { day: 'Ons', calls: 61, leads: 18, bookings: 9 },
@@ -86,12 +93,12 @@ function StatCard({ icon: Icon, label, value, change, suffix = '' }: {
   )
 }
 
-function MiniBarChart({ data, dataKey, color }: { data: typeof weeklyData, dataKey: string, color: string }) {
-  const maxVal = Math.max(...data.map(d => (d as any)[dataKey]))
+function MiniBarChart({ data, dataKey, color }: { data: ChartData[], dataKey: keyof Omit<ChartData, 'day'>, color: string }) {
+  const maxVal = Math.max(...data.map(d => d[dataKey]))
   return (
     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 100 }}>
       {data.map((d, i) => {
-        const val = (d as any)[dataKey]
+        const val = d[dataKey]
         const height = maxVal > 0 ? (val / maxVal) * 100 : 0
         return (
           <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>

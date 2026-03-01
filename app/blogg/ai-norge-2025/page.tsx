@@ -1,8 +1,8 @@
 'use client';
 
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { ArrowLeft, ArrowRight, Globe, Menu, X } from 'lucide-react';
 
 const DESIGN = {
@@ -850,12 +850,8 @@ export default function AINorge2025() {
             }
 
             if (section.type === 'heading') {
-              const HeadingTag = `h${section.level}`;
-              return (
-                <HeadingTag key={idx} className="section">
-                  {section.title}
-                </HeadingTag>
-              );
+              const HeadingTag = `h${section.level}` as keyof JSX.IntrinsicElements;
+              return React.createElement(HeadingTag, { key: idx, className: 'section' }, section.title);
             }
 
             if (section.type === 'content') {
@@ -878,7 +874,7 @@ export default function AINorge2025() {
                       </tr>
                     </thead>
                     <tbody>
-                      {section.data.map((row, rowIdx) => (
+                      {section.data && section.data.map((row, rowIdx) => (
                         <tr key={rowIdx}>
                           <td>{row.country}</td>
                           <td>{row.rate}</td>
@@ -897,7 +893,7 @@ export default function AINorge2025() {
                   {section.title && (
                     <div className="list-section-title">{section.title}</div>
                   )}
-                  {section.items.map((item, itemIdx) => (
+                  {section.items && section.items.map((item, itemIdx) => (
                     <div key={itemIdx} className="list-item">
                       <div className="list-item-title">{item.title}</div>
                       <div className="list-item-description">
@@ -924,9 +920,11 @@ export default function AINorge2025() {
                   <div className="cta-content">
                     <h2 className="cta-heading">{section.heading}</h2>
                     <p className="cta-subheading">{section.subheading}</p>
-                    <Link href={section.ctaHref} className="cta-button">
-                      {section.ctaText}
-                    </Link>
+                    {section.ctaHref && (
+                      <Link href={section.ctaHref} className="cta-button">
+                        {section.ctaText}
+                      </Link>
+                    )}
                   </div>
                 </div>
               );

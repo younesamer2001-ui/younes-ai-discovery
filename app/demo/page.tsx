@@ -36,7 +36,7 @@ function VoiceOrb({ status, volume }: { status: CallStatus; volume: number }) {
         <>
           <motion.div
             animate={{ scale: [1, 1.6, 1], opacity: [0.15, 0, 0.15] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
+            transition={{ duration: 2, repeat: Infinity }}
             style={{
               position: 'absolute', width: 200, height: 200, borderRadius: '50%',
               border: `1px solid rgba(${goldRgb},0.2)`,
@@ -44,7 +44,7 @@ function VoiceOrb({ status, volume }: { status: CallStatus; volume: number }) {
           />
           <motion.div
             animate={{ scale: [1, 1.4, 1], opacity: [0.1, 0, 0.1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeOut', delay: 0.5 }}
+            transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
             style={{
               position: 'absolute', width: 200, height: 200, borderRadius: '50%',
               border: `1px solid rgba(${goldRgb},0.15)`,

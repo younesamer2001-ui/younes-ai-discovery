@@ -7,6 +7,7 @@ export interface PricingAutomation {
   implTime: string
   setupPrice: number
   monthlyPrice: number
+  monthlyCost?: number
   category: string
 }
 
