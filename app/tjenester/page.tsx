@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useMemo } from 'react'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
 import {
   ArrowRight, Phone, Users, Target, Megaphone,
   Cog, BarChart3, FileText, ShieldCheck,
@@ -434,21 +434,29 @@ export default function TjenesterPage() {
             { value: 5, suffix: '', label: 'Bransjer', icon: Target },
             { value: 30, suffix: '%+', label: 'Spart arbeidstid', icon: TrendingUp },
           ].map((stat, i) => (
-            <div key={i} style={{
-              background: cardBg,
-              borderRadius: 14,
-              padding: '20px 16px',
-              textAlign: 'center',
-              border: `1px solid rgba(${goldRgb},0.06)`,
-            }}>
-              <stat.icon size={20} color={gold} style={{ marginBottom: 8 }} />
+            <motion.div key={i}
+              initial={{ opacity: 0, y: 16, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 0.15 + i * 0.08, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+              whileHover={{ y: -3, borderColor: `rgba(${goldRgb},0.2)`, transition: { duration: 0.2 } }}
+              style={{
+                background: cardBg,
+                borderRadius: 14,
+                padding: '20px 16px',
+                textAlign: 'center',
+                border: `1px solid rgba(${goldRgb},0.06)`,
+                cursor: 'default',
+              }}
+              className="stat-card-hover"
+            >
+              <stat.icon size={20} color={gold} style={{ marginBottom: 8 }} className="stat-icon" />
               <div style={{ fontSize: 28, fontWeight: 700, color: gold, lineHeight: 1 }}>
                 <AnimatedCounter target={stat.value} suffix={stat.suffix} />
               </div>
               <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>
                 {stat.label}
               </div>
-            </div>
+            </motion.div>
           ))}
         </motion.div>
       </section>
@@ -655,12 +663,18 @@ export default function TjenesterPage() {
       <section style={{
         maxWidth: 900, margin: '0 auto', padding: '20px 24px 60px',
       }}>
-        <div style={{
-          background: cardBg,
-          borderRadius: 20,
-          padding: '48px 32px',
-          border: `1px solid rgba(${goldRgb},0.06)`,
-        }}>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          style={{
+            background: cardBg,
+            borderRadius: 20,
+            padding: '48px 32px',
+            border: `1px solid rgba(${goldRgb},0.06)`,
+          }}
+        >
           <h2 style={{
             fontSize: 24, fontWeight: 600, textAlign: 'center', marginBottom: 40,
           }}>
@@ -693,16 +707,28 @@ export default function TjenesterPage() {
                 icon: TrendingUp,
               },
             ].map((s, i) => (
-              <div key={i} style={{ textAlign: 'center', padding: '0 8px' }}>
-                <div style={{
-                  width: 56, height: 56, borderRadius: '50%',
-                  background: `rgba(${goldRgb},0.08)`,
-                  border: `2px solid rgba(${goldRgb},0.2)`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  margin: '0 auto 16px',
-                }}>
+              <motion.div key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.15 }}
+                style={{ textAlign: 'center', padding: '0 8px' }}
+              >
+                <motion.div
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.15 + 0.1, type: 'spring', stiffness: 200 }}
+                  style={{
+                    width: 56, height: 56, borderRadius: '50%',
+                    background: `rgba(${goldRgb},0.08)`,
+                    border: `2px solid rgba(${goldRgb},0.2)`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    margin: '0 auto 16px',
+                  }}
+                >
                   <s.icon size={24} color={gold} />
-                </div>
+                </motion.div>
                 <h4 style={{ fontSize: 16, fontWeight: 600, margin: '0 0 8px' }}>
                   <span style={{ color: gold }}>{s.step}.</span> {s.title}
                 </h4>
@@ -712,15 +738,20 @@ export default function TjenesterPage() {
                 }}>
                   {s.desc}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ── Bottom CTA ── */}
       <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 80px', textAlign: 'center' }}>
-        <div style={{
+        <motion.div
+          initial={{ opacity: 0, y: 24, scale: 0.98 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          style={{
           background: `linear-gradient(135deg, rgba(${goldRgb},0.06), ${cardBg})`,
           borderRadius: 20,
           padding: '56px 32px',
@@ -769,7 +800,7 @@ export default function TjenesterPage() {
               <Phone size={16} /> Ring oss
             </a>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       <Footer lang={lang} />
@@ -778,11 +809,25 @@ export default function TjenesterPage() {
         .tjeneste-card:hover {
           border-color: rgba(${goldRgb}, 0.15) !important;
           background: linear-gradient(135deg, ${cardBg}, rgba(${goldRgb},0.03)) !important;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.15), 0 0 12px rgba(${goldRgb},0.04);
         }
         .filter-pill:hover {
           border-color: rgba(${goldRgb}, 0.2) !important;
           background: rgba(${goldRgb}, 0.06) !important;
           color: ${gold} !important;
+          transform: translateY(-1px);
+        }
+        .stat-card-hover:hover .stat-icon {
+          transform: scale(1.15) rotate(8deg);
+          transition: transform 0.3s ease;
+        }
+        .stat-icon {
+          transition: transform 0.3s ease;
+        }
+        .gold-hover:hover {
+          background: rgba(${goldRgb}, 0.06) !important;
+          transform: translateY(-1px);
         }
         input::placeholder {
           color: rgba(255,255,255,0.3);

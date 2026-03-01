@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import {
   ArrowRight, Phone, Zap, Shield, ChevronDown, Star,
   ClipboardList, FileText, CheckCircle2, Clock, Users,
@@ -191,6 +191,32 @@ export default function Home() {
     transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
   }
 
+  /* Stagger container for children */
+  const staggerContainer = {
+    initial: {},
+    whileInView: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+    viewport: { once: true },
+  }
+
+  const staggerChild = {
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } },
+  }
+
+  /* Scale-in variant */
+  const scaleIn = {
+    initial: { opacity: 0, scale: 0.92 },
+    whileInView: { opacity: 1, scale: 1 },
+    viewport: { once: true },
+    transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
+  }
+
+  /* Parallax for hero */
+  const heroRef = useRef<HTMLElement>(null)
+  const { scrollYProgress: heroScrollY } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
+  const heroTextY = useTransform(heroScrollY, [0, 1], [0, 100])
+  const heroOpacity = useTransform(heroScrollY, [0, 0.6], [1, 0])
+
   return (
     <>
       <Nav />
@@ -198,38 +224,58 @@ export default function Home() {
       {/* ═══════════════════════════════════════════ */}
       {/*  BLOCK 1: HERO                              */}
       {/* ═══════════════════════════════════════════ */}
-      <section className="pt-8 md:pt-20 pb-16 md:pb-28 text-center relative overflow-hidden min-h-[85vh] flex flex-col justify-center">
+      <section ref={heroRef} className="pt-8 md:pt-20 pb-16 md:pb-28 text-center relative overflow-hidden min-h-[85vh] flex flex-col justify-center">
         <div className="hero-gradient-mesh" />
         <div className="hero-orb" />
         <div className="hero-orb-accent hero-orb-accent-1" />
         <div className="hero-orb-accent hero-orb-accent-2" />
+        {/* Floating particles */}
+        <div className="hero-particles" aria-hidden="true">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className={`hero-particle hero-particle-${i + 1}`} />
+          ))}
+        </div>
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(244,241,235,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(244,241,235,0.1) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
         <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, rgba(${goldRgb},0.15), transparent)` }} />
 
-        <div className="relative z-10 max-w-3xl mx-auto px-5">
-          <motion.div {...sAnim} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 glass-card">
-            <Shield size={13} style={{ color: gold }} />
+        <motion.div className="relative z-10 max-w-3xl mx-auto px-5" style={{ y: heroTextY, opacity: heroOpacity }}>
+          <motion.div
+            initial={{ opacity: 0, y: 16, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 glass-card">
+            <Shield size={13} style={{ color: gold }} className="anim-spin-slow" />
             <span className="text-[12px] tracking-wide" style={{ color: 'rgba(244,241,235,0.7)' }}>GDPR-kompatibel &middot; Norsk support &middot; Live på ca. 14 dager</span>
           </motion.div>
 
-          <motion.h1 {...sAnim} transition={{ duration: 0.5, delay: 0.1 }}
+          <motion.h1
+            initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="text-[36px] md:text-[60px] font-extrabold leading-[1.08] tracking-tight mb-6"
             style={{ color: '#f4f1eb' }}>
             Spar 15–20 timer i uken med{' '}
-            <span className="text-gradient-gold">AI som jobber for deg</span>
+            <span className="text-gradient-gold anim-gradient-shift">AI som jobber for deg</span>
           </motion.h1>
 
-          <motion.p {...sAnim} transition={{ duration: 0.5, delay: 0.2 }}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="text-[16px] md:text-[18px] max-w-xl mx-auto mb-10 leading-relaxed"
             style={{ color: 'rgba(244,241,235,0.7)' }}>
             Små bedrifter taper 15 000–25 000 kr/mnd på ubesvarte anrop og manuelt arbeid.
             Arxon automatiserer telefon, booking og oppfølging — slik at du kan fokusere på kundene.
           </motion.p>
 
-          <motion.div {...sAnim} transition={{ duration: 0.5, delay: 0.3 }}>
-            <button onClick={ctaClick} className="gold-btn gold-btn-pulse rounded-xl py-4 px-10 text-[16px] font-bold inline-flex items-center gap-2"
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
+            <button onClick={ctaClick} className="gold-btn gold-btn-pulse rounded-xl py-4 px-10 text-[16px] font-bold inline-flex items-center gap-2 group"
               aria-label="Start gratis kartlegging — ingen binding">
-              Start gratis kartlegging <ArrowRight size={18} aria-hidden="true" />
+              Start gratis kartlegging <ArrowRight size={18} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1" />
             </button>
             <p className="text-[12px] mt-4" style={{ color: 'rgba(244,241,235,0.55)' }}>
               Gratis &middot; Ingen binding &middot; Resultat på 2 minutter
@@ -237,7 +283,10 @@ export default function Home() {
           </motion.div>
 
           {/* Industry pills */}
-          <motion.div {...sAnim} transition={{ duration: 0.5, delay: 0.45 }}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="mt-10 flex flex-wrap items-center justify-center gap-2">
             <span className="text-[11px] uppercase tracking-wide mr-2" style={{ color: 'rgba(244,241,235,0.4)' }}>Populært i:</span>
             {[
@@ -276,7 +325,7 @@ export default function Home() {
               <ChevronDown size={20} style={{ color: 'rgba(244,241,235,0.35)' }} />
             </motion.div>
           </motion.div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ═══════════════════════════════════════════ */}
@@ -304,16 +353,15 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <motion.div className="grid md:grid-cols-3 gap-6" {...staggerContainer}>
             {[
               { icon: <PhoneOff size={24} />, title: 'Ubesvarte anrop', pain: 'Hver gang telefonen ringer uten svar, mister du en potensiell kunde.', agitate: 'Det koster deg 15 000–25 000 kr/mnd i tapte inntekter.' },
               { icon: <Clock size={24} />, title: 'Timer på manuelt arbeid', pain: 'Booking, oppfølging, fakturering — alt gjøres for hånd.', agitate: '15–20 timer i uken forsvinner til oppgaver AI kan gjøre på sekunder.' },
               { icon: <TrendingUp size={24} />, title: 'Konkurrenter automatiserer', pain: 'Mens du gjør ting manuelt, har konkurrentene allerede AI.', agitate: 'De fanger kundene dine mens du er opptatt med admin.' },
             ].map((item, i) => (
               <motion.div key={i}
-                initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="glass-card p-6 md:p-8 group"
+                variants={staggerChild}
+                className="glass-card p-6 md:p-8 group hover-lift"
               >
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
                   style={{ background: 'rgba(239,69,69,0.08)', border: '1px solid rgba(239,69,69,0.15)' }}>
@@ -324,7 +372,7 @@ export default function Home() {
                 <p className="text-[13px] font-medium" style={{ color: '#ef4545' }}>{item.agitate}</p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           <motion.div {...sAnim} className="text-center mt-12">
             <p className="text-[18px] font-semibold" style={{ color: gold }}>
@@ -345,9 +393,9 @@ export default function Home() {
             </h2>
           </motion.div>
 
-          <motion.div {...sAnim} className="grid md:grid-cols-2 gap-6">
+          <motion.div {...staggerContainer} className="grid md:grid-cols-2 gap-6">
             {/* Before */}
-            <div className="glass-card p-6 md:p-8" style={{ borderColor: 'rgba(239,69,69,0.15)' }}>
+            <motion.div variants={staggerChild} className="glass-card p-6 md:p-8 hover-lift" style={{ borderColor: 'rgba(239,69,69,0.15)' }}>
               <div className="flex items-center gap-2 mb-6">
                 <X size={18} style={{ color: '#ef4545' }} />
                 <span className="text-[14px] font-bold uppercase tracking-wide" style={{ color: '#ef4545' }}>Uten Arxon</span>
@@ -367,10 +415,10 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* After */}
-            <div className="glass-card p-6 md:p-8" style={{ borderColor: `rgba(${goldRgb},0.2)`, background: `rgba(${goldRgb},0.02)` }}>
+            <motion.div variants={staggerChild} className="glass-card p-6 md:p-8 hover-lift" style={{ borderColor: `rgba(${goldRgb},0.2)`, background: `rgba(${goldRgb},0.02)` }}>
               <div className="flex items-center gap-2 mb-6">
                 <CheckCircle2 size={18} style={{ color: '#4ade80' }} />
                 <span className="text-[14px] font-bold uppercase tracking-wide" style={{ color: '#4ade80' }}>Med Arxon</span>
@@ -390,7 +438,7 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -424,10 +472,11 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.08 }}
                 className={`bento-card group ${item.span === 'wide' ? 'md:col-span-2' : ''}`}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
               >
                 <div className="bento-card-glow" />
                 <div className="relative z-10 p-6 md:p-8">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
                     style={{ background: `rgba(${goldRgb},0.08)`, border: `1px solid rgba(${goldRgb},0.15)` }}>
                     <span style={{ color: gold }}>{item.icon}</span>
                   </div>
@@ -461,7 +510,7 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <motion.div className="grid grid-cols-2 md:grid-cols-5 gap-4" {...staggerContainer}>
             {[
               { icon: Hammer, label: 'Bygg & Håndverk', count: 12, slug: 'bygg-og-handverk' },
               { icon: HomeIcon, label: 'Eiendom', count: 12, slug: 'eiendomsmegling' },
@@ -469,13 +518,10 @@ export default function Home() {
               { icon: Car, label: 'Bilverksted', count: 9, slug: 'bilverksted-og-bilforhandler' },
               { icon: Plane, label: 'Reiseliv', count: 10, slug: 'reiseliv-og-overnatting' },
             ].map((ind, i) => (
-              <motion.div key={ind.slug}
-                initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ duration: 0.3, delay: i * 0.08 }}
-              >
+              <motion.div key={ind.slug} variants={staggerChild}>
                 <Link href={`/bransjer#${ind.slug}`} style={{ textDecoration: 'none' }}>
-                  <div className="glass-card p-5 text-center group cursor-pointer" style={{ transition: 'all 0.3s' }}>
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
+                  <div className="glass-card p-5 text-center group cursor-pointer hover-lift" style={{ transition: 'all 0.3s' }}>
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
                       style={{ background: `rgba(${goldRgb},0.06)`, border: `1px solid rgba(${goldRgb},0.12)` }}>
                       <ind.icon size={22} style={{ color: gold }} />
                     </div>
@@ -485,11 +531,11 @@ export default function Home() {
                 </Link>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           <motion.div {...sAnim} className="text-center mt-8">
-            <Link href="/bransjer" className="inline-flex items-center gap-2 text-[13px] font-medium" style={{ color: gold, textDecoration: 'none' }}>
-              Se alle bransjer i detalj <ArrowRight size={14} />
+            <Link href="/bransjer" className="inline-flex items-center gap-2 text-[13px] font-medium group" style={{ color: gold, textDecoration: 'none' }}>
+              Se alle bransjer i detalj <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </motion.div>
         </div>
@@ -516,16 +562,22 @@ export default function Home() {
               { step: 3, icon: <Zap size={20} />, title: 'Vi implementerer alt', time: 'Ca. 14 dager', desc: 'Vi setter opp alt fra A til Å. Du trenger ikke gjøre noe teknisk — bare gi oss tilgang, så fikser vi resten.' },
             ].map((item, i) => (
               <motion.div key={i}
-                initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.15 }}
+                initial={{ opacity: 0, x: -30, scale: 0.97 }}
+                whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                 className="relative pl-16 md:pl-20 pb-12 last:pb-0"
               >
-                <div className="absolute left-0 md:left-2 w-12 h-12 rounded-full flex items-center justify-center z-10"
+                <motion.div
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.2 + 0.1, type: 'spring', stiffness: 200 }}
+                  className="absolute left-0 md:left-2 w-12 h-12 rounded-full flex items-center justify-center z-10"
                   style={{ background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.25)` }}>
                   <span className="text-sm font-bold" style={{ color: gold }}>{item.step}</span>
-                </div>
+                </motion.div>
 
-                <div className="glass-card p-6">
+                <div className="glass-card p-6 hover-lift">
                   <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                     <h3 className="text-[16px] font-bold flex items-center gap-2" style={{ color: '#f4f1eb' }}>
                       <span style={{ color: gold }}>{item.icon}</span> {item.title}
@@ -562,8 +614,8 @@ export default function Home() {
                 { val: 85, suffix: '%', label: 'Raskere oppfølging' },
                 { val: 24, suffix: '/7', label: 'AI tilgjengelig' },
               ].map((s, i) => (
-                <motion.div key={i} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.1 }}>
+                <motion.div key={i} initial={{ opacity: 0, scale: 0.6, y: 10 }} whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                  viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1, type: 'spring', stiffness: 150, damping: 15 }}>
                   <div className="text-[28px] md:text-[36px] font-extrabold text-gradient-gold">
                     <AnimCounter target={s.val} suffix={s.suffix} />
                   </div>
@@ -580,7 +632,7 @@ export default function Home() {
             </h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <motion.div className="grid md:grid-cols-2 gap-6" {...staggerContainer}>
             {[
               { name: 'Martin K.', biz: 'Bygg & Håndverk', quote: 'Vi gikk fra å miste halvparten av leads til å fange alle. Omsetningen økte 25% på tre måneder — uten å ansette noen.', result: '+25% omsetning', stars: 5 },
               { name: 'Camilla H.', biz: 'Salong & Skjønnhet', quote: 'Kundene booker selv døgnet rundt, og vi får påminnelser automatisk. No-shows gikk ned 70% på første måned.', result: '–70% no-shows', stars: 5 },
@@ -588,8 +640,8 @@ export default function Home() {
               { name: 'Kristine M.', biz: 'Bilverksted', quote: 'Automatisk påminnelse om EU-kontroll og service har gitt oss en jevn strøm av bookinger. Kundene elsker det.', result: '+35% gjenkjøp', stars: 5 },
             ].map((t, i) => (
               <motion.div key={i}
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.08 }}
+                variants={staggerChild}
+                whileHover={{ y: -3, transition: { duration: 0.2 } }}
                 className="glass-card p-6 md:p-8">
                 <div className="flex gap-1 mb-4">
                   {Array.from({ length: t.stars }).map((_, j) => <Star key={j} size={14} fill={gold} color={gold} />)}
@@ -607,7 +659,7 @@ export default function Home() {
                 </div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -623,7 +675,7 @@ export default function Home() {
             <p className="text-[15px] max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>Beregn ditt potensielle tap — og hva Arxon kan spare deg.</p>
           </motion.div>
 
-          <motion.div {...sAnim} className="glass-card p-6 md:p-8" role="form" aria-label="ROI-kalkulator">
+          <motion.div {...scaleIn} className="glass-card p-6 md:p-8" role="form" aria-label="ROI-kalkulator">
             <label className="block mb-4" htmlFor="roi-industry">
               <span className="text-[12px] uppercase tracking-wide" style={{ color: 'rgba(244,241,235,0.55)' }}>Bransje</span>
               <select id="roi-industry" value={roiIndustry} onChange={(e) => setRoiIndustry(e.target.value)}
@@ -686,16 +738,21 @@ export default function Home() {
         <div className="cta-glow" />
         <div className="max-w-2xl mx-auto px-5 text-center relative z-10">
           <motion.div {...sAnim}>
-            <h2 className="text-[28px] md:text-[48px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
+            <motion.h2
+              initial={{ opacity: 0, y: 30, scale: 0.97 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="text-[28px] md:text-[48px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
               Slutt å tape kunder.
               <br />
-              <span className="text-gradient-gold">Start i dag.</span>
-            </h2>
+              <span className="text-gradient-gold anim-gradient-shift">Start i dag.</span>
+            </motion.h2>
             <p className="text-[15px] mb-8 max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>
               Gratis kartlegging. Ingen binding. Implementert på ca. 14 dager.
             </p>
-            <button onClick={ctaClick} className="gold-btn gold-btn-pulse rounded-xl py-4 px-12 text-[16px] font-bold inline-flex items-center gap-2">
-              Start gratis kartlegging <ArrowRight size={18} />
+            <button onClick={ctaClick} className="gold-btn gold-btn-pulse rounded-xl py-4 px-12 text-[16px] font-bold inline-flex items-center gap-2 group">
+              Start gratis kartlegging <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1" />
             </button>
             <p className="text-[12px] mt-4" style={{ color: 'rgba(244,241,235,0.7)' }}>
               Eller ring oss: <a href="tel:+4778896386" className="no-underline" style={{ color: gold }}
@@ -916,6 +973,63 @@ export default function Home() {
           border-color: rgba(${goldRgb}, 0.2) !important;
           background: rgba(${goldRgb}, 0.05) !important;
           color: ${gold} !important;
+          transform: translateY(-1px);
+        }
+
+        /* ── Hover lift utility ── */
+        .hover-lift {
+          transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .hover-lift:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 30px rgba(0,0,0,0.2), 0 0 15px rgba(${goldRgb},0.06);
+        }
+
+        /* ── Slow spin for icons ── */
+        .anim-spin-slow {
+          animation: anim-spin-slow 8s linear infinite;
+        }
+        @keyframes anim-spin-slow {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        /* ── Gradient shift for gold text ── */
+        .anim-gradient-shift {
+          background-size: 200% 200%;
+          animation: gradient-shift 4s ease-in-out infinite alternate;
+        }
+        @keyframes gradient-shift {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 100% 50%; }
+        }
+
+        /* ── Floating hero particles ── */
+        .hero-particles {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          overflow: hidden;
+        }
+        .hero-particle {
+          position: absolute;
+          width: 3px;
+          height: 3px;
+          border-radius: 50%;
+          background: rgba(${goldRgb}, 0.3);
+          animation: float-particle 12s ease-in-out infinite;
+        }
+        .hero-particle-1 { top: 15%; left: 10%; animation-duration: 10s; animation-delay: 0s; }
+        .hero-particle-2 { top: 70%; left: 85%; animation-duration: 14s; animation-delay: 2s; width: 2px; height: 2px; }
+        .hero-particle-3 { top: 30%; left: 75%; animation-duration: 11s; animation-delay: 4s; }
+        .hero-particle-4 { top: 80%; left: 20%; animation-duration: 13s; animation-delay: 1s; width: 4px; height: 4px; opacity: 0.2; }
+        .hero-particle-5 { top: 50%; left: 50%; animation-duration: 16s; animation-delay: 3s; width: 2px; height: 2px; }
+        .hero-particle-6 { top: 25%; left: 40%; animation-duration: 12s; animation-delay: 5s; }
+        @keyframes float-particle {
+          0%, 100% { transform: translate(0, 0) scale(1); opacity: 0; }
+          10% { opacity: 0.6; }
+          50% { transform: translate(40px, -60px) scale(1.5); opacity: 0.3; }
+          90% { opacity: 0.5; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -927,6 +1041,11 @@ export default function Home() {
           .gold-btn-pulse { animation: none !important; }
           .bento-card:hover { transform: none; }
           .glass-card:hover { transform: none; }
+          .hover-lift:hover { transform: none; }
+          .anim-spin-slow { animation: none !important; }
+          .anim-gradient-shift { animation: none !important; }
+          .hero-particle { animation: none !important; opacity: 0 !important; }
+          .industry-pill:hover { transform: none; }
         }
       `}</style>
     </>
