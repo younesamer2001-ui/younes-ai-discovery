@@ -176,7 +176,7 @@ export default function Home() {
   }, [])
 
   const faqItems = [
-    { q: 'Hva koster det å komme i gang?', a: 'Kartleggingen er 100% gratis og uforpliktende. Etter analysen får du et skreddersydd pristilbud. De fleste starter fra 2 000 kr/mnd — ingen skjulte kostnader.' },
+    { q: 'Hva koster det å komme i gang?', a: 'Kartleggingen er 100% gratis og uforpliktende. Etter analysen får du et skreddersydd pristilbud basert på dine behov — ingen skjulte kostnader.' },
     { q: 'Hvor lang tid tar implementeringen?', a: 'Fra signering til live tar det ca. 14 virkedager. Vi jobber grundig med oppsett, testing og tilpasning slik at alt fungerer skikkelig fra dag én.' },
     { q: 'Er det trygt med tanke på GDPR?', a: 'Absolutt. All data lagres kryptert innen EØS. Vi er GDPR-kompatible og EU AI Act-klare. Vi inngår databehandleravtale med alle kunder.' },
     { q: 'Kan jeg starte med én automatisering?', a: 'Ja! De fleste starter med AI-mobilsvarer eller auto-booking og bygger videre derfra. Du velger selv tempo og omfang.' },
@@ -612,61 +612,7 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════ */}
-      {/*  BLOCK 9: PRICING TEASER                     */}
-      {/* ═══════════════════════════════════════════ */}
-      <section className="py-20 md:py-28" style={{ borderTop: '1px solid rgba(244,241,235,0.04)' }}>
-        <div className="max-w-3xl mx-auto px-5">
-          <motion.div {...sAnim} className="text-center mb-12">
-            <h2 className="text-[24px] md:text-[36px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
-              Enkel og <span className="text-gradient-gold">transparent prising</span>
-            </h2>
-            <p className="text-[15px] max-w-md mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>
-              Ingen skjulte kostnader. Betal kun for det du bruker.
-            </p>
-          </motion.div>
-
-          <motion.div {...sAnim} className="grid md:grid-cols-3 gap-5">
-            {[
-              { tier: 'Enkel', complexity: 'Lav', setup: '2 850', monthly: '2 000', color: '#4ade80', desc: 'Rask å sette opp. Perfekt for å starte.' },
-              { tier: 'Standard', complexity: 'Middels', setup: '7 600', monthly: '4 290', color: gold, desc: 'Mest populær. Flere integrasjoner.', popular: true },
-              { tier: 'Avansert', complexity: 'Høy', setup: '14 250', monthly: '8 570', color: '#a78bfa', desc: 'Komplekse systemer. Full tilpasning.' },
-            ].map((p, i) => (
-              <div key={i} className="glass-card p-6 text-center relative" style={p.popular ? { borderColor: `rgba(${goldRgb},0.25)`, background: `rgba(${goldRgb},0.03)` } : {}}>
-                {p.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full"
-                    style={{ background: gold, color: bg }}>
-                    Mest populær
-                  </div>
-                )}
-                <div className="text-[12px] font-semibold uppercase tracking-wide mb-1" style={{ color: p.color }}>{p.tier}</div>
-                <div className="text-[32px] font-extrabold mb-1" style={{ color: '#f4f1eb' }}>
-                  {p.monthly} <span className="text-[14px] font-normal" style={{ color: 'rgba(244,241,235,0.5)' }}>kr/mnd</span>
-                </div>
-                <div className="text-[11px] mb-4" style={{ color: 'rgba(244,241,235,0.4)' }}>
-                  + {p.setup} kr oppsett
-                </div>
-                <p className="text-[13px] mb-5" style={{ color: 'rgba(244,241,235,0.55)' }}>{p.desc}</p>
-                <div className="text-[11px] font-medium px-3 py-1.5 rounded-full inline-flex items-center gap-1"
-                  style={{ background: `${p.color}12`, color: p.color, border: `1px solid ${p.color}25` }}>
-                  {p.complexity} kompleksitet
-                </div>
-              </div>
-            ))}
-          </motion.div>
-
-          <motion.div {...sAnim} className="text-center mt-8 space-y-3">
-            <p className="text-[13px]" style={{ color: 'rgba(244,241,235,0.45)' }}>
-              Volum-rabatt: 5% ved 5+ automatiseringer · 10% ved 10+ · 15% ved 15+
-            </p>
-            <Link href="/priser" className="inline-flex items-center gap-2 text-[14px] font-medium" style={{ color: gold, textDecoration: 'none' }}>
-              Se full prisoversikt <ArrowUpRight size={15} />
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════ */}
-      {/*  BLOCK 10: ROI CALCULATOR                    */}
+      {/*  BLOCK 9: ROI CALCULATOR                     */}
       {/* ═══════════════════════════════════════════ */}
       <section className="py-20 md:py-28" style={{ borderTop: '1px solid rgba(244,241,235,0.04)' }}>
         <div className="max-w-xl mx-auto px-5">

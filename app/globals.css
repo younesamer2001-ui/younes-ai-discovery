@@ -18,11 +18,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth transitions */
-* {
-  transition-property: background-color, border-color, color, fill, stroke;
-  transition-duration: 150ms;
+/* Smooth transitions — scoped to interactive elements only */
+a, button, input, select, textarea, [role="button"] {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow, transform;
+  transition-duration: 200ms;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Better text rendering */
+body {
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.01em;
 }
 
 /* Glass card effect */

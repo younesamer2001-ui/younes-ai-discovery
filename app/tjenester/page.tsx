@@ -8,7 +8,7 @@ import {
   Cog, BarChart3, FileText, ShieldCheck,
   ChevronDown, CheckCircle2, Clock, Zap, AlertTriangle,
   Search, X, Filter, Hammer, Home, Scissors, Car, Plane,
-  TrendingUp, Bot, Sparkles, ArrowUpRight,
+  TrendingUp, Bot, Sparkles,
 } from 'lucide-react'
 import Nav from '@/app/components/Nav'
 import Footer from '@/app/components/Footer'
@@ -36,12 +36,6 @@ const complexityIcon: Record<string, any> = {
   'Middels': Clock,
   'Høy': AlertTriangle,
 }
-const complexityPrice: Record<string, { setup: string; monthly: string }> = {
-  'Lav': { setup: '2 850', monthly: '2 000' },
-  'Middels': { setup: '7 600', monthly: '4 290' },
-  'Høy': { setup: '14 250', monthly: '8 570' },
-}
-
 /* ── Industry filter config ── */
 const industries = [
   { id: 'alle', label: 'Alle bransjer', icon: Sparkles },
@@ -111,7 +105,6 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
 function AutomationItem({ auto, index }: { auto: ServiceAutomation; index: number }) {
   const CIcon = complexityIcon[auto.complexity] || Zap
   const cColor = complexityColor[auto.complexity] || '#fbbf24'
-  const price = complexityPrice[auto.complexity]
 
   return (
     <motion.div
@@ -161,22 +154,6 @@ function AutomationItem({ auto, index }: { auto: ServiceAutomation; index: numbe
         )}
       </div>
 
-      {/* Price indicator */}
-      {price && (
-        <div style={{
-          flexShrink: 0, textAlign: 'right',
-          display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2,
-        }}
-          className="hide-mob"
-        >
-          <span style={{ fontSize: 13, fontWeight: 600, color: gold }}>
-            {price.monthly} kr
-          </span>
-          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>
-            /mnd
-          </span>
-        </div>
-      )}
     </motion.div>
   )
 }
@@ -335,7 +312,7 @@ function CategoryCard({ cat, isOpen, onToggle, index, searchQuery, industryFilte
             flexWrap: 'wrap', gap: 12,
           }}>
             <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
-              Priser fra {complexityPrice['Lav'].monthly} kr/mnd per automatisering
+              Tilpasset din bedrift — kontakt oss for pris
             </span>
             <Link href="/kartlegging" className="cta-shimmer" style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -387,7 +364,7 @@ export default function TjenesterPage() {
       <section style={{
         maxWidth: 900,
         margin: '0 auto',
-        padding: '60px 24px 20px',
+        padding: '80px 24px 24px',
         textAlign: 'center',
       }}>
         <motion.div
@@ -604,9 +581,9 @@ export default function TjenesterPage() {
             Kompleksitet:
           </span>
           {[
-            { level: 'Lav', color: '#4ade80', icon: Zap, price: '2 000 kr/mnd' },
-            { level: 'Middels', color: '#fbbf24', icon: Clock, price: '4 290 kr/mnd' },
-            { level: 'Høy', color: '#f87171', icon: AlertTriangle, price: '8 570 kr/mnd' },
+            { level: 'Lav', color: '#4ade80', icon: Zap, desc: 'Rask implementering' },
+            { level: 'Middels', color: '#fbbf24', icon: Clock, desc: 'Flere integrasjoner' },
+            { level: 'Høy', color: '#f87171', icon: AlertTriangle, desc: 'Full tilpasning' },
           ].map(c => (
             <div key={c.level} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{
@@ -618,7 +595,7 @@ export default function TjenesterPage() {
                 {c.level}
               </span>
               <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>
-                fra {c.price}
+                {c.desc}
               </span>
             </div>
           ))}
@@ -676,7 +653,7 @@ export default function TjenesterPage() {
 
       {/* ── How it works ── */}
       <section style={{
-        maxWidth: 900, margin: '0 auto', padding: '0 24px 60px',
+        maxWidth: 900, margin: '0 auto', padding: '20px 24px 60px',
       }}>
         <div style={{
           background: cardBg,
@@ -779,7 +756,7 @@ export default function TjenesterPage() {
             }}>
               Start gratis kartlegging <ArrowRight size={16} />
             </Link>
-            <Link href="/priser" style={{
+            <a href="tel:+4778896386" style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               padding: '14px 32px', borderRadius: 12, fontWeight: 600,
               fontSize: 15, textDecoration: 'none', color: gold,
@@ -789,8 +766,8 @@ export default function TjenesterPage() {
             }}
               className="gold-hover"
             >
-              Se priser <ArrowUpRight size={16} />
-            </Link>
+              <Phone size={16} /> Ring oss
+            </a>
           </div>
         </div>
       </section>
