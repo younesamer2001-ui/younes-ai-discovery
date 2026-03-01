@@ -90,11 +90,11 @@ export function HeroSection({ heroRef, heroTextY, heroOpacity }: HeroSectionProp
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <button onClick={ctaClick} className="gold-btn gold-btn-pulse rounded-xl py-4 px-10 text-[16px] font-bold inline-flex items-center gap-2 group"
-            aria-label="Start gratis kartlegging — ingen binding">
-            {no ? 'Start gratis kartlegging' : 'Start free assessment'} <ArrowRight size={18} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1" />
+            aria-label="Prøv kartlegging gratis — ingen binding">
+            {no ? 'Prøv kartlegging gratis' : 'Try assessment free'} <ArrowRight size={18} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1" />
           </button>
           <p className="text-[12px] mt-4" style={{ color: 'rgba(244,241,235,0.55)' }}>
-            {no ? 'Gratis · Ingen binding · Resultat på 2 minutter' : 'Free · No commitment · Results in 2 minutes'}
+            {no ? 'Gratis · Uforpliktende · Resultat på 2–3 min' : 'Free · No obligation · Results in 2–3 min'}
           </p>
         </motion.div>
 

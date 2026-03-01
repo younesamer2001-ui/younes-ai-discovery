@@ -61,9 +61,17 @@ export function middleware(request: NextRequest) {
     }
 
     // Add CORS headers for API routes
+    const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'https://arxon.no').split(',').map(o => o.trim())
+    const origin = request.headers.get('origin') || ''
     const response = NextResponse.next()
+
+    if (allowedOrigins.includes(origin)) {
+      response.headers.set('Access-Control-Allow-Origin', origin)
+    } else if (allowedOrigins.includes('*')) {
+      response.headers.set('Access-Control-Allow-Origin', '*')
+    }
+
     response.headers.set('Access-Control-Allow-Credentials', 'true')
-    response.headers.set('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGINS || '*')
     response.headers.set(
       'Access-Control-Allow-Methods',
       'GET,DELETE,PATCH,POST,PUT'

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useLanguage } from '@/lib/language-context'
 
 declare global {
   interface Window {
@@ -19,6 +20,8 @@ type ConsentState = {
 }
 
 export default function CookieConsent() {
+  const { lang } = useLanguage()
+  const no = lang === 'no'
   const [visible, setVisible] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
   const [consent, setConsent] = useState<ConsentState>({
@@ -103,9 +106,13 @@ export default function CookieConsent() {
         }}>
           <div style={{ flex: 1, minWidth: 280 }}>
             <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, margin: '0 0 6px' }}>
-              Vi bruker informasjonskapsler for å sikre at nettsiden fungerer, og valgfrie cookies for analyse.
-              Du velger selv hva du godtar.{' '}
-              <Link href="/personvern" style={{ color: gold, textDecoration: 'underline' }}>Les mer</Link>
+              {no
+                ? 'Vi bruker informasjonskapsler for å sikre at nettsiden fungerer, og valgfrie cookies for analyse. Du velger selv hva du godtar.'
+                : 'We use cookies to ensure the website works properly and optional cookies for analytics. You choose what you accept.'
+              }{' '}
+              <Link href="/personvern" style={{ color: gold, textDecoration: 'underline' }}>
+                {no ? 'Les mer' : 'Learn more'}
+              </Link>
             </p>
             <button
               onClick={() => setShowDetails(!showDetails)}
@@ -115,7 +122,10 @@ export default function CookieConsent() {
                 fontFamily: 'inherit',
               }}
             >
-              {showDetails ? 'Skjul detaljer ▲' : 'Vis detaljer ▼'}
+              {showDetails
+                ? (no ? 'Skjul detaljer ▲' : 'Hide details ▲')
+                : (no ? 'Vis detaljer ▼' : 'Show details ▼')
+              }
             </button>
           </div>
 
@@ -127,7 +137,7 @@ export default function CookieConsent() {
               background: 'transparent',
               color: 'rgba(255,255,255,0.7)',
             }}>
-              Avvis alle
+              {no ? 'Avvis alle' : 'Reject all'}
             </button>
             {showDetails && (
               <button onClick={saveSelected} style={{
@@ -136,7 +146,7 @@ export default function CookieConsent() {
                 background: 'transparent',
                 color: gold,
               }}>
-                Lagre valg
+                {no ? 'Lagre valg' : 'Save preferences'}
               </button>
             )}
             <button onClick={acceptAll} style={{
@@ -145,7 +155,7 @@ export default function CookieConsent() {
               background: gold,
               color: '#0a0a0f',
             }}>
-              Godta alle
+              {no ? 'Godta alle' : 'Accept all'}
             </button>
           </div>
         </div>
@@ -160,9 +170,14 @@ export default function CookieConsent() {
             {/* Necessary — always on */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
               <div>
-                <div style={{ fontSize: 13, color: '#fff', fontWeight: 600, marginBottom: 2 }}>Nødvendige</div>
+                <div style={{ fontSize: 13, color: '#fff', fontWeight: 600, marginBottom: 2 }}>
+                  {no ? 'Nødvendige' : 'Necessary'}
+                </div>
                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>
-                  Kreves for at nettsiden skal fungere (navigasjon, sikkerhet, samtykkevalg).
+                  {no
+                    ? 'Kreves for at nettsiden skal fungere (navigasjon, sikkerhet, samtykkevalg).'
+                    : 'Required for the website to work properly (navigation, security, consent choices).'
+                  }
                 </div>
               </div>
               <button disabled style={{ ...toggleStyle(true), opacity: 0.6, cursor: 'not-allowed' }}>
@@ -173,15 +188,20 @@ export default function CookieConsent() {
             {/* Analytics */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
               <div>
-                <div style={{ fontSize: 13, color: '#fff', fontWeight: 600, marginBottom: 2 }}>Analyse</div>
+                <div style={{ fontSize: 13, color: '#fff', fontWeight: 600, marginBottom: 2 }}>
+                  {no ? 'Analyse' : 'Analytics'}
+                </div>
                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>
-                  Hjelper oss forstå hvordan besøkende bruker nettsiden (f.eks. Google Analytics). Anonymisert data.
+                  {no
+                    ? 'Hjelper oss forstå hvordan besøkende bruker nettsiden (f.eks. Google Analytics). Anonymisert data.'
+                    : 'Helps us understand how visitors use the website (e.g., Google Analytics). Anonymized data.'
+                  }
                 </div>
               </div>
               <button
                 onClick={() => setConsent(prev => ({ ...prev, analytics: !prev.analytics }))}
                 style={toggleStyle(consent.analytics)}
-                aria-label="Slå analyse-cookies av/på"
+                aria-label={no ? 'Slå analyse-cookies av/på' : 'Toggle analytics cookies'}
                 role="switch"
                 aria-checked={consent.analytics}
               >
@@ -192,15 +212,20 @@ export default function CookieConsent() {
             {/* Marketing */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
               <div>
-                <div style={{ fontSize: 13, color: '#fff', fontWeight: 600, marginBottom: 2 }}>Markedsføring</div>
+                <div style={{ fontSize: 13, color: '#fff', fontWeight: 600, marginBottom: 2 }}>
+                  {no ? 'Markedsføring' : 'Marketing'}
+                </div>
                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>
-                  Brukes til å vise relevante annonser og måle kampanjeeffektivitet. Ikke aktive i dag.
+                  {no
+                    ? 'Brukes til å vise relevante annonser og måle kampanjeeffektivitet. Ikke aktive i dag.'
+                    : 'Used to show relevant ads and measure campaign performance. Not active today.'
+                  }
                 </div>
               </div>
               <button
                 onClick={() => setConsent(prev => ({ ...prev, marketing: !prev.marketing }))}
                 style={toggleStyle(consent.marketing)}
-                aria-label="Slå markedsførings-cookies av/på"
+                aria-label={no ? 'Slå markedsførings-cookies av/på' : 'Toggle marketing cookies'}
                 role="switch"
                 aria-checked={consent.marketing}
               >

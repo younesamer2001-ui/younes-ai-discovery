@@ -61,7 +61,7 @@ export function Phase1Contact({
     width: '100%',
     boxSizing: 'border-box',
     fontFamily: fonts.body,
-    outline: 'none',
+    transition: 'all 0.2s',
   }
 
   const pageV = {
@@ -101,34 +101,51 @@ export function Phase1Contact({
 
       <div style={{ ...cardStyle, display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div>
-          <label style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>
+          <label htmlFor="company_name" style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>
             {t('company_name', lang)}
           </label>
           <input
+            id="company_name"
             autoComplete="organization"
             style={inputStyle}
             value={contact.company}
             onChange={e => setContact({ ...contact, company: e.target.value })}
+            onFocus={e => {
+              e.currentTarget.style.outline = '2px solid #efc07b'
+              e.currentTarget.style.outlineOffset = '2px'
+            }}
+            onBlur={e => {
+              e.currentTarget.style.outline = 'none'
+            }}
           />
         </div>
 
         <div>
-          <label style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>
+          <label htmlFor="contact_name" style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>
             {t('contact_name', lang)}
           </label>
           <input
+            id="contact_name"
             autoComplete="name"
             style={inputStyle}
             value={contact.name}
             onChange={e => setContact({ ...contact, name: e.target.value })}
+            onFocus={e => {
+              e.currentTarget.style.outline = '2px solid #efc07b'
+              e.currentTarget.style.outlineOffset = '2px'
+            }}
+            onBlur={e => {
+              e.currentTarget.style.outline = 'none'
+            }}
           />
         </div>
 
         <div>
-          <label style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>
+          <label htmlFor="email" style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>
             {t('email', lang)}
           </label>
           <input
+            id="email"
             type="email"
             autoComplete="email"
             style={{ ...inputStyle, borderColor: emailError ? '#ef4444' : cardBorder }}
@@ -137,15 +154,25 @@ export function Phase1Contact({
               setContact({ ...contact, email: e.target.value })
               setEmailError('')
             }}
+            onFocus={e => {
+              e.currentTarget.style.outline = '2px solid #efc07b'
+              e.currentTarget.style.outlineOffset = '2px'
+            }}
+            onBlur={e => {
+              e.currentTarget.style.outline = 'none'
+            }}
+            aria-describedby={emailError ? 'email-error' : undefined}
+            aria-invalid={!!emailError}
           />
-          {emailError && <span style={{ color: '#ef4444', fontSize: 12, marginTop: 4, display: 'block' }}>{emailError}</span>}
+          {emailError && <span id="email-error" style={{ color: '#ef4444', fontSize: 12, marginTop: 4, display: 'block' }} role="alert">{emailError}</span>}
         </div>
 
         <div>
-          <label style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>
+          <label htmlFor="phone" style={{ fontSize: 13, color: textSecondary, marginBottom: 6, display: 'block' }}>
             {t('phone', lang)}
           </label>
           <input
+            id="phone"
             type="tel"
             autoComplete="tel"
             style={{ ...inputStyle, borderColor: phoneError ? '#ef4444' : cardBorder }}
@@ -154,9 +181,18 @@ export function Phase1Contact({
               setContact({ ...contact, phone: e.target.value })
               setPhoneError('')
             }}
+            onFocus={e => {
+              e.currentTarget.style.outline = '2px solid #efc07b'
+              e.currentTarget.style.outlineOffset = '2px'
+            }}
+            onBlur={e => {
+              e.currentTarget.style.outline = 'none'
+            }}
             placeholder="412 34 567"
+            aria-describedby={phoneError ? 'phone-error' : undefined}
+            aria-invalid={!!phoneError}
           />
-          {phoneError && <span style={{ color: '#ef4444', fontSize: 12, marginTop: 4, display: 'block' }}>{phoneError}</span>}
+          {phoneError && <span id="phone-error" style={{ color: '#ef4444', fontSize: 12, marginTop: 4, display: 'block' }} role="alert">{phoneError}</span>}
         </div>
 
         <button

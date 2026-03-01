@@ -183,9 +183,9 @@ export default function RootLayout({
       <body className="min-h-screen antialiased" style={{ backgroundColor: '#0f1b27', color: '#f4f1eb' }}>
         <a href="#main-content" className="skip-to-content">Hopp til hovedinnhold</a>
         <LanguageProvider>
-          <div id="main-content">
+          <main id="main-content">
             {children}
-          </div>
+          </main>
         </LanguageProvider>
         <ChatWidget />
         <CookieConsent />

@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     // Validate action
     if (!action || typeof action !== 'string' || !['next_question', 'generate_summary', 'final_recommendation'].includes(action)) {
       return NextResponse.json(
-        { error: 'Invalid action parameter' },
+        { error: 'Invalid action parameter', code: 'INVALID_ACTION' },
         { status: 400 }
       )
     }
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     // Validate session object exists
     if (!session || typeof session !== 'object') {
       return NextResponse.json(
-        { error: 'Session object is required' },
+        { error: 'Session object is required', code: 'INVALID_SESSION' },
         { status: 400 }
       )
     }
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     // Validate previousAnswers is array
     if (!Array.isArray(previousAnswers)) {
       return NextResponse.json(
-        { error: 'Previous answers must be an array' },
+        { error: 'Previous answers must be an array', code: 'INVALID_SESSION' },
         { status: 400 }
       )
     }
@@ -215,11 +215,11 @@ Respond in this exact JSON format:
       return NextResponse.json(recommendationData)
     }
 
-    return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
+    return NextResponse.json({ error: 'Invalid action', code: 'INVALID_ACTION' }, { status: 400 })
   } catch (error: any) {
     console.error('Discovery API error:', error)
     return NextResponse.json(
-      { error: 'An error occurred processing your request' },
+      { error: 'An error occurred processing your request', code: 'AI_ERROR' },
       { status: 500 }
     )
   }

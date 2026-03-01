@@ -86,7 +86,57 @@ export default function PersonvernPage() {
         </div>
 
         <div style={sectionStyle}>
-          <h2 style={h2Style}>{no ? '9. Kontakt oss' : '9. Contact us'}</h2>
+          <h2 style={h2Style}>{no ? '9. AI-behandling' : '9. AI Processing'}</h2>
+          <p style={pStyle}>
+            {no
+              ? 'Arxon bruker Anthropic Claude for AI-analyse av kartleggingsdata. Personopplysninger sendes til Anthropic sin API for analyse, deretter slettes umiddelbart. AI-prosesseringen er GDPR-kompatibel og data lagres ikke for retrening.'
+              : 'Arxon uses Anthropic Claude for AI analysis of assessment data. Personal data is sent to Anthropic\'s API for analysis, then deleted immediately. AI processing is GDPR-compliant and data is not stored for retraining.'
+            }
+          </p>
+        </div>
+
+        <div style={sectionStyle}>
+          <h2 style={h2Style}>{no ? '10. Databehandlere' : '10. Data Processors'}</h2>
+          <p style={pStyle}>
+            {no
+              ? 'Vi bruker følgende databehandlere: Anthropic (AI-analyse), Resend (e-post), Supabase (database), og Vapi (telefoniintegrasjon). Alle databehandleravtaler er i samsvar med GDPR.'
+              : 'We use the following data processors: Anthropic (AI analysis), Resend (email), Supabase (database), and Vapi (phone integration). All data processing agreements comply with GDPR.'
+            }
+          </p>
+        </div>
+
+        <div style={sectionStyle}>
+          <h2 style={h2Style}>{no ? '11. Dataoppbevaring' : '11. Data Retention'}</h2>
+          <p style={pStyle}>
+            {no
+              ? 'Personopplysninger oppbevares i 12 måneder fra dato for innsamling, deretter slettes de permanent.'
+              : 'Personal data is retained for 12 months from the date of collection, then permanently deleted.'
+            }
+          </p>
+        </div>
+
+        <div style={sectionStyle}>
+          <h2 style={h2Style}>{no ? '12. Databruddmelding' : '12. Data Breach Notification'}</h2>
+          <p style={pStyle}>
+            {no
+              ? 'I tilfelle et databrudd vil vi varsle berørte personer innen 72 timer og rapportere til relevante myndigheter i henhold til GDPR.'
+              : 'In case of a data breach, we will notify affected individuals within 72 hours and report to relevant authorities in accordance with GDPR.'
+            }
+          </p>
+        </div>
+
+        <div style={sectionStyle}>
+          <h2 style={h2Style}>{no ? '13. Endringer i denne personvernerklæringen' : '13. Changes to This Privacy Policy'}</h2>
+          <p style={pStyle}>
+            {no
+              ? 'Vi kan oppdatere denne personvernerklæringen fra tid til annen. Vi vil varsle deg om betydelige endringer gjennom nettsiden.'
+              : 'We may update this privacy policy from time to time. We will notify you of significant changes through the website.'
+            }
+          </p>
+        </div>
+
+        <div style={sectionStyle}>
+          <h2 style={h2Style}>{no ? '14. Kontakt oss' : '14. Contact us'}</h2>
           <p style={pStyle}>
             {no ? 'Har du spørsmål om vår behandling av personopplysninger? Kontakt oss på kontakt@arxon.no.' : 'Do you have questions about how we process your personal data? Contact us at kontakt@arxon.no.'}
           </p>

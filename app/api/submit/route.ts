@@ -8,29 +8,33 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!recommendation || typeof recommendation !== 'object') {
       return NextResponse.json(
-        { error: 'Recommendation is required' },
+        { error: 'Recommendation is required', code: 'INVALID_SESSION' },
         { status: 400 }
       )
     }
 
     if (!session || typeof session !== 'object') {
       return NextResponse.json(
-        { error: 'Session is required' },
+        { error: 'Session is required', code: 'INVALID_SESSION' },
         { status: 400 }
       )
     }
 
     if (!Array.isArray(answers)) {
       return NextResponse.json(
-        { error: 'Answers must be an array' },
+        { error: 'Answers must be an array', code: 'INVALID_SESSION' },
         { status: 400 }
       )
     }
 
-    const adminEmail = process.env.ADMIN_EMAIL || 'amer.younes.2001@gmail.com'
+    const adminEmail = process.env.ADMIN_EMAIL
 
-    // If RESEND_API_KEY is configured, send email
-    if (process.env.RESEND_API_KEY) {
+    if (!adminEmail) {
+      console.warn('ADMIN_EMAIL environment variable not set')
+    }
+
+    // If RESEND_API_KEY and adminEmail are configured, send email
+    if (process.env.RESEND_API_KEY && adminEmail) {
       const emailBody = `
         <h1>New AI Discovery Submission</h1>
         <h2>Company Profile</h2>
@@ -79,8 +83,10 @@ export async function POST(request: NextRequest) {
         console.error('Email send failed:', await res.text())
       }
     } else {
-      console.log('RESEND_API_KEY not configured — skipping email')
-      console.log('Priority:', recommendation.priority_score)
+      console.log('RESEND_API_KEY or ADMIN_EMAIL not configured — skipping email')
+      if (recommendation.priority_score) {
+        console.log('Priority:', recommendation.priority_score)
+      }
     }
 
     return NextResponse.json({ success: true })

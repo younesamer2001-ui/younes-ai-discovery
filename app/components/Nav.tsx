@@ -22,14 +22,14 @@ export default function Nav({ sticky = false }: NavProps) {
         { href: '/tjenester', label: 'Tjenester' },
         { href: '/bransjer', label: 'Bransjer' },
         { href: '/integrasjoner', label: 'Integrasjoner' },
-        { href: '/pakkebygger', label: 'Priser' },
+        { href: '/priser', label: 'Priser' },
         { href: '/om-oss', label: 'Om oss' },
       ]
     : [
         { href: '/tjenester', label: 'Services' },
         { href: '/bransjer', label: 'Industries' },
         { href: '/integrasjoner', label: 'Integrations' },
-        { href: '/pakkebygger', label: 'Pricing' },
+        { href: '/priser', label: 'Pricing' },
         { href: '/om-oss', label: 'About us' },
       ]
 
@@ -75,9 +75,17 @@ export default function Nav({ sticky = false }: NavProps) {
               <Link key={l.href} href={l.href} style={{
                 color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: 13,
                 transition: 'color 0.2s', fontFamily: fonts.body,
+                outline: 'none',
               }}
               onMouseEnter={e => e.currentTarget.style.color = gold}
               onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}
+              onFocus={e => {
+                e.currentTarget.style.outline = '2px solid #efc07b'
+                e.currentTarget.style.outlineOffset = '4px'
+              }}
+              onBlur={e => {
+                e.currentTarget.style.outline = 'none'
+              }}
               >{l.label}</Link>
             ))}
             <button onClick={() => setLang(lang === 'no' ? 'en' : 'no')} style={{
@@ -93,14 +101,34 @@ export default function Nav({ sticky = false }: NavProps) {
               display: 'flex',
               alignItems: 'center',
               gap: 4,
-            }}>
+              outline: 'none',
+              transition: 'all 0.2s',
+            }}
+            onFocus={e => {
+              e.currentTarget.style.outline = '2px solid #efc07b'
+              e.currentTarget.style.outlineOffset = '2px'
+            }}
+            onBlur={e => {
+              e.currentTarget.style.outline = 'none'
+            }}
+            >
               <Globe size={12} />
               {lang === 'no' ? 'EN' : 'NO'}
             </button>
             <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
               color: bg, border: 'none', borderRadius: 10, padding: '8px 20px',
               fontWeight: 600, fontSize: sticky ? 13 : 14, cursor: 'pointer', fontFamily: fonts.body,
-            }}>
+              outline: 'none',
+              transition: 'all 0.2s',
+            }}
+            onFocus={e => {
+              e.currentTarget.style.outline = '2px solid #efc07b'
+              e.currentTarget.style.outlineOffset = '2px'
+            }}
+            onBlur={e => {
+              e.currentTarget.style.outline = 'none'
+            }}
+            >
               {lang === 'no' ? 'Start kartlegging' : 'Start assessment'}
               <ArrowRight size={13} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
             </button>
@@ -109,17 +137,47 @@ export default function Nav({ sticky = false }: NavProps) {
             <button onClick={() => setLang(lang === 'no' ? 'en' : 'no')} style={{
               background: 'none', border: `1px solid rgba(${goldRgb},0.2)`, borderRadius: 6,
               padding: '4px 10px', color: gold, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: fonts.body,
-            }}>
+              outline: 'none',
+              transition: 'all 0.2s',
+            }}
+            onFocus={e => {
+              e.currentTarget.style.outline = '2px solid #efc07b'
+              e.currentTarget.style.outlineOffset = '2px'
+            }}
+            onBlur={e => {
+              e.currentTarget.style.outline = 'none'
+            }}
+            >
               {lang === 'no' ? 'EN' : 'NO'}
             </button>
             <button onClick={() => router.push('/kartlegging')} className="cta-shimmer" style={{
               color: bg, border: 'none', borderRadius: 8, padding: '7px 16px',
               fontWeight: 600, fontSize: 12, cursor: 'pointer', fontFamily: fonts.body,
-            }}>Start</button>
+              outline: 'none',
+              transition: 'all 0.2s',
+            }}
+            onFocus={e => {
+              e.currentTarget.style.outline = '2px solid #efc07b'
+              e.currentTarget.style.outlineOffset = '2px'
+            }}
+            onBlur={e => {
+              e.currentTarget.style.outline = 'none'
+            }}
+            >Start</button>
             <button onClick={() => setMenuOpen(!menuOpen)} style={{
               background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8,
               padding: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
+              outline: 'none',
+              transition: 'all 0.2s',
+            }}
+            onFocus={e => {
+              e.currentTarget.style.outline = '2px solid #efc07b'
+              e.currentTarget.style.outlineOffset = '2px'
+            }}
+            onBlur={e => {
+              e.currentTarget.style.outline = 'none'
+            }}
+            >
               {menuOpen ? <X size={20} color="rgba(255,255,255,0.7)" /> : <Menu size={20} color="rgba(255,255,255,0.7)" />}
             </button>
           </div>

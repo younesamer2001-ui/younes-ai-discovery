@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     // Validate action
     if (!action || typeof action !== 'string' || !['submit', 'analyze'].includes(action)) {
       return NextResponse.json(
-        { error: 'Invalid action parameter' },
+        { error: 'Invalid action parameter', code: 'INVALID_ACTION' },
         { status: 400 }
       )
     }
@@ -34,28 +34,28 @@ export async function POST(request: NextRequest) {
       // Validate required fields
       if (!contact || typeof contact !== 'object') {
         return NextResponse.json(
-          { error: 'Invalid contact object' },
+          { error: 'Invalid contact object', code: 'INVALID_CONTACT' },
           { status: 400 }
         )
       }
 
       if (!contact.email || typeof contact.email !== 'string' || !isValidEmail(contact.email)) {
         return NextResponse.json(
-          { error: 'Invalid email address' },
+          { error: 'Invalid email address', code: 'INVALID_EMAIL' },
           { status: 400 }
         )
       }
 
       if (!contact.name || typeof contact.name !== 'string') {
         return NextResponse.json(
-          { error: 'Contact name is required' },
+          { error: 'Contact name is required', code: 'INVALID_CONTACT' },
           { status: 400 }
         )
       }
 
       if (!answers || typeof answers !== 'object') {
         return NextResponse.json(
-          { error: 'Answers are required' },
+          { error: 'Answers are required', code: 'INVALID_SESSION' },
           { status: 400 }
         )
       }
@@ -93,23 +93,27 @@ export async function POST(request: NextRequest) {
       if (dbError) {
         console.error('Supabase insert error:', dbError)
         return NextResponse.json(
-          { error: 'Failed to save submission' },
+          { error: 'Failed to save submission', code: 'DB_ERROR' },
           { status: 500 }
         )
       }
 
       // Send email notification
-      const adminEmail = process.env.ADMIN_EMAIL || 'amer.younes.2001@gmail.com'
+      const adminEmail = process.env.ADMIN_EMAIL
       const resendKey = process.env.RESEND_API_KEY
 
-      if (resendKey) {
+      if (!adminEmail) {
+        console.warn('ADMIN_EMAIL environment variable not set')
+      }
+
+      if (resendKey && adminEmail) {
         try {
           await fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${resendKey}` },
             body: JSON.stringify({
               from: 'AI Kartlegging <noreply@younesai.com>',
-              to: [adminEmail],
+              to: [adminEmail!],
               subject: `Ny AI-kartlegging: ${contact.company} (${refNumber})`,
               html: `
                 <h2>Ny lead fra AI Kartlegging</h2>
@@ -149,7 +153,7 @@ export async function POST(request: NextRequest) {
       // Validate prompt
       if (!body.prompt || typeof body.prompt !== 'string') {
         return NextResponse.json(
-          { error: 'Prompt is required and must be a string' },
+          { error: 'Prompt is required and must be a string', code: 'INVALID_SESSION' },
           { status: 400 }
         )
       }
@@ -159,7 +163,7 @@ export async function POST(request: NextRequest) {
 
       if (!anthropicKey) {
         return NextResponse.json(
-          { error: 'Service temporarily unavailable' },
+          { error: 'Service temporarily unavailable', code: 'AI_ERROR' },
           { status: 500 }
         )
       }
@@ -182,7 +186,7 @@ export async function POST(request: NextRequest) {
         const errText = await res.text()
         console.error('Anthropic API error:', errText)
         return NextResponse.json(
-          { error: 'AI analysis failed' },
+          { error: 'AI analysis failed', code: 'AI_ERROR' },
           { status: 500 }
         )
       }
@@ -192,7 +196,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ summary: text })
     }
 
-    return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
+    return NextResponse.json({ error: 'Invalid action', code: 'INVALID_ACTION' }, { status: 400 })
   } catch (error: any) {
     console.error('Kartlegging API error:', error)
     return NextResponse.json(
