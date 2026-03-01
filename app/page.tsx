@@ -10,6 +10,7 @@ import {
   TrendingUp, Bot, CalendarCheck, BarChart3, Megaphone,
   AlertTriangle, PhoneOff, Cog, Hammer, Home as HomeIcon, Scissors,
   Car, Plane, ArrowUpRight, X, Check,
+  MessageSquare, Send, Bell, Calendar, UserCheck, Receipt,
 } from 'lucide-react'
 import Nav from '@/app/components/Nav'
 import Footer from '@/app/components/Footer'
@@ -140,6 +141,202 @@ function TechLogos() {
           <span className="text-[10px] tracking-widest uppercase transition-colors" style={{ color: 'rgba(244,241,235,0.55)' }}>{logo.name}</span>
         </div>
       ))}
+    </div>
+  )
+}
+
+/* ── ANIMATED PHONE DEMO ── */
+function PhoneDemo() {
+  const [step, setStep] = useState(0)
+  const inViewRef = useRef<HTMLDivElement>(null)
+  const inView = useInView(inViewRef, { once: false, amount: 0.4 })
+
+  const messages = [
+    { from: 'system', text: 'Innkommende anrop fra +47 912 34 567…' },
+    { from: 'ai', text: 'Hei! Velkommen til Bygg & Montasje AS. Hvordan kan jeg hjelpe deg?' },
+    { from: 'customer', text: 'Hei, jeg trenger tilbud på nytt bad. Er det mulig å få befaring?' },
+    { from: 'ai', text: 'Selvfølgelig! Jeg ser at vi har ledig tid onsdag kl. 10:00 eller torsdag kl. 14:00. Hva passer best?' },
+    { from: 'customer', text: 'Onsdag kl. 10 passer fint!' },
+    { from: 'ai', text: 'Flott! Befaring booket onsdag kl. 10:00. Du får bekreftelse på SMS nå. Noe annet jeg kan hjelpe med?' },
+  ]
+
+  useEffect(() => {
+    if (!inView) { setStep(0); return }
+    setStep(0)
+    const timers: NodeJS.Timeout[] = []
+    messages.forEach((_, i) => {
+      timers.push(setTimeout(() => setStep(i + 1), 1200 + i * 2000))
+    })
+    // Reset and loop
+    timers.push(setTimeout(() => setStep(0), 1200 + messages.length * 2000 + 3000))
+    const interval = setInterval(() => {
+      setStep(0)
+      messages.forEach((_, i) => {
+        timers.push(setTimeout(() => setStep(i + 1), 1200 + i * 2000))
+      })
+    }, 1200 + messages.length * 2000 + 4000)
+    return () => { timers.forEach(clearTimeout); clearInterval(interval) }
+  }, [inView])
+
+  return (
+    <div ref={inViewRef} className="demo-phone-frame">
+      {/* Phone header */}
+      <div className="demo-phone-header">
+        <div className="demo-phone-notch" />
+        <div className="flex items-center justify-between px-5 pt-10 pb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: `rgba(${goldRgb},0.15)` }}>
+              <Bot size={14} style={{ color: gold }} />
+            </div>
+            <div>
+              <div className="text-[12px] font-semibold" style={{ color: '#f4f1eb' }}>Arxon AI</div>
+              <div className="text-[10px]" style={{ color: '#4ade80' }}>Aktiv 24/7</div>
+            </div>
+          </div>
+          <Phone size={14} style={{ color: 'rgba(244,241,235,0.4)' }} />
+        </div>
+      </div>
+
+      {/* Messages */}
+      <div className="demo-phone-body">
+        <AnimatePresence mode="sync">
+          {messages.slice(0, step).map((msg, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 12, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className={`demo-msg ${msg.from === 'customer' ? 'demo-msg-customer' : msg.from === 'ai' ? 'demo-msg-ai' : 'demo-msg-system'}`}
+            >
+              {msg.from === 'system' && <Phone size={11} className="inline mr-1.5" style={{ color: '#4ade80' }} />}
+              {msg.text}
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
+        {/* Typing indicator */}
+        {step > 0 && step < messages.length && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="demo-msg demo-msg-ai demo-typing"
+          >
+            <span className="demo-dot" /><span className="demo-dot" /><span className="demo-dot" />
+          </motion.div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/* ── AUTOMATION WORKFLOW DEMO ── */
+function WorkflowDemo() {
+  const [activeStep, setActiveStep] = useState(-1)
+  const inViewRef = useRef<HTMLDivElement>(null)
+  const inView = useInView(inViewRef, { once: false, amount: 0.4 })
+
+  const steps = [
+    { icon: <Phone size={18} />, label: 'Kunde ringer', detail: '+47 912 34 567', color: '#60a5fa' },
+    { icon: <Bot size={18} />, label: 'AI svarer', detail: 'Kvalifiserer lead', color: gold },
+    { icon: <Calendar size={18} />, label: 'Booking', detail: 'Onsdag kl. 10:00', color: '#a78bfa' },
+    { icon: <Send size={18} />, label: 'SMS sendt', detail: 'Bekreftelse + påminnelse', color: '#4ade80' },
+    { icon: <UserCheck size={18} />, label: 'Lead lagret', detail: 'CRM oppdatert', color: '#f472b6' },
+    { icon: <Receipt size={18} />, label: 'Oppfølging', detail: 'Auto etter 24t', color: '#fb923c' },
+  ]
+
+  useEffect(() => {
+    if (!inView) { setActiveStep(-1); return }
+    setActiveStep(-1)
+    const timers: NodeJS.Timeout[] = []
+    steps.forEach((_, i) => {
+      timers.push(setTimeout(() => setActiveStep(i), 800 + i * 1200))
+    })
+    // Loop
+    timers.push(setTimeout(() => setActiveStep(-1), 800 + steps.length * 1200 + 2500))
+    const interval = setInterval(() => {
+      setActiveStep(-1)
+      steps.forEach((_, i) => {
+        timers.push(setTimeout(() => setActiveStep(i), 800 + i * 1200))
+      })
+    }, 800 + steps.length * 1200 + 3500)
+    return () => { timers.forEach(clearTimeout); clearInterval(interval) }
+  }, [inView])
+
+  return (
+    <div ref={inViewRef} className="demo-workflow-frame">
+      <div className="demo-workflow-header">
+        <Zap size={14} style={{ color: gold }} />
+        <span className="text-[12px] font-semibold" style={{ color: '#f4f1eb' }}>Automatisk arbeidsflyt</span>
+        <span className="demo-workflow-live">LIVE</span>
+      </div>
+
+      <div className="demo-workflow-steps">
+        {steps.map((s, i) => (
+          <div key={i} className="demo-workflow-step-row">
+            {/* Connector line */}
+            {i > 0 && (
+              <div className="demo-workflow-connector">
+                <motion.div
+                  className="demo-workflow-connector-fill"
+                  initial={{ height: 0 }}
+                  animate={{ height: activeStep >= i ? '100%' : '0%' }}
+                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                  style={{ background: `rgba(${goldRgb},0.3)` }}
+                />
+              </div>
+            )}
+
+            {/* Step */}
+            <motion.div
+              className="demo-workflow-step"
+              animate={{
+                borderColor: activeStep >= i ? s.color : 'rgba(244,241,235,0.08)',
+                background: activeStep >= i ? `${s.color}10` : 'rgba(255,255,255,0.02)',
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div
+                className="demo-workflow-icon"
+                animate={{
+                  background: activeStep >= i ? `${s.color}20` : 'rgba(244,241,235,0.05)',
+                  scale: activeStep === i ? 1.1 : 1,
+                }}
+                transition={{ duration: 0.3, type: 'spring', stiffness: 300 }}
+              >
+                <span style={{ color: activeStep >= i ? s.color : 'rgba(244,241,235,0.35)' }}>{s.icon}</span>
+              </motion.div>
+              <div className="flex-1 min-w-0">
+                <div className="text-[12px] font-semibold" style={{ color: activeStep >= i ? '#f4f1eb' : 'rgba(244,241,235,0.4)' }}>
+                  {s.label}
+                </div>
+                <div className="text-[10px]" style={{ color: activeStep >= i ? 'rgba(244,241,235,0.6)' : 'rgba(244,241,235,0.25)' }}>
+                  {s.detail}
+                </div>
+              </div>
+              {activeStep >= i && (
+                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 400, damping: 15 }}>
+                  <CheckCircle2 size={14} style={{ color: s.color }} />
+                </motion.div>
+              )}
+            </motion.div>
+          </div>
+        ))}
+      </div>
+
+      {/* Bottom status */}
+      <div className="demo-workflow-footer">
+        <motion.div
+          animate={{ width: `${Math.max(0, ((activeStep + 1) / steps.length) * 100)}%` }}
+          transition={{ duration: 0.4 }}
+          className="demo-workflow-progress"
+          style={{ background: `linear-gradient(90deg, rgba(${goldRgb},0.4), ${gold})` }}
+        />
+        <div className="text-[10px] text-center pt-2" style={{ color: 'rgba(244,241,235,0.45)' }}>
+          {activeStep >= 0
+            ? `${activeStep + 1}/${steps.length} steg fullført — ${activeStep >= steps.length - 1 ? 'Alt automatisert!' : 'Behandler…'}`
+            : 'Venter på innkommende henvendelse…'
+          }
+        </div>
+      </div>
     </div>
   )
 }
@@ -493,6 +690,44 @@ export default function Home() {
               Se alle 200+ automatiseringer <ArrowUpRight size={15} />
             </Link>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════ */}
+      {/*  BLOCK 5B: PRODUCT DEMO — SEE IT IN ACTION    */}
+      {/* ═══════════════════════════════════════════ */}
+      <section className="py-20 md:py-28" style={{ borderTop: '1px solid rgba(244,241,235,0.04)' }}>
+        <div className="max-w-5xl mx-auto px-5">
+          <motion.div {...sAnim} className="text-center mb-14">
+            <h2 className="text-[28px] md:text-[42px] font-bold tracking-tight mb-4" style={{ color: '#f4f1eb' }}>
+              Se det i <span className="text-gradient-gold">aksjon</span>
+            </h2>
+            <p className="text-[15px] max-w-lg mx-auto" style={{ color: 'rgba(244,241,235,0.6)' }}>
+              Fra innkommende anrop til ferdig booking — helt uten manuelt arbeid.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-8 items-start">
+            <motion.div {...sAnim}>
+              <div className="text-center mb-4">
+                <span className="inline-flex items-center gap-1.5 text-[12px] font-medium px-3 py-1 rounded-full"
+                  style={{ background: `rgba(${goldRgb},0.08)`, color: gold, border: `1px solid rgba(${goldRgb},0.15)` }}>
+                  <MessageSquare size={12} /> AI-samtale — live demo
+                </span>
+              </div>
+              <PhoneDemo />
+            </motion.div>
+
+            <motion.div {...sAnim}>
+              <div className="text-center mb-4">
+                <span className="inline-flex items-center gap-1.5 text-[12px] font-medium px-3 py-1 rounded-full"
+                  style={{ background: `rgba(${goldRgb},0.08)`, color: gold, border: `1px solid rgba(${goldRgb},0.15)` }}>
+                  <Zap size={12} /> Automatisk arbeidsflyt
+                </span>
+              </div>
+              <WorkflowDemo />
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -1032,6 +1267,171 @@ export default function Home() {
           90% { opacity: 0.5; }
         }
 
+        /* ── Product Demo: Phone Mockup ── */
+        .demo-phone-frame {
+          background: #0a0e18;
+          border: 1px solid rgba(244,241,235,0.08);
+          border-radius: 24px;
+          overflow: hidden;
+          max-width: 340px;
+          margin: 0 auto;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 30px rgba(${goldRgb},0.04);
+        }
+        .demo-phone-header {
+          background: linear-gradient(180deg, rgba(${goldRgb},0.06) 0%, transparent 100%);
+          border-bottom: 1px solid rgba(244,241,235,0.06);
+          position: relative;
+        }
+        .demo-phone-notch {
+          width: 120px;
+          height: 24px;
+          background: #0a0e18;
+          border-radius: 0 0 16px 16px;
+          margin: 0 auto;
+          border: 1px solid rgba(244,241,235,0.06);
+          border-top: none;
+        }
+        .demo-phone-body {
+          padding: 16px;
+          min-height: 300px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          overflow: hidden;
+        }
+        .demo-msg {
+          padding: 8px 12px;
+          border-radius: 14px;
+          font-size: 12px;
+          line-height: 1.5;
+          max-width: 85%;
+        }
+        .demo-msg-system {
+          background: rgba(74,222,128,0.08);
+          border: 1px solid rgba(74,222,128,0.15);
+          color: #4ade80;
+          font-size: 11px;
+          align-self: center;
+          text-align: center;
+          max-width: 90%;
+          border-radius: 8px;
+        }
+        .demo-msg-ai {
+          background: rgba(${goldRgb},0.08);
+          border: 1px solid rgba(${goldRgb},0.12);
+          color: rgba(244,241,235,0.85);
+          align-self: flex-start;
+          border-bottom-left-radius: 4px;
+        }
+        .demo-msg-customer {
+          background: rgba(244,241,235,0.06);
+          border: 1px solid rgba(244,241,235,0.08);
+          color: rgba(244,241,235,0.75);
+          align-self: flex-end;
+          border-bottom-right-radius: 4px;
+        }
+        .demo-typing {
+          display: flex;
+          gap: 4px;
+          padding: 10px 16px;
+        }
+        .demo-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: rgba(${goldRgb},0.4);
+          animation: demo-dot-bounce 1.4s ease-in-out infinite;
+        }
+        .demo-dot:nth-child(2) { animation-delay: 0.2s; }
+        .demo-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes demo-dot-bounce {
+          0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+          40% { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* ── Product Demo: Workflow ── */
+        .demo-workflow-frame {
+          background: #0a0e18;
+          border: 1px solid rgba(244,241,235,0.08);
+          border-radius: 20px;
+          overflow: hidden;
+          max-width: 340px;
+          margin: 0 auto;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 30px rgba(${goldRgb},0.04);
+        }
+        .demo-workflow-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 14px 16px;
+          border-bottom: 1px solid rgba(244,241,235,0.06);
+          background: linear-gradient(180deg, rgba(${goldRgb},0.06) 0%, transparent 100%);
+        }
+        .demo-workflow-live {
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          padding: 2px 6px;
+          border-radius: 4px;
+          background: rgba(74,222,128,0.12);
+          color: #4ade80;
+          margin-left: auto;
+          animation: demo-live-pulse 2s ease-in-out infinite;
+        }
+        @keyframes demo-live-pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+        .demo-workflow-steps {
+          padding: 16px;
+          display: flex;
+          flex-direction: column;
+        }
+        .demo-workflow-step-row {
+          position: relative;
+        }
+        .demo-workflow-connector {
+          position: absolute;
+          left: 19px;
+          top: -12px;
+          width: 2px;
+          height: 12px;
+          background: rgba(244,241,235,0.06);
+          overflow: hidden;
+          border-radius: 1px;
+        }
+        .demo-workflow-connector-fill {
+          width: 100%;
+          border-radius: 1px;
+        }
+        .demo-workflow-step {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 8px 10px;
+          border-radius: 10px;
+          border: 1px solid rgba(244,241,235,0.06);
+          margin-bottom: 4px;
+          transition: all 0.3s ease;
+        }
+        .demo-workflow-icon {
+          width: 28px;
+          height: 28px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+        .demo-workflow-footer {
+          padding: 0 16px 14px;
+        }
+        .demo-workflow-progress {
+          height: 2px;
+          border-radius: 1px;
+          transition: width 0.4s ease;
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .hero-gradient-mesh { animation: none !important; }
           .hero-orb { animation: none !important; }
@@ -1046,6 +1446,8 @@ export default function Home() {
           .anim-gradient-shift { animation: none !important; }
           .hero-particle { animation: none !important; opacity: 0 !important; }
           .industry-pill:hover { transform: none; }
+          .demo-dot { animation: none !important; }
+          .demo-workflow-live { animation: none !important; }
         }
       `}</style>
     </>
