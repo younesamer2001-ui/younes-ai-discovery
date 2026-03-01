@@ -2,26 +2,30 @@
 
 import { useState, useRef, useEffect, useMemo } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowRight, Phone, Users, Target, Megaphone,
   Cog, BarChart3, FileText, ShieldCheck,
   ChevronDown, CheckCircle2, Clock, Zap, AlertTriangle,
-  ArrowUpDown, SortAsc,
+  Search, X, Filter, Hammer, Home, Scissors, Car, Plane,
+  TrendingUp, Bot, Sparkles, ArrowUpRight,
 } from 'lucide-react'
 import Nav from '@/app/components/Nav'
 import Footer from '@/app/components/Footer'
 import { serviceCategories, type ServiceAutomation } from '@/lib/services'
+import { gold, goldRgb, bg } from '@/lib/constants'
 
-const gold = '#efc07b'
-const goldRgb = '239,192,123'
-const bgDark = '#0f1b27'
-const cardBg = '#16213e'
+/* ── Design tokens ── */
+const cardBg = '#0d1a2d'
+const cardBgHover = '#111f35'
+const surfaceBg = '#0a1220'
 
+/* ── Icons ── */
 const iconMap: Record<string, any> = {
   Phone, Target, Users, Megaphone, Cog, BarChart3, FileText, ShieldCheck,
 }
 
+/* ── Complexity config ── */
 const complexityColor: Record<string, string> = {
   'Lav': '#4ade80',
   'Middels': '#fbbf24',
@@ -32,65 +36,208 @@ const complexityIcon: Record<string, any> = {
   'Middels': Clock,
   'Høy': AlertTriangle,
 }
-const complexityOrder: Record<string, number> = {
-  'Høy': 3,
-  'Middels': 2,
-  'Lav': 1,
+const complexityPrice: Record<string, { setup: string; monthly: string }> = {
+  'Lav': { setup: '2 850', monthly: '2 000' },
+  'Middels': { setup: '7 600', monthly: '4 290' },
+  'Høy': { setup: '14 250', monthly: '8 570' },
 }
 
-type SortMode = 'complexity' | 'alpha'
+/* ── Industry filter config ── */
+const industries = [
+  { id: 'alle', label: 'Alle bransjer', icon: Sparkles },
+  { id: 'bygg', label: 'Bygg & Håndverk', icon: Hammer },
+  { id: 'eiendom', label: 'Eiendom', icon: Home },
+  { id: 'salong', label: 'Salong & Skjønnhet', icon: Scissors },
+  { id: 'bil', label: 'Bilverksted', icon: Car },
+  { id: 'reiseliv', label: 'Reiseliv', icon: Plane },
+]
 
-function sortAutomations(items: ServiceAutomation[], mode: SortMode): ServiceAutomation[] {
-  return [...items].sort((a, b) => {
-    if (mode === 'complexity') {
-      const diff = (complexityOrder[b.complexity] || 0) - (complexityOrder[a.complexity] || 0)
-      if (diff !== 0) return diff
-      return a.name.localeCompare(b.name, 'nb')
-    }
-    return a.name.localeCompare(b.name, 'nb')
-  })
+/* Map automations to relevant industries by keyword matching */
+const industryKeywords: Record<string, string[]> = {
+  bygg: ['befaring', 'prosjekt', 'underentreprenør', 'HMS', 'bygge', 'håndverk', 'elektriker', 'rørlegger', 'maler', 'snekker', 'anbud', 'timer'],
+  eiendom: ['visning', 'bolig', 'megler', 'kjøper', 'selger', 'eiendom', 'prospekt', 'takst', 'leie', 'utleie'],
+  salong: ['salong', 'klipper', 'behandling', 'time', 'frisør', 'skjønnhet', 'spa', 'barbershop', 'hårklipp'],
+  bil: ['verksted', 'bil', 'EU-kontroll', 'dekk', 'service', 'reperasjon', 'deler', 'garanti'],
+  reiseliv: ['booking', 'gjest', 'overnatting', 'hotell', 'hytte', 'restaurant', 'bestilling', 'kanal', 'channel', 'sesong'],
 }
 
-/* ── Single category accordion ── */
-function CategoryCard({ cat, isOpen, onToggle, index, sortMode }: {
+function matchesIndustry(auto: ServiceAutomation, industryId: string): boolean {
+  if (industryId === 'alle') return true
+  const keywords = industryKeywords[industryId] || []
+  const text = `${auto.name} ${auto.desc} ${auto.benefit}`.toLowerCase()
+  return keywords.some(kw => text.includes(kw.toLowerCase()))
+}
+
+/* ── Total counts ── */
+const totalAutomations = serviceCategories.reduce((sum, cat) => sum + cat.automations.length, 0)
+
+/* ── Animated counter ── */
+function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: string }) {
+  const [count, setCount] = useState(0)
+  const ref = useRef<HTMLSpanElement>(null)
+  const [hasAnimated, setHasAnimated] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          setHasAnimated(true)
+          let start = 0
+          const duration = 1500
+          const stepTime = 16
+          const steps = duration / stepTime
+          const increment = target / steps
+          const timer = setInterval(() => {
+            start += increment
+            if (start >= target) {
+              setCount(target)
+              clearInterval(timer)
+            } else {
+              setCount(Math.floor(start))
+            }
+          }, stepTime)
+        }
+      },
+      { threshold: 0.5 }
+    )
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [target, hasAnimated])
+
+  return <span ref={ref}>{count}{suffix}</span>
+}
+
+/* ── Single automation card ── */
+function AutomationItem({ auto, index }: { auto: ServiceAutomation; index: number }) {
+  const CIcon = complexityIcon[auto.complexity] || Zap
+  const cColor = complexityColor[auto.complexity] || '#fbbf24'
+  const price = complexityPrice[auto.complexity]
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: Math.min(index * 0.02, 0.3) }}
+      style={{
+        padding: '16px 20px',
+        borderBottom: '1px solid rgba(255,255,255,0.04)',
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: 12,
+      }}
+    >
+      <CheckCircle2 size={16} color={gold} style={{ marginTop: 3, flexShrink: 0 }} />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 4 }}>
+          <span style={{ fontSize: 14, fontWeight: 600, color: '#f4f1eb' }}>
+            {auto.name}
+          </span>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+            fontSize: 10, color: cColor, fontWeight: 500,
+            background: `${cColor}12`, borderRadius: 12, padding: '2px 8px',
+          }}>
+            <CIcon size={10} />
+            {auto.complexity}
+          </span>
+          {auto.implTime && (
+            <span style={{
+              fontSize: 10, color: 'rgba(255,255,255,0.4)',
+              background: 'rgba(255,255,255,0.04)', borderRadius: 12, padding: '2px 8px',
+            }}>
+              {auto.implTime}
+            </span>
+          )}
+        </div>
+        {auto.desc && (
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', margin: 0, lineHeight: 1.5 }}>
+            {auto.desc}
+          </p>
+        )}
+        {auto.benefit && (
+          <p style={{ fontSize: 12, color: gold, margin: '4px 0 0', lineHeight: 1.5, opacity: 0.7 }}>
+            ✦ {auto.benefit}
+          </p>
+        )}
+      </div>
+
+      {/* Price indicator */}
+      {price && (
+        <div style={{
+          flexShrink: 0, textAlign: 'right',
+          display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2,
+        }}
+          className="hide-mob"
+        >
+          <span style={{ fontSize: 13, fontWeight: 600, color: gold }}>
+            {price.monthly} kr
+          </span>
+          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>
+            /mnd
+          </span>
+        </div>
+      )}
+    </motion.div>
+  )
+}
+
+/* ── Category accordion card ── */
+function CategoryCard({ cat, isOpen, onToggle, index, searchQuery, industryFilter }: {
   cat: typeof serviceCategories[0]
   isOpen: boolean
   onToggle: () => void
   index: number
-  sortMode: SortMode
+  searchQuery: string
+  industryFilter: string
 }) {
   const Icon = iconMap[cat.icon] || Cog
   const contentRef = useRef<HTMLDivElement>(null)
   const [contentHeight, setContentHeight] = useState(0)
 
-  const sorted = useMemo(
-    () => sortAutomations(cat.automations, sortMode),
-    [cat.automations, sortMode]
-  )
+  const filtered = useMemo(() => {
+    let items = cat.automations
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase()
+      items = items.filter(a =>
+        a.name.toLowerCase().includes(q) ||
+        a.desc.toLowerCase().includes(q) ||
+        a.benefit.toLowerCase().includes(q)
+      )
+    }
+    if (industryFilter !== 'alle') {
+      items = items.filter(a => matchesIndustry(a, industryFilter))
+    }
+    return items
+  }, [cat.automations, searchQuery, industryFilter])
 
   useEffect(() => {
     if (contentRef.current) {
       setContentHeight(contentRef.current.scrollHeight)
     }
-  }, [isOpen, sortMode])
+  }, [isOpen, filtered])
+
+  if (filtered.length === 0) return null
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: Math.min(index * 0.05, 0.4) }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ delay: Math.min(index * 0.04, 0.3) }}
+      layout
     >
-      {/* Card header — clickable */}
       <button
         onClick={onToggle}
         aria-expanded={isOpen}
         style={{
           width: '100%',
-          background: isOpen ? `linear-gradient(135deg, ${cardBg}, rgba(${goldRgb},0.04))` : cardBg,
+          background: isOpen
+            ? `linear-gradient(135deg, ${cardBg}, rgba(${goldRgb},0.05))`
+            : cardBg,
           borderRadius: isOpen ? '16px 16px 0 0' : 16,
-          padding: '24px 24px',
-          border: `1px solid rgba(${goldRgb},${isOpen ? '0.2' : '0.08'})`,
-          borderBottom: isOpen ? 'none' : `1px solid rgba(${goldRgb},0.08)`,
+          padding: '20px 24px',
+          border: `1px solid rgba(${goldRgb},${isOpen ? '0.2' : '0.06'})`,
+          borderBottom: isOpen ? 'none' : `1px solid rgba(${goldRgb},0.06)`,
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
@@ -103,7 +250,7 @@ function CategoryCard({ cat, isOpen, onToggle, index, sortMode }: {
       >
         <div style={{
           width: 48, height: 48, borderRadius: 12, flexShrink: 0,
-          background: `rgba(${goldRgb},${isOpen ? '0.15' : '0.08'})`,
+          background: `rgba(${goldRgb},${isOpen ? '0.15' : '0.06'})`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           transition: 'background 0.3s',
         }}>
@@ -120,12 +267,12 @@ function CategoryCard({ cat, isOpen, onToggle, index, sortMode }: {
               background: `rgba(${goldRgb},0.08)`, borderRadius: 20,
               padding: '3px 10px', whiteSpace: 'nowrap',
             }}>
-              {cat.automations.length} løsninger
+              {filtered.length} løsninger
             </span>
           </div>
           {!isOpen && (
             <p style={{
-              fontSize: 13, color: 'rgba(255,255,255,0.55)', margin: '6px 0 0',
+              fontSize: 13, color: 'rgba(255,255,255,0.5)', margin: '4px 0 0',
               lineHeight: 1.5, overflow: 'hidden', textOverflow: 'ellipsis',
               display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical' as any,
             }}>
@@ -136,7 +283,7 @@ function CategoryCard({ cat, isOpen, onToggle, index, sortMode }: {
 
         <ChevronDown
           size={20}
-          color="rgba(255,255,255,0.4)"
+          color="rgba(255,255,255,0.35)"
           style={{
             transition: 'transform 0.3s ease',
             transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -146,102 +293,56 @@ function CategoryCard({ cat, isOpen, onToggle, index, sortMode }: {
       </button>
 
       {/* Expanded content */}
-      <div
-        style={{
-          overflow: 'hidden',
-          maxHeight: isOpen ? contentHeight + 40 : 0,
-          transition: 'max-height 0.4s ease',
-        }}
-      >
+      <div style={{
+        overflow: 'hidden',
+        maxHeight: isOpen ? contentHeight + 40 : 0,
+        transition: 'max-height 0.4s ease',
+      }}>
         <div
           ref={contentRef}
           style={{
             background: cardBg,
             borderRadius: '0 0 16px 16px',
-            padding: '0 24px 24px',
+            padding: '0 0 20px',
             borderLeft: `1px solid rgba(${goldRgb},0.2)`,
             borderRight: `1px solid rgba(${goldRgb},0.2)`,
             borderBottom: `1px solid rgba(${goldRgb},0.2)`,
           }}
         >
           {/* Description */}
-          <p style={{
-            fontSize: 14, color: 'rgba(255,255,255,0.65)', lineHeight: 1.6,
-            padding: '16px 0', margin: 0,
-            borderBottom: '1px solid rgba(255,255,255,0.05)',
+          <div style={{
+            padding: '16px 24px',
+            borderBottom: '1px solid rgba(255,255,255,0.04)',
           }}>
-            {cat.desc}
-          </p>
-
-          {/* Automations list */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-            {sorted.map((auto, i) => {
-              const CIcon = complexityIcon[auto.complexity] || Zap
-              const cColor = complexityColor[auto.complexity] || '#fbbf24'
-              return (
-                <div
-                  key={auto.name}
-                  style={{
-                    padding: '14px 0',
-                    borderBottom: i < sorted.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: 12,
-                  }}
-                >
-                  <CheckCircle2 size={16} color={gold} style={{ marginTop: 2, flexShrink: 0 }} />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 4 }}>
-                      <span style={{ fontSize: 14, fontWeight: 600, color: '#f4f1eb' }}>
-                        {auto.name}
-                      </span>
-                      {auto.complexity && (
-                        <span style={{
-                          display: 'inline-flex', alignItems: 'center', gap: 4,
-                          fontSize: 10, color: cColor, fontWeight: 500,
-                          background: `${cColor}12`, borderRadius: 12, padding: '2px 8px',
-                        }}>
-                          <CIcon size={10} />
-                          {auto.complexity}
-                        </span>
-                      )}
-                      {auto.implTime && (
-                        <span style={{
-                          fontSize: 10, color: 'rgba(255,255,255,0.4)',
-                          background: 'rgba(255,255,255,0.04)', borderRadius: 12, padding: '2px 8px',
-                        }}>
-                          {auto.implTime}
-                        </span>
-                      )}
-                    </div>
-                    {auto.desc && (
-                      <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', margin: 0, lineHeight: 1.5 }}>
-                        {auto.desc}
-                      </p>
-                    )}
-                    {auto.benefit && (
-                      <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', margin: '4px 0 0', lineHeight: 1.5, fontStyle: 'italic' }}>
-                        {auto.benefit}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              )
-            })}
+            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', margin: 0, lineHeight: 1.6 }}>
+              {cat.desc}
+            </p>
           </div>
 
-          {/* CTA inside expanded */}
+          {/* Automations list */}
+          <div style={{ padding: '0 4px' }}>
+            {filtered.map((auto, i) => (
+              <AutomationItem key={auto.name} auto={auto} index={i} />
+            ))}
+          </div>
+
+          {/* CTA inside */}
           <div style={{
-            marginTop: 16, paddingTop: 16,
-            borderTop: '1px solid rgba(255,255,255,0.06)',
-            textAlign: 'center',
+            margin: '16px 24px 0',
+            paddingTop: 16,
+            borderTop: '1px solid rgba(255,255,255,0.05)',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            flexWrap: 'wrap', gap: 12,
           }}>
+            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
+              Priser fra {complexityPrice['Lav'].monthly} kr/mnd per automatisering
+            </span>
             <Link href="/kartlegging" className="cta-shimmer" style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              padding: '10px 24px', borderRadius: 10, fontWeight: 600,
-              fontSize: 13, textDecoration: 'none', color: bgDark,
+              padding: '10px 20px', borderRadius: 10, fontWeight: 600,
+              fontSize: 13, textDecoration: 'none', color: bg,
             }}>
-              Se hva som passer din bedrift <ArrowRight size={14} />
+              Finn det som passer deg <ArrowRight size={14} />
             </Link>
           </div>
         </div>
@@ -250,194 +351,445 @@ function CategoryCard({ cat, isOpen, onToggle, index, sortMode }: {
   )
 }
 
-/* ── Main page ── */
+/* ══════════════════════════════════════════════
+   MAIN PAGE
+   ══════════════════════════════════════════════ */
 export default function TjenesterPage() {
   const [lang] = useState<'no' | 'en'>('no')
   const [openId, setOpenId] = useState<string | null>(null)
-  const [sortMode, setSortMode] = useState<SortMode>('complexity')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [industryFilter, setIndustryFilter] = useState('alle')
+  const searchRef = useRef<HTMLInputElement>(null)
 
-  const toggle = (id: string) => {
-    setOpenId(prev => prev === id ? null : id)
-  }
+  const toggle = (id: string) => setOpenId(prev => prev === id ? null : id)
+
+  /* Count visible automations */
+  const visibleCount = useMemo(() => {
+    let count = 0
+    serviceCategories.forEach(cat => {
+      cat.automations.forEach(a => {
+        const matchesSearch = !searchQuery ||
+          a.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          a.desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          a.benefit.toLowerCase().includes(searchQuery.toLowerCase())
+        const matchesInd = industryFilter === 'alle' || matchesIndustry(a, industryFilter)
+        if (matchesSearch && matchesInd) count++
+      })
+    })
+    return count
+  }, [searchQuery, industryFilter])
 
   return (
-    <div style={{ background: bgDark, minHeight: '100vh', color: '#f4f1eb' }}>
+    <div style={{ background: bg, minHeight: '100vh', color: '#f4f1eb' }}>
       <Nav />
 
-      {/* Hero */}
-      <section style={{ maxWidth: 800, margin: '0 auto', padding: '60px 24px 32px', textAlign: 'center' }}>
+      {/* ── Hero ── */}
+      <section style={{
+        maxWidth: 900,
+        margin: '0 auto',
+        padding: '60px 24px 20px',
+        textAlign: 'center',
+      }}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{ marginBottom: 16 }}
+        >
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            fontSize: 12, fontWeight: 600, color: gold,
+            background: `rgba(${goldRgb},0.08)`, borderRadius: 20,
+            padding: '6px 14px', letterSpacing: '0.5px',
+            textTransform: 'uppercase',
+          }}>
+            <Bot size={14} />
+            Komplett automatiseringskatalog
+          </span>
+        </motion.div>
+
         <motion.h1
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-          style={{ fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: 700, marginBottom: 16, lineHeight: 1.2 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          style={{
+            fontSize: 'clamp(30px, 5vw, 48px)',
+            fontWeight: 700,
+            marginBottom: 16,
+            lineHeight: 1.15,
+          }}
         >
-          Hva vi <span style={{ color: gold }}>automatiserer</span>
+          Alt vi kan <span style={{ color: gold }}>automatisere</span> for deg
         </motion.h1>
+
         <motion.p
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          style={{ fontSize: 17, color: 'rgba(255,255,255,0.7)', maxWidth: 560, margin: '0 auto', lineHeight: 1.6 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          style={{
+            fontSize: 17,
+            color: 'rgba(255,255,255,0.65)',
+            maxWidth: 560,
+            margin: '0 auto',
+            lineHeight: 1.6,
+          }}
         >
-          200+ ferdige automatiseringer fordelt på 8 kategorier.
-          Trykk på en kategori for å se alle løsningene.
+          {totalAutomations}+ ferdige løsninger fordelt på {serviceCategories.length} kategorier.
+          Søk, filtrer, og finn automatiseringene som passer din bedrift.
         </motion.p>
       </section>
 
-      {/* Complexity legend + sort controls */}
-      <section style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px 24px' }}>
+      {/* ── Stats bar ── */}
+      <section style={{ maxWidth: 900, margin: '0 auto', padding: '24px 24px 32px' }}>
         <motion.div
-          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
           style={{
-            background: `rgba(${goldRgb},0.04)`,
-            border: `1px solid rgba(${goldRgb},0.1)`,
-            borderRadius: 14, padding: '16px 20px',
-            display: 'flex', flexDirection: 'column', gap: 14,
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: 12,
           }}
+          className="grid-2"
         >
-          {/* Legend */}
-          <div>
-            <p style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.7)', margin: '0 0 10px' }}>
-              Hva betyr kompleksitet?
-            </p>
-            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-              {[
-                { level: 'Lav', color: '#4ade80', icon: Zap, label: 'Rask å sette opp, få tilpasninger nødvendig. Klar på timer.' },
-                { level: 'Middels', color: '#fbbf24', icon: Clock, label: 'Krever noe konfigurasjon og integrasjon. 1–5 dager.' },
-                { level: 'Høy', color: '#f87171', icon: AlertTriangle, label: 'Avansert oppsett med flere systemer. 3–7 dager.' },
-              ].map(c => (
-                <div key={c.level} style={{ flex: '1 1 200px', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                  <span style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 4,
-                    fontSize: 11, color: c.color, fontWeight: 600,
-                    background: `${c.color}15`, borderRadius: 8, padding: '3px 8px',
-                    whiteSpace: 'nowrap', flexShrink: 0,
-                  }}>
-                    <c.icon size={11} />
-                    {c.level}
-                  </span>
-                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', lineHeight: 1.4 }}>
-                    {c.label}
-                  </span>
-                </div>
-              ))}
+          {[
+            { value: totalAutomations, suffix: '+', label: 'Automatiseringer', icon: Zap },
+            { value: serviceCategories.length, suffix: '', label: 'Kategorier', icon: BarChart3 },
+            { value: 5, suffix: '', label: 'Bransjer', icon: Target },
+            { value: 30, suffix: '%+', label: 'Spart arbeidstid', icon: TrendingUp },
+          ].map((stat, i) => (
+            <div key={i} style={{
+              background: cardBg,
+              borderRadius: 14,
+              padding: '20px 16px',
+              textAlign: 'center',
+              border: `1px solid rgba(${goldRgb},0.06)`,
+            }}>
+              <stat.icon size={20} color={gold} style={{ marginBottom: 8 }} />
+              <div style={{ fontSize: 28, fontWeight: 700, color: gold, lineHeight: 1 }}>
+                <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+              </div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>
+                {stat.label}
+              </div>
             </div>
-          </div>
-
-          {/* Sort toggle */}
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 8,
-            borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 12,
-          }}>
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginRight: 4 }}>Sorter:</span>
-            {[
-              { mode: 'complexity' as SortMode, label: 'Kompleksitet (høy → lav)', icon: ArrowUpDown },
-              { mode: 'alpha' as SortMode, label: 'A → Å', icon: SortAsc },
-            ].map(opt => (
-              <button
-                key={opt.mode}
-                onClick={() => setSortMode(opt.mode)}
-                style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 5,
-                  padding: '5px 12px', borderRadius: 8,
-                  fontSize: 12, fontWeight: 500, cursor: 'pointer',
-                  border: sortMode === opt.mode
-                    ? `1px solid rgba(${goldRgb},0.4)`
-                    : '1px solid rgba(255,255,255,0.08)',
-                  background: sortMode === opt.mode
-                    ? `rgba(${goldRgb},0.1)`
-                    : 'rgba(255,255,255,0.03)',
-                  color: sortMode === opt.mode ? gold : 'rgba(255,255,255,0.5)',
-                  transition: 'all 0.2s',
-                }}
-              >
-                <opt.icon size={12} />
-                {opt.label}
-              </button>
-            ))}
-          </div>
+          ))}
         </motion.div>
       </section>
 
-      {/* Categories accordion */}
-      <section style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px 60px' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {serviceCategories.map((cat, i) => (
-            <CategoryCard
-              key={cat.id}
-              cat={cat}
-              isOpen={openId === cat.id}
-              onToggle={() => toggle(cat.id)}
-              index={i}
-              sortMode={sortMode}
+      {/* ── Search & Filter ── */}
+      <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 12px' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          style={{ display: 'flex', flexDirection: 'column', gap: 12 }}
+        >
+          {/* Search bar */}
+          <div style={{
+            position: 'relative',
+            background: cardBg,
+            borderRadius: 14,
+            border: `1px solid rgba(${goldRgb},0.08)`,
+            overflow: 'hidden',
+          }}>
+            <Search
+              size={18}
+              color="rgba(255,255,255,0.3)"
+              style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)' }}
             />
-          ))}
-        </div>
+            <input
+              ref={searchRef}
+              type="text"
+              placeholder="Søk i alle automatiseringer..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '14px 44px 14px 44px',
+                background: 'transparent',
+                border: 'none',
+                outline: 'none',
+                color: '#f4f1eb',
+                fontSize: 15,
+              }}
+            />
+            {searchQuery && (
+              <button
+                onClick={() => { setSearchQuery(''); searchRef.current?.focus() }}
+                style={{
+                  position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+                  background: 'rgba(255,255,255,0.08)', border: 'none', borderRadius: 8,
+                  padding: '4px 8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4,
+                  color: 'rgba(255,255,255,0.5)', fontSize: 11,
+                }}
+              >
+                <X size={12} />
+                Tøm
+              </button>
+            )}
+          </div>
+
+          {/* Industry filter pills */}
+          <div style={{
+            display: 'flex', gap: 8, flexWrap: 'wrap',
+            alignItems: 'center',
+          }}>
+            <Filter size={14} color="rgba(255,255,255,0.3)" style={{ marginRight: 4 }} />
+            {industries.map(ind => {
+              const active = industryFilter === ind.id
+              return (
+                <button
+                  key={ind.id}
+                  onClick={() => setIndustryFilter(active ? 'alle' : ind.id)}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    padding: '7px 14px', borderRadius: 10,
+                    fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                    border: active
+                      ? `1px solid rgba(${goldRgb},0.4)`
+                      : '1px solid rgba(255,255,255,0.06)',
+                    background: active
+                      ? `rgba(${goldRgb},0.12)`
+                      : 'rgba(255,255,255,0.02)',
+                    color: active ? gold : 'rgba(255,255,255,0.5)',
+                    transition: 'all 0.2s',
+                  }}
+                  className="filter-pill"
+                >
+                  <ind.icon size={13} />
+                  {ind.label}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Result count */}
+          {(searchQuery || industryFilter !== 'alle') && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              style={{
+                fontSize: 13, color: 'rgba(255,255,255,0.45)',
+                display: 'flex', alignItems: 'center', gap: 6,
+              }}
+            >
+              <span style={{ color: gold, fontWeight: 600 }}>{visibleCount}</span>
+              {visibleCount === 1 ? 'automatisering' : 'automatiseringer'} funnet
+              {searchQuery && (
+                <span> for «{searchQuery}»</span>
+              )}
+              {industryFilter !== 'alle' && (
+                <span> i {industries.find(i => i.id === industryFilter)?.label}</span>
+              )}
+            </motion.div>
+          )}
+        </motion.div>
       </section>
 
-      {/* How it works */}
-      <section style={{ maxWidth: 700, margin: '0 auto', padding: '0 24px 60px' }}>
-        <h2 style={{ fontSize: 24, fontWeight: 600, textAlign: 'center', marginBottom: 32 }}>
-          Slik kommer du i gang
-        </h2>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+      {/* ── Complexity legend ── */}
+      <section style={{ maxWidth: 900, margin: '0 auto', padding: '12px 24px 24px' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+          style={{
+            background: `rgba(${goldRgb},0.03)`,
+            border: `1px solid rgba(${goldRgb},0.08)`,
+            borderRadius: 14,
+            padding: '14px 20px',
+            display: 'flex', gap: 20, flexWrap: 'wrap', alignItems: 'center',
+          }}
+        >
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.5)' }}>
+            Kompleksitet:
+          </span>
           {[
-            { step: '1', title: 'Gratis kartlegging', desc: 'Vi analyserer bedriften din og finner de mest verdifulle automatiseringene.' },
-            { step: '2', title: 'Vi bygger løsningen', desc: 'Alt settes opp og tilpasses dine systemer. Du trenger ikke gjøre noe teknisk.' },
-            { step: '3', title: 'Du sparer tid og penger', desc: 'Automatiseringene kjører 24/7. Du fokuserer på det som virkelig teller.' },
-          ].map((s, i) => (
-            <div key={i} style={{
-              display: 'flex', gap: 20, alignItems: 'flex-start',
-              padding: '20px 0',
-              borderLeft: `2px solid rgba(${goldRgb},0.2)`,
-              marginLeft: 20,
-              paddingLeft: 28,
-              position: 'relative',
-            }}>
-              <div style={{
-                position: 'absolute', left: -14, top: 18,
-                width: 28, height: 28, borderRadius: '50%',
-                background: bgDark, border: `2px solid ${gold}`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 12, fontWeight: 700, color: gold,
+            { level: 'Lav', color: '#4ade80', icon: Zap, price: '2 000 kr/mnd' },
+            { level: 'Middels', color: '#fbbf24', icon: Clock, price: '4 290 kr/mnd' },
+            { level: 'Høy', color: '#f87171', icon: AlertTriangle, price: '8 570 kr/mnd' },
+          ].map(c => (
+            <div key={c.level} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+                fontSize: 11, color: c.color, fontWeight: 600,
+                background: `${c.color}12`, borderRadius: 8, padding: '3px 8px',
               }}>
-                {s.step}
-              </div>
-              <div>
-                <h4 style={{ fontSize: 16, fontWeight: 600, margin: '0 0 4px' }}>{s.title}</h4>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)', margin: 0, lineHeight: 1.5 }}>{s.desc}</p>
-              </div>
+                <c.icon size={11} />
+                {c.level}
+              </span>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>
+                fra {c.price}
+              </span>
             </div>
           ))}
+        </motion.div>
+      </section>
+
+      {/* ── Categories accordion ── */}
+      <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 60px' }}>
+        <AnimatePresence mode="popLayout">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {serviceCategories.map((cat, i) => (
+              <CategoryCard
+                key={cat.id}
+                cat={cat}
+                isOpen={openId === cat.id}
+                onToggle={() => toggle(cat.id)}
+                index={i}
+                searchQuery={searchQuery}
+                industryFilter={industryFilter}
+              />
+            ))}
+          </div>
+        </AnimatePresence>
+
+        {/* No results */}
+        {visibleCount === 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            style={{
+              textAlign: 'center', padding: '60px 20px',
+              color: 'rgba(255,255,255,0.45)',
+            }}
+          >
+            <Search size={40} style={{ marginBottom: 16, opacity: 0.3 }} />
+            <p style={{ fontSize: 16, fontWeight: 500, margin: '0 0 8px' }}>
+              Ingen automatiseringer funnet
+            </p>
+            <p style={{ fontSize: 14, margin: 0 }}>
+              Prøv et annet søkeord eller fjern filteret
+            </p>
+            <button
+              onClick={() => { setSearchQuery(''); setIndustryFilter('alle') }}
+              style={{
+                marginTop: 16, padding: '8px 20px', borderRadius: 10,
+                background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.2)`,
+                color: gold, fontSize: 13, fontWeight: 600, cursor: 'pointer',
+              }}
+            >
+              Nullstill filtre
+            </button>
+          </motion.div>
+        )}
+      </section>
+
+      {/* ── How it works ── */}
+      <section style={{
+        maxWidth: 900, margin: '0 auto', padding: '0 24px 60px',
+      }}>
+        <div style={{
+          background: cardBg,
+          borderRadius: 20,
+          padding: '48px 32px',
+          border: `1px solid rgba(${goldRgb},0.06)`,
+        }}>
+          <h2 style={{
+            fontSize: 24, fontWeight: 600, textAlign: 'center', marginBottom: 40,
+          }}>
+            Slik kommer du i gang
+          </h2>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 24,
+          }}
+            className="grid-3"
+          >
+            {[
+              {
+                step: '1',
+                title: 'Gratis kartlegging',
+                desc: 'Vi analyserer bedriften din og finner de mest verdifulle automatiseringene.',
+                icon: Target,
+              },
+              {
+                step: '2',
+                title: 'Vi bygger løsningen',
+                desc: 'Alt settes opp og tilpasses dine systemer. Du trenger ikke gjøre noe teknisk.',
+                icon: Cog,
+              },
+              {
+                step: '3',
+                title: 'Du sparer tid og penger',
+                desc: 'Automatiseringene kjører 24/7. Du fokuserer på det som virkelig teller.',
+                icon: TrendingUp,
+              },
+            ].map((s, i) => (
+              <div key={i} style={{ textAlign: 'center', padding: '0 8px' }}>
+                <div style={{
+                  width: 56, height: 56, borderRadius: '50%',
+                  background: `rgba(${goldRgb},0.08)`,
+                  border: `2px solid rgba(${goldRgb},0.2)`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  margin: '0 auto 16px',
+                }}>
+                  <s.icon size={24} color={gold} />
+                </div>
+                <h4 style={{ fontSize: 16, fontWeight: 600, margin: '0 0 8px' }}>
+                  <span style={{ color: gold }}>{s.step}.</span> {s.title}
+                </h4>
+                <p style={{
+                  fontSize: 13, color: 'rgba(255,255,255,0.55)',
+                  margin: 0, lineHeight: 1.6,
+                }}>
+                  {s.desc}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section style={{ maxWidth: 700, margin: '0 auto', padding: '0 24px 80px', textAlign: 'center' }}>
+      {/* ── Bottom CTA ── */}
+      <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 80px', textAlign: 'center' }}>
         <div style={{
-          background: `linear-gradient(135deg, ${cardBg}, rgba(${goldRgb},0.06))`,
-          borderRadius: 20, padding: '48px 32px',
+          background: `linear-gradient(135deg, rgba(${goldRgb},0.06), ${cardBg})`,
+          borderRadius: 20,
+          padding: '56px 32px',
           border: `1px solid rgba(${goldRgb},0.12)`,
+          position: 'relative',
+          overflow: 'hidden',
         }}>
-          <h2 style={{ fontSize: 24, fontWeight: 600, marginBottom: 12 }}>
+          {/* Subtle glow */}
+          <div style={{
+            position: 'absolute', top: -80, right: -80,
+            width: 200, height: 200, borderRadius: '50%',
+            background: `radial-gradient(circle, rgba(${goldRgb},0.08), transparent)`,
+          }} />
+
+          <h2 style={{ fontSize: 28, fontWeight: 700, marginBottom: 12, position: 'relative' }}>
             Usikker på hva du trenger?
           </h2>
-          <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.7)', marginBottom: 24, lineHeight: 1.6 }}>
-            Start med en gratis kartlegging. Vi finner de automatiseringene som gir størst effekt for akkurat din bedrift.
+          <p style={{
+            fontSize: 16, color: 'rgba(255,255,255,0.65)', marginBottom: 28,
+            lineHeight: 1.6, maxWidth: 480, margin: '0 auto 28px',
+            position: 'relative',
+          }}>
+            Start med en gratis kartlegging — vi finner automatiseringene som gir størst effekt for akkurat din bedrift.
           </p>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{
+            display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap',
+            position: 'relative',
+          }}>
             <Link href="/kartlegging" className="cta-shimmer" style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               padding: '14px 32px', borderRadius: 12, fontWeight: 600,
-              fontSize: 15, textDecoration: 'none', color: bgDark,
+              fontSize: 15, textDecoration: 'none', color: bg,
             }}>
-              Start kartlegging <ArrowRight size={16} />
+              Start gratis kartlegging <ArrowRight size={16} />
             </Link>
-            <Link href="/bransjer" style={{
+            <Link href="/priser" style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               padding: '14px 32px', borderRadius: 12, fontWeight: 600,
               fontSize: 15, textDecoration: 'none', color: gold,
               border: `1px solid rgba(${goldRgb},0.3)`,
               background: 'transparent',
-            }}>
-              Se alle bransjer <ArrowRight size={16} />
+              transition: 'all 0.3s',
+            }}
+              className="gold-hover"
+            >
+              Se priser <ArrowUpRight size={16} />
             </Link>
           </div>
         </div>
@@ -447,8 +799,16 @@ export default function TjenesterPage() {
 
       <style jsx global>{`
         .tjeneste-card:hover {
-          border-color: rgba(${goldRgb}, 0.2) !important;
+          border-color: rgba(${goldRgb}, 0.15) !important;
           background: linear-gradient(135deg, ${cardBg}, rgba(${goldRgb},0.03)) !important;
+        }
+        .filter-pill:hover {
+          border-color: rgba(${goldRgb}, 0.2) !important;
+          background: rgba(${goldRgb}, 0.06) !important;
+          color: ${gold} !important;
+        }
+        input::placeholder {
+          color: rgba(255,255,255,0.3);
         }
       `}</style>
     </div>
