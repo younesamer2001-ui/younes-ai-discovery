@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { useLanguage } from '@/lib/language-context'
 import { motion } from 'framer-motion'
 import { supabase } from '@/lib/supabase'
 import {
@@ -15,6 +16,7 @@ import { gold, goldRgb, bg, fadeUp, globalStyles } from '@/lib/constants'
 function ResultPageContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const { lang } = useLanguage()
   const sessionId = searchParams.get('session')
   const langParam = (searchParams.get('lang') || 'no') as 'no' | 'en'
 
@@ -161,7 +163,7 @@ function ResultPageContent() {
             </div>
             <div>
               <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase' as const, marginBottom: 4 }}>{tx.tierTitle}</div>
-              <div style={{ fontSize: 22, fontWeight: 700, fontFamily: "'Playfair Display', serif", color: tier.color }}>{tier[lang]}</div>
+              <div style={{ fontSize: 22, fontWeight: 700, fontFamily: "'Playfair Display', serif", color: tier.color }}>{lang === 'no' ? tier.no : tier.en}</div>
             </div>
           </motion.div>
         </section>

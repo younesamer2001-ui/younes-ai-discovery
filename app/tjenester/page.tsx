@@ -14,6 +14,7 @@ import Nav from '@/app/components/Nav'
 import Footer from '@/app/components/Footer'
 import { serviceCategories, type ServiceAutomation } from '@/lib/services'
 import { gold, goldRgb, bg } from '@/lib/constants'
+import { useLanguage } from '@/lib/language-context'
 
 /* ── Design tokens ── */
 const cardBg = '#0d1a2d'
@@ -37,13 +38,13 @@ const complexityIcon: Record<string, any> = {
   'Høy': AlertTriangle,
 }
 /* ── Industry filter config ── */
-const industries = [
-  { id: 'alle', label: 'Alle bransjer', icon: Sparkles },
-  { id: 'bygg', label: 'Bygg & Håndverk', icon: Hammer },
-  { id: 'eiendom', label: 'Eiendom', icon: Home },
-  { id: 'salong', label: 'Salong & Skjønnhet', icon: Scissors },
-  { id: 'bil', label: 'Bilverksted', icon: Car },
-  { id: 'reiseliv', label: 'Reiseliv', icon: Plane },
+const getIndustries = (no: boolean) => [
+  { id: 'alle', label: no ? 'Alle bransjer' : 'All industries', icon: Sparkles },
+  { id: 'bygg', label: no ? 'Bygg & Håndverk' : 'Construction & Crafts', icon: Hammer },
+  { id: 'eiendom', label: no ? 'Eiendom' : 'Real estate', icon: Home },
+  { id: 'salong', label: no ? 'Salong & Skjønnhet' : 'Salon & Beauty', icon: Scissors },
+  { id: 'bil', label: no ? 'Bilverksted' : 'Auto repair', icon: Car },
+  { id: 'reiseliv', label: no ? 'Reiseliv' : 'Travel & tourism', icon: Plane },
 ]
 
 /* Map automations to relevant industries by keyword matching */
@@ -159,13 +160,14 @@ function AutomationItem({ auto, index }: { auto: ServiceAutomation; index: numbe
 }
 
 /* ── Category accordion card ── */
-function CategoryCard({ cat, isOpen, onToggle, index, searchQuery, industryFilter }: {
+function CategoryCard({ cat, isOpen, onToggle, index, searchQuery, industryFilter, no }: {
   cat: typeof serviceCategories[0]
   isOpen: boolean
   onToggle: () => void
   index: number
   searchQuery: string
   industryFilter: string
+  no: boolean
 }) {
   const Icon = iconMap[cat.icon] || Cog
   const contentRef = useRef<HTMLDivElement>(null)
@@ -244,7 +246,7 @@ function CategoryCard({ cat, isOpen, onToggle, index, searchQuery, industryFilte
               background: `rgba(${goldRgb},0.08)`, borderRadius: 20,
               padding: '3px 10px', whiteSpace: 'nowrap',
             }}>
-              {filtered.length} løsninger
+              {filtered.length} {no ? 'løsninger' : 'solutions'}
             </span>
           </div>
           {!isOpen && (
@@ -312,14 +314,14 @@ function CategoryCard({ cat, isOpen, onToggle, index, searchQuery, industryFilte
             flexWrap: 'wrap', gap: 12,
           }}>
             <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
-              Tilpasset din bedrift — kontakt oss for pris
+              {no ? 'Tilpasset din bedrift — kontakt oss for pris' : 'Customized for your business — contact us for pricing'}
             </span>
             <Link href="/kartlegging" className="cta-shimmer" style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               padding: '10px 20px', borderRadius: 10, fontWeight: 600,
               fontSize: 13, textDecoration: 'none', color: bg,
             }}>
-              Finn det som passer deg <ArrowRight size={14} />
+              {no ? 'Finn det som passer deg' : 'Find what fits you'} <ArrowRight size={14} />
             </Link>
           </div>
         </div>
@@ -332,7 +334,9 @@ function CategoryCard({ cat, isOpen, onToggle, index, searchQuery, industryFilte
    MAIN PAGE
    ══════════════════════════════════════════════ */
 export default function TjenesterPage() {
-  const [lang] = useState<'no' | 'en'>('no')
+  const { lang } = useLanguage()
+  const no = lang === 'no'
+  const industries = getIndustries(no)
   const [openId, setOpenId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [industryFilter, setIndustryFilter] = useState('alle')
@@ -380,7 +384,7 @@ export default function TjenesterPage() {
             textTransform: 'uppercase',
           }}>
             <Bot size={14} />
-            Komplett automatiseringskatalog
+            {no ? 'Komplett automatiseringskatalog' : 'Complete automation catalog'}
           </span>
         </motion.div>
 
@@ -395,7 +399,7 @@ export default function TjenesterPage() {
             lineHeight: 1.15,
           }}
         >
-          Alt vi kan <span style={{ color: gold }}>automatisere</span> for deg
+          {no ? 'Alt vi kan' : 'Everything we can'} <span style={{ color: gold }}>{no ? 'automatisere' : 'automate'}</span> {no ? 'for deg' : 'for you'}
         </motion.h1>
 
         <motion.p
@@ -410,8 +414,7 @@ export default function TjenesterPage() {
             lineHeight: 1.6,
           }}
         >
-          {totalAutomations}+ ferdige løsninger fordelt på {serviceCategories.length} kategorier.
-          Søk, filtrer, og finn automatiseringene som passer din bedrift.
+          {totalAutomations}+ {no ? 'ferdige løsninger fordelt på' : 'ready-made solutions across'} {serviceCategories.length} {no ? 'kategorier.' : 'categories.'} {no ? 'Søk, filtrer, og finn automatiseringene som passer din bedrift.' : 'Search, filter, and find automations that fit your business.'}
         </motion.p>
       </section>
 
@@ -428,12 +431,17 @@ export default function TjenesterPage() {
           }}
           className="grid-2"
         >
-          {[
+          {(no ? [
             { value: totalAutomations, suffix: '+', label: 'Automatiseringer', icon: Zap },
             { value: serviceCategories.length, suffix: '', label: 'Kategorier', icon: BarChart3 },
             { value: 5, suffix: '', label: 'Bransjer', icon: Target },
             { value: 30, suffix: '%+', label: 'Spart arbeidstid', icon: TrendingUp },
-          ].map((stat, i) => (
+          ] : [
+            { value: totalAutomations, suffix: '+', label: 'Automations', icon: Zap },
+            { value: serviceCategories.length, suffix: '', label: 'Categories', icon: BarChart3 },
+            { value: 5, suffix: '', label: 'Industries', icon: Target },
+            { value: 30, suffix: '%+', label: 'Time saved', icon: TrendingUp },
+          ]).map((stat, i) => (
             <motion.div key={i}
               initial={{ opacity: 0, y: 16, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -485,7 +493,7 @@ export default function TjenesterPage() {
             <input
               ref={searchRef}
               type="text"
-              placeholder="Søk i alle automatiseringer..."
+              placeholder={no ? 'Søk i alle automatiseringer...' : 'Search all automations...'}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               style={{
@@ -509,7 +517,7 @@ export default function TjenesterPage() {
                 }}
               >
                 <X size={12} />
-                Tøm
+                {no ? 'Tøm' : 'Clear'}
               </button>
             )}
           </div>
@@ -559,12 +567,12 @@ export default function TjenesterPage() {
               }}
             >
               <span style={{ color: gold, fontWeight: 600 }}>{visibleCount}</span>
-              {visibleCount === 1 ? 'automatisering' : 'automatiseringer'} funnet
+              {visibleCount === 1 ? (no ? 'automatisering' : 'automation') : (no ? 'automatiseringer' : 'automations')} {no ? 'funnet' : 'found'}
               {searchQuery && (
-                <span> for «{searchQuery}»</span>
+                <span> {no ? 'for' : 'for'} «{searchQuery}»</span>
               )}
               {industryFilter !== 'alle' && (
-                <span> i {industries.find(i => i.id === industryFilter)?.label}</span>
+                <span> {no ? 'i' : 'in'} {industries.find(i => i.id === industryFilter)?.label}</span>
               )}
             </motion.div>
           )}
@@ -586,13 +594,17 @@ export default function TjenesterPage() {
           }}
         >
           <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.5)' }}>
-            Kompleksitet:
+            {no ? 'Kompleksitet:' : 'Complexity:'}
           </span>
-          {[
+          {(no ? [
             { level: 'Lav', color: '#4ade80', icon: Zap, desc: 'Rask implementering' },
             { level: 'Middels', color: '#fbbf24', icon: Clock, desc: 'Flere integrasjoner' },
             { level: 'Høy', color: '#f87171', icon: AlertTriangle, desc: 'Full tilpasning' },
-          ].map(c => (
+          ] : [
+            { level: 'Low', color: '#4ade80', icon: Zap, desc: 'Fast implementation' },
+            { level: 'Medium', color: '#fbbf24', icon: Clock, desc: 'Multiple integrations' },
+            { level: 'High', color: '#f87171', icon: AlertTriangle, desc: 'Full customization' },
+          ]).map(c => (
             <div key={c.level} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{
                 display: 'inline-flex', alignItems: 'center', gap: 4,
@@ -623,6 +635,7 @@ export default function TjenesterPage() {
                 index={i}
                 searchQuery={searchQuery}
                 industryFilter={industryFilter}
+                no={no}
               />
             ))}
           </div>
@@ -640,10 +653,10 @@ export default function TjenesterPage() {
           >
             <Search size={40} style={{ marginBottom: 16, opacity: 0.3 }} />
             <p style={{ fontSize: 16, fontWeight: 500, margin: '0 0 8px' }}>
-              Ingen automatiseringer funnet
+              {no ? 'Ingen automatiseringer funnet' : 'No automations found'}
             </p>
             <p style={{ fontSize: 14, margin: 0 }}>
-              Prøv et annet søkeord eller fjern filteret
+              {no ? 'Prøv et annet søkeord eller fjern filteret' : 'Try a different search or remove the filter'}
             </p>
             <button
               onClick={() => { setSearchQuery(''); setIndustryFilter('alle') }}
@@ -653,7 +666,7 @@ export default function TjenesterPage() {
                 color: gold, fontSize: 13, fontWeight: 600, cursor: 'pointer',
               }}
             >
-              Nullstill filtre
+              {no ? 'Nullstill filtre' : 'Reset filters'}
             </button>
           </motion.div>
         )}
@@ -678,7 +691,7 @@ export default function TjenesterPage() {
           <h2 style={{
             fontSize: 24, fontWeight: 600, textAlign: 'center', marginBottom: 40,
           }}>
-            Slik kommer du i gang
+            {no ? 'Slik kommer du i gang' : 'How to get started'}
           </h2>
           <div style={{
             display: 'grid',
@@ -687,7 +700,7 @@ export default function TjenesterPage() {
           }}
             className="grid-3"
           >
-            {[
+            {(no ? [
               {
                 step: '1',
                 title: 'Gratis kartlegging',
@@ -706,7 +719,26 @@ export default function TjenesterPage() {
                 desc: 'Automatiseringene kjører 24/7. Du fokuserer på det som virkelig teller.',
                 icon: TrendingUp,
               },
-            ].map((s, i) => (
+            ] : [
+              {
+                step: '1',
+                title: 'Free assessment',
+                desc: 'We analyze your business and find the most valuable automations for you.',
+                icon: Target,
+              },
+              {
+                step: '2',
+                title: 'We build the solution',
+                desc: 'Everything is set up and customized for your systems. No technical work needed.',
+                icon: Cog,
+              },
+              {
+                step: '3',
+                title: 'Save time and money',
+                desc: 'Automations run 24/7. You focus on what really matters.',
+                icon: TrendingUp,
+              },
+            ]).map((s, i) => (
               <motion.div key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -767,14 +799,14 @@ export default function TjenesterPage() {
           }} />
 
           <h2 style={{ fontSize: 28, fontWeight: 700, marginBottom: 12, position: 'relative' }}>
-            Usikker på hva du trenger?
+            {no ? 'Usikker på hva du trenger?' : 'Unsure what you need?'}
           </h2>
           <p style={{
             fontSize: 16, color: 'rgba(255,255,255,0.65)', marginBottom: 28,
             lineHeight: 1.6, maxWidth: 480, margin: '0 auto 28px',
             position: 'relative',
           }}>
-            Start med en gratis kartlegging — vi finner automatiseringene som gir størst effekt for akkurat din bedrift.
+            {no ? 'Start med en gratis kartlegging — vi finner automatiseringene som gir størst effekt for akkurat din bedrift.' : 'Start with a free assessment — we find the automations that deliver the most impact for your business.'}
           </p>
           <div style={{
             display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap',
@@ -785,7 +817,7 @@ export default function TjenesterPage() {
               padding: '14px 32px', borderRadius: 12, fontWeight: 600,
               fontSize: 15, textDecoration: 'none', color: bg,
             }}>
-              Start gratis kartlegging <ArrowRight size={16} />
+              {no ? 'Start gratis kartlegging' : 'Start free assessment'} <ArrowRight size={16} />
             </Link>
             <a href="tel:+4778896386" style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -797,7 +829,7 @@ export default function TjenesterPage() {
             }}
               className="gold-hover"
             >
-              <Phone size={16} /> Ring oss
+              <Phone size={16} /> {no ? 'Ring oss' : 'Call us'}
             </a>
           </div>
         </motion.div>

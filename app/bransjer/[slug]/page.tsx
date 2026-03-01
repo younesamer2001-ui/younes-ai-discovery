@@ -15,6 +15,7 @@ import {
 import Nav from '@/app/components/Nav'
 import Footer from '@/app/components/Footer'
 import { getIndustryBySlug, Automation } from '@/lib/industries'
+import { useLanguage } from '@/lib/language-context'
 
 const gold = '#efc07b'
 const goldRgb = '239,192,123'
@@ -135,7 +136,8 @@ export default function IndustryPage() {
   const params = useParams()
   const slug = params.slug as string
   const industry = getIndustryBySlug(slug)
-  const [lang] = useState<'no' | 'en'>('no')
+  const { lang } = useLanguage()
+  const no = lang === 'no'
   const [sortMode, setSortMode] = useState<SortMode>('complexity')
   const [showSticky, setShowSticky] = useState(false)
 
@@ -152,9 +154,9 @@ export default function IndustryPage() {
       <div style={{ background: bgDark, minHeight: '100vh', color: '#f4f1eb' }}>
         <Nav />
         <div style={{ maxWidth: 600, margin: '0 auto', padding: '120px 24px', textAlign: 'center' }}>
-          <h1 style={{ fontSize: 28, marginBottom: 16 }}>Bransje ikke funnet</h1>
-          <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: 24 }}>Vi fant ikke denne bransjen.</p>
-          <Link href="/bransjer" style={{ color: gold, textDecoration: 'underline' }}>Tilbake til bransjer</Link>
+          <h1 style={{ fontSize: 28, marginBottom: 16 }}>{no ? 'Bransje ikke funnet' : 'Industry not found'}</h1>
+          <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: 24 }}>{no ? 'Vi fant ikke denne bransjen.' : 'We could not find this industry.'}</p>
+          <Link href="/bransjer" style={{ color: gold, textDecoration: 'underline' }}>{no ? 'Tilbake til bransjer' : 'Back to industries'}</Link>
         </div>
       </div>
     )
@@ -188,7 +190,7 @@ export default function IndustryPage() {
         onMouseEnter={e => e.currentTarget.style.color = gold}
         onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}
         >
-          <ArrowLeft size={14} /> Alle bransjer
+          <ArrowLeft size={14} /> {no ? 'Alle bransjer' : 'All industries'}
         </Link>
       </div>
 
@@ -225,7 +227,7 @@ export default function IndustryPage() {
             padding: '13px 28px', borderRadius: 12, fontWeight: 600,
             fontSize: 14, textDecoration: 'none', color: bgDark,
           }}>
-            Gratis kartlegging for {industry.title.toLowerCase()} <ArrowRight size={15} />
+            {no ? 'Gratis kartlegging for' : 'Free mapping for'} {industry.title.toLowerCase()} <ArrowRight size={15} />
           </Link>
         </motion.div>
       </section>
@@ -241,10 +243,10 @@ export default function IndustryPage() {
             }}>
               <Star size={16} color={gold} />
               <h2 style={{ fontSize: 18, fontWeight: 600, margin: 0 }}>
-                Raskeste gevinster
+                {no ? 'Raskeste gevinster' : 'Quick wins'}
               </h2>
               <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
-                — Enklest å komme i gang med
+                {no ? '— Enklest å komme i gang med' : '— Easiest to get started'}
               </span>
             </div>
 
@@ -296,7 +298,7 @@ export default function IndustryPage() {
           flexWrap: 'wrap', gap: 12, marginBottom: 14,
         }}>
           <h2 style={{ fontSize: 18, fontWeight: 600, margin: 0 }}>
-            Alle {industry.count} automatiseringer
+            {no ? 'Alle' : 'All'} {industry.count} {no ? 'automatiseringer' : 'automations'}
           </h2>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <button
@@ -311,7 +313,7 @@ export default function IndustryPage() {
                 transition: 'all 0.2s',
               }}
             >
-              <ArrowUpDown size={12} /> Kompleksitet
+              <ArrowUpDown size={12} /> {no ? 'Kompleksitet' : 'Complexity'}
             </button>
             <button
               onClick={() => setSortMode('alpha')}
@@ -325,7 +327,7 @@ export default function IndustryPage() {
                 transition: 'all 0.2s',
               }}
             >
-              <SortAsc size={12} /> A → Å
+              <SortAsc size={12} /> {no ? 'A → Å' : 'A → Z'}
             </button>
           </div>
         </div>
@@ -337,21 +339,21 @@ export default function IndustryPage() {
           borderRadius: 10, padding: '10px 16px',
           display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center',
         }}>
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>Kompleksitet:</span>
+          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{no ? 'Kompleksitet:' : 'Complexity:'}</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11 }}>
             <Zap size={11} color="#4ade80" />
-            <span style={{ color: '#4ade80', fontWeight: 500 }}>Lav</span>
-            <span style={{ color: 'rgba(255,255,255,0.35)' }}>— Noen timer</span>
+            <span style={{ color: '#4ade80', fontWeight: 500 }}>{no ? 'Lav' : 'Low'}</span>
+            <span style={{ color: 'rgba(255,255,255,0.35)' }}>— {no ? 'Noen timer' : 'A few hours'}</span>
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11 }}>
             <Clock size={11} color="#fbbf24" />
-            <span style={{ color: '#fbbf24', fontWeight: 500 }}>Middels</span>
-            <span style={{ color: 'rgba(255,255,255,0.35)' }}>— 1–5 dager</span>
+            <span style={{ color: '#fbbf24', fontWeight: 500 }}>{no ? 'Middels' : 'Medium'}</span>
+            <span style={{ color: 'rgba(255,255,255,0.35)' }}>— {no ? '1–5 dager' : '1-5 days'}</span>
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11 }}>
             <AlertTriangle size={11} color="#f87171" />
-            <span style={{ color: '#f87171', fontWeight: 500 }}>Høy</span>
-            <span style={{ color: 'rgba(255,255,255,0.35)' }}>— 3–7 dager</span>
+            <span style={{ color: '#f87171', fontWeight: 500 }}>{no ? 'Høy' : 'High'}</span>
+            <span style={{ color: 'rgba(255,255,255,0.35)' }}>— {no ? '3–7 dager' : '3-7 days'}</span>
           </span>
         </div>
       </section>
@@ -373,21 +375,20 @@ export default function IndustryPage() {
           border: `1px solid rgba(${goldRgb},0.12)`,
         }}>
           <h2 style={{ fontSize: 24, fontWeight: 600, marginBottom: 12 }}>
-            Klar for å automatisere?
+            {no ? 'Klar for å automatisere?' : 'Ready to automate?'}
           </h2>
           <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.7)', marginBottom: 24, lineHeight: 1.6 }}>
-            Få en gratis kartlegging og se nøyaktig hvilke av disse {industry.count} løsningene
-            som gir mest verdi for din bedrift — det tar under 2 minutter.
+            {no ? `Få en gratis kartlegging og se nøyaktig hvilke av disse ${industry.count} løsningene\nsom gir mest verdi for din bedrift — det tar under 2 minutter.` : `Get a free mapping and see exactly which of these ${industry.count} solutions\ngive the most value for your business — it takes under 2 minutes.`}
           </p>
           <Link href="/kartlegging" className="cta-shimmer" style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '14px 32px', borderRadius: 12, fontWeight: 600,
             fontSize: 15, textDecoration: 'none', color: bgDark,
           }}>
-            Start gratis kartlegging <ArrowRight size={16} />
+            {no ? 'Start gratis kartlegging' : 'Start free mapping'} <ArrowRight size={16} />
           </Link>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 14 }}>
-            Ingen forpliktelser · Svar innen 24 timer
+            {no ? 'Ingen forpliktelser · Svar innen 24 timer' : 'No commitment · Response within 24 hours'}
           </p>
         </div>
       </section>
@@ -406,14 +407,14 @@ export default function IndustryPage() {
       }}>
         <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: 6 }}>
           <Phone size={14} color={gold} />
-          Gratis kartlegging
+          {no ? 'Gratis kartlegging' : 'Free mapping'}
         </span>
         <Link href="/kartlegging" className="cta-shimmer" style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           padding: '10px 24px', borderRadius: 10, fontWeight: 600,
           fontSize: 14, textDecoration: 'none', color: bgDark,
         }}>
-          Start nå <ArrowRight size={14} />
+          {no ? 'Start nå' : 'Start now'} <ArrowRight size={14} />
         </Link>
       </div>
 

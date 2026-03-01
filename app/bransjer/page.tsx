@@ -13,6 +13,7 @@ import {
 import Nav from '@/app/components/Nav'
 import Footer from '@/app/components/Footer'
 import { industries } from '@/lib/industries'
+import { useLanguage } from '@/lib/language-context'
 
 const gold = '#efc07b'
 const goldRgb = '239,192,123'
@@ -30,7 +31,8 @@ const totalAutomations = industries.reduce((sum, ind) => sum + ind.count, 0)
 
 export default function BransjerPage() {
   const [search, setSearch] = useState('')
-  const [lang] = useState<'no' | 'en'>('no')
+  const { lang } = useLanguage()
+  const no = lang === 'no'
 
   const filtered = industries.filter(ind =>
     ind.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -52,20 +54,20 @@ export default function BransjerPage() {
             marginBottom: 20, fontWeight: 500,
           }}
         >
-          <Zap size={14} /> {totalAutomations}+ automatiseringer på tvers av {industries.length} bransjer
+          <Zap size={14} /> {totalAutomations}+ {no ? 'automatiseringer på tvers av' : 'automations across'} {industries.length} {no ? 'bransjer' : 'industries'}
         </motion.div>
 
         <motion.h1
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
           style={{ fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: 700, marginBottom: 16, lineHeight: 1.2 }}
         >
-          Finn løsningene som passer <span style={{ color: gold }}>din bransje</span>
+          {no ? 'Finn løsningene som passer' : 'Find solutions that fit'} <span style={{ color: gold }}>{no ? 'din bransje' : 'your industry'}</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
           style={{ fontSize: 17, color: 'rgba(255,255,255,0.7)', maxWidth: 560, margin: '0 auto 32px', lineHeight: 1.6 }}
         >
-          Velg din bransje og se nøyaktig hvilke AI-automatiseringer som sparer deg tid og penger — helt gratis.
+          {no ? 'Velg din bransje og se nøyaktig hvilke AI-automatiseringer som sparer deg tid og penger — helt gratis.' : 'Select your industry and see exactly which AI automations save you time and money — completely free.'}
         </motion.p>
 
         {/* Search */}
@@ -80,7 +82,7 @@ export default function BransjerPage() {
           <Search size={18} color={gold} />
           <input
             type="text"
-            placeholder="Søk etter din bransje..."
+            placeholder={no ? 'Søk etter din bransje...' : 'Search for your industry...'}
             value={search}
             onChange={e => setSearch(e.target.value)}
             style={{
@@ -99,13 +101,13 @@ export default function BransjerPage() {
           }}
         >
           <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <Shield size={13} color="rgba(255,255,255,0.35)" /> Gratis kartlegging
+            <Shield size={13} color="rgba(255,255,255,0.35)" /> {no ? 'Gratis kartlegging' : 'Free mapping'}
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <Clock size={13} color="rgba(255,255,255,0.35)" /> Ferdig på ca. 14 dager
+            <Clock size={13} color="rgba(255,255,255,0.35)" /> {no ? 'Ferdig på ca. 14 dager' : 'Done in ~14 days'}
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <Phone size={13} color="rgba(255,255,255,0.35)" /> Norsk support
+            <Phone size={13} color="rgba(255,255,255,0.35)" /> {no ? 'Norsk support' : 'English support'}
           </span>
         </motion.div>
       </section>
@@ -155,7 +157,7 @@ export default function BransjerPage() {
                         background: `rgba(${goldRgb},0.08)`, borderRadius: 20,
                         padding: '4px 10px', fontWeight: 500,
                       }}>
-                        {ind.count} løsninger
+                        {ind.count} {no ? 'løsninger' : 'solutions'}
                       </span>
                     </div>
                     <h3 style={{ fontSize: 16, fontWeight: 600, color: '#f4f1eb', margin: 0 }}>
@@ -171,7 +173,7 @@ export default function BransjerPage() {
                       marginTop: 4, justifyContent: 'center',
                       transition: 'opacity 0.2s',
                     }}>
-                      Se løsninger <ArrowRight size={14} />
+                      {no ? 'Se løsninger' : 'View solutions'} <ArrowRight size={14} />
                     </div>
                   </div>
                 </Link>
@@ -183,7 +185,7 @@ export default function BransjerPage() {
         {filtered.length === 0 && (
           <div style={{ textAlign: 'center', padding: '60px 20px' }}>
             <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.65)' }}>
-              Ingen bransjer matcher «{search}». Prøv et annet søkeord.
+              {no ? `Ingen bransjer matcher «${search}». Prøv et annet søkeord.` : `No industries match "${search}". Try a different search term.`}
             </p>
           </div>
         )}
@@ -197,18 +199,17 @@ export default function BransjerPage() {
           border: `1px solid rgba(${goldRgb},0.12)`,
         }}>
           <h2 style={{ fontSize: 24, fontWeight: 600, marginBottom: 12 }}>
-            Finner du ikke din bransje?
+            {no ? 'Finner du ikke din bransje?' : "Can't find your industry?"}
           </h2>
           <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.7)', marginBottom: 24, lineHeight: 1.6 }}>
-            Vi tilpasser løsningene til din bedrift uansett bransje.
-            Start en gratis kartlegging — det tar under 2 minutter.
+            {no ? 'Vi tilpasser løsningene til din bedrift uansett bransje.\nStart en gratis kartlegging — det tar under 2 minutter.' : 'We customize solutions to your business regardless of industry.\nStart a free mapping — it takes under 2 minutes.'}
           </p>
           <Link href="/kartlegging" className="cta-shimmer" style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '14px 32px', borderRadius: 12, fontWeight: 600,
             fontSize: 15, textDecoration: 'none', color: bgDark,
           }}>
-            Start gratis kartlegging <ArrowRight size={16} />
+            {no ? 'Start gratis kartlegging' : 'Start free mapping'} <ArrowRight size={16} />
           </Link>
         </div>
       </section>

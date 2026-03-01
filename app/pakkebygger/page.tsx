@@ -8,6 +8,7 @@ import {
   CalendarDays, ShoppingCart, Shield, Phone, Sparkles, X, Info,
   Bot, BarChart3, CheckCircle2, TrendingUp, Users,
 } from 'lucide-react'
+import { useLanguage } from '@/lib/language-context'
 import Nav from '@/app/components/Nav'
 import Footer from '@/app/components/Footer'
 import {
@@ -131,6 +132,8 @@ function AutomationRow({
 }
 
 export default function PakkebyggerPage() {
+  const { lang } = useLanguage()
+  const no = lang === 'no'
   const [selectedIndustry, setSelectedIndustry] = useState('')
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [billing, setBilling] = useState<BillingMode>('monthly')
@@ -189,21 +192,20 @@ export default function PakkebyggerPage() {
             marginBottom: 16, fontWeight: 500,
           }}
         >
-          <Package size={14} /> Bygg din egen automatiseringspakke
+          <Package size={14} /> {no ? 'Bygg din egen automatiseringspakke' : 'Build your own automation package'}
         </motion.div>
 
         <motion.h1
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
           style={{ fontSize: 'clamp(26px, 5vw, 40px)', fontWeight: 700, marginBottom: 12, lineHeight: 1.2 }}
         >
-          Velg automatiseringer, <span style={{ color: gold }}>se prisen live</span>
+          {no ? 'Velg automatiseringer, ' : 'Choose automations, '}<span style={{ color: gold }}>{no ? 'se prisen live' : 'see pricing live'}</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
           style={{ fontSize: 16, color: 'rgba(255,255,255,0.65)', maxWidth: 520, margin: '0 auto', lineHeight: 1.6 }}
         >
-          Velg din bransje, kryss av for det du trenger, og se nøyaktig hva det koster.
-          Ingen skjulte kostnader.
+          {no ? 'Velg din bransje, kryss av for det du trenger, og se nøyaktig hva det koster. Ingen skjulte kostnader.' : 'Choose your industry, select what you need, and see exactly what it costs. No hidden fees.'}
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
@@ -214,7 +216,7 @@ export default function PakkebyggerPage() {
           }}
         >
           <CheckCircle2 size={16} />
-          <span>Bedrifter sparer typisk <strong>150 000 – 250 000 kr/år</strong> i tid og økt omsetning</span>
+          <span>{no ? 'Bedrifter sparer typisk ' : 'Companies typically save '}<strong>{no ? '150 000 – 250 000 kr/år' : '$18,000 – $30,000/year'}</strong>{no ? ' i tid og økt omsetning' : ' in time and increased revenue'}</span>
         </motion.div>
       </section>
 
@@ -228,7 +230,7 @@ export default function PakkebyggerPage() {
             {/* Industry selector */}
             <div style={{ marginBottom: 20, position: 'relative' }}>
               <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginBottom: 8, display: 'block' }}>
-                1. Velg din bransje
+                {no ? '1. Velg din bransje' : '1. Choose your industry'}
               </label>
               <button
                 onClick={() => setShowDropdown(!showDropdown)}
@@ -241,7 +243,7 @@ export default function PakkebyggerPage() {
                   fontSize: 15, fontFamily: 'inherit',
                 }}
               >
-                {selectedIndustry || 'Velg bransje...'}
+                {selectedIndustry || (no ? 'Velg bransje...' : 'Select industry...')}
                 <ChevronDown size={16} color="rgba(255,255,255,0.4)"
                   style={{ transform: showDropdown ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.2s' }}
                 />
@@ -267,7 +269,7 @@ export default function PakkebyggerPage() {
                     >
                       {ind}
                       <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginLeft: 8 }}>
-                        {pricingAutomations.filter(a => a.industry === ind).length} løsninger
+                        {pricingAutomations.filter(a => a.industry === ind).length} {no ? 'løsninger' : 'solutions'}
                       </span>
                     </button>
                   ))}
@@ -283,11 +285,12 @@ export default function PakkebyggerPage() {
                   marginBottom: 12,
                 }}>
                   <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>
-                    2. Velg automatiseringer ({industryAutomations.length} tilgjengelig)
+                    {no ? '2. Velg automatiseringer (' : '2. Choose automations ('}
+                    {industryAutomations.length} {no ? 'tilgjengelig)' : 'available)'}
                   </label>
                   {count > 0 && (
                     <span style={{ fontSize: 12, color: gold, fontWeight: 500 }}>
-                      {count} valgt
+                      {count} {no ? 'valgt' : 'selected'}
                     </span>
                   )}
                 </div>
@@ -311,7 +314,7 @@ export default function PakkebyggerPage() {
               }}>
                 <Package size={40} color="rgba(255,255,255,0.15)" style={{ marginBottom: 16 }} />
                 <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.4)' }}>
-                  Velg en bransje for å se tilgjengelige automatiseringer
+                  {no ? 'Velg en bransje for å se tilgjengelige automatiseringer' : 'Choose an industry to see available automations'}
                 </p>
               </div>
             )}
@@ -335,7 +338,7 @@ export default function PakkebyggerPage() {
               }}>
                 <div style={{ fontSize: 16, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
                   <Sparkles size={18} color={gold} />
-                  Din pakke
+                  {no ? 'Din pakke' : 'Your package'}
                 </div>
               </div>
 
@@ -352,7 +355,7 @@ export default function PakkebyggerPage() {
                     fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit',
                     transition: 'all 0.2s',
                   }}>
-                    Månedlig
+                    {no ? 'Månedlig' : 'Monthly'}
                   </button>
                   <button onClick={() => setBilling('annual')} style={{
                     flex: 1, padding: '8px 12px', borderRadius: 6, border: 'none',
@@ -361,7 +364,7 @@ export default function PakkebyggerPage() {
                     fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit',
                     transition: 'all 0.2s', position: 'relative',
                   }}>
-                    Årlig
+                    {no ? 'Årlig' : 'Annual'}
                     <span style={{
                       position: 'absolute', top: -8, right: -4,
                       background: '#4ade80', color: bgDark, fontSize: 10, fontWeight: 700,
@@ -374,7 +377,7 @@ export default function PakkebyggerPage() {
 
                 {count === 0 ? (
                   <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', textAlign: 'center', padding: '20px 0' }}>
-                    Velg automatiseringer for å se prisen
+                    {no ? 'Velg automatiseringer for å se prisen' : 'Choose automations to see pricing'}
                   </p>
                 ) : (
                   <>
@@ -399,25 +402,26 @@ export default function PakkebyggerPage() {
                     {/* Subtotals */}
                     <div style={{ borderTop: `1px solid rgba(${goldRgb},0.1)`, paddingTop: 12 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
-                        <span style={{ color: 'rgba(255,255,255,0.5)' }}>Engangskostnad oppsett</span>
+                        <span style={{ color: 'rgba(255,255,255,0.5)' }}>{no ? 'Engangskostnad oppsett' : 'Setup fee'}</span>
                         <span style={{ color: '#f4f1eb', fontWeight: 500 }}>{formatKr(totalSetup)}</span>
                       </div>
 
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
-                        <span style={{ color: 'rgba(255,255,255,0.5)' }}>Månedspris ({count} stk)</span>
+                        <span style={{ color: 'rgba(255,255,255,0.5)' }}>{no ? 'Månedspris (' : 'Monthly price ('}
+                          {count} {no ? 'stk)' : 'items)'}</span>
                         <span style={{ color: '#f4f1eb' }}>{formatKr(totalMonthlyRaw)}</span>
                       </div>
 
                       {discountRate > 0 && (
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
-                          <span style={{ color: '#4ade80' }}>Kvantumsrabatt ({Math.round(discountRate * 100)}%)</span>
+                          <span style={{ color: '#4ade80' }}>{no ? 'Kvantumsrabatt ' : 'Volume discount '}({Math.round(discountRate * 100)}%)</span>
                           <span style={{ color: '#4ade80' }}>-{formatKr(totalMonthlyRaw * discountRate)}</span>
                         </div>
                       )}
 
                       {billing === 'annual' && (
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
-                          <span style={{ color: '#4ade80' }}>Årsrabatt (20%)</span>
+                          <span style={{ color: '#4ade80' }}>{no ? 'Årsrabatt ' : 'Annual discount '}(20%)</span>
                           <span style={{ color: '#4ade80' }}>-{formatKr(monthlyAfterQuantity * 0.20)}</span>
                         </div>
                       )}
@@ -430,7 +434,7 @@ export default function PakkebyggerPage() {
                     }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                         <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
-                          {billing === 'annual' ? 'Per måned (årlig)' : 'Per måned'}
+                          {billing === 'annual' ? (no ? 'Per måned (årlig)' : 'Per month (annual)') : (no ? 'Per måned' : 'Per month')}
                         </span>
                         <span style={{ fontSize: 22, fontWeight: 700, color: gold }}>
                           {formatKr(Math.round(monthlyFinal))}
@@ -438,13 +442,13 @@ export default function PakkebyggerPage() {
                       </div>
                       {billing === 'annual' && (
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
-                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>Årlig totalt</span>
+                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{no ? 'Årlig totalt' : 'Annual total'}</span>
                           <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>{formatKr(Math.round(annualTotal))}</span>
                         </div>
                       )}
                       {billing === 'monthly' && totalMonthlyRaw !== monthlyFinal && (
                         <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 4, textDecoration: 'line-through' }}>
-                          {formatKr(totalMonthlyRaw)}/mnd uten rabatt
+                          {formatKr(totalMonthlyRaw)}/{no ? 'mnd' : 'mo'} {no ? 'uten rabatt' : 'without discount'}
                         </div>
                       )}
                     </div>
@@ -456,7 +460,7 @@ export default function PakkebyggerPage() {
                         padding: '14px 20px', borderRadius: 10, fontWeight: 600,
                         fontSize: 14, textDecoration: 'none', color: bgDark,
                       }}>
-                        <ShoppingCart size={16} /> Bestill denne pakken
+                        <ShoppingCart size={16} /> {no ? 'Bestill denne pakken' : 'Order this package'}
                       </Link>
 
                       <Link href="/kartlegging" style={{
@@ -466,22 +470,22 @@ export default function PakkebyggerPage() {
                         color: gold, border: `1px solid rgba(${goldRgb},0.2)`,
                         transition: 'all 0.2s',
                       }}>
-                        <CalendarDays size={15} /> Book et gratis rådgivningsmøte
+                        <CalendarDays size={15} /> {no ? 'Book et gratis rådgivningsmøte' : 'Book a free consultation'}
                       </Link>
                     </div>
 
                     {/* Trust */}
                     <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 6 }}>
                       <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <Shield size={11} /> Ingen binding — kanseller når som helst
+                        <Shield size={11} /> {no ? 'Ingen binding — kanseller når som helst' : 'No commitment — cancel anytime'}
                       </span>
                       {billing === 'annual' && (
                         <span style={{ fontSize: 11, color: '#4ade80', display: 'flex', alignItems: 'center', gap: 6 }}>
-                          <Shield size={11} /> 14 dagers åpent kjøp ved årlig betaling
+                          <Shield size={11} /> {no ? '14 dagers åpent kjøp ved årlig betaling' : '14-day money back guarantee'}
                         </span>
                       )}
                       <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <Phone size={11} /> Norsk support inkludert
+                        <Phone size={11} /> {no ? 'Norsk support inkludert' : 'Support included'}
                       </span>
                     </div>
                   </>
@@ -495,15 +499,20 @@ export default function PakkebyggerPage() {
       {/* How it works */}
       <section style={{ maxWidth: 800, margin: '0 auto', padding: '40px 24px 80px' }}>
         <h2 style={{ fontSize: 22, fontWeight: 600, textAlign: 'center', marginBottom: 32 }}>
-          Slik fungerer det
+          {no ? 'Slik fungerer det' : 'How it works'}
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
-          {[
+          {(no ? [
             { step: '1', title: 'Velg', desc: 'Velg bransje og kryss av for automatiseringene du trenger' },
             { step: '2', title: 'Bestill eller book', desc: 'Bestill pakken direkte eller book et gratis rådgivningsmøte' },
             { step: '3', title: 'Vi setter opp', desc: 'Arxon bygger og tester alt — ferdig på ca. 14 dager' },
             { step: '4', title: 'Alt fungerer', desc: '30 dager med full støtte og oppfølging etter lansering' },
-          ].map(s => (
+          ] : [
+            { step: '1', title: 'Choose', desc: 'Select your industry and check the automations you need' },
+            { step: '2', title: 'Order or book', desc: 'Order the package directly or book a free consultation' },
+            { step: '3', title: 'We set it up', desc: 'Arxon builds and tests everything — ready in about 14 days' },
+            { step: '4', title: 'Everything works', desc: '30 days of full support and follow-up after launch' },
+          ]).map(s => (
             <div key={s.step} style={{
               background: cardBg, borderRadius: 14, padding: '24px 20px',
               border: `1px solid rgba(${goldRgb},0.06)`, textAlign: 'center',
@@ -528,15 +537,13 @@ export default function PakkebyggerPage() {
         <h2 style={{
           fontSize: 'clamp(20px, 4vw, 26px)', fontWeight: 700, textAlign: 'center', marginBottom: 8,
         }}>
-          Slipp å ansette — <span style={{ color: gold }}>automatiser i stedet</span>
+          {no ? 'Slipp å ansette — ' : 'Skip hiring — '}<span style={{ color: gold }}>{no ? 'automatiser i stedet' : 'automate instead'}</span>
         </h2>
         <p style={{
           fontSize: 14, color: 'rgba(255,255,255,0.5)', textAlign: 'center',
           maxWidth: 560, margin: '0 auto 28px', lineHeight: 1.6,
         }}>
-          Mange bedrifter vurderer å ansette for å håndtere telefoner, booking eller oppfølging.
-          Med Arxon løser du det samme — til en brøkdel av prisen.
-          Alle tall er verifisert mot SSB og Altinn, og inkluderer lønn, 14.1% arbeidsgiveravgift, 12% feriepenger og 2% OTP.
+          {no ? 'Mange bedrifter vurderer å ansette for å håndtere telefoner, booking eller oppfølging. Med Arxon løser du det samme — til en brøkdel av prisen. Alle tall er verifisert mot SSB og Altinn, og inkluderer lønn, 14.1% arbeidsgiveravgift, 12% feriepenger og 2% OTP.' : 'Many companies consider hiring to handle calls, bookings, or follow-ups. With Arxon, you solve the same problem — for a fraction of the cost. All figures are verified against official labor statistics and include salary, employer taxes, vacation pay, and pension contributions.'}
         </p>
 
         <div style={{
@@ -551,19 +558,24 @@ export default function PakkebyggerPage() {
             fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.5)',
             gap: 8,
           }}>
-            <span>Oppgave</span>
-            <span style={{ textAlign: 'right' }}>Verdi (timer/mnd)</span>
-            <span style={{ textAlign: 'right' }}>Arxon (årlig)</span>
-            <span style={{ textAlign: 'right', color: '#4ade80' }}>Estimert gevinst</span>
+            <span>{no ? 'Oppgave' : 'Task'}</span>
+            <span style={{ textAlign: 'right' }}>{no ? 'Verdi (timer/mnd)' : 'Value (hours/month)'}</span>
+            <span style={{ textAlign: 'right' }}>Arxon ({no ? 'årlig' : 'yearly'})</span>
+            <span style={{ textAlign: 'right', color: '#4ade80' }}>{no ? 'Estimert gevinst' : 'Estimated savings'}</span>
           </div>
 
           {/* Rows — realistic estimates for small businesses */}
-          {[
+          {(no ? [
             { role: 'Telefon & mottak', detail: 'AI-telefonsvarer + booking', timeSaved: '20–30 t/mnd', arxonRange: '24 000 – 36 000', savingRange: '60 000 – 90 000' },
             { role: 'Kundeservice & support', detail: 'Chatbot + auto-svar + FAQ', timeSaved: '15–25 t/mnd', arxonRange: '36 000 – 51 000', savingRange: '40 000 – 60 000' },
             { role: 'Booking & kalender', detail: 'Auto-booking + påminnelser', timeSaved: '10–15 t/mnd', arxonRange: '24 000 – 36 000', savingRange: '30 000 – 50 000' },
             { role: 'Lead-oppfølging & salg', detail: 'Scoring + CRM + follow-up', timeSaved: '15–20 t/mnd', arxonRange: '36 000 – 51 000', savingRange: '50 000 – 80 000' },
-          ].map((row, i) => (
+          ] : [
+            { role: 'Phone & Reception', detail: 'AI phone assistant + booking', timeSaved: '20–30 h/mo', arxonRange: '$2,900 – $4,400', savingRange: '$7,200 – $10,800' },
+            { role: 'Customer Service & Support', detail: 'Chatbot + auto-reply + FAQ', timeSaved: '15–25 h/mo', arxonRange: '$4,400 – $6,200', savingRange: '$4,800 – $7,200' },
+            { role: 'Booking & Calendar', detail: 'Auto-booking + reminders', timeSaved: '10–15 h/mo', arxonRange: '$2,900 – $4,400', savingRange: '$3,600 – $6,000' },
+            { role: 'Lead Follow-up & Sales', detail: 'Scoring + CRM + follow-up', timeSaved: '15–20 h/mo', arxonRange: '$4,400 – $6,200', savingRange: '$6,000 – $9,600' },
+          ]).map((row, i) => (
             <div key={i} style={{
               display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr',
               padding: '14px 20px', gap: 8,
@@ -589,14 +601,14 @@ export default function PakkebyggerPage() {
           }}>
             <div>
               <div style={{ fontSize: 13, fontWeight: 600, color: '#f4f1eb' }}>
-                Typisk totalverdi for en liten bedrift
+                {no ? 'Typisk totalverdi for en liten bedrift' : 'Typical total value for a small business'}
               </div>
               <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>
-                Spart tid + økt omsetning fra færre tapte kunder. Varierer etter bransje og volum.
+                {no ? 'Spart tid + økt omsetning fra færre tapte kunder. Varierer etter bransje og volum.' : 'Saved time + increased revenue from fewer lost customers. Varies by industry and volume.'}
               </div>
             </div>
             <div style={{ fontSize: 18, fontWeight: 700, color: '#4ade80' }}>
-              150 000 – 250 000 kr/år
+              {no ? '150 000 – 250 000 kr/år' : '$18,000 – $30,000/year'}
             </div>
           </div>
         </div>
@@ -607,25 +619,30 @@ export default function PakkebyggerPage() {
         <h2 style={{
           fontSize: 'clamp(20px, 4vw, 26px)', fontWeight: 700, textAlign: 'center', marginBottom: 8,
         }}>
-          Hvorfor engangs <span style={{ color: gold }}>setup-fee?</span>
+          {no ? 'Hvorfor engangs ' : 'Why a '}
+          <span style={{ color: gold }}>{no ? 'setup-fee?' : 'setup fee?'}</span>
         </h2>
         <p style={{
           fontSize: 14, color: 'rgba(255,255,255,0.5)', textAlign: 'center',
           maxWidth: 520, margin: '0 auto 28px', lineHeight: 1.6,
         }}>
-          Du investerer i en skreddersydd AI-løsning — ikke et ferdigprodukt fra hylla.
-          Setup-fee dekker alt det arbeidet som gjør at AI-en faktisk leverer resultater.
+          {no ? 'Du investerer i en skreddersydd AI-løsning — ikke et ferdigprodukt fra hylla. Setup-fee dekker alt det arbeidet som gjør at AI-en faktisk leverer resultater.' : 'You\'re investing in a custom AI solution — not a off-the-shelf product. The setup fee covers all the work that makes your AI actually deliver results.'}
         </p>
 
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14,
         }}>
-          {[
+          {(no ? [
             { Icon: Bot, title: 'Skreddersydd AI-opplæring', desc: 'Vi trener AI-en på din bedrift, dine tjenester, priser og vanlige spørsmål — så den svarer som en av dine egne.' },
             { Icon: Zap, title: 'Integrasjon med dine systemer', desc: 'Vi kobler AI til kalender, CRM, regnskap og de verktøyene du allerede bruker — alt satt opp for deg.' },
             { Icon: Shield, title: 'Testing og kvalitetssikring', desc: 'Vi tester alt grundig før lansering og justerer til du er 100% fornøyd med hvordan AI-en representerer bedriften din.' },
             { Icon: BarChart3, title: 'Lavere løpende kostnader', desc: 'Høyere setup-fee = lavere månedskostnad. Du investerer i en skikkelig løsning, og sparer mer over tid.' },
-          ].map((card, i) => (
+          ] : [
+            { Icon: Bot, title: 'Custom AI Training', desc: 'We train the AI on your business, services, pricing, and common questions — so it responds like one of your team.' },
+            { Icon: Zap, title: 'System Integration', desc: 'We connect the AI to your calendar, CRM, accounting, and tools you already use — all set up for you.' },
+            { Icon: Shield, title: 'Testing & Quality Assurance', desc: 'We thoroughly test everything before launch and adjust until you\'re 100% happy with how the AI represents your business.' },
+            { Icon: BarChart3, title: 'Lower Ongoing Costs', desc: 'Higher setup fee = lower monthly cost. You invest in a proper solution and save more over time.' },
+          ]).map((card, i) => (
             <div key={i} style={{
               background: cardBg, borderRadius: 14, padding: '24px 20px',
               border: `1px solid rgba(${goldRgb},0.06)`,
