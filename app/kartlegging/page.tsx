@@ -67,6 +67,66 @@ const T: Record<string, Record<string, string>> = {
   summary_title: { no: "Din AI-analyse", en: "Your AI analysis" },
   confirm_title: { no: "Takk for din henvendelse!", en: "Thank you for your inquiry!" },
   confirm_ref: { no: "Referansenummer", en: "Reference number" },
+  badge_automations: { no: "53+ automatiseringer tilgjengelig", en: "53+ automations available" },
+  trust_free: { no: "Gratis kartlegging", en: "Free assessment" },
+  trust_done: { no: "Ferdig på ca. 14 dager", en: "Ready in approx. 14 days" },
+  trust_support: { no: "Norsk support", en: "Norwegian support" },
+  see_results: { no: "Se resultater", en: "See results" },
+  resume_banner: { no: "Du har en ufullstendig kartlegging. Vil du fortsette?", en: "You have an incomplete assessment. Continue where you left off?" },
+  resume_continue: { no: "Fortsett", en: "Continue" },
+  resume_restart: { no: "Start på nytt", en: "Start over" },
+  results_desc: { no: "Velg automatiseringene som passer din bedrift. Se nøyaktig pris live — ingen skjulte kostnader.", en: "Choose the automations that fit your business. See exact pricing live — no hidden costs." },
+  select_automations: { no: "Velg automatiseringer", en: "Select automations" },
+  available: { no: "tilgjengelig", en: "available" },
+  selected: { no: "valgt", en: "selected" },
+  recommended_for_you: { no: "Anbefalte for deg", en: "Recommended for you" },
+  based_on_answers: { no: "Basert på dine svar", en: "Based on your answers" },
+  other_automations: { no: "Andre automatiseringer", en: "Other automations" },
+  your_package: { no: "Din pakke", en: "Your package" },
+  monthly: { no: "Månedlig", en: "Monthly" },
+  annual: { no: "Årlig", en: "Annual" },
+  select_to_see_price: { no: "Velg automatiseringer for å se prisen", en: "Select automations to see pricing" },
+  setup_cost: { no: "Engangskostnad oppsett", en: "One-time setup cost" },
+  monthly_price: { no: "Månedspris", en: "Monthly price" },
+  quantity_discount: { no: "Kvantumsrabatt", en: "Volume discount" },
+  annual_discount: { no: "Årsrabatt", en: "Annual discount" },
+  per_month: { no: "Per måned", en: "Per month" },
+  per_month_annual: { no: "Per måned (årlig)", en: "Per month (annual)" },
+  annual_total: { no: "Årlig totalt", en: "Annual total" },
+  no_binding: { no: "Ingen binding — kanseller når som helst", en: "No commitment — cancel anytime" },
+  open_purchase: { no: "14 dagers åpent kjøp ved årlig betaling", en: "14-day money-back guarantee for annual billing" },
+  support_included: { no: "Norsk support inkludert", en: "Norwegian support included" },
+  select_min_one: { no: "Velg minst én automatisering for å fortsette", en: "Select at least one automation to continue" },
+  book_call: { no: "Book en gratis samtale", en: "Book a free call" },
+  book_desc: { no: "Vi gjennomgår analysen din og gir deg et tilpasset tilbud basert på pakken du har bygget.", en: "We'll review your analysis and provide a customized offer based on the package you've built." },
+  book_calendar: { no: "Book tid i kalenderen", en: "Book a time" },
+  send_without_booking: { no: "Send inn uten å booke — vi ringer deg", en: "Submit without booking — we'll call you" },
+  book_trust1: { no: "30 min uforpliktende samtale", en: "30 min no-obligation call" },
+  book_trust2: { no: "Vi diskuterer pris og løsning", en: "We discuss pricing and solution" },
+  book_trust3: { no: "Du forplikter deg til ingenting", en: "No strings attached" },
+  confirm_desc: { no: "Kartleggingen din er sendt! Book en samtale så diskuterer vi pris og løsning.", en: "Your assessment has been submitted! Book a call and we'll discuss pricing and solution." },
+  choose_time: { no: "Velg tid i kalenderen", en: "Choose a time" },
+  confirm_time: { no: "15 min · Gratis · Uforpliktende", en: "15 min · Free · No obligation" },
+  next_steps: { no: "Slik fungerer det videre", en: "What happens next" },
+  next_step1: { no: "Book en tid som passer deg", en: "Book a time that works for you" },
+  next_step2: { no: "Vi gjennomgår AI-analysen din", en: "We review your AI analysis" },
+  next_step3: { no: "Du får et skreddersydd tilbud", en: "You receive a customized offer" },
+  loading: { no: "Laster kartlegging...", en: "Loading assessment..." },
+  setup_label: { no: "Oppsett", en: "Setup" },
+  impl_label: { no: "Implementering", en: "Implementation" },
+  engangskostnad: { no: "Engangskostnad", en: "One-time cost" },
+  package_count: { no: "automatiseringer", en: "automations" },
+  pcs: { no: "stk", en: "pcs" },
+  more: { no: "til", en: "more" },
+  mnd: { no: "/mnd", en: "/mo" },
+  compliance_gdpr: { no: "GDPR-kompatibel", en: "GDPR compliant" },
+  compliance_gdpr_desc: { no: "All databehandling følger personopplysningsloven og GDPR.", en: "All data processing complies with GDPR regulations." },
+  compliance_datacenter: { no: "Norsk datasenter", en: "Norwegian data center" },
+  compliance_datacenter_desc: { no: "Data lagres innenfor EØS via EU-baserte API-endepunkter.", en: "Data is stored within the EEA via EU-based API endpoints." },
+  compliance_aiact: { no: "EU AI Act-klar", en: "EU AI Act ready" },
+  compliance_aiact_desc: { no: "Full AI-transparens i henhold til Art. 50.", en: "Full AI transparency in accordance with Art. 50." },
+  compliance_dpa: { no: "Databehandleravtale", en: "Data Processing Agreement" },
+  compliance_dpa_desc: { no: "DPA inkludert i alle kontrakter.", en: "DPA included in all contracts." },
 }
 
 const t = (key: string, lang: string) => T[key]?.[lang] || T[key]?.['no'] || key
@@ -187,11 +247,11 @@ const JOB_VALUE_DEFAULT = 3000
 /* ────────────────────────────────────────────
    COMPLIANCE
    ──────────────────────────────────────────── */
-const COMPLIANCE = [
-  { title: 'GDPR-kompatibel', desc: 'All databehandling følger personopplysningsloven og GDPR.' },
-  { title: 'Norsk datasenter', desc: 'Data lagres innenfor EØS via EU-baserte API-endepunkter.' },
-  { title: 'EU AI Act-klar', desc: 'Full AI-transparens i henhold til Art. 50.' },
-  { title: 'Databehandleravtale', desc: 'DPA inkludert i alle kontrakter.' },
+const getCompliance = (lang: string) => [
+  { title: t('compliance_gdpr', lang), desc: t('compliance_gdpr_desc', lang) },
+  { title: t('compliance_datacenter', lang), desc: t('compliance_datacenter_desc', lang) },
+  { title: t('compliance_aiact', lang), desc: t('compliance_aiact_desc', lang) },
+  { title: t('compliance_dpa', lang), desc: t('compliance_dpa_desc', lang) },
 ]
 
 /* ────────────────────────────────────────────
@@ -299,6 +359,7 @@ const fmtNOK = (n: number) => n >= 1_000_000 ? `${(n / 1_000_000).toFixed(1).rep
    AUTOMATION ROW (reusable)
    ──────────────────────────────────────────── */
 function AutoRow({ auto, selected, onToggle }: { auto: PricingAutomation; selected: boolean; onToggle: () => void }) {
+  const { lang } = useLanguage()
   const [showInfo, setShowInfo] = useState(false)
   const CIcon = complexityIcon[auto.complexity] || Zap
   const cColor = complexityColor[auto.complexity] || '#fbbf24'
@@ -331,7 +392,7 @@ function AutoRow({ auto, selected, onToggle }: { auto: PricingAutomation; select
         </span>
         <div style={{ textAlign: 'right', flexShrink: 0, minWidth: 80 }}>
           <div style={{ fontSize: 14, fontWeight: 600, color: gold }}>{formatKr(auto.monthlyPrice)}</div>
-          <div style={{ fontSize: 10, color: textMuted }}>/mnd</div>
+          <div style={{ fontSize: 10, color: textMuted }}>{t('mnd', lang)}</div>
         </div>
         <button onClick={e => { e.stopPropagation(); setShowInfo(!showInfo) }} style={{
           background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.3)', padding: 4, flexShrink: 0,
@@ -344,8 +405,8 @@ function AutoRow({ auto, selected, onToggle }: { auto: PricingAutomation; select
           {auto.desc && <p style={{ fontSize: 13, color: textSecondary, margin: '10px 0 0', lineHeight: 1.5 }}>{auto.desc}</p>}
           {auto.benefit && <p style={{ fontSize: 12, color: `rgba(${goldRgb},0.75)`, margin: '8px 0 0', lineHeight: 1.4, fontStyle: 'italic' }}>{auto.benefit}</p>}
           <div style={{ display: 'flex', gap: 16, marginTop: 10, fontSize: 11, color: textMuted }}>
-            <span>Oppsett: {formatKr(auto.setupPrice)}</span>
-            <span>Implementering: {auto.implTime}</span>
+            <span>{t('setup_label', lang)}: {formatKr(auto.setupPrice)}</span>
+            <span>{t('impl_label', lang)}: {auto.implTime}</span>
           </div>
         </div>
       </div>
@@ -620,13 +681,13 @@ function KartleggingApp() {
               background: `rgba(${goldRgb},0.1)`, border: `1px solid rgba(${goldRgb},0.25)`,
               borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap',
             }}>
-            <span style={{ fontSize: 14 }}>Du har en ufullstendig kartlegging. Vil du fortsette?</span>
+            <span style={{ fontSize: 14 }}>{t('resume_banner', lang)}</span>
             <div style={{ display: 'flex', gap: 8 }}>
               <button onClick={resumeProgress} className="cta-shimmer" style={{
                 color: bgDark, border: 'none', borderRadius: 8, padding: '6px 16px',
                 fontWeight: 600, fontSize: 13, cursor: 'pointer', fontFamily: fonts.body,
-              }}>Fortsett</button>
-              <button onClick={dismissResume} style={{ ...btnSecondary, padding: '6px 12px', fontSize: 13 }}>Start på nytt</button>
+              }}>{t('resume_continue', lang)}</button>
+              <button onClick={dismissResume} style={{ ...btnSecondary, padding: '6px 12px', fontSize: 13 }}>{t('resume_restart', lang)}</button>
             </div>
           </motion.div>
         )}
@@ -644,7 +705,7 @@ function KartleggingApp() {
                   background: `rgba(${goldRgb},0.08)`, border: `1px solid rgba(${goldRgb},0.15)`,
                   borderRadius: 24, padding: '6px 16px', fontSize: 13, color: gold, marginBottom: 16, fontWeight: 500,
                 }}>
-                  <Sparkles size={14} /> 53+ automatiseringer tilgjengelig
+                  <Sparkles size={14} /> {t('badge_automations', lang)}
                 </motion.div>
                 <h1 style={{ fontSize: 'clamp(26px, 5vw, 38px)', fontWeight: 700, lineHeight: 1.2, marginBottom: 14 }}>
                   {t('phase1_title', lang)}
@@ -679,7 +740,7 @@ function KartleggingApp() {
 
                 {/* Trust badges */}
                 <div style={{ display: 'flex', justifyContent: 'center', gap: 20, marginTop: 8, flexWrap: 'wrap' }}>
-                  {['Gratis kartlegging', 'Ferdig på ca. 14 dager', 'Norsk support'].map(txt => (
+                  {[t('trust_free', lang), t('trust_done', lang), t('trust_support', lang)].map(txt => (
                     <span key={txt} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: textMuted }}>
                       <Check size={12} color="#4ade80" /> {txt}
                     </span>
@@ -730,7 +791,7 @@ function KartleggingApp() {
                 <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
                   <button style={btnSecondary} onClick={prevStep}>{t('back', lang)}</button>
                   <button style={{ ...btnPrimary, opacity: canNext() || currentQ.optional ? 1 : 0.4 }} onClick={nextStep} disabled={!canNext() && !currentQ.optional}>
-                    {step === questions.length - 1 ? 'Se resultater' : t('next', lang)}
+                    {step === questions.length - 1 ? t('see_results', lang) : t('next', lang)}
                   </button>
                 </div>
               </div>
@@ -750,7 +811,7 @@ function KartleggingApp() {
                 </motion.div>
                 <h2 style={{ fontSize: 'clamp(22px, 4vw, 30px)', fontWeight: 700, marginBottom: 8 }}>{t('results_title', lang)}</h2>
                 <p style={{ color: textSecondary, fontSize: 14, maxWidth: 520, margin: '0 auto', lineHeight: 1.6 }}>
-                  Velg automatiseringene som passer din bedrift. Se nøyaktig pris live — ingen skjulte kostnader.
+                  {t('results_desc', lang)}
                 </p>
               </div>
 
@@ -797,9 +858,9 @@ function KartleggingApp() {
                 <div style={{ flex: 1, minWidth: 300 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                     <label style={{ fontSize: 14, fontWeight: 600 }}>
-                      Velg automatiseringer ({industryAutomations.length} tilgjengelig)
+                      {t('select_automations', lang)} ({industryAutomations.length} {t('available', lang)})
                     </label>
-                    {count > 0 && <span style={{ fontSize: 12, color: gold, fontWeight: 500 }}>{count} valgt</span>}
+                    {count > 0 && <span style={{ fontSize: 12, color: gold, fontWeight: 500 }}>{count} {t('selected', lang)}</span>}
                   </div>
 
                   {/* ── Recommended section ── */}
@@ -812,8 +873,8 @@ function KartleggingApp() {
                         border: `1px solid rgba(${goldRgb},0.15)`,
                       }}>
                         <Sparkles size={15} color={gold} />
-                        <span style={{ fontSize: 14, fontWeight: 600, color: gold }}>Anbefalte for deg</span>
-                        <span style={{ fontSize: 11, color: textMuted, marginLeft: 'auto' }}>Basert på dine svar</span>
+                        <span style={{ fontSize: 14, fontWeight: 600, color: gold }}>{t('recommended_for_you', lang)}</span>
+                        <span style={{ fontSize: 11, color: textMuted, marginLeft: 'auto' }}>{t('based_on_answers', lang)}</span>
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                         {recommended.map(auto => (
@@ -832,7 +893,7 @@ function KartleggingApp() {
                           padding: '6px 14px',
                         }}>
                           <Package size={14} color={textMuted} />
-                          <span style={{ fontSize: 13, fontWeight: 500, color: textSecondary }}>Andre automatiseringer</span>
+                          <span style={{ fontSize: 13, fontWeight: 500, color: textSecondary }}>{t('other_automations', lang)}</span>
                         </div>
                       )}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -849,7 +910,7 @@ function KartleggingApp() {
                   <div style={{ background: cardBg, borderRadius: 16, border: `1px solid rgba(${goldRgb},0.12)`, overflow: 'hidden' }}>
                     <div style={{ background: `rgba(${goldRgb},0.06)`, padding: '18px 20px', borderBottom: `1px solid rgba(${goldRgb},0.1)` }}>
                       <div style={{ fontSize: 16, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <Sparkles size={18} color={gold} /> Din pakke
+                        <Sparkles size={18} color={gold} /> {t('your_package', lang)}
                       </div>
                     </div>
                     <div style={{ padding: 20 }}>
@@ -860,20 +921,20 @@ function KartleggingApp() {
                           background: billing === 'monthly' ? `rgba(${goldRgb},0.15)` : 'transparent',
                           color: billing === 'monthly' ? gold : 'rgba(255,255,255,0.5)',
                           fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s',
-                        }}>Månedlig</button>
+                        }}>{t('monthly', lang)}</button>
                         <button onClick={() => setBilling('annual')} style={{
                           flex: 1, padding: '8px 12px', borderRadius: 6, border: 'none',
                           background: billing === 'annual' ? `rgba(${goldRgb},0.15)` : 'transparent',
                           color: billing === 'annual' ? gold : 'rgba(255,255,255,0.5)',
                           fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', position: 'relative',
                         }}>
-                          Årlig
+                          {t('annual', lang)}
                           <span style={{ position: 'absolute', top: -8, right: -4, background: '#4ade80', color: bgDark, fontSize: 10, fontWeight: 700, padding: '1px 6px', borderRadius: 10 }}>-20%</span>
                         </button>
                       </div>
 
                       {count === 0 ? (
-                        <p style={{ fontSize: 14, color: textMuted, textAlign: 'center', padding: '20px 0' }}>Velg automatiseringer for å se prisen</p>
+                        <p style={{ fontSize: 14, color: textMuted, textAlign: 'center', padding: '20px 0' }}>{t('select_to_see_price', lang)}</p>
                       ) : (
                         <>
                           <div style={{ marginBottom: 16 }}>
@@ -883,27 +944,27 @@ function KartleggingApp() {
                                 <span style={{ color: textMuted, whiteSpace: 'nowrap' }}>{formatKr(a.monthlyPrice)}</span>
                               </div>
                             ))}
-                            {count > 5 && <div style={{ fontSize: 11, color: textMuted, marginTop: 4 }}>+ {count - 5} til</div>}
+                            {count > 5 && <div style={{ fontSize: 11, color: textMuted, marginTop: 4 }}>+ {count - 5} {t('more', lang)}</div>}
                           </div>
 
                           <div style={{ borderTop: `1px solid rgba(${goldRgb},0.1)`, paddingTop: 12 }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
-                              <span style={{ color: textSecondary }}>Engangskostnad oppsett</span>
+                              <span style={{ color: textSecondary }}>{t('setup_cost', lang)}</span>
                               <span style={{ fontWeight: 500 }}>{formatKr(totalSetup)}</span>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
-                              <span style={{ color: textSecondary }}>Månedspris ({count} stk)</span>
+                              <span style={{ color: textSecondary }}>{t('monthly_price', lang)} ({count} {t('pcs', lang)})</span>
                               <span>{formatKr(totalMonthlyRaw)}</span>
                             </div>
                             {discountRate > 0 && (
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
-                                <span style={{ color: '#4ade80' }}>Kvantumsrabatt ({Math.round(discountRate * 100)}%)</span>
+                                <span style={{ color: '#4ade80' }}>{t('quantity_discount', lang)} ({Math.round(discountRate * 100)}%)</span>
                                 <span style={{ color: '#4ade80' }}>-{formatKr(Math.round(totalMonthlyRaw * discountRate))}</span>
                               </div>
                             )}
                             {billing === 'annual' && (
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
-                                <span style={{ color: '#4ade80' }}>Årsrabatt (20%)</span>
+                                <span style={{ color: '#4ade80' }}>{t('annual_discount', lang)} (20%)</span>
                                 <span style={{ color: '#4ade80' }}>-{formatKr(Math.round(monthlyAfterQuantity * 0.20))}</span>
                               </div>
                             )}
@@ -911,12 +972,12 @@ function KartleggingApp() {
 
                           <div style={{ background: `rgba(${goldRgb},0.06)`, borderRadius: 10, padding: 14, marginTop: 12 }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                              <span style={{ fontSize: 13, color: textSecondary }}>{billing === 'annual' ? 'Per måned (årlig)' : 'Per måned'}</span>
+                              <span style={{ fontSize: 13, color: textSecondary }}>{billing === 'annual' ? t('per_month_annual', lang) : t('per_month', lang)}</span>
                               <span style={{ fontSize: 22, fontWeight: 700, color: gold }}>{formatKr(Math.round(monthlyFinal))}</span>
                             </div>
                             {billing === 'annual' && (
                               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
-                                <span style={{ fontSize: 12, color: textMuted }}>Årlig totalt</span>
+                                <span style={{ fontSize: 12, color: textMuted }}>{t('annual_total', lang)}</span>
                                 <span style={{ fontSize: 13, color: textSecondary }}>{formatKr(Math.round(annualTotal))}</span>
                               </div>
                             )}
@@ -925,15 +986,15 @@ function KartleggingApp() {
                           {/* Trust */}
                           <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 6 }}>
                             <span style={{ fontSize: 11, color: textMuted, display: 'flex', alignItems: 'center', gap: 6 }}>
-                              <Shield size={11} /> Ingen binding — kanseller når som helst
+                              <Shield size={11} /> {t('no_binding', lang)}
                             </span>
                             {billing === 'annual' && (
                               <span style={{ fontSize: 11, color: '#4ade80', display: 'flex', alignItems: 'center', gap: 6 }}>
-                                <Shield size={11} /> 14 dagers åpent kjøp ved årlig betaling
+                                <Shield size={11} /> {t('open_purchase', lang)}
                               </span>
                             )}
                             <span style={{ fontSize: 11, color: textMuted, display: 'flex', alignItems: 'center', gap: 6 }}>
-                              <Phone size={11} /> Norsk support inkludert
+                              <Phone size={11} /> {t('support_included', lang)}
                             </span>
                           </div>
                         </>
@@ -949,7 +1010,7 @@ function KartleggingApp() {
                   <Shield size={16} color={gold} /> {t('compliance_title', lang)}
                 </h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {COMPLIANCE.map((c, i) => (
+                  {getCompliance(lang).map((c, i) => (
                     <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                       <Check size={12} color="#4ade80" style={{ marginTop: 3, flexShrink: 0 }} />
                       <div>
@@ -970,7 +1031,7 @@ function KartleggingApp() {
                 {t('generate_btn', lang)} <ArrowRight size={16} style={{ display: 'inline', marginLeft: 6, verticalAlign: 'middle' }} />
               </button>
               {count === 0 && (
-                <p style={{ textAlign: 'center', fontSize: 13, color: textMuted, marginTop: 8 }}>Velg minst én automatisering for å fortsette</p>
+                <p style={{ textAlign: 'center', fontSize: 13, color: textMuted, marginTop: 8 }}>{t('select_min_one', lang)}</p>
               )}
             </motion.div>
           )}
@@ -1009,22 +1070,22 @@ function KartleggingApp() {
               {/* Selected summary with pricing */}
               {count > 0 && (
                 <div style={{ ...cardStyle, marginBottom: 24, padding: '20px' }}>
-                  <span style={{ fontSize: 15, fontWeight: 600, display: 'block', marginBottom: 12 }}>Din pakke ({count} automatiseringer)</span>
+                  <span style={{ fontSize: 15, fontWeight: 600, display: 'block', marginBottom: 12 }}>{t('your_package', lang)} ({count} {t('package_count', lang)})</span>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
                     <div style={{ background: `rgba(${goldRgb},0.04)`, borderRadius: 10, padding: 14, textAlign: 'center' }}>
-                      <div style={{ fontSize: 11, color: textMuted, marginBottom: 4 }}>Engangskostnad</div>
+                      <div style={{ fontSize: 11, color: textMuted, marginBottom: 4 }}>{t('engangskostnad', lang)}</div>
                       <div style={{ fontSize: 18, fontWeight: 700, color: gold }}>{formatKr(totalSetup)}</div>
                     </div>
                     <div style={{ background: `rgba(${goldRgb},0.04)`, borderRadius: 10, padding: 14, textAlign: 'center' }}>
-                      <div style={{ fontSize: 11, color: textMuted, marginBottom: 4 }}>Månedspris</div>
-                      <div style={{ fontSize: 18, fontWeight: 700, color: gold }}>{formatKr(Math.round(monthlyFinal))}/mnd</div>
+                      <div style={{ fontSize: 11, color: textMuted, marginBottom: 4 }}>{t('monthly_price', lang)}</div>
+                      <div style={{ fontSize: 18, fontWeight: 700, color: gold }}>{formatKr(Math.round(monthlyFinal))}{t('mnd', lang)}</div>
                     </div>
                   </div>
                   {selectedAutomations.map((a, i) => (
                     <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '5px 0' }}>
                       <Check size={12} color={gold} />
                       <span style={{ fontSize: 13 }}>{a.name}</span>
-                      <span style={{ fontSize: 11, color: textMuted, marginLeft: 'auto' }}>{formatKr(a.monthlyPrice)}/mnd</span>
+                      <span style={{ fontSize: 11, color: textMuted, marginLeft: 'auto' }}>{formatKr(a.monthlyPrice)}{t('mnd', lang)}</span>
                     </div>
                   ))}
                 </div>
@@ -1033,22 +1094,22 @@ function KartleggingApp() {
               {/* Booking CTA */}
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
                 style={{ ...cardStyle, marginBottom: 24, padding: '32px 24px', textAlign: 'center', border: `1.5px solid ${gold}`, background: `rgba(${goldRgb},0.04)` }}>
-                <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>Book en gratis samtale</h3>
+                <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>{t('book_call', lang)}</h3>
                 <p style={{ fontSize: 13.5, color: textSecondary, marginBottom: 20, lineHeight: 1.55 }}>
-                  Vi gjennomgår analysen din og gir deg et tilpasset tilbud basert på pakken du har bygget.
+                  {t('book_desc', lang)}
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 320, margin: '0 auto' }}>
                   <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="cta-shimmer"
                     onClick={() => { if (!submitting && !refNumber) handleSubmit() }}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 20px', borderRadius: 10, fontWeight: 600, fontSize: 14, textDecoration: 'none', color: bgDark }}>
-                    <CalendarDays size={16} /> Book tid i kalenderen
+                    <CalendarDays size={16} /> {t('book_calendar', lang)}
                   </a>
                   <button style={{ ...btnSecondary, fontSize: 13 }} onClick={() => { if (!submitting && !refNumber) handleSubmit(); setPhase(8) }}>
-                    Send inn uten å booke — vi ringer deg
+                    {t('send_without_booking', lang)}
                   </button>
                 </div>
                 <div style={{ marginTop: 16 }}>
-                  {['30 min uforpliktende samtale', 'Vi diskuterer pris og løsning', 'Du forplikter deg til ingenting'].map((s, i) => (
+                  {[t('book_trust1', lang), t('book_trust2', lang), t('book_trust3', lang)].map((s, i) => (
                     <div key={i} style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 4 }}>
                       <Check size={11} color="#4ade80" />
                       <span style={{ fontSize: 12.5, color: textMuted }}>{s}</span>
@@ -1079,9 +1140,9 @@ function KartleggingApp() {
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
                 style={{ ...cardStyle, maxWidth: 500, margin: '0 auto 28px', padding: '32px 28px', border: `1.5px solid ${gold}`, background: `rgba(${goldRgb},0.04)` }}>
-                <h3 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>Book en gratis samtale</h3>
+                <h3 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>{t('book_call', lang)}</h3>
                 <p style={{ color: textSecondary, fontSize: 14, lineHeight: 1.6, marginBottom: 24, maxWidth: 380, margin: '0 auto 24px' }}>
-                  Kartleggingen din er sendt! Book en samtale så diskuterer vi pris og løsning.
+                  {t('confirm_desc', lang)}
                 </p>
                 <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="cta-shimmer"
                   style={{
@@ -1089,14 +1150,14 @@ function KartleggingApp() {
                     color: bgDark, borderRadius: 12, padding: '16px 36px', fontWeight: 700, fontSize: 16,
                     textDecoration: 'none', boxShadow: `0 8px 32px rgba(${goldRgb},0.25)`,
                   }}>
-                  <CalendarDays size={18} /> Velg tid i kalenderen
+                  <CalendarDays size={18} /> {t('choose_time', lang)}
                 </a>
-                <p style={{ fontSize: 12, color: textMuted, marginTop: 14 }}>15 min · Gratis · Uforpliktende</p>
+                <p style={{ fontSize: 12, color: textMuted, marginTop: 14 }}>{t('confirm_time', lang)}</p>
               </motion.div>
 
               <div style={{ ...cardStyle, textAlign: 'left', maxWidth: 500, margin: '0 auto' }}>
-                <h4 style={{ fontSize: 15, fontWeight: 600, marginBottom: 14 }}>Slik fungerer det videre</h4>
-                {['Book en tid som passer deg', 'Vi gjennomgår AI-analysen din', 'Du får et skreddersydd tilbud'].map((s, i) => (
+                <h4 style={{ fontSize: 15, fontWeight: 600, marginBottom: 14 }}>{t('next_steps', lang)}</h4>
+                {[t('next_step1', lang), t('next_step2', lang), t('next_step3', lang)].map((s, i) => (
                   <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'center' }}>
                     <div style={{
                       width: 24, height: 24, borderRadius: '50%',
@@ -1136,7 +1197,7 @@ function KartleggingFallback() {
   return (
     <div style={{ minHeight: '100vh', background: bgDark, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <div style={{ width: 48, height: 48, border: `3px solid rgba(${goldRgb},0.15)`, borderTopColor: gold, borderRadius: '50%', animation: 'spin 0.8s linear infinite', marginBottom: 24 }} />
-      <div style={{ color: gold, fontSize: 18, fontFamily: fonts.body, marginBottom: 8 }}>Laster kartlegging...</div>
+      <div style={{ color: gold, fontSize: 18, fontFamily: fonts.body, marginBottom: 8 }}>{t('loading', 'no')}</div>
       <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
     </div>
   )
